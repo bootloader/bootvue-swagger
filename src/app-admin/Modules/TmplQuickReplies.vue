@@ -78,6 +78,10 @@
                   <b-button size="sm" @click="deleteReps(row.item, row.index, $event.target)" variant="outline-primary">
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
+                  &nbsp;
+                  <b-button size="sm" v-tooltip="row.item.message" variant="outline-primary">
+                     <font-awesome-icon icon="eye" title="View"/>
+                  </b-button>                                
                 </template>
 
             </b-table>
@@ -93,13 +97,13 @@
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
-        faUsersSlash,faUsers,faTrash
+        faUsersSlash,faUsers,faTrash,faEye
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import mustache from 'mustache';
 
     library.add(
-        faUsersSlash,faUsers,faTrash
+        faUsersSlash,faUsers,faTrash,faEye
     );
 
     function newQReps() {
@@ -128,7 +132,12 @@
         }),
         computed : {
             teams : function (argument) {
-              return this.$store.getters.StateQReps
+              var THAT = this;
+              return (this.$store.getters.StateQReps || []).map(function (op) {
+                  console.log("=====",op)
+                  op.message = mustache.render(op.template || op.message || op.title || '', THAT.sample) || op.title;
+                  return op;
+              });
             },
             templatePreview : function (argument) {
               if(!this.newQReps.template)
