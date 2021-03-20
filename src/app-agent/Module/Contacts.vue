@@ -13,7 +13,8 @@
                     @keyup="inputSearch"
                     placeholder="Search..." name="" class="form-control search">
                 <div class="input-group-prepend">
-                    <span class="input-group-text search_btn"><i class="fa fa-search"></i></span>
+                    <span v-if="!!search" class="input-group-text search_btn" @click="search=''" ><i class="fa fa-close"></i></span>
+                    <span v-if="!search" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
             </div>
         </div>
@@ -47,11 +48,11 @@
             </ul>
         </div>
         <div class="card-footer">
-            &nbsp;<span class="contact_type fa fa-facebook"></span>
-            <span class="contact_type fa fa-whatsapp"></span>
-            <span class="contact_type fa fa-twitter"></span>
-            <span class="contact_type fa fa-telegram"></span>
-            <span class="contact_type fa fa-chrome"></span>
+            &nbsp;<span class="contact_type fa fa-facebook" @click="search=':facebook'"></span>
+            <span class="contact_type fa fa-whatsapp" @click="search=':whatsapp'" ></span>
+            <span class="contact_type fa fa-twitter"  @click="search=':twitter'"></span>
+            <span class="contact_type fa fa-telegram"  @click="search=':telegram'"></span>
+            <span class="contact_type fa fa-chrome" @click="search=':website'"></span>
             <span
                  v-bind:class="{'toggle-active' : isOnline}" 
                  @click="toggleOnline"
@@ -85,9 +86,24 @@
         computed : {
             activeChats : function(){ 
                 console.log("store",this.$store.getters.StateChats); 
-                let search = this.search;
+                let searchTags = this.search.split(/(:[\w]+\ )/).filter(function (argument) {
+                    return !!argument;
+                }).map(function (argument) {
+                    var tags = argument.split(":");
+                    return {
+                        isTag : !tags[0],
+                        text : (tags[0] || tags[1]).trim()
+                    }
+                });
                 return (this.$store.getters.StateChats || []).filter(function(chat){
-                    return ((chat.name || "").toLowerCase().indexOf(search.toLowerCase()) > -1) && chat.active;
+                    var _searchTags = searchTags.filter(function (searchTag) {
+                        if(searchTag.isTag){
+                            return ((chat.contactType || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
+                        } else {
+                            return ((chat.name || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1) && chat.active;
+                        }
+                    });
+                    return _searchTags.length == searchTags.length;
                 }).sort(function(a, b){
                     if(a.assigned && !b.assigned){
                         return -1;
@@ -172,5 +188,8 @@
     }
     ul.contacts .user_info *, ul.contacts .contact-time p{
        color : rgba(21, 21, 21, 0.68) !important
+    }
+    .card-footer .contact_type {
+        cursor: pointer;
     }
 </style>
