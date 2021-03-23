@@ -54,7 +54,7 @@
             <span class="contact_type fa fa-telegram"  @click="search=':telegram'"></span>
             <span class="contact_type fa fa-chrome" @click="search=':website'"></span>
             <span
-                 v-bind:class="{'toggle-active' : isOnline}" 
+                 v-bind:class="{'toggle-active' : isOnline, 'fa-rotate-180' : !isOnline }" 
                  @click="toggleOnline"
                  v-tooltip="isOnline ? 'Go Offline' : 'Go Online'"
                 class="online-toggle fa fa-toggle-on"></span>
@@ -192,4 +192,18 @@
     .card-footer .contact_type {
         cursor: pointer;
     }
+    .online-toggle {
+        float: right;
+        font-size: 25px!important;
+        border-radius: 48%;
+        line-height: 21px!important;
+        cursor: pointer;
+    }
+    .online-toggle.fa-toggle-on {
+      color: #000;
+    }
+    .online-toggle.fa-toggle-on.toggle-active {
+      color: #4cd137;
+    }
+
 </style>

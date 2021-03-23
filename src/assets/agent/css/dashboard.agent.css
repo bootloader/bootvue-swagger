@@ -345,21 +345,6 @@
   float: left;
   margin-right: 5px;
 }
-.online-toggle {
-    float: right;
-    font-size: 25px!important;
-    height: 19px;
-    border-radius: 48%;
-    padding-bottom: 0px;
-    line-height: 21px!important;
-    cursor: pointer;
-}
-.online-toggle.fa-toggle-on {
-  color: #000;
-}
-.online-toggle.fa-toggle-on.toggle-active {
-  color: #4cd137;
-}
 
 .information img {
     width: 200px;
