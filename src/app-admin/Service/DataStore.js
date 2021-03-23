@@ -120,6 +120,7 @@ const actions = {
 
   async CreatQuickReps({ commit },qReps) {
     let UserForm = new FormData()
+    UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
     UserForm.append('template', qReps.template);

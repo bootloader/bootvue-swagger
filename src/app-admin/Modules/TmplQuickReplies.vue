@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
                   <ValidationObserver ref="form">
-                    <div class="card-body"><h5 class="card-title">Add Quick Reply </h5>                    
+                    <div class="card-body"><h5 class="card-title">{{newQReps.id ? 'Edit' : 'Add' }} Quick Reply </h5>                    
                             <div class="position-relative form-group">
                               <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Category</label>
@@ -49,10 +49,16 @@
  
 
 
-                            <div class="position-relative form-group">
-                              <button @click="creatQuickReps"
-                                name="password" id="examplePassword"
-                                class="form-control btn btn-primary">Create</button>
+                            <div class="text-center form-group">
+                              <button @click="cancelReps"
+                                class="btn btn-warning">Cancel</button>
+&nbsp;
+                              <button v-if="newQReps.id"  @click="creatQuickReps"
+                                class="btn btn-primary">Update</button>
+&nbsp;
+                              <button v-if="!newQReps.id"  @click="creatQuickReps"
+                                class="btn btn-primary">Create</button>
+
                             </div>
                            
                     </div>
@@ -72,14 +78,15 @@
                      :fixed=false
                      :foot-clone=false
                      :items="teams"
-                     :fields="fields">
+                     :fields="fields"
+                     :tbody-tr-class="rowClass">
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="deleteReps(row.item, row.index, $event.target)" variant="outline-primary">
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
                   &nbsp;
-                  <b-button size="sm" v-tooltip="row.item.message" variant="outline-primary">
+                  <b-button size="sm"@click="editReps(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
                      <font-awesome-icon icon="eye" title="View"/>
                   </b-button>                                
                 </template>
@@ -134,7 +141,6 @@
             teams : function (argument) {
               var THAT = this;
               return (this.$store.getters.StateQReps || []).map(function (op) {
-                  console.log("=====",op)
                   op.message = mustache.render(op.template || op.message || op.title || '', THAT.sample) || op.title;
                   return op;
               });
@@ -166,6 +172,23 @@
           },
           async deleteReps(item) {
              await this.$store.dispatch('DeleteQuickReps', item);
+          }, 
+          async cancelReps(item) {
+             this.newQReps = newQReps();
+          }, 
+          async editReps(item) {
+              this.newQReps = newQReps();
+              this.newQReps.id = item.id;
+              this.newQReps.category = item.category;
+              this.newQReps.title = item.title;
+              this.newQReps.message = item.message;
+              this.newQReps.template = item.template;
+              
+             //await this.$store.dispatch('DeleteQuickReps', item);
+          },
+          rowClass(item, type) {
+            if (!item || type !== 'row') return
+            if (this.newQReps.id == item.id) return 'table-success'
           }
         }
 
