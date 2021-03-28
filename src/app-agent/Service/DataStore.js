@@ -25,7 +25,7 @@ const state = {
   chats : null,
   chatsCounter : 1,
   meta : null,
-  mediaOptions : null,
+  mediaOptions : null, quickActions : null,
   quickReplies : [],
   chatHistory : { sessions : []}
 };
@@ -35,6 +35,7 @@ const getters = {
   StateChats: (state) => state.chats,
   StateMeta: (state) => state.meta,
   StateMediaOptions: (state) => state.mediaOptions,
+  StateQuickActions: (state) => state.quickActions,
   StateChatHistory: (state) => state.chatHistory.sessions
 };
 
@@ -104,7 +105,7 @@ const actions = {
                         message : msg.text,
                         template : msg.template,
                         sessionId : msg.sessionId,
-                        template : msg.template,
+                        template : msg.template,action : msg.action,
                         messageIdRef : msg.messageIdRef
                     });
     msg.messageId = response.data.results[0].messageId;
@@ -157,6 +158,11 @@ const actions = {
     commit("setMediaOptions", response.data);
   },
 
+  async LoadQuickActions({ commit }) {
+    let response = await axios.get("/gallery/map/quick_actions");
+    commit("setQuickActions", response.data);
+  },
+
   async LoadQuickReplies({ commit },tags) {
     var categories = (tags || {categories : []}).categories;
     var _categories = [];
@@ -207,11 +213,13 @@ const mutations = {
   //Contacts
   setChats(state, chats) {
     for(var c in chats){
-      chats[c].lastmsg = chats[c].messages[chats[c].messages.length-1] || {};
-      for (var i = chats[c].messages.length - 1; i >= 0; i--) {
-        if(!chats[c].messages[i].type){
+      chats[c].lastmsg = {};
+      for (var i = 0; i < chats[c].messages.length; i++) {
+        if(chats[c].messages[i].type == 'I'){
           chats[c].ilastmsg = chats[c].messages[i];
-          break;
+        }  
+        if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
+          chats[c].lastmsg = chats[c].messages[i];
         }
       }
     }
@@ -222,6 +230,9 @@ const mutations = {
   },
   setMeta(state, meta) {
     state.meta = meta;
+  },
+  setQuickActions(state, quickActions) {
+    state.quickActions = quickActions;
   },
   setMediaOptions(state, mediaOptions) {
     state.mediaOptions = mediaOptions;

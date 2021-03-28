@@ -33,10 +33,10 @@
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
-                            <p class="font-preview" >{{chat.lastmsg.text}}</p>
+                            <p class="font-preview" >{{chat.ilastmsg.text}}</p>
                         </div>
-                        <div class="contact-time" :title="chat.lastmsg.timestamp">
-                            <p>{{chat.lastmsg.timestamp | formatDate}} </p>
+                        <div class="contact-time" :title="chat.ilastmsg.timestamp">
+                            <p>{{chat.ilastmsg.timestamp | formatDate}} </p>
                             <div v-if="chat.newmsg" class="new-message" id="'nm' + c.contactId"><p>&nbsp;</p></div>  
                         </div>
                     </div>

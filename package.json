@@ -36,6 +36,7 @@
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.0.5",
     "vue-sidebar-menu": "^3.7.0",
+    "vue-slide-up-down": "^2.0.1",
     "vue-toast-notification": "^0.6.1",
     "vue2-daterange-picker": "^0.6.3",
     "vue2-google-maps": "^0.10.6",

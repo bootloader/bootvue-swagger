@@ -37,13 +37,14 @@ const state = {
   meta : null,
   mediaOptions : null,
   quickReplies : [],
-  qreps : null
+  qreps : null,qaxns : null
 };
 
 const getters = {
     //Contacts
   isAuthenticated: (state) => !!state.user,
   StateQReps: (state) => state.qreps,
+  StateQAxns: (state) => state.qaxns,
   StateTeams: (state) => state.teams,
   StateAgents: (state) => state.agents,
   StateMeta: (state) => state.meta
@@ -142,10 +143,39 @@ const actions = {
     commit("setQReps", response.data.results);
   },
 
+
+  async CreatQuickAxns({ commit },qReps) {
+    let UserForm = new FormData()
+    UserForm.append('id', qReps.id);
+    UserForm.append('category', qReps.category);
+    UserForm.append('title', qReps.title);
+    UserForm.append('action', qReps.action);
+    let response = await axios.post("/api/tmpl/quickaxn",UserForm);
+    validateResponse(response);
+    commit("setQAxns", response.data.results);
+  },
+
+  async GetQuickAxns({ commit }) {
+    let response = await axios.get("/api/tmpl/quickaxn");
+    commit("setQAxns", response.data.results);
+  },
+
+  async DeleteQuickAxns({ commit },qReps) {
+    let response = await axios.delete("/api/tmpl/quickaxn?id=" + qReps.id,{
+      data : {id : qReps.id}
+     });
+    validateResponse(response);
+    commit("setQAxns", response.data.results);
+  },
+
+
 };
 
 const mutations = {
   //Contacts
+  setQAxns(state, qaxns) {
+    state.qaxns = qaxns;
+  },
   setQReps(state, qreps) {
     state.qreps = qreps;
   },

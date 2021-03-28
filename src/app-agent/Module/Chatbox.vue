@@ -59,7 +59,7 @@
 </div>
 <div v-else-if="activeChat" v-for="m in activeChat.messages">
     
-    <div v-if="!m.type" class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
+    <div v-if="m.type == 'I'" class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
         <div class="img_cont_msg">
             <img src="assets/images/profile.png" class="rounded-circle user_img_msg">
         </div>
@@ -69,7 +69,7 @@
         <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
     </div>
 
-    <div v-else="m.type" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
+    <div v-else-if="m.type=='O'" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
         <div class="msg_cotainer_send">
             <span>{{m.text | striphtml | newlines}}</span>
@@ -78,7 +78,7 @@
                     <img v-for="atch in m.attachments" :src="atch.mediaURL | thumburl" class="">
                 </div>
             </div>
-            <div v-else-if="m.template">
+            <div v-else-if="m.template" class="my-msg-template-tag">
                 <span class="fa fa-tag"></span>&nbsp;{{m.template}}
             </div>
             <span class="msg_time_send">{{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span></span>
@@ -87,6 +87,14 @@
             <img src="assets/images/profile.png" class="rounded-circle user_img_msg">
         </div>
     </div>
+
+    <div v-else-if="m.type=='A' || m.type=='L'" 
+        class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
+        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
+        <div class="msg_cotainer_action">
+            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}<i v-if="m.logs[0]">,&nbsp;{{m.logs[0] | striphtml | newlines}}</i><i v-if="m.logs[1]">,&nbsp;{{m.logs[1] | striphtml | newlines}}</i>
+        </div>
+    </div>    
 
 </div>
                     </div>
@@ -100,8 +108,9 @@
                             <span v-if="quickReplies && quickReplies.length>0" class="divider-v" ></span>
 
                             <span class="msg_cotainer_smart" @click="closSession" v-tooltip="'End Chat'">
-                                <i class="fas fa-power-off" ></i>
-                            </span>
+                                <i class="fa fa-check-circle" ></i>
+                            </span>                        
+
                         </div>
                     </div>
                 </div>
@@ -127,15 +136,33 @@
                         </div>
                     </div>
                 </div>
-                
+
+
                 <div class="card-footer">
+
+                    <slide-up-down :active="showQuickActions" :duration="200" class="action-events">
+                            <span v-if="quickActions" v-for="quickAction in quickActions" 
+                             @click="sendQuickAction(quickAction.action)"
+                            class="msg_cotainer_smart">  {{quickAction.title}}</span>
+                         <hr/>
+                    </slide-up-down>
+
+                     <div v-if="activeChat && activeChat.active" class="control-panel">
+                        <!--   Contorl Box-->
+                     </div>  
+
+
                     <div class="input-group my-input-section" 
                         v-bind:class="{ fade : !sendEnabled}"
                         >
-                        <div class="input-group-append">
+                        <div class="input-group-prepend">
                             <span 
                             @click="showMediaOptions=!showMediaOptions"
-                            class="input-group-text attach_btn"><i class="fa fa-paperclip"></i></span>
+                            class="input-group-text input-group-text-left attach_btn"><i class="fa fa-paperclip"></i></span>
+                            <span 
+                            @click="showQuickActions=!showQuickActions"
+                            class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
+
                         </div>
                         <textarea name="" class="form-control type_msg input-message" 
                             placeholder="Type your message..." 
@@ -147,7 +174,7 @@
                         <div class="input-group-append">
                             <span
                                 @click="onSendMessage"
-                             class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
+                             class="input-group-text input-group-text-right send_btn"><i class="fa fa-location-arrow"></i></span>
                         </div>
                     </div>
                 </div>
@@ -172,11 +199,12 @@
     import Loading from 'vue-loading-overlay';
     import tunnel from './../../services/tunnel';
     import mustache from 'mustache';
+    import SlideUpDown from 'vue-slide-up-down'
 
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
-            Loading: Loading
+            Loading: Loading,SlideUpDown
         },
         computed : {
             inputTextEnabled : function (argument) {
@@ -206,6 +234,10 @@
                 console.log("mediaOptions=",this.$store.getters.StateMediaOptions)
                 return this.$store.getters.StateMediaOptions;
             },
+            quickActions : function(){ 
+                console.log("quickActions=",this.$store.getters.StateQuickActions)
+                return this.$store.getters.StateQuickActions;
+            },
         },
         data: () => ({
             message_text : "",quickReplies : null,
@@ -214,13 +246,15 @@
             showChatOptions : false,
             lastMessageId : null,ilastMessageId :  null,
             MyDict,MyFlags,MyConst,
-            isLoading : false
+            isLoading : false,
+            showQuickActions : false
         }),
         created () {
             // fetch the data when the view is created and the data is
             // already being observed
             console.log("loading...")
             this.loadMediaOptions();
+            this.loadQuickActions();
             this.scrollToBottom();
         },
         updated (){
@@ -230,6 +264,17 @@
         mounted (){
             this.scrollToBottom();
             this.loadQuickReplies();
+
+            var THAT =  this;
+            this.tunnel = tunnel.init().instance()
+            .on("/agent/onmessage", function(msg){
+                if(msg.sessionId == THAT.$route.params.sessionId)
+                    THAT.scrollToBottom(true);
+            });
+
+        },
+        beforeUnmount (){
+            this.tunnel.off();
         },
         watch: {
             '$route.params.contactId': function (contactId) {
@@ -241,12 +286,12 @@
             }
         },
         methods: {
-            async sendText(text,template){
+            async sendText(text,template, action){
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
                 }
-                if(!text && !template){
+                if(!text && !template && !action){
                     return;
                 }
                 var sessionId = activeChat.sessionId;
@@ -255,7 +300,8 @@
                     text : text, type :  true, timestamp : new Date().getTime(),
                     sender : MyConst.agent,name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
-                    template : template
+                    template : template,
+                    action : action
                 };
                 //activeChat.messages.push(msg);
                 this.scrollToBottom();
@@ -268,7 +314,7 @@
                     console.error(e)
                     msg.logs = ["Error While Sending"];
                 }
-                this.scrollToBottom();
+                this.scrollToBottom(true);
             },
             onSendMessage :  function () {
                 this.sendText(this.message_text,this.showMediaOptions ?   this.selectedMedia : null);
@@ -279,6 +325,9 @@
             },
             sendQuickReply : function (argument) {
                 this.sendText(argument || event.target.innerText,this.showMediaOptions ?   this.selectedMedia : null);
+            },
+            sendQuickAction : function (argument) {
+                this.sendText(null, null, argument);
             },
             closSession :  function () {
                 this.sendText("/exit_chat");
@@ -304,13 +353,16 @@
                     var mcb =document.querySelector('.msg_card_body');
                     if(mcb){
                         console.log("updating",mcb.scrollTop, mcb.scrollHeight);
-                        mcb.scrollTop =  mcb.scrollHeight;
+                        mcb.scrollTop =  mcb.scrollHeight+50;
                     }
                 });
                  console.log("scrolledToBottom",force)
             },
             async loadMediaOptions(){
                 await this.$store.dispatch('LoadMediaOptions')
+            },
+            async loadQuickActions(){
+                return await this.$store.dispatch('LoadQuickActions');
             },
             async loadQuickReplies(){
                 var activeChat = this.activeChat;
@@ -336,6 +388,7 @@
                     }
                     return quickReply
                 });
+                this.scrollToBottom(true);
             },
             async loadMessages(){
                 console.log("loadMessages...")
@@ -456,5 +509,26 @@
         cursor : pointer;
         display: inline;
     }
-
+    .msg_cotainer_action {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 10px;
+        border-radius: 7px;
+        background-color: #e2e2e2f2;
+        padding: 4px;
+        position: relative;
+        font-size: 10px;
+    }
+    .card-footer .control-panel {
+        color: #FFF;
+    }
+    .action-events hr {
+        border: 0;
+        border-top: 1px solid #ffffff61;
+        margin: 10px 0;
+    }
+    .chat-bubble .my-msg-template-tag  {
+        font-size: smaller;
+        color: #00000085;
+    }
 </style>

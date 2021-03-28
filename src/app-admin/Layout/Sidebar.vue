@@ -108,6 +108,11 @@
                                 href: '/app/admins/tmpl/quickreplies',
                                 title: 'Quick Replies',
                             },
+                            {   
+                                enabled : true,
+                                href: '/app/admins/tmpl/quickactions',
+                                title: 'Quick Actions',
+                            },
                             {
                                 href: '/pages/register-boxed',
                                 title: 'Register Boxed',

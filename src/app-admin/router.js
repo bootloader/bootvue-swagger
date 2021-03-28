@@ -44,6 +44,10 @@ export default AppRouter.route({
             name: 'quickreplies',
             component: () => import('./Modules/TmplQuickReplies.vue'),    
         },
-
+        {
+            path : "/app/admins/tmpl/quickactions",
+            name: 'quickactions',
+            component: () => import('./Modules/TmplQuickActions.vue'),    
+        },
     ]
 })
