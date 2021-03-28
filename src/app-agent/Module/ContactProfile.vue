@@ -129,11 +129,12 @@
         created () {
             // fetch the data when the view is created and the data is
             // already being observed
-            console.log("loading...")
+            console.log("CP","created...")
         },
         updated (){
         },
         mounted (){
+            console.log("CP","mounted...")
             this.getSessions();
         },
         watch: {
@@ -143,9 +144,10 @@
         },
         methods: {
             async getSessions (){
-                if(!this.activeChat ||  !this.activeChat.contactId || !this.$route.params.profileId){
+                if(!this.$route.params.profileId){
                     this.sessions.items = [];
                     this.sessions.rows = 0;
+                    console.log("CP","No Active Chat")
                     return;
                 }
                 this.isLoading = true;
