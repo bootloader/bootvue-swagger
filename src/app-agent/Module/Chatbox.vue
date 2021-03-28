@@ -92,7 +92,7 @@
         class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
         <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
         <div class="msg_cotainer_action">
-            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}<i v-if="m.logs[0]">,&nbsp;{{m.logs[0] | striphtml | newlines}}</i><i v-if="m.logs[1]">,&nbsp;{{m.logs[1] | striphtml | newlines}}</i>
+            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}<i v-if="m.logs && m.logs[0]">,&nbsp;{{m.logs[0] | striphtml | newlines}}</i><i v-if="m.logs && m.logs[1]">,&nbsp;{{m.logs[1] | striphtml | newlines}}</i>
         </div>
     </div>    
 
