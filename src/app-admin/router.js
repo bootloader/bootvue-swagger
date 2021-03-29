@@ -49,5 +49,15 @@ export default AppRouter.route({
             name: 'quickactions',
             component: () => import('./Modules/TmplQuickActions.vue'),    
         },
+        {
+            path : "/app/admins/tmpl/quicklabels",
+            name: 'quicklabels',
+            component: () => import('./Modules/TmplQuickLabels.vue'),    
+        },
+        {
+            path: 'app/admins/components/modals',
+            name: 'modals',
+            component: () => import('../Modules/Components/Modals.vue'),
+        },
     ]
 })

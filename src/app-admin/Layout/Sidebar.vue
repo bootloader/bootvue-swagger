@@ -113,6 +113,11 @@
                                 href: '/app/admins/tmpl/quickactions',
                                 title: 'Quick Actions',
                             },
+                           {   
+                                enabled : true,
+                                href: '/app/admins/tmpl/quicklabels',
+                                title: 'Quick Labels',
+                            },
                             {
                                 href: '/pages/register-boxed',
                                 title: 'Register Boxed',
@@ -215,8 +220,9 @@
                                 href: '/components/accordions',
                             },
                             {
+                                enabled : false,
                                 title: 'Modals',
-                                href: '/components/modals',
+                                href: '/app/admins/components/modals',
                             },
                             {
                                 title: 'Progress Bar',

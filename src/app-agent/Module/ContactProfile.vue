@@ -72,23 +72,83 @@
                 <p v-if="activeChat.phone"><span class="fa fa-phone"/> {{activeChat.phone}}</p>
             </div>
 
-            <div id="listGroups">
-                <h1></h1>
+            <div v-if="activeChat" id="listGroups">
+                <div v-if="activeChat && activeChat.contact" class="contact_labels" >
+                    <span v-for="label in labels" class="badge badge-light" >
+                        <span v-bind:style="{ 'background-color' : '#'+label.color }">&nbsp;</span>
+                        {{label.title}}
+                    </span>  
+                    <span class="badge badge-light btn-add" v-b-modal.tagmodal>+</span>           
+                </div>
             </div>
     </div>
+        
+        <b-modal v-if="activeChat && activeChat.contact" id="tagmodal" title="Contact Labels"
+            @ok="tagmodalOk"
+        >
+           <vue-tags-input
+              v-model="labelInput"
+              :tags="labels"
+              :add-only-from-autocomplete="true"
+              :autocomplete-items="quickLabels"
+              @tags-changed="onLabelChange"
+              >
 
+                 <div slot="autocomplete-item"
+                    slot-scope="props"
+                    class="my-item"
+                    @click="props.performAdd(props.item)" >
+                    
+                    <i v-bind:style="{ 'background-color': '#' + props.item.color }">&nbsp;</i>&nbsp;
+
+                    <i class="material-icons" >
+                      {{ props.item.category }}
+                    </i> {{ props.item.title }}
+                </div>
+
+
+                  <div
+                    slot="tag-left"
+                    slot-scope="props"
+                    class="my-tag-left"
+                    @click="props.performOpenEdit(props.index)"
+                  >
+                    <i v-bind:style="{ 'background-color': '#' + props.tag.color }">&nbsp;</i>&nbsp;
+                  </div>
+
+
+          </vue-tags-input>
+        </b-modal>
 
 </div>
+
+
 </template>
 
 <script>
 
     import { MyFlags,MyDict,MyConst } from './../global';
     import Loading from 'vue-loading-overlay';
+    import formatters from '../../services/formatters';
+
+    import VueTagsInput from '@johmun/vue-tags-input';
+
+
+    var tagFormat = function (argument) {
+        return {
+            id : argument.id,
+            category : argument.category,
+            title : argument.title,
+            text : argument.title,
+            color : formatters.hexacode(argument.category)
+        };
+    }
 
     export default {
         components: {
-            Loading: Loading
+            Loading: Loading,
+            VueTagsInput,
+            //SmartTagz : SmartTagz
         },
         computed : {
             activeChat : function(){ 
@@ -103,7 +163,25 @@
             },
             profileId : function () {
                return this.$route.params.profileId;
-            }
+            },
+            labels  : function (argument) {
+                var THAT = this;
+                if(this.$route.params.contactId && this.activeChat)
+                    return (THAT.activeChat.contact.labelId || []).map(function (labelId) {
+                        return tagFormat(THAT.$store.getters.StateQuickLabels.filter(t => {
+                            return t.id == labelId;
+                        })[0]);
+                    });
+                return [];
+            },
+            quickLabels : function(){ 
+                console.log("StateQuickLabels=",this.labelInput,this.$store.getters.StateQuickLabels)
+                return this.$store.getters.StateQuickLabels.filter(i => {
+                  return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
+                }).map(function (argument) {
+                    return tagFormat(argument);
+                });
+            },
         }, 
         data: () => ({
             MyDict,MyFlags,MyConst,
@@ -124,12 +202,15 @@
                 currentPage: 1,
                 rows : 0
             },
-            isLoading : false
+            isLoading : false,
+
+            labelInput : "", newLabels : null
         }),
         created () {
             // fetch the data when the view is created and the data is
             // already being observed
-            console.log("CP","created...")
+            console.log("CP","created...");
+            this.loadQuickLabels();
         },
         updated (){
         },
@@ -143,6 +224,9 @@
             }
         },
         methods: {
+            async loadQuickLabels(){
+                return await this.$store.dispatch('LoadQuickLabels');
+            },
             async getSessions (){
                 if(!this.$route.params.profileId){
                     this.sessions.items = [];
@@ -159,9 +243,22 @@
                     return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
                 });
                 this.sessions.rows = this.sessions.items.length;
-                console.log("sessions",resp,this.sessions );
+                console.log("sessions",resp,this.sessions);
                 this.isLoading = false;
             },
+            async tagmodalOk(argument) {
+                console.log("Labels",this.labels);
+                var resp = await this.$store.dispatch('AttachQuickLabels',{
+                    sessionId : this.$route.params.sessionId,
+                    labels : this.newLabels || this.labels
+                    //contactType : this.activeChat.contactType
+                });
+                this.activeChat.contact = resp.data;
+            },
+            onLabelChange : function (newLabels) {
+                console.log("newLabels",this.newLabels);
+                this.newLabels = newLabels; 
+            }
         },
 
     }
@@ -174,5 +271,19 @@
     }
     .card.card_contact_profile .card-body {
         background-color: #f5f5f5!important;
+    }
+    .contact_labels .badge{
+        margin: 0px 2px!important;
+        padding: 4px 4px!important;
+    }
+    .contact_labels .btn-add{
+        cursor: pointer;
+    }
+</style>
+<style type="text/css">
+    #tagmodal li.ti-tag, #tagmodal li.ti-item{
+        background-color: #efefef!important;
+        color: #212529!important;
+        border: #ccc 1px solid;
     }
 </style>

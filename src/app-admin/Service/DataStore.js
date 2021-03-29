@@ -37,7 +37,7 @@ const state = {
   meta : null,
   mediaOptions : null,
   quickReplies : [],
-  qreps : null,qaxns : null
+  qreps : null,qaxns : null,qlabels : null
 };
 
 const getters = {
@@ -45,6 +45,7 @@ const getters = {
   isAuthenticated: (state) => !!state.user,
   StateQReps: (state) => state.qreps,
   StateQAxns: (state) => state.qaxns,
+  StateQLabels: (state) => state.qlabels,
   StateTeams: (state) => state.teams,
   StateAgents: (state) => state.agents,
   StateMeta: (state) => state.meta
@@ -144,12 +145,13 @@ const actions = {
   },
 
 
+// Quick Actions
   async CreatQuickAxns({ commit },qReps) {
     let UserForm = new FormData()
     UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
-    UserForm.append('action', qReps.action);
+    UserForm.append('code', qReps.code);
     let response = await axios.post("/api/tmpl/quickaxn",UserForm);
     validateResponse(response);
     commit("setQAxns", response.data.results);
@@ -169,10 +171,37 @@ const actions = {
   },
 
 
+// Quick Tags
+  async CreatQuickLabels({ commit },qReps) {
+    let UserForm = new FormData()
+    UserForm.append('id', qReps.id);
+    UserForm.append('category', qReps.category);
+    UserForm.append('title', qReps.title);
+    UserForm.append('code', qReps.code);
+    let response = await axios.post("/api/tmpl/quicklabels",UserForm);
+    validateResponse(response);
+    commit("setQLabels", response.data.results);
+  },
+
+  async GetQuickLabels({ commit }) {
+    let response = await axios.get("/api/tmpl/quicklabels");
+    commit("setQLabels", response.data.results);
+  },
+
+  async DeleteQuickLabels({ commit },qReps) {
+    let response = await axios.delete("/api/tmpl/quicklabels?id=" + qReps.id,{
+      data : {id : qReps.id}
+     });
+    validateResponse(response);
+    commit("setQLabels", response.data.results);
+  },
+
 };
 
 const mutations = {
-  //Contacts
+  setQLabels(state, qlabels) {
+    state.qlabels = qlabels;
+  },
   setQAxns(state, qaxns) {
     state.qaxns = qaxns;
   },

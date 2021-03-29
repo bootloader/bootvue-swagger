@@ -2,6 +2,7 @@
 
 
 import axios from "axios";
+import formatters from '../../services/formatters';
 
 
 function guid() {
@@ -25,7 +26,7 @@ const state = {
   chats : null,
   chatsCounter : 1,
   meta : null,
-  mediaOptions : null, quickActions : null,
+  mediaOptions : null, quickActions : null, quickLabels : null,
   quickReplies : [],
   chatHistory : { sessions : []}
 };
@@ -36,6 +37,7 @@ const getters = {
   StateMeta: (state) => state.meta,
   StateMediaOptions: (state) => state.mediaOptions,
   StateQuickActions: (state) => state.quickActions,
+  StateQuickLabels: (state) => state.quickLabels,
   StateChatHistory: (state) => state.chatHistory.sessions
 };
 
@@ -163,6 +165,20 @@ const actions = {
     commit("setQuickActions", response.data);
   },
 
+  async LoadQuickLabels({ commit }) {
+    let response = await axios.get("/gallery/map/quick_labels");
+    commit("setQuickLabels", response.data);
+  },
+
+  async AttachQuickLabels({ commit },{ sessionId,labels }) {
+    let response = await axios.post("/api/contact/label?sessionId="+sessionId,{
+      values : labels
+    });
+    //commit("setQuickTags", response.data);
+    return response.data;
+  },
+
+
   async LoadQuickReplies({ commit },tags) {
     var categories = (tags || {categories : []}).categories;
     var _categories = [];
@@ -233,6 +249,10 @@ const mutations = {
   },
   setQuickActions(state, quickActions) {
     state.quickActions = quickActions;
+  },
+  setQuickLabels(state, quickLabels) {
+    formatters.addContactLabels(quickLabels);
+    state.quickLabels = quickLabels;
   },
   setMediaOptions(state, mediaOptions) {
     state.mediaOptions = mediaOptions;
