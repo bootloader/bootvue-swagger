@@ -60,7 +60,6 @@
 <script>
 
     import PageTitle from "../../Layout/Components/PageTitleDateRange.vue";
-    import VuePerfectScrollbar from 'vue-perfect-scrollbar'
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import AgentChat from './AgentChat';
 
@@ -94,7 +93,6 @@
     export default {
         components: {
             PageTitle,
-            VuePerfectScrollbar,
             'font-awesome-icon': FontAwesomeIcon,
             AgentChat
            // chart1,chart2,chart3,
