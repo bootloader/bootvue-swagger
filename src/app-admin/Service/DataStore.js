@@ -196,6 +196,11 @@ const actions = {
     commit("setQLabels", response.data.results);
   },
 
+  async GetSessionChats({ commit },options) {
+    let response = await axios.post("/api/message/messages",options);
+    return response.data.results;
+  },
+
 };
 
 const mutations = {

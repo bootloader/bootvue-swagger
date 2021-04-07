@@ -36,9 +36,7 @@
                     <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
                 </template>   
                 <template #cell(actions)="row">
-                  <b-button size="xs" @click="activateAgent(row.item, row.index, $event.target)" variant="outline-primary">
-                    {{ row.item.isactive == "Y" ? 'DeActivate' : 'Activate' }} Agent
-                  </b-button>
+                    <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" > </span>
                 </template>
 
         </b-table>
@@ -50,6 +48,11 @@
               aria-controls="agent-session-list"
             ></b-pagination>
 
+      <div class="chat_archive"  v-bind:class="{closed : !session}" >
+          <agent-chat v-if="session" :session="session" :key="session.sessionId"
+          @close="hideChat">
+          </agent-chat>
+      </div>        
     </div>
 
 </template>
@@ -59,6 +62,7 @@
     import PageTitle from "../../Layout/Components/PageTitleDateRange.vue";
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
     import { MyFlags,MyDict,MyConst } from './../global';
+    import AgentChat from './AgentChat';
 
     //import chart1 from './Analytics/chart1';
     //import chart2 from './Analytics/chart2';
@@ -92,6 +96,7 @@
             PageTitle,
             VuePerfectScrollbar,
             'font-awesome-icon': FontAwesomeIcon,
+            AgentChat
            // chart1,chart2,chart3,
         },
         data: () => ({
@@ -107,6 +112,7 @@
             },
             sessions : {
                 fields: [ { key : 'assignedToAgent', label : "Assigned" },{ key : 'contactId', label : "Contact" },
+                    { key : 'actions', label : "Action" },
                     { key : 'startSessionStamp', label : "Start@" },
                     { key : 'fistResponseStamp', label : "Agent@" },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
@@ -124,7 +130,8 @@
                     startDate : null,
                     endDate : null,
                 }
-            }
+            },
+            session : null,
         }),
         mounted : function (argument) {
           this.dateRangeOnUpdate();
@@ -146,6 +153,16 @@
                this.input.daterange.startDate = this.input.daterange.startDate.getTime();
                this.input.daterange.endDate = this.input.daterange.endDate.getTime();
                this.getSessions();
+          },
+          hideChat : function (argument) {
+            this.session = null;
+          },
+          showChat : function (r) {
+            if(this.session && this.session.sessionId == r.sessionId){
+              this.session = null;
+            } else {
+              this.session = r;
+            }
           }
         },
 
@@ -153,3 +170,23 @@
 
 
 </script>
+<style type="text/css" scoped>
+  .chat_archive {
+    right: 0px;
+    position: fixed;
+    background-color: #f5f5f5;
+    bottom: 0px;
+    top: 60px;
+    width: 450px;
+  }
+  .chat_archive.closed {
+    width: 0px;
+    opacity : 0;
+    transition: width 0.5s, opacity 1s ease-in;
+  }
+  .chat_archive{
+    width: 450px;
+    opacity : 1;
+    transition: width 0.5s ease-out, opacity 0.2s ease-out;
+  }
+</style>

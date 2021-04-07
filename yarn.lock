@@ -653,6 +653,13 @@
     "cssnano-preset-default" "^4.0.0"
     "postcss" "^7.0.0"
 
+"@johmun/vue-tags-input@^2.1.0":
+  "integrity" "sha512-Fdwfss/TqCqMJbGAkmlzKbcG/ia1MstYjhqPBj+zG7h/166tIcE1TIftUxhT9LZ+RWjRSG0EFA1UyaHQSr3k3Q=="
+  "resolved" "https://registry.npmjs.org/@johmun/vue-tags-input/-/vue-tags-input-2.1.0.tgz"
+  "version" "2.1.0"
+  dependencies:
+    "vue" "^2.6.10"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   "resolved" "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz"
   "version" "2.2.1"
@@ -5203,7 +5210,7 @@
   "resolved" "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.70.tgz"
   "version" "1.1.70"
 
-"node-sass@^4.12.0", "node-sass@^4.14.0":
+"node-sass@^4.14.0":
   "resolved" "https://registry.yarnpkg.com/node-sass/-/node-sass-4.14.1.tgz"
   "version" "4.14.1"
   dependencies:
@@ -7215,14 +7222,6 @@
   "resolved" "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz"
   "version" "2.0.1"
 
-"style-loader@^0.23.1":
-  "integrity" "sha512-XK+uv9kWwhZMZ1y7mysB+zoihsEj4wneFWAS5qoiLwzW0WzSqMrrsIy+a3zkQJq0ipFtBpX5W3MqyRIBF/WFGg=="
-  "resolved" "https://registry.npmjs.org/style-loader/-/style-loader-0.23.1.tgz"
-  "version" "0.23.1"
-  dependencies:
-    "loader-utils" "^1.1.0"
-    "schema-utils" "^1.0.0"
-
 "stylehacks@^4.0.0":
   "resolved" "https://registry.yarnpkg.com/stylehacks/-/stylehacks-4.0.3.tgz"
   "version" "4.0.3"
@@ -7716,15 +7715,6 @@
   dependencies:
     "@types/chart.js" "^2.7.55"
 
-"vue-dynamic-dropdown@^1.0.12":
-  "integrity" "sha512-eIHnBTKofVYCJzsHxgpPhxwUZOVfnvPYvGfhykvDpfdm1lMZSM0a85ViXcP7eviUSxjE6Bps8JHuc52sc5BTSA=="
-  "resolved" "https://registry.npmjs.org/vue-dynamic-dropdown/-/vue-dynamic-dropdown-1.0.12.tgz"
-  "version" "1.0.12"
-  dependencies:
-    "node-sass" "^4.12.0"
-    "sass-loader" "^7.1.0"
-    "style-loader" "^0.23.1"
-
 "vue-eslint-parser@^2.0.3":
   "resolved" "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-2.0.3.tgz"
   "version" "2.0.3"
@@ -7823,7 +7813,7 @@
   "resolved" "https://registry.npmjs.org/vue-toast-notification/-/vue-toast-notification-0.6.1.tgz"
   "version" "0.6.1"
 
-"vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@>=1.x.x", "vue@~2":
+"vue@^2.0.0", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@>=1.x.x", "vue@~2":
   "resolved" "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz"
   "version" "2.6.12"
 
