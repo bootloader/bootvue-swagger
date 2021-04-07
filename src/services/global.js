@@ -3,7 +3,8 @@ export const MyConst = {
  	some: 'Settings',
 	app : window.CONST.APP,
 	appPrefix : "/" + window.CONST.APP,
-	user : window.CONST.APP_USER
+	user : window.CONST.APP_USER,
+	agent : window.CONST.APP_USER
 }
 export const MyFlags = {
   showSidebar: false,

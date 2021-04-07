@@ -16,7 +16,7 @@
   import Vue from 'vue';
   import router from "./app-agent/router";
   import DataStore from "./app-agent/Service/DataStore";
-  import { MyFlags,MyDict,MyConst } from './app-agent/global';
+  import { MyFlags,MyDict,MyConst } from './services/global';
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
 

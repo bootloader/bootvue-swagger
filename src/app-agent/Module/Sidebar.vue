@@ -23,7 +23,7 @@
 <script>
     import {SidebarMenu} from 'vue-sidebar-menu'
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-    import { MyFlags,MyConst } from './../global';
+    import { MyFlags,MyConst } from './../../services/global';
 
 
     function menuFilter(menu){

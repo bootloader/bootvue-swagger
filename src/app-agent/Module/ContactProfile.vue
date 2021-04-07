@@ -127,7 +127,7 @@
 
 <script>
 
-    import { MyFlags,MyDict,MyConst } from './../global';
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
     import formatters from '../../services/formatters';
 

@@ -199,7 +199,7 @@
         faWhatsapp
     } from '@fortawesome/free-solid-svg-icons'
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-    import { MyFlags,MyDict,MyConst } from './../global';
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
     import tunnel from './../../services/tunnel';
     import mustache from 'mustache';

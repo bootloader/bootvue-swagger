@@ -34,7 +34,7 @@
     import Chatbox from './../Module/Chatbox';
     import ContactProfile from './../Module/ContactProfile';
     import VuePerfectScrollbar from 'vue-perfect-scrollbar';
-    import { MyFlags,MyDict,MyConst } from './../global';
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {

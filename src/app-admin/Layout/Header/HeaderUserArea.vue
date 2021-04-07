@@ -63,7 +63,7 @@
         faFileArchive,
         faEllipsisH,
     );
-    import { MyFlags,MyConst } from './../../global';
+    import { MyFlags,MyConst } from './../../../services/global';
 
     export default {
         components: {

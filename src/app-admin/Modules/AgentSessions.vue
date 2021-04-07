@@ -61,7 +61,7 @@
 
     import PageTitle from "../../Layout/Components/PageTitleDateRange.vue";
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-    import { MyFlags,MyDict,MyConst } from './../global';
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
     import AgentChat from './AgentChat';
 
     //import chart1 from './Analytics/chart1';
