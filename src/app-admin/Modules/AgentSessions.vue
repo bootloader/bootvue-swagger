@@ -189,4 +189,7 @@
     opacity : 1;
     transition: width 0.5s ease-out, opacity 0.2s ease-out;
   }
+  .chat_archive>div {
+    width: 450px;
+  }
 </style>

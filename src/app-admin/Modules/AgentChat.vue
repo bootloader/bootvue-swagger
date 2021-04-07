@@ -153,7 +153,7 @@
                 //this.session.contactType = "TELEGRAM";
                 var resp = await this.$store.dispatch('GetSessionChats',this.session);
                 console.log("resp",resp)
-                this.activeChat.messages = resp;
+                this.activeChat = resp;
                 this.isLoading = false;
             },
             closeBox : function (argument) {

@@ -198,7 +198,7 @@ const actions = {
 
   async GetSessionChats({ commit },options) {
     let response = await axios.post("/api/message/messages",options);
-    return response.data.results;
+    return response.data.data;
   },
 
 };
