@@ -1,6 +1,7 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions></page-title>
+        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
+        @action="onAction"></page-title>
 
           <b-card title="" class="main-card mb-4">
             <b-table :striped=true
@@ -28,14 +29,22 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Team '"
+        @hidden="cancelReps">
                   <ValidationObserver ref="form">
-                    <div class="card-body"><h5 class="card-title">Add Team </h5>                    
                             <div class="position-relative form-group">
                               <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Name</label>
                                     <input name="agent_name" id="examplePassword"
                                      placeholder="Online Team" type="text"
-                                      class="form-control" v-model="newTeam.dept_name">
+                                      class="form-control" v-model="newItem.dept_name">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                             </div>
@@ -44,23 +53,23 @@
                                 <label for="exampleEmail" class="">Code</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newTeam.dept_code">
+                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.dept_code">
                                 </div>
                             </div>
  
 
-                            <div class="position-relative form-group">
-                              <button @click="createTeam"
-                                name="password" id="examplePassword"
-                                class="form-control btn btn-primary">Create</button>
-                              </div>
-                    </div>
+
                   </ValidationObserver>
-                </div>
-            </div>
 
-        </div>
+                  <template #modal-footer>
+                      <div class="position-relative form-group">
+                        <button @click="createTeam"
+                          name="password" id="examplePassword" :disabled="!isChanged"
+                          class="form-control btn btn-primary">Create</button>
+                        </div>
+                  </template>
 
+        </b-modal>
 
 
     </div>
@@ -80,7 +89,7 @@
         faUsersSlash,faUsers
     );
 
-    function newTeam() {
+    function newItem() {
       return {
               "dept_code": "",
               "dept_email": "",
@@ -96,15 +105,21 @@
             heading: 'Teams',
             subheading: 'Once created, can be used to assign to Agent',
             icon: 'pe-7s-network icon-gradient bg-tempting-azure',
-            actions : [],
+            actions : [{
+              label : "Add Team", icon : "plus", name : "ADD_ITEM"
+            }],
             fields: [ { key : 'dept_name', label : "Name" }, { key : 'dept_code', label : "Code" }, 
               { key : 'dept_email', label : "Email" },
               { key: 'actions', label: 'Actions' }],
-            newTeam : newTeam()
+            newItem : newItem(),
+            modelName :  "MODAL_ADD_TEAM",
         }),
         computed : {
             teams : function (argument) {
               return this.$store.getters.StateTeams
+            },
+            isChanged :  function (argument) {
+              return this.oldHash !== JSON.stringify(this.newItem);
             } 
         },
         created : function (argument) {
@@ -115,14 +130,39 @@
             await this.$store.dispatch('GetTeams');
           },
           async createTeam () {
-            await this.$store.dispatch('CreatTeam', this.newTeam);
-            this.newTeam = newTeam();
+            await this.$store.dispatch('CreatTeam', this.newItem);
+            this.newItem = newItem();
             this.$refs.form.reset();
+            this.onAction({name : "CANCEL"});
           },
           async enableTeam(item) {
              item.isactive = item.isactive == "Y" ? "N" : "Y";
              await this.$store.dispatch('CreatTeam', item);
+          },
+          async cancelReps(item) {
+             this.newItem = newItem();
+             this.onAction({name : "CANCEL"});
+          }, 
+          onAction : function (argument) {
+            switch(argument.name){
+              case "ADD_ITEM" :
+                this.oldHash = JSON.stringify(this.newItem);
+                this.$bvModal.show(this.modelName)
+                console.log("ADD_ITEM",argument);
+                break;
+              case "EDIT_ITEM" :
+              this.oldHash = JSON.stringify(this.newItem);
+                this.$bvModal.show(this.modelName)
+                console.log("ADD_ITEM",argument);
+                break;
+              case "CANCEL" :
+                this.$bvModal.hide(this.modelName)
+                break;
+              default:
+                console.log("NoMapping",argument) 
+            }
           }
+
         }
 
 

@@ -14,11 +14,17 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <router-link v-for="action in actions" tag="button" :to="action.link"
-                    type="button" class="btn-shadow d-inline-flex align-items-center btn btn-success">
-                    <font-awesome-icon class="mr-2" :icon="action.icon"/>
-                    {{action.label}} 
-                </router-link>
+                <span v-for="action in actions" >
+                    <router-link v-if="action.link" tag="button" :to="action.link"
+                        type="button" class="btn-shadow d-inline-flex align-items-center btn btn-success">
+                        <font-awesome-icon class="mr-2" :icon="action.icon"/>
+                        {{action.label}} 
+                    </router-link>
+                    <button v-else @click="clickAction(action)" class="btn-shadow d-inline-flex align-items-center btn btn-success">
+                        <font-awesome-icon class="mr-2" :icon="action.icon"/>
+                        {{action.label}} 
+                    </button>
+                </span>
             </div>
         </div>
     </div>
@@ -46,6 +52,11 @@
             heading: String,
             subheading: String,
             actions : Array
+        },
+        methods : {
+            clickAction : function (argument) {
+                this.$emit('action',argument);
+            }
         }
     }
 </script>

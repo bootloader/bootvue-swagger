@@ -1,61 +1,8 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions></page-title>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-                  <ValidationObserver ref="form">
-                    <div class="card-body"><h5 class="card-title">{{newQReps.id ? 'Edit' : 'Add' }} Quick Labels </h5>                    
-                            <div class="position-relative form-group">
-                              <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Category</label>
-                                    <input name="category" id="examplePassword"
-                                     placeholder="eg : country, customerType" type="text"
-                                      class="form-control" v-model="newQReps.category">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
-
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Title</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="eg: Platiinum, Verified, India" type="text"
-                                      class="form-control" v-model="newQReps.title">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
-
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Label Code</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="eg:- PLATINUM, VERFD, IND" type="text"
-                                      class="form-control" v-model="newQReps.code">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
-
-
-                            <div class="text-center form-group">
-                              <button @click="cancelReps"
-                                class="btn btn-warning">Cancel</button>
-&nbsp;
-                              <button v-if="newQReps.id"  @click="creatQuickReps"
-                                class="btn btn-primary">Update</button>
-&nbsp;
-                              <button v-if="!newQReps.id"  @click="creatQuickReps"
-                                class="btn btn-primary">Create</button>
-
-                            </div>
-                           
-                    </div>
-                  </ValidationObserver>
-                </div>
-            </div>
-        </div>
-
+        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
+        @action="onAction"
+        ></page-title>
 
           <b-card title="" class="main-card mb-4">
             <b-table :striped=true
@@ -82,7 +29,60 @@
 
             </b-table>
         </b-card>
-          
+        
+
+
+
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Labels '"
+        @hidden="cancelReps">
+                  <ValidationObserver ref="form">
+                            <div class="position-relative form-group">
+                              <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Category</label>
+                                    <input name="category" id="examplePassword"
+                                     placeholder="eg : country, customerType" type="text"
+                                      class="form-control" v-model="newItem.category">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
+
+                            <div class="position-relative form-group">
+                               <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Title</label>
+                                    <input name="agent_name" id="examplePassword"
+                                     placeholder="eg: Platiinum, Verified, India" type="text"
+                                      class="form-control" v-model="newItem.title">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
+
+                            <div class="position-relative form-group">
+                               <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Label Code</label>
+                                    <input name="agent_name" id="examplePassword"
+                                     placeholder="eg:- PLATINUM, VERFD, IND" type="text"
+                                      class="form-control" v-model="newItem.code">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
+
+                  </ValidationObserver>
+
+                  <template #modal-footer>
+
+                        <button @click="cancelReps" class="btn btn-warning">Cancel</button>
+            &nbsp;
+                        <button v-if="newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
+                                            class="btn btn-primary">Update</button>
+            &nbsp;
+                        <button v-if="!newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
+                                            class="btn btn-primary">Create</button>
+
+
+                  </template>
+
+        </b-modal>
+
 
     </div>
 </template>
@@ -102,7 +102,7 @@
         faUsersSlash,faUsers,faTrash,faEye
     );
 
-    function newQReps() {
+    function newItem() {
       return {
               "category": "",
               "title": "",
@@ -113,23 +113,29 @@
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,
         },
         data: () => ({
-            heading: 'Quick Actions',
+            heading: 'Quick Labels',
             subheading: 'Once created, can be used by Agent',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure',
-            actions : [],
+            actions : [{
+              label : "Add Quick Label", icon : "plus", name : "ADD_ITEM"
+            }],
             fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
               { key : 'code', label : "Code" },
               { key: 'actions', label: 'Options' }],
-            newQReps : newQReps(),
+            newItem : newItem(),
             sample : {
               contact : {
                 name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
               }
-            }
+            },
+            modelName :  "MODAL_ADD_QUICK_LABEL",
         }),
         computed : {
             teams : function (argument) {
               return this.$store.getters.StateQLabels;
+            },
+            isChanged :  function (argument) {
+              return this.oldHash !== JSON.stringify(this.newItem);
             } 
         },
         created : function (argument) {
@@ -142,29 +148,50 @@
           async creatQuickReps () {
             let success = await this.$refs.form.validate();
             if(success === true){
-              await this.$store.dispatch('CreatQuickLabels', this.newQReps);
-              this.newQReps = newQReps();
+              await this.$store.dispatch('CreatQuickLabels', this.newItem);
+              this.newItem = newItem();
               this.$refs.form.reset();
+              this.onAction({name : "CANCEL"});
             }
           },
           async deleteReps(item) {
              await this.$store.dispatch('DeleteQuickLabels', item);
           }, 
           async cancelReps(item) {
-             this.newQReps = newQReps();
+             this.newItem = newItem();
+             this.onAction({name : "CANCEL"});
           }, 
           async editReps(item) {
-              this.newQReps = newQReps();
-              this.newQReps.id = item.id;
-              this.newQReps.category = item.category;
-              this.newQReps.title = item.title;
-              this.newQReps.code = item.code;
-              
+              this.newItem = newItem();
+              this.newItem.id = item.id;
+              this.newItem.category = item.category;
+              this.newItem.title = item.title;
+              this.newItem.code = item.code;
+              this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
           rowClass(item, type) {
             if (!item || type !== 'row') return
-            if (this.newQReps.id == item.id) return 'table-success'
+            if (this.newItem.id == item.id) return 'table-success'
+          },
+          onAction : function (argument) {
+            switch(argument.name){
+              case "ADD_ITEM" :
+                this.oldHash = JSON.stringify(this.newItem);
+                this.$bvModal.show(this.modelName)
+                console.log("ADD_ITEM",argument);
+                break;
+              case "EDIT_ITEM" :
+              this.oldHash = JSON.stringify(this.newItem);
+                this.$bvModal.show(this.modelName)
+                console.log("ADD_ITEM",argument);
+                break;
+              case "CANCEL" :
+                this.$bvModal.hide(this.modelName)
+                break;
+              default:
+                console.log("NoMapping",argument) 
+            }
           }
         }
 
