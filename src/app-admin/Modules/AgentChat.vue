@@ -177,29 +177,28 @@
         float: right;
     }
 
-  .user_info{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 15px;
-  }
-  .user_info span{
-    font-size: 20px;
-  }
-  .user_info .font-name{
-    text-overflow: ellipsis;
-      max-width: 187px;
-      display: inline-block;
-      overflow: hidden;
-  }
-  .user_info .font-preview{
-    text-overflow: ellipsis;
-      max-width: 187px;
-      overflow: hidden;
-  }
-  .user_info p{
-    font-size: 10px;
-  }
-
+    .user_info{
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 15px;
+      }
+      .user_info span{
+        font-size: 20px;
+      }
+      .user_info .font-name{
+        text-overflow: ellipsis;
+          max-width: 187px;
+          display: inline-block;
+          overflow: hidden;
+      }
+      .user_info .font-preview{
+        text-overflow: ellipsis;
+          max-width: 187px;
+          overflow: hidden;
+      }
+      .user_info p{
+        font-size: 10px;
+      }
     .user_img{
         max-height: 30px;
     }
