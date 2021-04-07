@@ -175,7 +175,10 @@
             },
             loadQuickReply : () => {
 
-            }
+            },
+            async loadQuickLabels(){
+                return await this.$store.dispatch('LoadQuickLabels');
+            },
         },
     }
 </script>

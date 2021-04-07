@@ -141,6 +141,7 @@
         },
         mounted (){
             this.loadMessages();
+            this.loadQuickLabels();
         },
         beforeUnmount (){
 
@@ -157,13 +158,17 @@
             },
             closeBox : function (argument) {
                 this.$emit('close');
-            }
+            },
+            async loadQuickLabels(){
+                return await this.$store.dispatch('LoadQuickLabels');
+            },
         },
 
     }
 
 
 </script>
+
 <style type="text/css" scoped>
     .chat_box_wrapper {
         height: 100%;

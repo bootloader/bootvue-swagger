@@ -3,6 +3,7 @@
 
 import axios from "axios";
 import Vue from 'vue';
+import formatters from '../../services/formatters';
 
 
 function guid() {
@@ -183,7 +184,7 @@ const actions = {
     commit("setQLabels", response.data.results);
   },
 
-  async GetQuickLabels({ commit }) {
+  async LoadQuickLabels({ commit }) {
     let response = await axios.get("/api/tmpl/quicklabels");
     commit("setQLabels", response.data.results);
   },
@@ -206,6 +207,7 @@ const actions = {
 const mutations = {
   setQLabels(state, qlabels) {
     state.qlabels = qlabels;
+    formatters.addContactLabels(qlabels);
   },
   setQAxns(state, qaxns) {
     state.qaxns = qaxns;

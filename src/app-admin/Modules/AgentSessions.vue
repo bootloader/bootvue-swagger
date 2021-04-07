@@ -168,7 +168,7 @@
 
 
 </script>
-<style type="text/css" scoped>
+<style type="text/css" scoped >
   .chat_archive {
     right: 0px;
     position: fixed;

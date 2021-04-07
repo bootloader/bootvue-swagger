@@ -137,7 +137,7 @@
         },
         methods : {
           async loadQReps (){
-            await this.$store.dispatch('GetQuickLabels');
+            await this.$store.dispatch('LoadQuickLabels');
           },
           async creatQuickReps () {
             let success = await this.$refs.form.validate();
