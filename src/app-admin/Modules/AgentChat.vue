@@ -63,6 +63,7 @@
             <div v-else-if="m.template" class="my-msg-template-tag">
                 <span class="fa fa-tag"></span>&nbsp;{{m.template}}
             </div>
+            <i v-if="m.logs" class="log_icon fa fa-exclamation-triangle float-right" v-tooltip="m.logs+''"></i>
             <span class="msg_time_send">{{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span></span>
         </div>
     </div>
@@ -335,6 +336,10 @@
           transform-origin: 0 0;
           transform: rotate(-45deg);
           box-shadow: -1px 1px 1px 0 rgb(0 0 0 / 22%);
+      }
+
+      .log_icon {
+        color: red;
       }
 
     .msg_cotainer_smart{
