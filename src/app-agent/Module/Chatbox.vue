@@ -4,20 +4,20 @@
                     <div class="d-flex bd-highlight chat-header-left">
                         <div class="img_cont" 
                             v-if="activeChat"
-                            @click="MyFlags.showContactProfile = !MyFlags.showContactProfile">
+                            @click="showContactProfile">
                             <img :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
                             <span class="online_icon" hidden></span>
                         </div>
                         <div class="user_info"
                             v-if="activeChat"
-                            @click="MyFlags.showContactProfile = !MyFlags.showContactProfile">
+                            @click="showContactProfile">
                             <span class="user_name">{{activeChat.name}}</span>
                             <p v-if="activeChat.ilastmsg" class="user_text">{{activeChat.ilastmsg.timestamp | formatDate}} </p>
                         </div>
                         <div class="video_cam">
                             <span hidden><i class="fas fa-video" ></i></span>
                             <span hidden><i class="fas fa-phone" ></i></span>
-                            <span  hidden  @click="MyFlags.showContactProfile = !MyFlags.showContactProfile" >
+                            <span  hidden  @click="showContactProfile" >
                                 <i class="fas fa-history"></i>
                             </span> 
                         </div>
@@ -28,7 +28,10 @@
                     </div>
                     <div  class="chat-header-right">
                         <div class="video_cam">
-                            <span  @click="MyFlags.showContactProfile = !MyFlags.showContactProfile" v-tooltip="'Show Chat History'" >
+                            <span  @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
+                                <i class="fa fa-user"></i>
+                            </span> 
+                            <span  @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
                         </div>
@@ -38,7 +41,7 @@
                         <span id="action_menu_btn"> <i class="fas fa-user-clock" hidden></i></span>
                         <div class="action_menu" v-show="showChatOptions">
                             <ul style="padding-top: 10px">
-                                <li @click="MyFlags.showContactProfile = !MyFlags.showContactProfile">
+                                <li @click="showContactProfile">
                                     <i class="fas fa-history"></i> Chat Hisotry</li>
                                 <li @click="closSession"><i class="fa fa-check-circle"></i> Resolve Ticket</li>
                             </ul>
@@ -337,6 +340,15 @@
             closSession :  function () {
                 this.sendText("/exit_chat");
                 this.$router.push("/app/chat")
+            },
+            showContactProfile : function (type) {
+                console.log("type",type)
+                if(MyFlags.agent.profileView == type){
+                    MyFlags.agent.showProfile = !MyFlags.agent.showProfile
+                } else {
+                    MyFlags.agent.profileView = type
+                    MyFlags.agent.showProfile = true
+                }
             },
             scrollToBottom : function (force) {
                 var activeChat = this.activeChat;

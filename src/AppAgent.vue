@@ -59,6 +59,7 @@
       this.tunnel = tunnel.init().instance()
         .on("/agent/onmessage", function(msg){
             msg.version = 3;
+            console.log("msg===",msg)
             THAT.$store.dispatch('ReadChat', msg);
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
           THAT.$store.dispatch('AddChat', testresponse);

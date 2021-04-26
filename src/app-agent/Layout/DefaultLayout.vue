@@ -8,15 +8,15 @@
                 </div>
                 <div class="col-xl-6 chat" 
                     v-bind:class="{
-                        'col-md-6' : MyFlags.showContactProfile,
-                        'col-md-9' : !MyFlags.showContactProfile,
-                        'col-xl-6' : MyFlags.showContactProfile,
-                        'col-xl-9' : !MyFlags.showContactProfile
+                        'col-md-6' : MyFlags.agent.showProfile,
+                        'col-md-9' : !MyFlags.agent.showProfile,
+                        'col-xl-6' : MyFlags.agent.showProfile,
+                        'col-xl-9' : !MyFlags.agent.showProfile
                     }" >
                      <Chatbox/>
                 </div>
                 
-                <div class="col-md-4 col-xl-3 chat" v-if="MyFlags.showContactProfile">
+                <div class="col-md-4 col-xl-3 chat" v-if="MyFlags.agent.showProfile">
                     <ContactProfile/>
                 </div>
                 

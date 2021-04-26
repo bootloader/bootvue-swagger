@@ -16,6 +16,7 @@ function guid() {
 
 function eq(a,b) {
   if(!a || !b) return false;
+  if(a=="null" || b=="null") return false;
   return a === b;
 }
 

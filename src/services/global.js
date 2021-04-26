@@ -9,6 +9,10 @@ export const MyConst = {
 export const MyFlags = {
   showSidebar: false,
   showContactProfile : true,
+  agent : {
+  	showProfile : true,
+  	profileView : 'history', //history,info
+  }
 }
 
 export const MyDict = {

@@ -2,10 +2,7 @@
 <div class="card mb-sm-3 mb-md-0 card_contact_profile">
     
     <div class="card-header">
-        <span class="fa fa-close float-right"
-        @click="MyFlags.agent.showProfile = false"></span>
-        <center>{{MyFlags.agent.profileView}}</center>
-
+        <center>History</center>
     </div>
     <div class="card-body vld-parent">
         <loading :active.sync="isLoading" 
@@ -16,31 +13,7 @@
         <div class="information" style="display: flex;" hidden>
                 <img :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
         </div>
-        <small v-if="MyFlags.agent.profileView == 'info'" >
-            <div>
-               <span class="fa fa-user"/> <p>{{activeChat.contact.profile.name}}</p>
-            </div>
-
-            <div>
-               <span class="fa fa-fingerprint"/> <p>{{activeChat.contact.profile.userId}}</p>
-            </div>
-            
-            <div>
-                <p><span class="fa fa-envelope"/> {{activeChat.contact.profile.email}}</p>
-            </div>
-
-            <div>
-                <p><span class="fa fa-phone"/> {{activeChat.contact.profile.phone}}</p>
-            </div>
-
-            <div>
-                <p v-for="label in activeChat.contact.profile.labels"><span class="fa fa-tag"/>{{label.name || label.key}} : {{label.value}}</p>
-            </div>
-
-        </small>    
-
-
-        <small v-if="MyFlags.agent.profileView == 'history'" >
+        <small>
         <b-table id="agent-session-list" :striped=true
                      :bordered=true
                      :outlined=false
@@ -304,12 +277,6 @@
         padding: 4px 4px!important;
     }
     .contact_labels .btn-add{
-        cursor: pointer;
-    }
-    .card-header{
-         text-transform: capitalize;
-    }
-    .card-header .fa-close {
         cursor: pointer;
     }
 </style>
