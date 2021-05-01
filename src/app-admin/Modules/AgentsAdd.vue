@@ -159,7 +159,7 @@
       return {
               "agent_code": "",
               "agent_email": "",
-              "agent_id" : 0,
+              "agent_id" : null,
               "agent_channels_list": [],"agent_channels" : ""
             };
     }

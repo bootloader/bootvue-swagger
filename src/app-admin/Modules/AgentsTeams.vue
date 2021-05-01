@@ -93,7 +93,7 @@
       return {
               "dept_code": "",
               "dept_email": "",
-              "dept_id" : 0,
+              "dept_id" : null,
               "dept_name": ""
             };
     }
