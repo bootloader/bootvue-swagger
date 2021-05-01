@@ -109,7 +109,7 @@
               label : "Add Team", icon : "plus", name : "ADD_ITEM"
             }],
             fields: [ { key : 'dept_name', label : "Name" }, { key : 'dept_code', label : "Code" }, 
-              { key : 'dept_email', label : "Email" },
+              //{ key : 'dept_email', label : "Email" },
               { key: 'actions', label: 'Actions' }],
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
