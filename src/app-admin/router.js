@@ -55,6 +55,11 @@ export default AppRouter.route({
             component: () => import('./Modules/TmplQuickLabels.vue'),    
         },
         {
+            path : "/app/admins/tmpl/quickmedia",
+            name: 'quickmedia',
+            component: () => import('./Modules/TmplQuickMedia.vue'),    
+        },
+        {
             path: 'app/admins/components/modals',
             name: 'modals',
             component: () => import('../Modules/Components/Modals.vue'),

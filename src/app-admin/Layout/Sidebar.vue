@@ -118,6 +118,11 @@
                                 href: '/app/admins/tmpl/quicklabels',
                                 title: 'Quick Labels',
                             },
+                            {   
+                                enabled : true,
+                                href: '/app/admins/tmpl/quickmedia',
+                                title: 'Quick Media',
+                            },
                             {
                                 href: '/pages/register-boxed',
                                 title: 'Register Boxed',

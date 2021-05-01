@@ -37,15 +37,15 @@ const state = {
   teams : null,
   chatsCounter : 1,
   meta : null,
-  mediaOptions : null,
   quickReplies : [],
-  qreps : null,qaxns : null,qlabels : null
+  qreps : null,qaxns : null,qlabels : null,qmeds : null
 };
 
 const getters = {
     //Contacts
   isAuthenticated: (state) => !!state.user,
   StateQReps: (state) => state.qreps,
+  StateQMeds: (state) => state.qmeds,
   StateQAxns: (state) => state.qaxns,
   StateQLabels: (state) => state.qlabels,
   StateTeams: (state) => state.teams,
@@ -202,6 +202,34 @@ const actions = {
     commit("setQLabels", response.data.results);
   },
 
+// Media
+
+  async CreatQuickMeds({ commit },qMeds) {
+    let UserForm = new FormData()
+    UserForm.append('name', qMeds.name);
+    UserForm.append('category', qMeds.category);
+    UserForm.append('title', qMeds.title);
+    UserForm.append('url', qMeds.url);
+    UserForm.append('content', qMeds.content);
+    let response = await axios.post("/api/tmpl/quickmedia",UserForm);
+    validateResponse(response);
+    commit("setQMeds", response.data.results);
+  },
+
+  async GetQuickMeds({ commit }) {
+    let response = await axios.get("/api/tmpl/quickmedia");
+    commit("setQMeds", response.data.results);
+  },
+
+  async DeleteQuickMeds({ commit },qMeds) {
+    let response = await axios.delete("/api/tmpl/quickmedia?id=" + qMeds.name,{
+      data : {id : qMeds.id}
+     });
+    validateResponse(response);
+    commit("setQMeds", response.data.results);
+  },
+
+//
   async GetSessionChats({ commit },options) {
     let response = await axios.post("/api/message/messages",options);
     return response.data.data;
@@ -220,6 +248,9 @@ const mutations = {
   setQReps(state, qreps) {
     state.qreps = qreps;
   },
+  setQMeds(state, qmeds) {
+    state.qmeds = qmeds;
+  },
   setTeams(state, teams) {
     state.teams = teams;
   },
@@ -228,9 +259,6 @@ const mutations = {
   },
   setMeta(state, meta) {
     state.meta = meta;
-  },
-  setMediaOptions(state, mediaOptions) {
-    state.mediaOptions = mediaOptions;
   },
   setUser(state, username) {
     state.user = username;
