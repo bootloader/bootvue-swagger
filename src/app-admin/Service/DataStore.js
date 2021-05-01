@@ -24,6 +24,7 @@ function guid() {
 
     if(response.data && response.data.message){
         //Vue.toaster.success(response.data.message);
+         console.log("===>",response.data.message)
         Vue.$toast.success(response.data.message)
     }
 
@@ -79,10 +80,12 @@ const actions = {
 
   async CreatTeam({ commit },team) {
     let response = await axios.post("/api/admins/dept",team);
+    validateResponse(response);
     commit("setTeams", response.data.results);
   },
   async GetTeams({ commit }) {
     let response = await axios.get("/api/admins/dept");
+    validateResponse(response);
     commit("setTeams", response.data.results);
   },
 
@@ -94,6 +97,7 @@ const actions = {
   async CreateAgent({ commit },agent) {
     agent.agent_channels = (agent.agent_channels_list || []).join(",");
     let response = await axios.post("/api/admins/agent",agent);
+    validateResponse(response);
     commit("setAgents", response.data.results);
   },
 
@@ -106,6 +110,7 @@ const actions = {
      let response = await axios.delete("/api/admins/agent?agent_id="+agent.agent_id +"&status=" + agent.isactive,{
       data : {agent_id : agent.agent_id, status : agent.isactive }
      });
+     validateResponse(response);
      commit("setAgents", response.data);
   },
 
