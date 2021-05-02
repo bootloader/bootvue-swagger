@@ -17,11 +17,11 @@
                      :tbody-tr-class="rowClass">
 
                 <template #cell(actions)="row">
-                  <b-button size="sm" @click="deleteReps(row.item, row.index, $event.target)" variant="outline-primary">
+                  <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
                   &nbsp;
-                  <b-button size="sm"@click="editReps(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
+                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
                      <font-awesome-icon icon="eye" title="View"/>
                   </b-button>                                
                 </template>
@@ -31,7 +31,7 @@
           
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Media '" size="lg"
-        @hidden="cancelReps">
+        @hidden="cancelItem">
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group">
                               <ValidationProvider v-slot="v" rules="required">
@@ -53,20 +53,17 @@
                               </ValidationProvider>
                             </div>
 
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">URL</label>
-                                    <input name="url" id="examplePassword"
-                                     placeholder="https://url.com/image.png" type="text"
-                                      class="form-control" v-model="newItem.url">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                            <div v-if="newItem.name" class="row">
+                                <img :src="newItem.url"  class="position-relative form-group col-md-12">
                             </div>
 
-                            <div class="row">
-                           <div class="position-relative form-group col-md-12">
-                            <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-                          
+                            <div v-if="!newItem.name" class="row">
+                              <div class="position-relative form-group col-md-12">
+                                <vue-dropzone ref="myVueDropzone"
+                                 id="dropzone" :options="dropzoneOptions"
+                                 v-on:vdropzone-sending="sendingEvent"
+                                 v-on:vdropzone-file-added="fileAdded" 
+                                 v-on:vdropzone-queue-complete="fileUploaded"></vue-dropzone>
                             </div>
                         </div> 
 
@@ -74,14 +71,14 @@
 
                   <template #modal-footer>
                       <div class="text-center form-group">
-                        <button @click="cancelReps"
+                        <button @click="cancelItem"
                           class="btn btn-warning">Cancel</button>
 &nbsp;
-                        <button v-if="newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
+                        <button v-if="newItem.name"  @click="updateItem" :disabled="!isChanged"
                           class="btn btn-primary">Update</button>
 &nbsp;
-                        <button v-if="!newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
-                          class="btn btn-primary">Create</button>
+                        <button v-if="!newItem.name"  @click="createItem" :disabled="!isChangedAndAdded"
+                          class="btn btn-primary">Upload</button>
                       </div>
                   </template>
 
@@ -103,6 +100,7 @@
     import mustache from 'mustache';
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+    import { MyFlags,MyConst } from './../../services/global';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -136,11 +134,12 @@
             },
             modelName :  "MODAL_ADD_QUICK_MEDIA",
             dropzoneOptions: {
-              url: 'https://httpbin.org/post',
+              url: MyConst.context + '/api/tmpl/quickmedia',
               thumbnailWidth: 150,
               maxFilesize: 0.5, maxFiles : 1,
-              headers: { "My-Awesome-Header": "header value" }
-            }
+              autoProcessQueue: false
+            },
+            addedFileCount : 0
         }),
         computed : {
             teams : function (argument) {
@@ -161,34 +160,65 @@
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
-            }   
+            },
+            isChangedAndAdded : function (argument) {
+              return (this.newItem.title) 
+              && (this.newItem.category) 
+              && (this.addedFileCount>0)
+              && (this.$refs.myVueDropzone.getQueuedFiles().length);
+            } 
         },
         created : function (argument) {
-          this.loadQReps();
+          this.loadItems();
         },
         methods : {
-          async loadQReps (){
+          async loadItems (){
             await this.$store.dispatch('GetQuickMeds');
           },
-          async creatQuickReps () {
+          fileAdded : function (argument) {
+            this.addedFileCount++;
+          },
+          sendingEvent : function (file, xhr, formData) {
+            formData.append('category', this.newItem.category);
+            formData.append('title', this.newItem.title);
+            formData.append('content', this.newItem.title);
+          },
+          async fileUploaded () {
+            await this.loadItems();
+            this.newItem = newItem();
+            this.$refs.form.reset();
+            this.onAction({name : "CANCEL"});
+          },
+          async updateItem () {
             let success = await this.$refs.form.validate();
             if(success === true){
-              await this.$store.dispatch('CreatQuickReps', this.newItem);
+              await this.$store.dispatch('CreatQuickMeds', this.newItem);
               this.newItem = newItem();
               this.$refs.form.reset();
               this.onAction({name : "CANCEL"});
             }
           },
-          async deleteReps(item) {
-             await this.$store.dispatch('DeleteQuickReps', item);
+          async createItem () {
+            let success = await this.$refs.form.validate();
+            if(success === true){
+              //console.log(this.$refs.myVueDropzone.getQueuedFiles());
+             await this.$refs.myVueDropzone.processQueue();
+              //await this.$store.dispatch('CreatQuickReps', this.newItem);
+              //this.newItem = newItem();
+              //this.$refs.form.reset();
+              //this.onAction({name : "CANCEL"});
+            }
+          },
+          async deleteItem(item) {
+             await this.$store.dispatch('DeleteQuickMeds', item);
           }, 
-          async cancelReps(item) {
+          async cancelItem(item) {
              this.newItem = newItem();
             this.onAction({name : "CANCEL"});
           }, 
-          async editReps(item) {
+          async editItem(item) {
               this.newItem = newItem();
-              this.newItem.id = item.id;
+              this.newItem.name = item.name;
               this.newItem.category = item.category;
               this.newItem.title = item.title;
               this.newItem.message = item.message;

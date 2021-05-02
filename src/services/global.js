@@ -3,6 +3,7 @@ export const MyConst = {
  	some: 'Settings',
 	app : window.CONST.APP,
 	appPrefix : "/" + window.CONST.APP,
+	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER,
 	agent : window.CONST.APP_USER
 }
