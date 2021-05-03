@@ -80,14 +80,20 @@
                         header: true,
                         title: 'Admin',
                     },
+                    {
+                        title: 'Users',
+                        icon: 'pe-7s-users',
+                        enabled : true,
+                        href: '/app/admins/agents'
+                    },
                    {
                         title: 'Agents',
                         icon: 'pe-7s-users',
-                        enabled : true,
+                        enabled : false,
                         href: '/app/admins/agents/list'
                     },
                     {
-                        enabled : true,
+                        enabled : false,
                         icon: 'pe-7s-add-user',
                         href: '/app/admins/agents/add',
                         title: 'Add Agent',

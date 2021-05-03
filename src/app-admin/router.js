@@ -16,7 +16,11 @@ export default AppRouter.route({
             name: 'dept',
             component: () => import('./Modules/AgentSessions.vue'),
         },
-
+        {
+            path: '/app/admins/agents',
+            name: 'agents_users',
+            component: () => import('./Modules/AgentsUsers.vue'),
+        },
         {
             path: '/app/admins/agents/list',
             name: 'agents_list',

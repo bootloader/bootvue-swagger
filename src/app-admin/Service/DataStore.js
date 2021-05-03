@@ -113,6 +113,15 @@ const actions = {
      validateResponse(response);
      commit("setAgents", response.data);
   },
+  async DeAdminAgent ({ commit },agent){
+     console.log("--",agent)
+     let UserForm = new FormData();
+     UserForm.append('agent_id', agent.agent_id);
+     let response = await axios.post("/api/admins/agent/admin",UserForm);
+     validateResponse(response);
+     commit("setAgents", response.data);
+  },
+  
 
   async LoadAnalytics({ commit },options) {
     let response = await axios.post("/admin/agent-dashboard-analytics",options);
