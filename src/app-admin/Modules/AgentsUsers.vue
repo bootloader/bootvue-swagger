@@ -75,7 +75,7 @@
 
                             <div class="row">
                               <div class="position-relative form-group col-md-6">
-                                  <label for="exampleEmail" class="">Agent Code</label>
+                                  <label for="exampleEmail" class="">Username</label>
                                   <div class="input-group">
                                       <div class="input-group-prepend"><span class="input-group-text">@</span></div>
                                       <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.agent_code">
