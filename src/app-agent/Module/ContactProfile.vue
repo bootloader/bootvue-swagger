@@ -16,7 +16,7 @@
         <div class="information" style="display: flex;" hidden>
                 <img :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
         </div>
-        <small v-if="MyFlags.agent.profileView == 'info'" >
+        <small v-if="MyFlags.agent.profileView == 'info' && activeChat.contact.profile" >
             <div>
                <span class="fa fa-user"/> <p>{{activeChat.contact.profile.name}}</p>
             </div>

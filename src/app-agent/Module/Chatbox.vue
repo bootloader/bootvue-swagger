@@ -343,6 +343,9 @@
             },
             showContactProfile : function (type) {
                 console.log("type",type)
+                if(typeof type !='string'){
+                    type = "info";
+                }
                 if(MyFlags.agent.profileView == type){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                 } else {
