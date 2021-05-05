@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="card-body contacts_body">
-            <ul class="contacts contact-list">
+            <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
                     v-bind:class="{data_assigned : chat.assigned, data_unassigned : !chat.assigned }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
@@ -41,7 +41,9 @@
                         </div>
                     </div>
                 </router-link>
-
+            </ul>
+            <ul class="contacts contact-list" v-if="activeChats.length==0">
+               <center><small>No active session </small></center>
             </ul>
             <ul class="contacts contact-list-unassigned">
                 
