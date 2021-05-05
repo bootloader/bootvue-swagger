@@ -97,7 +97,7 @@ var formatter = {
       if(m && m.length){
         m[6] = "w_100,h_100";
         return m.slice(1).join("/");
-      }
+      } return mediaUrl;
     });
 
     Vue.filter('contact_label', function (id) {
