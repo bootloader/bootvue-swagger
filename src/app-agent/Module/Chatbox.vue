@@ -857,6 +857,7 @@
     visibility: none;
     width: 0px;
     padding: 0px;
+    color: #FFF;
   }
  .user_assignment .vs__clear {
     display: none;;
