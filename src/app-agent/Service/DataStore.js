@@ -2,7 +2,9 @@
 
 
 import axios from "axios";
+import Vue from 'vue';
 import formatters from '../../services/formatters';
+import {MyConst} from '../../services/global';
 
 
 function guid() {
@@ -20,8 +22,29 @@ function eq(a,b) {
   return a === b;
 }
 
+  function validateResponse(response){
+    if(response.request.responseURL.endsWith("/auth/login")){
+      //https://app.mehery.com/admin/auth/login
+      console.log("===>",response.request.responseURL)
+      window.location.href = response.request.responseURL;
+    }
+
+    if(response.data && response.data.message){
+        //Vue.toaster.success(response.data.message);
+         console.log("===>",response.data.message)
+         if(Vue.$toast && Vue.$toast.success)
+            Vue.$toast.success(response.data.message)
+    }
+
+  }
+
+  function isChatAssigned(chat) {
+    console.log()
+    chat.assigned = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
+  }
+
 const state = {
-  user: null,
+  user: null,agents : [],
   posts: null,
   contacts : null,
   chats : null,
@@ -39,8 +62,21 @@ const getters = {
   StateMediaOptions: (state) => state.mediaOptions,
   StateQuickActions: (state) => state.quickActions,
   StateQuickLabels: (state) => state.quickLabels,
+  StateAgentOptions: (state) => state.agents,
   StateChatHistory: (state) => state.chatHistory.sessions
 };
+
+;
+
+const cache = {
+  _GetChats : (function () {
+    let x = null; 
+    return async function () {
+      x =  x || (axios.get("/api/sessions/assigned.json"));
+      return x;
+    };
+  })()
+}
 
 const actions = {
   async Register({dispatch}, form) {
@@ -78,7 +114,8 @@ const actions = {
   },
 
   async GetChats({ commit }) {
-    let response = await axios.get("/api/sessions/assigned.json");
+    let response = await cache._GetChats();
+    validateResponse(response);
     commit("setChats", response.data.results);
     commit("setMeta", response.data.meta);
   },
@@ -87,7 +124,9 @@ const actions = {
     for(var c in state.chats){
       if(state.chats[c].contactId == chat.contactId){
         state.chats[c].active = !!chat.active;
-        state.chats[c].assigned = !!chat.assigned;
+        state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
+        state.chats[c].resolved = chat.resolved;
+        isChatAssigned(state.chats[c])
         console.log(state.chats[c],chat)
         state.chats.splice(c,1);
         //commit("setChats", state.chats);
@@ -111,6 +150,7 @@ const actions = {
                         template : msg.template,action : msg.action,
                         messageIdRef : msg.messageIdRef
                     });
+    validateResponse(response);
     msg.messageId = response.data.results[0].messageId;
     msg.version = 1;
     dispatch("ReadChat",msg);
@@ -156,18 +196,29 @@ const actions = {
     commit("setMeta", state.meta);
   },
 
+  async LoadAgentOptions({ commit }) {
+    let response = await axios.get("/api/options/agents");
+    validateResponse(response);
+    if(response.data && response.data.results){
+       commit("setAgents", response.data.results);
+    }
+  },
+
   async LoadMediaOptions({ commit }) {
     let response = await axios.get("/gallery/map/media_reply");
+    validateResponse(response);
     commit("setMediaOptions", response.data);
   },
 
   async LoadQuickActions({ commit }) {
     let response = await axios.get("/gallery/map/quick_actions");
+    validateResponse(response);
     commit("setQuickActions", response.data);
   },
 
   async LoadQuickLabels({ commit }) {
     let response = await axios.get("/gallery/map/quick_labels");
+    validateResponse(response);
     commit("setQuickLabels", response.data);
   },
 
@@ -175,37 +226,37 @@ const actions = {
     let response = await axios.post("/api/contact/label?sessionId="+sessionId,{
       values : labels
     });
+    validateResponse(response);
     //commit("setQuickTags", response.data);
     return response.data;
   },
 
-
   async LoadQuickReplies({ commit },tags) {
+    if(!state.quickReplies || state.quickReplies.length == 0){
+        let response = await axios.get("/category/map/smart_reply.json");
+        validateResponse(response);
+        for (var i in response.data) {
+          response.data[i].template = formatters.nullify(response.data[i].template);
+        }
+
+        commit("setQuickReply",response.data)
+    }
+
     var categories = (tags || {categories : []}).categories;
     var _categories = [];
-    var resps = [];
-    for(var i in categories){
-      var quickReplyMatched = state.quickReplies.filter(function (quickReply) {
-        return quickReply.id.category == categories[i]
-      })[0];
-      if(quickReplyMatched){
-          resps.push(quickReplyMatched);
-      } else {
-        _categories.push(categories[i]);
-      }
-    }
-
-    if(_categories.length){
-      let response = await axios.get("/category/map/smart_reply.json?value="
-          + _categories.join(",")
-      );
-      var data = response.data;
-      for(var i in data){
-        state.quickReplies.push(data[i]);
-        resps.push(data[i]);
-      }
-    }
-    return resps;
+    var resps = state.quickReplies.map(function (quickReply) {
+          if(categories.indexOf(quickReply.category)>-1){
+            quickReply.match = true
+          }
+          return quickReply;
+    });
+    return resps.sort(function(a,b) {
+        if(a.match)
+          return -1
+        else if(b.match){
+          return 1
+        } else 1
+    });
     //commit("setMediaOptions", response.data);
   },
 
@@ -214,6 +265,7 @@ const actions = {
       return state.chatHistory.sessions;
     }
     let response = await axios.get("/api/sessions/contact",{params : options });
+    validateResponse(response);
     state.chatHistory.contactId = options.contactId;
     state.chatHistory.sessions = response.data.results;
     commit("setChatHistory",state.chatHistory)
@@ -221,8 +273,19 @@ const actions = {
   },
   async GetSessionChats({ commit },options) {
     let response = await axios.post("/api/sessions/messages",options);
+    validateResponse(response);
     return response.data.results;
   },
+
+  async AssingToAgent({commit},{ sessionId,agentId }) {
+    let AssignAgentForm = new FormData();
+    AssignAgentForm.append('sessionId', sessionId);
+    AssignAgentForm.append('agentId', agentId);
+    let response = await axios.post("/api/session/agent",AssignAgentForm);
+    validateResponse(response);
+    //commit("setQuickTags", response.data);
+    return response.data;
+  }
 
 };
 
@@ -231,14 +294,16 @@ const mutations = {
   setChats(state, chats) {
     for(var c in chats){
       chats[c].lastmsg = {};
-      for (var i = 0; i < chats[c].messages.length; i++) {
-        if(chats[c].messages[i].type == 'I'){
-          chats[c].ilastmsg = chats[c].messages[i];
-        }  
-        if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
-          chats[c].lastmsg = chats[c].messages[i];
+      if(chats[c].messages)
+        for (var i = 0; i < chats[c].messages.length; i++) {
+          if(chats[c].messages[i].type == 'I'){
+            chats[c].ilastmsg = chats[c].messages[i];
+          }  
+          if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
+            chats[c].lastmsg = chats[c].messages[i];
+          }
         }
-      }
+      isChatAssigned(chats[c])
     }
     state.chats = chats;
   },
@@ -247,6 +312,9 @@ const mutations = {
   },
   setMeta(state, meta) {
     state.meta = meta;
+  },
+  setQuickReply(state, quickReplies) {
+    state.quickReplies = quickReplies;
   },
   setQuickActions(state, quickActions) {
     state.quickActions = quickActions;
@@ -257,6 +325,9 @@ const mutations = {
   },
   setMediaOptions(state, mediaOptions) {
     state.mediaOptions = mediaOptions;
+  },
+  setAgents(state, agents) {
+    state.agents = agents;
   },
   setUser(state, username) {
     state.user = username;

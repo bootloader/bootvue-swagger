@@ -2508,6 +2508,11 @@
   "resolved" "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz"
   "version" "1.0.2"
 
+"debounce@^1.2.1":
+  "integrity" "sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug=="
+  "resolved" "https://registry.npmjs.org/debounce/-/debounce-1.2.1.tgz"
+  "version" "1.2.1"
+
 "debug@^2.2.0", "debug@^2.3.3", "debug@2.6.9":
   "resolved" "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz"
   "version" "2.6.9"
@@ -7783,11 +7788,21 @@
   "resolved" "https://registry.yarnpkg.com/vue-router/-/vue-router-3.5.1.tgz"
   "version" "3.5.1"
 
+"vue-select@^3.11.2":
+  "integrity" "sha512-pIOcY8ajWNSwg8Ns4eHVr5ZWwqKCSZeQRymTnlUI8i+3QiQXF6JIM4lylK6mVfbccs4S6vOyxB7zmJBpp7tDUg=="
+  "resolved" "https://registry.npmjs.org/vue-select/-/vue-select-3.11.2.tgz"
+  "version" "3.11.2"
+
 "vue-sidebar-menu@^3.7.0":
   "resolved" "https://registry.yarnpkg.com/vue-sidebar-menu/-/vue-sidebar-menu-3.12.2.tgz"
   "version" "3.12.2"
   dependencies:
     "vue" "^2.5.21"
+
+"vue-simple-search-dropdown@^1.0.1":
+  "integrity" "sha512-r3LuGFB3WqMDRILx+Z/Y2S9UTLqMh3Y0nv1Oly+tt8oEzvg77r0tfYLHVqQlhsmVPy0GmSuxMMbetMkDRLOEqg=="
+  "resolved" "https://registry.npmjs.org/vue-simple-search-dropdown/-/vue-simple-search-dropdown-1.0.1.tgz"
+  "version" "1.0.1"
 
 "vue-slide-up-down@^2.0.1":
   "integrity" "sha512-2crtzW3oeasRrDMNrKMUW5cz0HV7qhj2BPM9UNtPZwVXiHZT5qjdcn1GwpRxKK7DMBhD6OeTmEumwWxXK5XdHw=="
@@ -7818,7 +7833,7 @@
   "resolved" "https://registry.npmjs.org/vue-toast-notification/-/vue-toast-notification-0.6.1.tgz"
   "version" "0.6.1"
 
-"vue@^2.0.0", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@>=1.x.x", "vue@~2":
+"vue@^2.0.0", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@>=1.x.x", "vue@~2", "vue@2.x":
   "resolved" "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz"
   "version" "2.6.12"
 

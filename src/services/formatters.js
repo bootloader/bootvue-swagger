@@ -58,6 +58,14 @@ var formatter = {
   contactLabels : function (id) {
     return (CONTACT_LABELS_DICT[id] || { id : id, title : id});
   },
+  isEmpty : function (argument) {
+    return argument === null ||argument === undefined || argument === "" || argument === "null";
+  },
+  nullify : function (argument) {
+    if(argument === null ||argument === undefined || argument === "" || argument === "null"){
+      return null;
+    } return argument;
+  },
   init : function () {
     var THAT = this;
 

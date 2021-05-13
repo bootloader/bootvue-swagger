@@ -17,6 +17,19 @@
                     <span v-if="!search" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
             </div>
+
+        </div>
+        <div class="card-header contact-tabs">
+             <ul class="nav nav-tabs nav-fill card-header-tabs">
+              <li class="nav-item">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (tab == 'ME')}" @click="tab = 'ME'">
+                    <span class="fa fa-user"/> Me</span>
+              </li>
+              <li class="nav-item">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (tab == 'TEAM')}" @click="tab = 'TEAM'">
+                    <span class="fa fa-user-friends"/> Team</span>
+              </li>
+            </ul>
         </div>
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
@@ -33,9 +46,9 @@
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
-                            <p class="font-preview" >{{chat.ilastmsg.text}}</p>
+                            <p class="font-preview" v-if="chat.ilastmsg" >{{chat.ilastmsg.text}}</p>
                         </div>
-                        <div class="contact-time" :title="chat.ilastmsg.timestamp">
+                        <div class="contact-time" v-if="chat.ilastmsg" :title="chat.ilastmsg.timestamp">
                             <p>{{chat.ilastmsg.timestamp | formatDate}} </p>
                             <div v-if="chat.newmsg" class="new-message" id="'nm' + c.contactId"><p>&nbsp;</p></div>  
                         </div>
@@ -97,7 +110,16 @@
                         text : (tags[0] || tags[1]).trim()
                     }
                 });
-                return (this.$store.getters.StateChats || []).filter(function(chat){
+                var tab = this.tab;
+
+                return (this.$store.getters.StateChats || []).filter(function (chat) {
+                    if(tab == 'ME'){
+                        return (chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent;
+                     }  else if(tab == 'TEAM'){
+                        return !((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent);
+                     } 
+                    return false;
+                }).filter(function(chat){
                     var _searchTags = searchTags.filter(function (searchTag) {
                         if(searchTag.isTag){
                             return ((chat.contactType || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
@@ -125,6 +147,7 @@
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: '',
+             tab : "ME",
              //chats : this.$store.getters.StateChats
         }),
         mounted () {
@@ -196,6 +219,24 @@
     }
     .card-footer .contact_type {
         cursor: pointer;
+    }
+    .contact-tabs {
+        background-color: #00000021;
+        padding: 2px 10px;
+        border-radius: 0px !important;
+        color: #fff;
+    }
+    .contact-tabs .nav-link {
+        background-color: #00000021;
+        border-radius: 0px !important;
+        color: #fff;
+        font-size: 13px;
+        cursor: pointer;
+    }
+    .contact-tabs .nav-link.active {
+        background-color: #0000006b;
+        border-radius: 0px !important;
+        color: #fff;
     }
     .online-toggle {
         float: right;

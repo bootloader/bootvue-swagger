@@ -16,28 +16,28 @@
         <div class="information" style="display: flex;" hidden>
                 <img :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
         </div>
-        <small v-if="MyFlags.agent.profileView == 'info' && activeChat.contact.profile" >
-            <div>
-               <span class="fa fa-user"/> <p>{{activeChat.contact.profile.name}}</p>
+        <div v-if="MyFlags.agent.profileView == 'info' && activeChat.contact && activeChat.contact.profile" class="contact-profile-info" >
+            <div v-if="activeChat.contact.profile.name">
+               <span class="fa fa-user"/>&nbsp;<label>Name</label> : <data>{{activeChat.contact.profile.name}}</data>
             </div>
 
-            <div>
-               <span class="fa fa-fingerprint"/> <p>{{activeChat.contact.profile.userId}}</p>
+            <div v-if="activeChat.contact.profile.profileId">
+               <span class="fa fa-fingerprint"/>&nbsp;<label>PID</label> : <data>{{activeChat.contact.profile.profileId}}</data>
             </div>
             
-            <div>
-                <p><span class="fa fa-envelope"/> {{activeChat.contact.profile.email}}</p>
+            <div  v-if="activeChat.contact.profile.email">
+                <span class="fa fa-envelope"/> &nbsp;<label>Email</label> :  <data>{{activeChat.contact.profile.email}}</data>
             </div>
 
-            <div>
-                <p><span class="fa fa-phone"/> {{activeChat.contact.profile.phone}}</p>
+            <div  v-if="activeChat.contact.profile.mobile">
+                <span class="fa fa-phone"/>&nbsp;<label>Phone</label> : <data>{{activeChat.contact.profile.mobile}}</data>
             </div>
 
-            <div>
-                <p v-for="label in activeChat.contact.profile.labels"><span class="fa fa-tag"/>{{label.name || label.key}} : {{label.value}}</p>
+            <div v-for="label in activeChat.contact.profile.labels">
+                <span class="fa fa-tag"/>&nbsp;<label>{{label.name || label.key}}</label> : <data>{{label.value}}</data>
             </div>
 
-        </small>    
+        </div>    
 
 
         <small v-if="MyFlags.agent.profileView == 'history'" >
@@ -77,7 +77,7 @@
                     <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
                 </template>   
                 <template #cell(actions)="row">
-                    <router-link tag="button" :id="row.item.sessionId" :to="'/app/chat/'+row.item.contactId+ '/' + row.item.sessionId + '/' + profileId" active-class="disabled"
+                    <router-link tag="button" :id="row.item.sessionId" :to="'/app/chat/'+row.item.contactId.replace('/','-')+ '/' + row.item.sessionId + '/' + profileId" active-class="disabled"
                     class="btn btn-outline-primary btn-xs">
                             View Chat
                  </router-link>
@@ -311,6 +311,16 @@
     }
     .card-header .fa-close {
         cursor: pointer;
+    }
+    .contact-profile-info {
+        font-size: 14px;
+    }
+    .contact-profile-info label{
+        font-style: normal;
+        font-size: 13px;
+    }
+    .contact-profile-info data {
+        font-weight: 100;
     }
 </style>
 <style type="text/css">

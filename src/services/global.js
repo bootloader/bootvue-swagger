@@ -4,7 +4,7 @@ export const MyConst = {
 	app : window.CONST.APP,
 	appPrefix : "/" + window.CONST.APP,
 	context : window.CONST.CONTEXT,
-	user : window.CONST.APP_USER,
+	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	agent : window.CONST.APP_USER
 }
 export const MyFlags = {
