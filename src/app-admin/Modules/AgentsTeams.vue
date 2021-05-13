@@ -19,7 +19,11 @@
                   <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary">
                     <font-awesome-icon v-if="row.item.isactive == 'Y'" icon="users" title="De-Activate"/>
                     <font-awesome-icon v-if="row.item.isactive != 'Y'" icon="users-slash" title="Activate"/>
-                  </b-button>
+                  </b-button>&nbsp;
+                  <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)">
+                    <span v-if="!row.item.defaultValue" class="far fa-star" title="Make Default"/>
+                    <span v-if="row.item.defaultValue" class="fas fa-star" title="Make Default"/>
+                  </button>
                 </template>
 
             </b-table>
@@ -81,12 +85,12 @@
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
-        faUsersSlash,faUsers
+        faUsersSlash,faUsers,faStar
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
     library.add(
-        faUsersSlash,faUsers
+        faUsersSlash,faUsers,faStar
     );
 
     function newItem() {
@@ -138,6 +142,9 @@
           async enableTeam(item) {
              item.isactive = item.isactive == "Y" ? "N" : "Y";
              await this.$store.dispatch('CreatTeam', item);
+          },
+          async setItemDefault(item) {
+             await this.$store.dispatch('SetTeamsDefault', item);
           },
           async cancelReps(item) {
              this.newItem = newItem();

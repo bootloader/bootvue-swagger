@@ -27,6 +27,11 @@
                   v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false>
                     <font-awesome-icon icon="user-cog"/>
                   </b-button>
+                  &nbsp;
+                 <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)">
+                    <span v-if="!row.item.defaultValue" class="far fa-star" title="Make Default"/>
+                    <span v-if="row.item.defaultValue" class="fas fa-star" title="Make Default"/>
+                  </button>
 
                 </template>
 
@@ -226,6 +231,9 @@
           },
           async enableItemAdmin(item) {
               await this.$store.dispatch('DeAdminAgent',item);
+          },
+          async setItemDefault(item) {
+             await this.$store.dispatch('SetAgentDefault', item);
           },
           async cancelItem(item) {
              this.newItem = newItem();

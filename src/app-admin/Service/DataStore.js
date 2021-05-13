@@ -22,10 +22,30 @@ function guid() {
       window.location.href = response.request.responseURL;
     }
 
-    if(response.data && response.data.message){
-        //Vue.toaster.success(response.data.message);
-         console.log("===>",response.data.message)
-        Vue.$toast.success(response.data.message)
+    if(response.data){
+        if(response.data.errors){
+            for(var i in response.data.errors){
+              Vue.$toast.success(response.data.errors[i].descriptionKey + ":" + response.data.errors[i].field)
+            }
+        } else if(response.data.message){
+            Vue.$toast.success(response.data.message)
+        } else if(response.data.message){
+          Vue.$toast.success(response.data.message)
+        }
+    }
+    return response;
+  }
+
+
+  async function post(url,option){
+    try{
+        let response = await axios.post(url,option);
+        return response;
+    } catch (e){
+      if(e.response && e.response){
+        validateResponse(e.response);
+        throw e;
+      }
     }
 
   }
@@ -88,6 +108,13 @@ const actions = {
     validateResponse(response);
     commit("setTeams", response.data.results);
   },
+  async SetTeamsDefault({ commit },team) {
+    let UserForm = new FormData();
+    UserForm.append('dept_id', team.dept_id);
+    let response = await axios.post("/api/admins/dept/default",UserForm);
+    validateResponse(response);
+    commit("setTeams", response.data.results);
+  },
 
   async GetAgents({ commit }) {
     let response = await axios.get("/api/admins/agent");
@@ -96,7 +123,15 @@ const actions = {
 
   async CreateAgent({ commit },agent) {
     agent.agent_channels = (agent.agent_channels_list || []).join(",");
-    let response = await axios.post("/api/admins/agent",agent);
+    let response = await post("/api/admins/agent",agent);
+    validateResponse(response);
+    commit("setAgents", response.data.results);
+  },
+
+  async SetAgentDefault({ commit },agent) {
+    let UserForm = new FormData();
+    UserForm.append('agent_id', agent.agent_id);
+    let response = await axios.post("/api/admins/agent/default",UserForm);
     validateResponse(response);
     commit("setAgents", response.data.results);
   },
