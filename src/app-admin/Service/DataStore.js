@@ -110,7 +110,7 @@ const actions = {
   },
   async SetTeamsDefault({ commit },team) {
     let UserForm = new FormData();
-    UserForm.append('dept_id', team.dept_id);
+    UserForm.append('dept_id', team.id);
     let response = await axios.post("/api/admins/dept/default",UserForm);
     validateResponse(response);
     commit("setTeams", response.data.results);
@@ -122,7 +122,7 @@ const actions = {
   },
 
   async CreateAgent({ commit },agent) {
-    agent.agent_channels = (agent.agent_channels_list || []).join(",");
+    agent.agent_channels = (agent.channels || []).join(",");
     let response = await post("/api/admins/agent",agent);
     validateResponse(response);
     commit("setAgents", response.data.results);
@@ -130,7 +130,7 @@ const actions = {
 
   async SetAgentDefault({ commit },agent) {
     let UserForm = new FormData();
-    UserForm.append('agent_id', agent.agent_id);
+    UserForm.append('agent_id', agent.id);
     let response = await axios.post("/api/admins/agent/default",UserForm);
     validateResponse(response);
     commit("setAgents", response.data.results);
@@ -140,10 +140,10 @@ const actions = {
      console.log("--",agent)
      agent.isactive = (agent.isactive == "Y" ? "N" : "Y");
      let UserForm = new FormData();
-     UserForm.append('agent_id', agent.agent_id);
+     UserForm.append('agent_id', agent.id);
      UserForm.append('status', agent.isactive);
-     let response = await axios.delete("/api/admins/agent?agent_id="+agent.agent_id +"&status=" + agent.isactive,{
-      data : {agent_id : agent.agent_id, status : agent.isactive }
+     let response = await axios.delete("/api/admins/agent?agent_id="+agent.id +"&status=" + agent.isactive,{
+      data : {id : agent.id, status : agent.isactive }
      });
      validateResponse(response);
      commit("setAgents", response.data);
@@ -151,7 +151,7 @@ const actions = {
   async DeAdminAgent ({ commit },agent){
      console.log("--",agent)
      let UserForm = new FormData();
-     UserForm.append('agent_id', agent.agent_id);
+     UserForm.append('agent_id', agent.id);
      let response = await axios.post("/api/admins/agent/admin",UserForm);
      validateResponse(response);
      commit("setAgents", response.data);

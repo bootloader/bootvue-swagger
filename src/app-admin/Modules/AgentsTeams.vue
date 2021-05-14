@@ -50,7 +50,7 @@
                                     <label for="examplePassword" class="">Name</label>
                                     <input name="agent_name" id="examplePassword"
                                      placeholder="Online Team" type="text"
-                                      class="form-control" v-model="newItem.dept_name">
+                                      class="form-control" v-model="newItem.name">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                             </div>
@@ -99,8 +99,8 @@
       return {
               "dept_code": "",
               "dept_email": "",
-              "dept_id" : null,
-              "dept_name": ""
+              "id" : null,
+              "name": ""
             };
     }
     export default {
@@ -114,7 +114,7 @@
             actions : [{
               label : "Add Team", icon : "plus", name : "ADD_ITEM"
             }],
-            fields: [ { key : 'dept_name', label : "Name" }, { key : 'dept_code', label : "Code" }, 
+            fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
               //{ key : 'dept_email', label : "Email" },
               { key: 'actions', label: 'Actions' }],
             newItem : newItem(),

@@ -21,6 +21,9 @@ export const MyDict = {
 	 "FACEBOOK" : "fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fa-telegram",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
 	},
 	socialPrefix : function (argument) {
+		if(this.social[argument]){
+			return this.social[argument];
+		}
 		if(argument.indexOf('tw')==0){
 			return this.social.TWITTER
 		} else if(argument.indexOf('tg')==0){
@@ -31,6 +34,6 @@ export const MyDict = {
 			return this.social.WHATSAPP
 		}
 		return this.social.WEBSITE;
-	} ,
+	},
 	profilePic : require('./../assets/agent/images/profile.png')
 }

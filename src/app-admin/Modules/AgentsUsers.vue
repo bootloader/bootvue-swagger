@@ -15,6 +15,9 @@
                      :items="items"
                      :fields="fields">
 
+                <template #cell(channels)="row">
+                  <span v-for="c in row.item.channels" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
+                </template>
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
                     v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
@@ -99,10 +102,10 @@
                               <div class="col-md-6">
                                 <div class="position-relative form-group"><label for="exampleSelect" class="">Team</label>
                                   <select name="select" id="exampleSelect" class="form-control"
-                                    v-model="newItem.dept_id">
+                                    v-model="newItem.id">
                                       <option v-for="team in teams"
-                                      v-if="team.isactive=='Y'" :value=team.dept_id>
-                                      {{team.dept_name}}</option>
+                                      v-if="team.isactive=='Y'" :value=team.id>
+                                      {{team.name}}</option>
                                     </select>
                                 </div>
 
@@ -118,7 +121,7 @@
                                     <label for="exampleCustomMutlipleSelect" class="">Channels</label>
                                     <select multiple="" type="select" id="exampleCustomMutlipleSelect"
                                              name="customSelect" class="custom-select"
-                                             v-model="newItem.agent_channels_list">
+                                             v-model="newItem.channels">
                                             <option>WHATSAPP</option>
                                             <option>FACEBOOK</option>
                                             <option>TWITTER</option>
@@ -157,6 +160,7 @@
 <script>
 
     import PageTitle from "../Layout/PageTitleAction.vue";
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -173,23 +177,24 @@
               "agent_code": "",
               "agent_email": "",
               "agent_id" : null,
-              "agent_channels_list": [],"agent_channels" : "", admin : false
+              "channels": [],"agent_channels" : "", admin : false
             };
     }
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,MyDict
         },
         data: () => ({
+            MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Users',
             subheading: 'List of all users',
             icon: 'pe-7s-users icon-gradient bg-happy-itmeo',
             actions : [{
               label : "Add User", icon : "plus", name : "ADD_ITEM"
             }],
-          fields: [ { key : 'dept.dept_name', label : "Dept" },{ key : 'agent_name', label : "Name" },
-           { key : 'agent_code', label : "Username" }, { key : 'agent_email', label : "Email" },
-           { key : 'agent_channels', label : "Channels", class : "upper-case" },
+          fields: [ { key : 'dept.name', label : "Team" },{ key : 'name', label : "Name" },
+           { key : 'code', label : "Username" }, { key : 'agent_email', label : "Email" },
+           { key : 'channels', label : "Channels", class : "upper-case" },
            { key : 'actions', label : "Action" }],
             newItem : newItem(),
             modelName :  "MODAL_ADD_USERS",
