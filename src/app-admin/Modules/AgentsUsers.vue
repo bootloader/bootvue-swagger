@@ -16,9 +16,10 @@
                      :fields="fields">
 
                 <template #cell(actions)="row">
-                  <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary">
-                    <font-awesome-icon v-if="row.item.isactive == 'Y'" icon="user" title="De-Activate"/>
-                    <font-awesome-icon v-if="row.item.isactive != 'Y'" icon="user-slash" title="Activate"/>
+                  <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
+                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
+                    <font-awesome-icon v-if="row.item.isactive == 'Y'" icon="user" />
+                    <font-awesome-icon v-if="row.item.isactive != 'Y'" icon="user-slash"/>
                   </b-button>
                   &nbsp;
                   <b-button size="sm" @click="enableItemAdmin(row.item, row.index, $event.target)" 
@@ -28,9 +29,10 @@
                     <font-awesome-icon icon="user-cog"/>
                   </b-button>
                   &nbsp;
-                 <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)">
-                    <span v-if="!row.item.defaultValue" class="far fa-star" title="Make Default"/>
-                    <span v-if="row.item.defaultValue" class="fas fa-star" title="Make Default"/>
+                 <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
+                  v-tooltip="'Make Default Assignee'" >
+                    <span v-if="!row.item.defaultValue" class="far fa-star" />
+                    <span v-if="row.item.defaultValue" class="fas fa-star" />
                   </button>
 
                 </template>
