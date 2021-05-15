@@ -113,6 +113,7 @@
                 var tab = this.tab;
 
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
+                    return chat._tab == tab;
                     if(tab == 'ME'){
                         return (chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent;
                      }  else if(tab == 'TEAM'){

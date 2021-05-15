@@ -103,7 +103,7 @@
     <div v-else-if="m.type=='O'" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
         <div class="msg_cotainer_send">
-            <span>{{m.text | striphtml | newlines}}</span>
+            <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> 
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
@@ -199,10 +199,11 @@
 
                         v-on:vdropzone-drag-enter="dragEnter" 
                         v-on:vdropzone-drag-over="dragEnter" 
-
-                        v-on:vdropzone-sending="fileUploading"
+                        
                         v-on:vdropzone-file-added="fileAdded" 
-                        v-on:vdropzone-queue-complete="fileUploaded"
+                        v-on:vdropzone-sending="fileUploading"
+                        v-on:vdropzone-success="fileUploaded"
+                        v-on:vdropzone-queue-complete="fileUploadedAll"
                         ></vue-dropzone>
                     </div>
                 </div>
@@ -265,6 +266,7 @@
     } from '@fortawesome/free-solid-svg-icons'
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
     import tunnel from './../../services/tunnel';
     import mustache from 'mustache';
@@ -332,7 +334,7 @@
             dz: {
               url: MyConst.context + '/api/sessions/message/upload',
               thumbnailWidth: 150,
-              maxFilesize: 0.5, 
+              maxFilesize: 10, 
               //maxFiles : 1,
               autoProcessQueue: false,
               addRemoveLinks : true,
@@ -514,17 +516,21 @@
                 return await this.$store.dispatch('LoadQuickActions');
             },
             async loadQuickReplies(){
+                console.log("loadQuickReplies1");
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
                 }
+                console.log("loadQuickReplies2");
                 var ilastmsg = activeChat.ilastmsg;
                 if(!ilastmsg){
                     return;
                 }
+                console.log("loadQuickReplies3");
                 if(this.ilastMessageId == ilastmsg.messageId){
                     return;
                 }
+                console.log("loadQuickReplies4");
                 this.ilastMessageId = ilastmsg.messageId;
                 var quickReplies = await this.$store.dispatch('LoadQuickReplies',ilastmsg.tags);
                 this.quickReplies = quickReplies.map(function (quickReply) {
@@ -583,7 +589,7 @@
                         name : this.activeChat.name
                     });
                     console.log("resp",resp)
-                    activeChat.messages = resp;
+                    activeChat.messages = resp.messages;
                     this.isLoading = false;
                 }
                 this.scrollToBottom(true);
@@ -595,6 +601,7 @@
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id
                 });
+                this.loadArchiveMessages();
             },
 
             showWinMode : function (argument) {
@@ -637,12 +644,20 @@
                  //this.dz.file_dropped = true;
             },
             async fileUploading(file, xhr, formData) {
-                formData.append('message', JSON.stringify(this.prepareMessage(null, null,null,true)));
+                var msg = this.prepareMessage(null, null,null,true);
+                this.$store.dispatch("SendChatPre",msg);
+                console.log("fileUploading2",msg)
+                formData.append('message', JSON.stringify(msg));
             },
-            async fileUploaded(argument) {
-            // body...
-            }
+            async fileUploaded(argument,resp) {
+                console.log("fileUploaded",resp)
+                if(resp){
+                    this.$store.dispatch("ReadChat",resp.results[0]);                  
+                }
+            },
+            async fileUploadedAll(argument){
 
+            }
 
         },
 

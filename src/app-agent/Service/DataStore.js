@@ -6,15 +6,7 @@ import Vue from 'vue';
 import formatters from '../../services/formatters';
 import {MyConst} from '../../services/global';
 
-
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16)
-        .substring(1);
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4()
-      + s4() + s4();
-}
+var guid = formatters.guid
 
 function eq(a,b) {
   if(!a || !b) return false;
@@ -41,6 +33,12 @@ function eq(a,b) {
   function isChatAssigned(chat) {
     console.log()
     chat.assigned = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
+    if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
+      chat._tab = "ME";
+    } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){
+       chat._tab = "TEAM";
+    }
+
   }
 
 const state = {
@@ -65,8 +63,6 @@ const getters = {
   StateAgentOptions: (state) => state.agents,
   StateChatHistory: (state) => state.chatHistory.sessions
 };
-
-;
 
 const cache = {
   _GetChats : (function () {
@@ -121,6 +117,7 @@ const actions = {
   },
 
   async AddChat({ commit },chat) {
+    console.log("AddChat",chat)
     for(var c in state.chats){
       if(state.chats[c].contactId == chat.contactId){
         state.chats[c].active = !!chat.active;
@@ -138,10 +135,29 @@ const actions = {
     commit("setChats", state.chats);
   },
 
-  async SendChat({ commit,dispatch }, msg) {
-    msg.messageIdRef = msg.messageIdRef || guid();
-    msg.version=msg.version || 0;
+  async AddHistoryChat({ commit },chat) {
+    console.log("AddChatHistory",chat)
+    var sessions = state.chatHistory.sessions;
+    for(var c in sessions){
+      if(sessions[c].sessionId == chat.sessionId){
+        sessions[c].active = !!chat.active;
+        sessions[c] = chat;
+        console.log("AddChatHistory:M",c)
+      }
+    }
+    commit("setChatHistory", state.chatHistory);
+  },
+
+  async SendChatPre({ commit,dispatch }, msg) {
+      msg.messageIdRef = msg.messageIdRef || guid();
+      msg.version=msg.version || 0;
+      dispatch("ReadChat",msg);
+  },
+  async SendChatPost({ commit,dispatch }, msg) {
     dispatch("ReadChat",msg);
+  },
+  async SendChat({ commit,dispatch }, msg) {
+    dispatch("SendChatPre",msg);
     let response = await axios.post("/api/sessions/message/send",{
                         id : msg.id,
                         message : msg.text,
@@ -151,9 +167,7 @@ const actions = {
                         messageIdRef : msg.messageIdRef
                     });
     validateResponse(response);
-    msg.messageId = response.data.results[0].messageId;
-    msg.version = 1;
-    dispatch("ReadChat",msg);
+    dispatch("SendChatPost",response.data.results[0]);
     return response.data;
   },
 
@@ -165,6 +179,10 @@ const actions = {
         var index  = -1
         for(var j in chat.messages){
           var msg = chat.messages[j];
+          if(eq(msg.messageIdRef, m.messageIdRef)){
+            msg.messageId = m.messageId;
+            msg.version = 1;
+          }
           if(eq(msg.messageId,m.messageId) || eq(msg, m) || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
             index = j;
             if(m.version < msg.version){
@@ -271,18 +289,24 @@ const actions = {
     commit("setChatHistory",state.chatHistory)
     return response.data.results;
   },
-  async GetSessionChats({ commit },options) {
+  async GetSessionChats({ commit , dispatch},options) {
     let response = await axios.post("/api/sessions/messages",options);
     validateResponse(response);
-    return response.data.results;
+    if(response.data.results[0].active){
+        dispatch("AddChat",response.data.results[0]);
+    } else {
+        dispatch("AddHistoryChat",response.data.results[0]);
+    }
+    return response.data.results[0];
   },
 
-  async AssingToAgent({commit},{ sessionId,agentId }) {
+  async AssingToAgent({commit,dispatch},{ sessionId,agentId }) {
     let AssignAgentForm = new FormData();
     AssignAgentForm.append('sessionId', sessionId);
     AssignAgentForm.append('agentId', agentId);
     let response = await axios.post("/api/session/agent",AssignAgentForm);
     validateResponse(response);
+    dispatch("AddChat",response.data.results[0]);
     //commit("setQuickTags", response.data);
     return response.data;
   }
