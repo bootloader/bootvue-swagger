@@ -21,17 +21,17 @@
                                 @option:selected="onAssignedToAgent"
                                 :components="{Deselect}">
                                     <template #selected-option="option">
-                                      <div class="user_assignment-selected">Assigned to {{ option.agent_code }}</div>
+                                      <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
                                     </template>
                                     <template #open-indicator="{ attributes }">
                                       <span v-bind="attributes" class="fa fa-caret-down"></span>
                                     </template>
-                                    <template #option="{ agent_code, agent_name }">
-                                      <em>{{ agent_code }} - {{ agent_name }}</em>
+                                    <template #option="{ code, name, dept }">
+                                      <em>{{ code }} - {{ name }}</em>
                                     </template>
                                 </v-select>
                                 <span v-if="!sendEnabled" class="vs__selected">
-                                    Assigned to {{assignedToAgent.agent_code}}
+                                    Assigned to {{assignedToAgent.code}}
                                 </span>
                             </div>
 
@@ -568,7 +568,7 @@
                 }
 
                 this.assignedToAgent = this.$store.getters.StateAgentOptions.filter(function (t) {
-                    return t.agent_code == activeChat.assignedToAgent;
+                    return t.code == activeChat.assignedToAgent;
                 })[0] || {};
 
                 console.log("assignedToAgent",this.assignedToAgent);
@@ -593,7 +593,7 @@
                 console.log("assignedToAgent",argument);
                 var resp = await this.$store.dispatch('AssingToAgent',{
                     sessionId : this.activeChat.sessionId,
-                    agentId : argument.agent_id
+                    agentId : argument.id
                 });
             },
 
