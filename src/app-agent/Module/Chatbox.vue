@@ -18,7 +18,7 @@
                             <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
                             <div v-if="activeChat.ilastmsg" class="user_stamp">{{activeChat.ilastmsg.timestamp | formatDate}} </div>
                             <div v-if="assignedToAgent" class="user_assignment">
-                                <v-select v-if="sendEnabled" :options="agentOptions" v-model="assignedToAgent"
+                                <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
                                 @option:selected="onAssignedToAgent"
                                 :components="{Deselect}">
                                     <template #selected-option="option">
@@ -31,7 +31,7 @@
                                       <em>{{ code }} - {{ name }}</em>
                                     </template>
                                 </v-select>
-                                <span v-if="!sendEnabled" class="vs__selected">
+                                <span v-if="!isChatActive" class="vs__selected">
                                     Assigned to {{assignedToAgent.code}}
                                 </span>
                             </div>
@@ -291,6 +291,9 @@
         computed : {
             inputTextEnabled : function (argument) {
                return !!this.$route.params.contactId && !!this.activeChat && this.activeChat.active;
+            },
+            isChatActive : function (argument) {
+                return this.activeChat.active;
             },
             sendEnabled : function (argument) {
                return (!!this.$route.params.contactId && !!this.activeChat && this.activeChat.active)
