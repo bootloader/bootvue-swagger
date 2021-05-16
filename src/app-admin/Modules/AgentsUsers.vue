@@ -64,7 +64,7 @@
                                       <label for="examplePassword" class="">Name</label>
                                       <input name="agent_name" id="examplePassword"
                                        placeholder="John Doe" type="text"
-                                        class="form-control" v-model="newItem.agent_name">
+                                        class="form-control" v-model="newItem.name">
                                         <span class="v-input-error">{{ v.errors[0] }}</span>
                                 </ValidationProvider>
                                 </div>
@@ -88,7 +88,7 @@
                                   <label for="exampleEmail" class="">Username</label>
                                   <div class="input-group">
                                       <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                      <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.agent_code">
+                                      <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.code">
                                   </div>
                               </div>
 
@@ -102,7 +102,7 @@
                               <div class="col-md-6">
                                 <div class="position-relative form-group"><label for="exampleSelect" class="">Team</label>
                                   <select name="select" id="exampleSelect" class="form-control"
-                                    v-model="newItem.id">
+                                    v-model="newItem.dept_id">
                                       <option v-for="team in teams"
                                       v-if="team.isactive=='Y'" :value=team.id>
                                       {{team.name}}</option>
@@ -210,7 +210,7 @@
               return this.oldHash !== JSON.stringify(this.newItem);
             },
             isValid : function (argument) {
-              return this.newItem.agent_name && this.newItem.agent_code && this.newItem.agent_email;
+              return this.newItem.name && this.newItem.code && this.newItem.agent_email;
             }
         },
         created : function (argument) {
