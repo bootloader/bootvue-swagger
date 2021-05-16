@@ -313,7 +313,7 @@
                 return this.$store.getters.StateQuickActions;
             },
             showChatWindow : function (argument) {
-                return this.winMode === null;
+                return (this.winMode === null) || this.winMode == "CHAT_BOX";
             },
             showMediaUpload : function (argument) {
                 return (this.dz.file_dragging || this.dz.file_dropped) && this.winMode == 'UPLOAD_MEDIA';
@@ -457,6 +457,7 @@
                     console.error(e)
                     msg.logs = ["Error While Sending"];
                 }
+                this.showWinMode("CHAT_BOX")
                 this.scrollToBottom(true);
             },
             onSendMessage :  function () {
