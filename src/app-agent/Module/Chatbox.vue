@@ -297,7 +297,6 @@
  
             },
             agentOptions : function(){ 
-                console.log("agentOptions=",this.$store.getters.StateAgentOptions)
                 return this.$store.getters.StateAgentOptions;
             },
             mediaOptions : function(){ 
@@ -379,7 +378,7 @@
         },
         updated (){
             this.scrollToBottom();
-            this.loadQuickReplies();
+            this.setQuickReplies();
         },
         mounted (){
             this.scrollToBottom();
@@ -511,6 +510,10 @@
                 return await this.$store.dispatch('LoadQuickActions');
             },
             async loadQuickReplies(){
+                return await this.$store.dispatch('LoadQuickReplies');
+            },
+            async setQuickReplies(){
+                this.refreshActiveChats();
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
@@ -542,7 +545,6 @@
                 this.loadArchiveMessages();
             },
             loadActiveChat (argument) {
-                console.log("id",this.$route.params.contactId,this.$route.params.sessionId); 
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.sessionId == chat.sessionId){
@@ -557,8 +559,15 @@
                 }
                 return null;
             },
+            refreshActiveChats(force){
+                if(this.chatsVersion != this.$store.getters.StateChatsVersion || force){
+                    this.activeChat = this.loadActiveChat();
+                    this.chatsVersion = this.$store.getters.StateChatsVersion;
+                }
+                return this.activeChat
+            },
             async loadArchiveMessages(){
-                this.activeChat = this.loadActiveChat();
+                this.refreshActiveChats(true);
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
@@ -572,7 +581,6 @@
                 })[0] || {};
 
                 if(!activeChat.messages){
-                    console.log("GetSessionChats...");
                     this.isLoading = true;
                     var resp = await this.$store.dispatch('GetSessionChats',{
                         contactId : this.activeChat.contactId,
@@ -603,7 +611,6 @@
                 }
             },
             async dragEnter (argument) {
-                //console.log("Trying to enter")
                 this.dz.file_dragging = true;
                 this.winMode = "UPLOAD_MEDIA";
                 //window.clearTimeout(this.dz.showcounter);

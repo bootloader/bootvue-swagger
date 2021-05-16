@@ -44,7 +44,7 @@ const state = {
   user: null,agents : [],
   posts: null,
   contacts : null,
-  chats : null,
+  chats : null,chatsVersion : 0,
   chatsCounter : 1,
   meta : null,
   mediaOptions : null, quickActions : null, quickLabels : null,
@@ -55,6 +55,7 @@ const state = {
 const getters = {
     //Contacts
   StateChats: (state) => state.chats,
+  StateChatsVersion : (state) => state.chatsVersion,
   StateMeta: (state) => state.meta,
   StateMediaOptions: (state) => state.mediaOptions,
   StateQuickActions: (state) => state.quickActions,
@@ -269,7 +270,6 @@ const actions = {
         for (var i in response.data) {
           response.data[i].template = formatters.nullify(response.data[i].template);
         }
-
         commit("setQuickReply",response.data)
     }
 
@@ -329,7 +329,6 @@ const actions = {
 const mutations = {
   //Contacts
   setChats(state, chats) {
-    console.log("loadArchiveMessages:setChats")
     for(var c in chats){
       chats[c].lastmsg = {};
       if(chats[c].messages)
@@ -345,6 +344,7 @@ const mutations = {
     }
     state.chatsSize = chats.length;
     state.chats = chats;
+    state.chatsVersion++;
   },
   setChatHistory(state, chatHistory) {
     state.chatHistory = chatHistory;
