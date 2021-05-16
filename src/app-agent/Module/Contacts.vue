@@ -34,7 +34,7 @@
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
-                    v-bind:class="{data_assigned : chat._assignedToMe, data_unassigned : !chat._assignedToMe }"
+                    v-bind:class="{data_assigned : chat.assignedToAgent, data_unassigned : !chat.assignedToAgent }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
