@@ -31,7 +31,7 @@ function eq(a,b) {
   }
 
   function isChatAssigned(chat) {
-    chat.assigned = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
+    chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
     if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
       chat._tab = "ME";
     } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){

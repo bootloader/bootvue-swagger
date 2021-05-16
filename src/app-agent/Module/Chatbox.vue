@@ -293,7 +293,7 @@
                return !!this.$route.params.contactId && !!this.activeChat && this.activeChat.active;
             },
             isChatActive : function (argument) {
-                return this.activeChat.active;
+                return (!!this.activeChat && this.activeChat.active);
             },
             sendEnabled : function (argument) {
                return (!!this.$route.params.contactId && !!this.activeChat && this.activeChat.active)

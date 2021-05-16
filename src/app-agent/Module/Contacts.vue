@@ -34,7 +34,7 @@
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
-                    v-bind:class="{data_assigned : chat.assigned, data_unassigned : !chat.assigned }"
+                    v-bind:class="{data_assigned : chat._assignedToMe, data_unassigned : !chat._assignedToMe }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
@@ -130,9 +130,9 @@
                     });
                     return _searchTags.length == searchTags.length;
                 }).sort(function(a, b){
-                    if(a.assigned && !b.assigned){
+                    if(a._assignedToMe && !b._assignedToMe){
                         return -1;
-                    } else if(!a.assigned && b.assigned){
+                    } else if(!a._assignedToMe && b._assignedToMe){
                         return 1;
                     }
                     return b.lastInComingStamp-a.lastInComingStamp;
