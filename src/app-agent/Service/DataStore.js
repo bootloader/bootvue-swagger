@@ -186,6 +186,7 @@ const actions = {
   },
 
   async ReadChat({ commit },m) {
+    if(!m) return;
     m.messageIdRef = m.messageIdRef || guid();
     for(var c in state.chats){
       var chat = state.chats[c];

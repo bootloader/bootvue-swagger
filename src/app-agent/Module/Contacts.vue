@@ -248,7 +248,7 @@
         cursor: pointer;
     }
     .online-toggle.fa-toggle-on {
-      color: #c51111;
+      color: #ff5656;
     }
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;

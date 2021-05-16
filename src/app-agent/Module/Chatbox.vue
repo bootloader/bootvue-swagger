@@ -4,6 +4,7 @@
             @dragover="dragEnter" 
             @dragleave="dragLeave"
             @mouseleave="dragLeave"
+            :id="chatsVersionGlobal"
         >
                 <div class="card-header msg_head chat-head">                   
                     <div class="d-flex bd-highlight chat-header-left">
@@ -314,6 +315,9 @@
             },
             showMediaUpload : function (argument) {
                 return (this.dz.file_dragging || this.dz.file_dropped) && this.winMode == 'UPLOAD_MEDIA';
+            }, 
+            chatsVersionGlobal : function(){
+                return this.$store.getters.StateChatsVersion;
             }
         },
         data: () => ({
@@ -329,6 +333,7 @@
             showAgentOption : false,
             assignedToAgent : null,
             activeChat : null,
+            chatsVersionLocal : 0,
 
             winMode : null,
 
@@ -562,9 +567,9 @@
                 return null;
             },
             refreshActiveChats(force){
-                if(this.chatsVersion != this.$store.getters.StateChatsVersion || force){
+                if(this.chatsVersionLocal != this.chatsVersionGlobal || force){
                     this.activeChat = this.loadActiveChat();
-                    this.chatsVersion = this.$store.getters.StateChatsVersion;
+                    this.chatsVersionLocal = this.$store.getters.StateChatsVersion;
                 }
                 return this.activeChat
             },
@@ -601,7 +606,7 @@
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id
                 });
-                this.loadArchiveMessages();
+                this.refreshActiveChats();
             },
 
             showWinMode : function (argument) {
