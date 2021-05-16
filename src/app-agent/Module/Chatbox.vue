@@ -294,7 +294,9 @@
             },
             sendEnabled : function (argument) {
                return (!!this.$route.params.contactId && !!this.activeChat && this.activeChat.active)
-               && (this.$route.params.profileId == this.$route.params.contactId);
+               && (this.$route.params.profileId == this.$route.params.contactId)
+               && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
+               ;
             },
             activeChatss : function(){ 
  
