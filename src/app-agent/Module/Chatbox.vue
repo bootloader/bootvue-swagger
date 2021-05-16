@@ -108,7 +108,9 @@
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
                     <span v-for="atch in m.attachments">
-                        <img  :src="atch.mediaURL | thumburl" class=""><br/>
+                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl" class="">
+                            <a v-else :href="atch.mediaURL | thumburl" class="fa fa-file-alt float-right"></a>
+                        <br/>
                         <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                     </span>
                 </div>
