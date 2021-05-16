@@ -109,7 +109,7 @@
                 <div class="input-group my-attachments">
                     <span v-for="atch in m.attachments">
                         <img  :src="atch.mediaURL | thumburl" class=""><br/>
-                        <span v-if="atch.mediaCaption">{{atch.mediaCaption}}</span>
+                        <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                     </span>
                 </div>
             </div>
