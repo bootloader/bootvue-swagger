@@ -468,7 +468,6 @@
                 this.$router.push("/app/chat")
             },
             showContactProfile : function (type) {
-                console.log("type",type)
                 if(typeof type !='string'){
                     type = "info";
                 }
@@ -480,7 +479,6 @@
                 }
             },
             scrollToBottom : function (force) {
-                console.log("scrollToBottom:",this.showChatWindow)
                 if(!this.showChatWindow){
                     return;
                 }
@@ -489,7 +487,6 @@
                 if(!activeChat){
                     return;
                 }
-                console.log("scrollToBottom...",force)
                 var msgs = activeChat.messages;
                 if(!msgs || !msgs.length){
                     return;
@@ -503,11 +500,9 @@
                 this.$nextTick(() => {
                     var mcb =document.querySelector('.msg_card_body');
                     if(mcb){
-                        console.log("updating",mcb.scrollTop, mcb.scrollHeight);
                         mcb.scrollTop =  mcb.scrollHeight+50;
                     }
                 });
-                 console.log("scrolledToBottom",force)
             },
             async loadMediaOptions(){
                 await this.$store.dispatch('LoadMediaOptions')
@@ -516,21 +511,17 @@
                 return await this.$store.dispatch('LoadQuickActions');
             },
             async loadQuickReplies(){
-                console.log("loadQuickReplies1");
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
                 }
-                console.log("loadQuickReplies2");
                 var ilastmsg = activeChat.ilastmsg;
                 if(!ilastmsg){
                     return;
                 }
-                console.log("loadQuickReplies3");
                 if(this.ilastMessageId == ilastmsg.messageId){
                     return;
                 }
-                console.log("loadQuickReplies4");
                 this.ilastMessageId = ilastmsg.messageId;
                 var quickReplies = await this.$store.dispatch('LoadQuickReplies',ilastmsg.tags);
                 this.quickReplies = quickReplies.map(function (quickReply) {
@@ -572,12 +563,13 @@
                 if(!activeChat){
                     return;
                 }
-
+                if( activeChat._tab){
+                    MyFlags.agent.contactsTab = activeChat._tab;
+                }
+                
                 this.assignedToAgent = this.$store.getters.StateAgentOptions.filter(function (t) {
                     return t.code == activeChat.assignedToAgent;
                 })[0] || {};
-
-                console.log("assignedToAgent",this.assignedToAgent);
 
                 if(!activeChat.messages){
                     console.log("GetSessionChats...");
@@ -588,7 +580,6 @@
                         contactType : this.activeChat.contactType,
                         name : this.activeChat.name
                     });
-                    console.log("resp",resp)
                     activeChat.messages = resp.messages;
                     this.isLoading = false;
                 }
@@ -596,7 +587,6 @@
             },
 
             async onAssignedToAgent (argument) {
-                console.log("assignedToAgent",argument);
                 var resp = await this.$store.dispatch('AssingToAgent',{
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id

@@ -31,7 +31,6 @@ function eq(a,b) {
   }
 
   function isChatAssigned(chat) {
-    console.log()
     chat.assigned = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
     if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
       chat._tab = "ME";
@@ -109,11 +108,25 @@ const actions = {
     commit("logout", user);
   },
 
-  async GetChats({ commit }) {
+  async LoadChats({ commit }) {
     let response = await cache._GetChats();
     validateResponse(response);
     commit("setChats", response.data.results);
     commit("setMeta", response.data.meta);
+    return response;
+  },
+
+  async GetChats({ commit,dispatch }) {
+    let response = await dispatch("LoadChats");
+    return await new Promise((resolve, reject) => {
+      var intrvl; 
+      intrvl = setInterval(() => {
+        if(state.chatsSize>0){
+          clearInterval(intrvl);
+          resolve('foo');
+        }
+      }, 2000);
+    });
   },
 
   async AddChat({ commit },chat) {
@@ -316,6 +329,7 @@ const actions = {
 const mutations = {
   //Contacts
   setChats(state, chats) {
+    console.log("loadArchiveMessages:setChats")
     for(var c in chats){
       chats[c].lastmsg = {};
       if(chats[c].messages)
@@ -329,6 +343,7 @@ const mutations = {
         }
       isChatAssigned(chats[c])
     }
+    state.chatsSize = chats.length;
     state.chats = chats;
   },
   setChatHistory(state, chatHistory) {

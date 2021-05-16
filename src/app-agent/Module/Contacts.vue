@@ -22,11 +22,11 @@
         <div class="card-header contact-tabs">
              <ul class="nav nav-tabs nav-fill card-header-tabs">
               <li class="nav-item">
-                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (tab == 'ME')}" @click="tab = 'ME'">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ME')}" @click="MyFlags.agent.contactsTab = 'ME'">
                     <span class="fa fa-user"/> Me</span>
               </li>
               <li class="nav-item">
-                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (tab == 'TEAM')}" @click="tab = 'TEAM'">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
             </ul>
@@ -110,7 +110,7 @@
                         text : (tags[0] || tags[1]).trim()
                     }
                 });
-                var tab = this.tab;
+                var tab = MyFlags.agent.contactsTab;
 
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
                     return chat._tab == tab;
@@ -148,7 +148,7 @@
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: '',
-             tab : "ME",
+             //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
         }),
         mounted () {
@@ -172,6 +172,7 @@
                         }
                     }
                 });
+            //MyFlags.agent.contactsTab = this.$route.params.contactsTab
         },
         beforeUnmount (){
             this.tunnel.off();

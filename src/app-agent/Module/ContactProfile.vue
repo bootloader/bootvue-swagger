@@ -179,7 +179,6 @@
         },
         computed : {
             activeChat : function(){ 
-                console.log("id",this.$route.params.contactId); 
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.contactId == chat.contactId){
@@ -202,7 +201,6 @@
                 return [];
             },
             quickLabels : function(){ 
-                console.log("StateQuickLabels=",this.labelInput,this.$store.getters.StateQuickLabels)
                 return this.$store.getters.StateQuickLabels.filter(i => {
                   return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
                 }).map(function (argument) {
@@ -236,13 +234,11 @@
         created () {
             // fetch the data when the view is created and the data is
             // already being observed
-            console.log("CP","created...");
             this.loadQuickLabels();
         },
         updated (){
         },
         mounted (){
-            console.log("CP","mounted...")
             this.getSessions();
         },
         watch: {
@@ -258,7 +254,6 @@
                 if(!this.$route.params.profileId){
                     this.sessions.items = [];
                     this.sessions.rows = 0;
-                    console.log("CP","No Active Chat")
                     return;
                 }
                 this.isLoading = true;
@@ -270,11 +265,9 @@
                     return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
                 });
                 this.sessions.rows = this.sessions.items.length;
-                console.log("sessions",resp,this.sessions);
                 this.isLoading = false;
             },
             async tagmodalOk(argument) {
-                console.log("Labels",this.labels);
                 var resp = await this.$store.dispatch('AttachQuickLabels',{
                     sessionId : this.$route.params.sessionId,
                     labels : this.newLabels || this.labels
@@ -283,7 +276,6 @@
                 this.activeChat.contact = resp.data;
             },
             onLabelChange : function (newLabels) {
-                console.log("newLabels",this.newLabels);
                 this.newLabels = newLabels; 
             }
         },

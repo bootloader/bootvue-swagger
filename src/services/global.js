@@ -13,6 +13,7 @@ export const MyFlags = {
   agent : {
   	showProfile : true,
   	profileView : 'history', //history,info
+  	contactsTab : 'ME',
   }
 }
 
