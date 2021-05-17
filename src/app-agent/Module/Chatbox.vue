@@ -891,4 +891,7 @@
   .user_assignment .vs__search, .vs__search:focus{
     width: 100%;
   }
+  .fade {
+    visibility : hidden;
+  }
 </style>
