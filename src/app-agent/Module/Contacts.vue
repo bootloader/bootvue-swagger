@@ -9,12 +9,11 @@
                     </span>
                 </div>
                 <input type="text" 
-                    v-model="search"
-                    @keyup="inputSearch"
+                    v-model="search.text"
                     placeholder="Search..." name="" class="form-control search">
                 <div class="input-group-prepend">
-                    <span v-if="!!search" class="input-group-text search_btn" @click="search=''" ><i class="fa fa-close"></i></span>
-                    <span v-if="!search" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
+                    <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
+                    <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
             </div>
 
@@ -67,11 +66,16 @@
             </ul>
         </div>
         <div class="card-footer">
-            &nbsp;<span class="contact_type fa fa-facebook" @click="search=':facebook'"></span>
-            <span class="contact_type fa fa-whatsapp" @click="search=':whatsapp'" ></span>
-            <span class="contact_type fa fa-twitter"  @click="search=':twitter'"></span>
-            <span class="contact_type fa fa-telegram"  @click="search=':telegram'"></span>
-            <span class="contact_type fa fa-chrome" @click="search=':website'"></span>
+            &nbsp;<span class="contact_type fa fa-facebook" @click="searchTag(':facebook')" 
+                    v-bind:class="{active : search.text==':facebook' }"></span>
+            <span class="contact_type fa fa-whatsapp" @click="searchTag(':whatsapp')" 
+                    v-bind:class="{active : search.text==':whatsapp' }"></span>
+            <span class="contact_type fa fa-twitter"  @click="searchTag(':twitter')" 
+                    v-bind:class="{active : search.text==':twitter' }"></span>
+            <span class="contact_type fa fa-telegram"  @click="searchTag(':telegram')" 
+                    v-bind:class="{active : search.text==':telegram' }"></span>
+            <span class="contact_type fa fa-chrome" @click="searchTag(':website')" 
+                    v-bind:class="{active : search.text==':website' }"></span>
             <span
                  v-bind:class="{'toggle-active' : isOnline, 'fa-rotate-180' : !isOnline }" 
                  @click="toggleOnline"
@@ -105,7 +109,7 @@
         computed : {
             activeChats : function(){ 
                 console.log("store",this.$store.getters.StateChats); 
-                let searchTags = this.search.split(/(:[\w]+\ )/).filter(function (argument) {
+                let searchTags = this.search.text.split(/(:[\w]+\ )/).filter(function (argument) {
                     return !!argument;
                 }).map(function (argument) {
                     var tags = argument.split(":");
@@ -154,7 +158,10 @@
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-             search: '',
+             search: {
+                contactType : null,
+                text : ""
+             }, 
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
         }),
@@ -204,11 +211,32 @@
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus');
             },
-            inputSearch : ()=> {
-
+            searchTag : function(searchTag) {
+                if(this.search.text === searchTag){
+                    this.search.text = "";
+                } else {
+                    this.search.text = searchTag;
+                }
             },
-            loadQuickReply : () => {
+            searchText : function() {
+                var searchTag = this.search.text.split(/(:[\w]+\ *)/).map(function (argument) {
+                    var argument = argument.trim();
+                    if(argument.indexOf(":") == 0){
+                        return (argument == searchTag) ? "" : searchTag;
+                    }
+                    return argument;
+                }).filter(function (argument) {
+                    return !!argument;
+                }).join(" ");
 
+                console.log("sss",[searchTag,this.search,searchTag]);
+                if(this.search.text !== searchTag){
+                    this.search.text = searchTag;
+                } else if(this.search.text === searchTag){
+                    this.search.text = "";
+                } else {
+                    this.search.text = searchTag + " " + this.search.text;
+                }
             },
             async loadQuickLabels(){
                 return await this.$store.dispatch('LoadQuickLabels');
@@ -259,6 +287,9 @@
     }
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;
+    }
+    .contact_type.active {
+      box-shadow: 0 0px 13px 3px rgb(0 0 0 / 45%);
     }
 
 

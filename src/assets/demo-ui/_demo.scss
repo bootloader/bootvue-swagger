@@ -212,3 +212,45 @@
     transition: opacity .15s;
   }
 }
+
+
+/* ===================================== Contact Type ==================================== */
+.img_cont .contact_type{
+  bottom: 0px;
+  right: 0px;
+  position: absolute;
+}
+.contact_type {
+  background-color: #fff;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  margin: auto;
+  display: block;
+  padding: 5px;
+}
+.contact_type.fa-facebook{
+  background-color: #4267B2;
+  color : #FFF;
+}
+.contact_type.fa-whatsapp{
+  background-color: #25D366;
+  color : #FFF;
+}
+.contact_type.fa-twitter{
+  background-color: #1DA1F2;
+  color : #FFF;
+}
+.contact_type.fa-chrome{
+  background-color: #4c8bf5;
+  color : #FFF;
+}
+.contact_type.fa-telegram{
+  background-color: #FFF;
+  color : #0088cc;
+}
+.card-footer .contact_type{
+  float: left;
+  margin-right: 5px;
+}    
