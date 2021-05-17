@@ -450,6 +450,7 @@
                     return;
                 }
                 //activeChat.messages.push(msg);
+                this.showWinMode("CHAT_BOX");
                 this.scrollToBottom();
                 try {
                     console.log("beforeSendcta")
@@ -460,7 +461,7 @@
                     console.error(e)
                     msg.logs = ["Error While Sending"];
                 }
-                this.showWinMode("CHAT_BOX")
+                this.showWinMode("CHAT_BOX");
                 this.scrollToBottom(true);
             },
             onSendMessage :  function () {
