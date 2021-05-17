@@ -164,7 +164,7 @@
                             </span>                        
                         </div>
 
-                    <slide-up-down :active="sendEnabled && showQuickReplies && quickReplies" :duration="200" class="action-events">
+                    <slide-up-down :active="sendEnabled && showQuickReplies && !!quickReplies" :duration="200" class="action-events">
                             <span v-for="quickReply in quickReplies"  v-if="!quickReply.match"
                             @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
                             class="msg_cotainer_smart">  {{quickReply.title}}</span>
