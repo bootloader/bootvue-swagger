@@ -15,7 +15,9 @@
                     class="fas fa-atom"></i> Indigo</span> <span
                     theme="dashboard.agent.bubble" class="w3-bar-item w3-button" hidden><i
                     class="fas fa-atom"></i> Bubble</span>
-                <div class="logo-src"></div>
+                <div class="s logo-src" v-bind:style="logoStyle" >
+                    
+                </div>
             </div>
         </div>
 </template>
@@ -56,10 +58,12 @@
             sidebarbg: String,
         },
         data : () => ({
-            MyFlags : MyFlags, MyConst : MyConst
+            MyFlags : MyFlags, MyConst : MyConst,
+            logoStyle : {
+                "background-image" : "url("+MyConst.logo.full_inverse+")"
+            }
         }),
         methods: {
-
             toggleBodyClass(className) {
                 const el = document.body;
                 this.isOpen = !this.isOpen;
@@ -128,16 +132,16 @@
     }
 
     .mySidebar {
-      color: #292d79!important;
+      color: #ffffff!important;
       background-color: transparent!important
     }
     .mySidebar .mySidebar-container {
-      background-color: #f5f5f5 !important;
+      background-color: #4953ba !important;
       height : 100%;
     }
     .mySidebar .menu_btn_close {
       background-color: rgba(0, 0, 0, 0.03) !important;
-      color: #292d79;
+      color: #ffffff;
     }
     .mySidebar a{
       background-color: rgb(0 0 0 / 9%) !important;
@@ -146,5 +150,8 @@
       color : #FFF!important;
       background-color: rgb(0 0 0 / 50%) !important;
     }
-
+    .w3-button:hover {
+        color: #fff!important;
+        background-color: #424ca9!important;
+    }
 </style>
