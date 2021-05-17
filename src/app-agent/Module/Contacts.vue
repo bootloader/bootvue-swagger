@@ -133,10 +133,11 @@
                         if(searchTag.isTag){
                             return ((chat.contactType || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
                         } else {
-                            return ((chat.name || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1) && chat.active;
+                            console.log(chat.name,searchTag.text)
+                            return ((chat.name || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
                         }
                     });
-                    return _searchTags.length == searchTags.length;
+                    return (_searchTags.length == searchTags.length) && chat.active;
                 }).sort(function(a, b){
                     if(a._assignedToMe && !b._assignedToMe){
                         return -1;

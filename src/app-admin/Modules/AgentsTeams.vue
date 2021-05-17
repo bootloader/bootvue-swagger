@@ -59,7 +59,7 @@
                                 <label for="exampleEmail" class="">Code</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.dept_code">
+                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.code">
                                 </div>
                             </div>
  
@@ -97,7 +97,7 @@
 
     function newItem() {
       return {
-              "dept_code": "",
+              "code": "",
               "dept_email": "",
               "id" : null,
               "name": ""
