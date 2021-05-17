@@ -34,7 +34,11 @@
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
-                    v-bind:class="{data_assigned : chat.assignedToAgent, data_unassigned : !chat.assignedToAgent }"
+                    v-bind:class="{
+                        data_assigned : chat.assignedToAgent,
+                        data_unassigned : !chat.assignedToAgent,
+                        active_contact : (contactId == chat.contactId)
+                    }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
@@ -143,7 +147,10 @@
                     return this.$store.getters.StateMeta.isOnline;
                 }
                 return false;
-            }
+            },
+            contactId : function () {
+               return this.$route.params.contactId;
+            },
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -213,7 +220,7 @@
     .contacts_body{
         background-color: #f5f5f5;
     }
-    .contacts li.router-link-exact-active{
+    .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
     }
     ul.contacts .user_info *, ul.contacts .contact-time p{
@@ -253,5 +260,6 @@
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;
     }
+
 
 </style>

@@ -88,7 +88,7 @@
     </div>
     <div class="card-footer">
             <div>
-                <p>{{activeChat.name}}</p>
+                <p><span class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)" />{{activeChat.name}}</p>
             </div>
             
             <div>
@@ -174,14 +174,20 @@
     export default {
         components: {
             Loading: Loading,
-            VueTagsInput,
+            VueTagsInput,MyDict
             //SmartTagz : SmartTagz
         },
         computed : {
             activeChat : function(){ 
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
-                    if(this.$route.params.contactId == chat.contactId){
+                    if(this.$route.params.profileId == chat.contactId){
+                        return chat;
+                    }
+                }
+               for(var i in this.$store.getters.StateChatHistory){
+                    var chat = this.$store.getters.StateChatHistory[i];
+                    if(this.$route.params.profileId == chat.contactId){
                         return chat;
                     }
                 }

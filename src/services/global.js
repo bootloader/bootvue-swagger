@@ -23,6 +23,7 @@ export const MyDict = {
 	 "FACEBOOK" : "fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fa-telegram",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
 	},
 	socialPrefix : function (argument) {
+		argument = argument || "";
 		if(this.social[argument]){
 			return this.social[argument];
 		}
