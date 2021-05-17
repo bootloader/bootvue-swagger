@@ -585,7 +585,8 @@
                 if(!activeChat){
                     return;
                 }
-                if( activeChat._tab){
+                if( activeChat._tab && activeChat.active){
+                    console.log("Setting Tab to ",activeChat,activeChat._tab)
                     MyFlags.agent.contactsTab = activeChat._tab;
                 }
                 
