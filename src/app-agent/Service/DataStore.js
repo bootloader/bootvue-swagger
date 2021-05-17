@@ -30,7 +30,10 @@ function eq(a,b) {
 
   }
 
-  function isChatAssigned(chat) {
+  function setChatFlags(chat) {
+    var expiryDateStamp = new Date().getTime()-MyConst.config.chatSessionTimeout;
+    chat.expired = chat.expired || (chat.lastInComingStamp < expiryDateStamp);
+    chat.active = chat.active && !chat.expired
     chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
     if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
       chat._tab = "ME";
@@ -137,7 +140,7 @@ const actions = {
         state.chats[c].active = !!chat.active;
         state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
         state.chats[c].resolved = chat.resolved;
-        isChatAssigned(state.chats[c])
+        setChatFlags(state.chats[c])
         console.log(state.chats[c],chat)
         state.chats.splice(c,1);
         //commit("setChats", state.chats);
@@ -306,6 +309,7 @@ const actions = {
   async GetSessionChats({ commit , dispatch},options) {
     let response = await axios.post("/api/sessions/messages",options);
     validateResponse(response);
+    setChatFlags(response.data.results[0]);
     if(response.data.results[0].active){
         dispatch("AddChat",response.data.results[0]);
     } else {
@@ -341,7 +345,7 @@ const mutations = {
             chats[c].lastmsg = chats[c].messages[i];
           }
         }
-      isChatAssigned(chats[c])
+      setChatFlags(chats[c])
     }
     state.chatsSize = chats.length;
     state.chats = chats;

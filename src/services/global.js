@@ -5,7 +5,8 @@ export const MyConst = {
 	appPrefix : "/" + window.CONST.APP,
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
-	agent : window.CONST.APP_USER
+	agent : window.CONST.APP_USER,
+	config : window.CONST.CONFIG || window.CONST.CONFG
 }
 export const MyFlags = {
   showSidebar: false,
