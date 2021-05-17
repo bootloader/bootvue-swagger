@@ -416,6 +416,7 @@
             '$route.params.sessionId': function (contactId) {
                 //this.loadChat();
                 this.loadArchiveMessages();
+                this.showWinMode("CHAT_BOX");
             }
         },
         methods: {
