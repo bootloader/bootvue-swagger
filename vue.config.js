@@ -38,8 +38,6 @@ module.exports = {
         // },
     },
 
-
-
     // pages: {
     //   'admin': {
     //     entry: './src/owa-admin/main.js',
