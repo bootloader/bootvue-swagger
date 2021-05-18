@@ -47,7 +47,7 @@ const state = {
   user: null,agents : [],
   posts: null,
   contacts : null,
-  chats : null,chatsVersion : 0,
+  chats : null,chatsVersion : 0, chatsSize : null,
   chatsCounter : 1,
   meta : null,
   mediaOptions : null, quickActions : null, quickLabels : null,
@@ -125,7 +125,7 @@ const actions = {
     return await new Promise((resolve, reject) => {
       var intrvl; 
       intrvl = setInterval(() => {
-        if(state.chatsSize>0){
+        if(state.chatsSize !== null){
           clearInterval(intrvl);
           resolve('foo');
         }

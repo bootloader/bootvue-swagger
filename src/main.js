@@ -52,6 +52,7 @@ Vue.use(VueToast);
 })(function () { //Condition
 	return window.CONST.APP
 })("admin",function (admin) { //Admin App
+	 console.log("This is Admin App")
     new Vue({
 	  el: '#app',
 	  store,
@@ -61,6 +62,7 @@ Vue.use(VueToast);
 	});
 
 })("agent", function(agent){ //Agent App
+   console.log("This is Agent App")
    new Vue({
 	  el: '#app',
 	  store,

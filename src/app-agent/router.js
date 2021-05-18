@@ -7,22 +7,22 @@ export default AppRouter.route({
         // Dashboards
         {
             path: '/app/home',
-            name: 'agent-dashboard',
+            name: 'agent-home',
             component: () => import('./Module/Home.vue'),
         },
         {
             path: '/app/chat/:contactId/:sessionId',
-            name: 'agent-dashboard',
+            name: 'agent-chat',
             component: () => import('./Module/Home.vue'),
         },
         {
             path: '/app/chat/:contactId/:sessionId/:profileId',
-            name: 'agent-dashboards',
+            name: 'agent-chat-profile',
             component: () => import('./Module/Home.vue'),
         },
         {
             path: '/app/chistory/:contactId/:sessionId',
-            name: 'agent-dashboard',
+            name: 'agent-chat-session',
             component: () => import('./Module/Home.vue'),
         },
     ]
