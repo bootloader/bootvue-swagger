@@ -30,18 +30,18 @@ function eq(a,b) {
 
   }
 
-  function setChatFlags(chat) {
-    var expiryDateStamp = new Date().getTime()-MyConst.config.chatSessionTimeout;
-    chat.expired = chat.expired || (chat.lastInComingStamp < expiryDateStamp);
-    chat.active = chat.active && !chat.expired
-    chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
-    if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
-      chat._tab = "ME";
-    } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){
-       chat._tab = "TEAM";
-    }
-
+function setChatFlags(chat) {
+  var expiryDateStamp = new Date().getTime()-MyConst.config.chatSessionTimeout;
+  chat.expired = chat.expired || (chat.lastInComingStamp < expiryDateStamp);
+  chat.active = chat.active && !chat.expired
+  chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
+  if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
+    chat._tab = "ME";
+  } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){
+     chat._tab = "TEAM";
   }
+
+}
 
 const state = {
   user: null,agents : [],
