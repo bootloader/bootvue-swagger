@@ -135,9 +135,9 @@
                  <b-icon v-else-if="m.stamps.SENTX" icon="check" 
                     variant="dark" class="msg_status_send"></b-icon>
                  <b-icon v-else-if="m.stamps.SENT" icon="check" 
-                    variant="muted" class="msg_status_send "></b-icon>
+                    variant="muted" class="msg_status_send muted"></b-icon>
                  <b-icon v-else="" icon="check" 
-                    variant="" class="msg_status_send"></b-icon>
+                    variant="light" class="msg_status_send"></b-icon>
             </span>
         </div>
         <div class="img_cont_msg">
@@ -770,6 +770,9 @@
     }
     .msg_status_send {
         font-size: 20px;
+    }
+    .msg_status_send.muted {
+        color: #6c757d87 !important;
     }
 
     .divider-v {
