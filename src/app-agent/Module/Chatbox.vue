@@ -124,7 +124,7 @@
                 <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
                 <span>&nbsp;&nbsp;</span>
 
-                <b-icon v-if="m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
+                <b-icon v-if="m.stamps.SENT_ERR || m.logs" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
                     variant="danger" class="msg_status_send" ></b-icon>
                 <b-icon v-else-if="m.stamps.SENTX_ERR" icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
                     variant="danger" class="msg_status_send" ></b-icon>
