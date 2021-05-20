@@ -119,8 +119,26 @@
             <div v-else-if="m.template" class="my-msg-template-tag">
                 <span class="fa fa-tag"></span>&nbsp;{{m.template}}
             </div>
-            <i v-if="m.logs" class="log_icon fa fa-exclamation-triangle float-right" v-tooltip="m.logs+''"></i>
-            <span class="msg_time_send">{{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span></span>
+            <span class="msg_time_send">
+                
+                <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
+                <span>&nbsp;&nbsp;</span>
+
+                <b-icon v-if="m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
+                    variant="danger" class="msg_status_send" ></b-icon>
+                <b-icon v-else-if="m.stamps.SENTX_ERR" icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
+                    variant="danger" class="msg_status_send" ></b-icon>
+                <b-icon v-else-if="m.stamps.READ" icon="check-all" 
+                    variant="success" class="msg_status_send"></b-icon>
+                 <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 
+                    variant="dark" class="msg_status_send"></b-icon>
+                 <b-icon v-else-if="m.stamps.SENTX" icon="check" 
+                    variant="dark" class="msg_status_send"></b-icon>
+                 <b-icon v-else-if="m.stamps.SENT" icon="check" 
+                    variant="muted" class="msg_status_send "></b-icon>
+                 <b-icon v-else="" icon="check" 
+                    variant="" class="msg_status_send"></b-icon>
+            </span>
         </div>
         <div class="img_cont_msg">
             <img src="assets/images/profile.png" class="rounded-circle user_img_msg">
@@ -749,6 +767,9 @@
 
     .log_icon {
         color: red;
+    }
+    .msg_status_send {
+        font-size: 20px;
     }
 
     .divider-v {

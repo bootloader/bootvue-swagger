@@ -6,7 +6,7 @@ import mainrouter from './router';
 import store from './store';
 import axios from 'axios';
 
-import BootstrapVue from "bootstrap-vue"
+import { BootstrapVue,BootstrapVueIcons } from "bootstrap-vue"
 
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -33,6 +33,8 @@ console.log("ADMIN====",axios.defaults.baseURL);
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons)
+
 Vue.use(VueLoading);
 Vue.use(VTooltip);
 VTooltip.options.defaultClass = 'my-tooltip';
