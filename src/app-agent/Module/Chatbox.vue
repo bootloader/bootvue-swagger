@@ -102,7 +102,6 @@
     </div>
 
     <div v-else-if="m.type=='O'" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
-       <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
         <div class="msg_cotainer_send">
             <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> 
@@ -124,20 +123,23 @@
                 <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
                 <span>&nbsp;&nbsp;</span>
 
-                <b-icon v-if="m.stamps.SENT_ERR || m.logs" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
-                    variant="danger" class="msg_status_send" ></b-icon>
-                <b-icon v-else-if="m.stamps.SENTX_ERR" icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
-                    variant="danger" class="msg_status_send" ></b-icon>
-                <b-icon v-else-if="m.stamps.READ" icon="check-all" 
-                    variant="success" class="msg_status_send"></b-icon>
-                 <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 
-                    variant="dark" class="msg_status_send"></b-icon>
-                 <b-icon v-else-if="m.stamps.SENTX" icon="check" 
-                    variant="dark" class="msg_status_send"></b-icon>
-                 <b-icon v-else-if="m.stamps.SENT" icon="check" 
-                    variant="muted" class="msg_status_send muted"></b-icon>
-                 <b-icon v-else="" icon="check" 
-                    variant="light" class="msg_status_send"></b-icon>
+                <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
+                    <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin msg_status_send" >&nbsp;</i>
+                    <b-icon v-else-if="m.logs || m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
+                        variant="danger" class="msg_status_send" ></b-icon>
+                    <b-icon v-else-if="m.logs || m.stamps.SENTX_ERR" icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
+                        variant="danger" class="msg_status_send" ></b-icon>
+                    <b-icon v-else-if="m.stamps.READ" icon="check-all" 
+                        variant="success" class="msg_status_send"></b-icon>
+                     <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 
+                        variant="dark" class="msg_status_send"></b-icon>
+                     <b-icon v-else-if="m.stamps.SENTX" icon="check" 
+                        variant="dark" class="msg_status_send"></b-icon>
+                     <b-icon v-else-if="m.stamps.SENT" icon="check" 
+                        variant="muted" class="msg_status_send muted"></b-icon>
+                     <b-icon v-else="" icon="check" 
+                        variant="light" class="msg_status_send"></b-icon>
+                </span>
             </span>
         </div>
         <div class="img_cont_msg">
@@ -244,7 +246,7 @@
 
 
                     <div class="input-group my-input-section" 
-                        v-bind:class="{ fade : !sendEnabled}"
+                        v-bind:class="{ invisible : !sendEnabled}"
                         >
                         <div class="input-group-prepend">
                             <span 
@@ -438,7 +440,7 @@
             }
         },
         methods: {
-            prepareMessage : function function_name(text,template,action,empty) {
+            prepareMessage : function (text,template,action,empty) {
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
@@ -453,16 +455,19 @@
                     sender : MyConst.agent,name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
                     template : template,
-                    action : action
+                    action : action, type : "O"
                 };
                 return msg;
             },
             async sendText(text,template, action){
                 this.showQuickReplies = false;
                 this.isShowMediaOptions = false;
+                this.selectedMedia = null;
+
                 if(this.winMode == "UPLOAD_MEDIA" && this.$refs.myVueDropzone.getQueuedFiles().length > 0){
                     await this.$refs.myVueDropzone.processQueue();
-                }
+                } 
+
                 var msg = this.prepareMessage(text,template, action);
                 if(!msg){
                     console.log("I Return")
@@ -471,6 +476,7 @@
                 //activeChat.messages.push(msg);
                 this.showWinMode("CHAT_BOX");
                 this.scrollToBottom();
+
                 try {
                     console.log("beforeSendcta")
                     var resp = await this.$store.dispatch('SendChat', msg);
@@ -768,16 +774,32 @@
     .log_icon {
         color: red;
     }
+    .msg_status_send-wrapper {
+        display: inline-block;
+        height: 15px;
+        width: 15px;
+        padding: 0px;
+        margin: 0px;
+        float: right;
+    }
     .msg_status_send {
         font-size: 20px;
     }
     .msg_status_send.muted {
         color: #6c757d87 !important;
     }
-
+    .msg_status_send.sending {
+        color: #6c757d87 !important;
+        /* width: 6px; */
+        /* height: 6px; */
+        font-size: 11px;
+        margin: 0px;
+        padding: 0px;
+        line-height: 15px;
+    }
     .divider-v {
         padding-left: 2px;
-     padding-right: 4px;
+        padding-right: 4px;
     }
     .divider-v:after{
         content: " ";
@@ -916,8 +938,5 @@
  }
   .user_assignment .vs__search, .vs__search:focus{
     width: 100%;
-  }
-  .fade {
-    visibility : hidden;
   }
 </style>

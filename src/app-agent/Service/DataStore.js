@@ -213,7 +213,7 @@ const actions = {
     m.messageIdRef = m.messageIdRef || guid();
     for(var c in state.chats){
       var chat = state.chats[c];
-      if( (m.sessionId == chat.sessionId ) || (m.contactId == chat.contactId) ){
+      if(m.sessionId == chat.sessionId){
         var index  = -1
         for(var j in chat.messages){
           var msg = chat.messages[j];
@@ -224,6 +224,7 @@ const actions = {
           if(eq(msg.messageId,m.messageId) || eq(msg, m) 
                 || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
             index = j;
+            console.log("ReadChat================",m.version, msg.version)
             if(m.version < msg.version){
               m=msg;
             }            
@@ -236,6 +237,7 @@ const actions = {
         } else {
           chat.messages.splice(index, 1, m);
         }
+        console.log("ReadChat================   DONE",index,m.version, msg.version)
         //state.chats[c].newmsg = true;
         break;
       }
@@ -355,6 +357,7 @@ const actions = {
 const mutations = {
   //Contacts
   setChats(state, chats) {
+    console.log("==================setChats    START")
     for(var c in chats){
       chats[c].lastmsg = {};
       if(chats[c].messages)
@@ -372,6 +375,7 @@ const mutations = {
     state.chatsSize = chats.length;
     state.chats = chats;
     state.chatsVersion++;
+    console.log("==================setChats:   DONE")
   },
   setChatHistory(state, chatHistory) {
     state.chatHistory = chatHistory;
