@@ -368,7 +368,7 @@ const mutations = {
           if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
             chats[c].lastmsg = chats[c].messages[i];
           }
-          chats[c].messages[i].stamps = chats[c].messages[i].stamps || { X : true}
+          chats[c].messages[i].stamps = chats[c].messages[i].stamps || { }
         }
       setChatFlags(chats[c])
     }
