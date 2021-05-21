@@ -59,12 +59,17 @@
       this.tunnel = tunnel.init().instance()
         .on("/agent/onmessage", function(msg){
             msg.version = 3;
-            console.log("msg===",msg)
+            console.log("/agent/onmessage===",msg)
             THAT.$store.dispatch('ReadChat', msg);
+        }).on("/message/receive/new", function(msg){
+            console.log("/message/receive/new:msg===",msg)
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
-          THAT.$store.dispatch('AddChat', testresponse);
+            THAT.$store.dispatch('AddChat', testresponse);
         }).on("/dept/onassign-__DEPT__", function(testresponse){
-           THAT.$store.dispatch('AddChat', testresponse);
+            THAT.$store.dispatch('AddChat', testresponse);
+        }).on("/message/update/status", function(status){
+            console.log("/message/update/status===",status)
+            THAT.$store.dispatch('UpdateChatMessageStatus', status);
         });
     },
     beforeUnmount (){

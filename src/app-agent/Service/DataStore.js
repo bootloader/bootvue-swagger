@@ -188,6 +188,26 @@ const actions = {
     return response.data;
   },
 
+  async UpdateChatMessageStatus({ commit },msgStatus) {
+    for(var c in state.chats){
+      var chat = state.chats[c];
+      if(chat.messages){
+        for (var m  in chat.messages) {
+          var msg = chat.messages[m];
+          if(eq(chat.contactType, msgStatus.contactType)
+            && (eq(msg.messageId,msgStatus.messageId) || eq(msgStatus.messageIdExt,m.messageIdExt))
+          ){
+              msg.stamps = msg.stamps || {};
+              msg.stamps[msgStatus.status] = msgStatus.timestamp;
+              console.log("Voila!!!!!")
+              commit("setChats", state.chats);
+              return;
+          }
+        }
+      }
+    }
+  },
+
   async ReadChat({ commit },m) {
     if(!m) return;
     m.messageIdRef = m.messageIdRef || guid();
@@ -201,7 +221,8 @@ const actions = {
             msg.messageId = m.messageId;
             msg.version = 1;
           }
-          if(eq(msg.messageId,m.messageId) || eq(msg, m) || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
+          if(eq(msg.messageId,m.messageId) || eq(msg, m) 
+                || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
             index = j;
             if(m.version < msg.version){
               m=msg;
