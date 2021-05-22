@@ -57,10 +57,10 @@
 
                     <div  class="chat-header-right">
                         <div v-if="activeChat" class="video_cam">
-                            <span  @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
+                            <span  @click="showContactProfile('info')" v-tooltip="(MyFlags.agent.profileView == 'info' ? 'Hide' : 'Show' ) + ' Profile Info'" >
                                 <i class="fa fa-user"></i>
                             </span> 
-                            <span  @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
+                            <span  @click="showContactProfile('history')" v-tooltip="(MyFlags.agent.profileView =='history' ? 'Hide' : 'Show' ) + ' Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
                         </div>
@@ -520,6 +520,9 @@
                 }
                 if(MyFlags.agent.profileView == type){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
+                    if(!MyFlags.agent.showProfile){
+                         MyFlags.agent.profileView = null;
+                    }
                 } else {
                     MyFlags.agent.profileView = type
                     MyFlags.agent.showProfile = true
