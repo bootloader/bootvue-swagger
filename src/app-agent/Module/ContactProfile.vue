@@ -3,7 +3,7 @@
     
     <div class="card-header">
         <span class="fa fa-close float-right"
-        @click="MyFlags.agent.showProfile = false"></span>
+        @click="MyFlags.agent.showProfile=false"></span>
         <center>{{MyFlags.agent.profileView}}</center>
 
     </div>
@@ -112,41 +112,46 @@
         
         <b-modal v-if="activeChat && activeChat.contact" id="tagmodal" title="Contact Labels"
             @ok="tagmodalOk"
-        >
-           <vue-tags-input
-              v-model="labelInput"
-              :tags="labels"
-              :add-only-from-autocomplete="true"
-              :autocomplete-items="quickLabels"
-              :autocomplete-min-length="0"
-              :placeholder="'Select Labels'"
-              @tags-changed="onLabelChange"
-              >
+            content-class="card"
+            footer-class="card-footer"
+            header-class="card-header"
+            header-text-variant="white"
+            body-class="card-body"
+            dialog-class="card-dialog"
+            >
+                
+                <vue-tags-input
+                    v-model="labelInput"
+                    :tags="labels"
+                    :add-only-from-autocomplete="true"
+                    :autocomplete-items="quickLabels"
+                    :autocomplete-min-length="0"
+                    :placeholder="'Select Labels'"
+                    @tags-changed="onLabelChange">
 
-                 <div slot="autocomplete-item"
-                    slot-scope="props"
-                    class="my-item"
-                    @click="props.performAdd(props.item)" >
+
+
+                    <div slot="autocomplete-item"
+                        slot-scope="props"
+                        class="my-item"
+                        @click="props.performAdd(props.item)" >
                     
-                    <i v-bind:style="{ 'background-color': '#' + props.item.color }">&nbsp;</i>&nbsp;
+                        <i v-bind:style="{ 'background-color': '#' + props.item.color }">&nbsp;</i>&nbsp;
 
-                    <i class="material-icons" >
+                        <i class="material-icons" >
                       {{ props.item.category }}
-                    </i> {{ props.item.title }}
-                </div>
+                        </i> {{ props.item.title }}
+                    </div>
 
 
-                  <div
-                    slot="tag-left"
-                    slot-scope="props"
-                    class="my-tag-left"
-                    @click="props.performOpenEdit(props.index)"
-                  >
-                    <i v-bind:style="{ 'background-color': '#' + props.tag.color }">&nbsp;</i>&nbsp;
-                  </div>
+                    <div slot="tag-left"
+                        slot-scope="props"
+                        class="my-tag-left"
+                        @click="props.performOpenEdit(props.index)">
+                        <i v-bind:style="{ 'background-color': '#' + props.tag.color }">&nbsp;</i>&nbsp;
+                    </div>
 
-
-          </vue-tags-input>
+                </vue-tags-input>
         </b-modal>
 
 </div>
@@ -322,11 +327,24 @@
     .contact-profile-info data {
         font-weight: 100;
     }
+    .card-footer .contact_type{
+        float: left;
+        margin-right: 5px;
+    } 
 </style>
 <style type="text/css">
     #tagmodal li.ti-tag, #tagmodal li.ti-item{
         background-color: #efefef!important;
         color: #212529!important;
         border: #ccc 1px solid;
+    }
+    .modal-dialog.card-dialog {
+        box-shadow: none!important;
+    } 
+    .modal-body.card-body {
+        background-color: #f5f5f5;;
+    }
+    .modal-footer.card-footer{
+        background-color: rgb(247 247 247 / 95%);
     }
 </style>

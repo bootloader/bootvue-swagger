@@ -736,7 +736,6 @@
 
     }
 
-
 </script>
 <style type="text/css" scoped>
     .chat-header-left{
@@ -952,7 +951,6 @@
     font-size: 10px;
     color: rgba(255,255,255,0.6);
   }
-
 </style>
 <style type="text/css">
   .user_info .user_assignment .vs__selected {

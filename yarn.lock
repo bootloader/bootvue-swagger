@@ -1538,7 +1538,7 @@
   "resolved" "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz"
   "version" "1.0.0"
 
-"bootstrap-vue@^2.0.0-rc.18":
+"bootstrap-vue@^2.10.0":
   "resolved" "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.21.2.tgz"
   "version" "2.21.2"
   dependencies:
@@ -7799,11 +7799,6 @@
   dependencies:
     "vue" "^2.5.21"
 
-"vue-simple-search-dropdown@^1.0.1":
-  "integrity" "sha512-r3LuGFB3WqMDRILx+Z/Y2S9UTLqMh3Y0nv1Oly+tt8oEzvg77r0tfYLHVqQlhsmVPy0GmSuxMMbetMkDRLOEqg=="
-  "resolved" "https://registry.npmjs.org/vue-simple-search-dropdown/-/vue-simple-search-dropdown-1.0.1.tgz"
-  "version" "1.0.1"
-
 "vue-slide-up-down@^2.0.1":
   "integrity" "sha512-2crtzW3oeasRrDMNrKMUW5cz0HV7qhj2BPM9UNtPZwVXiHZT5qjdcn1GwpRxKK7DMBhD6OeTmEumwWxXK5XdHw=="
   "resolved" "https://registry.npmjs.org/vue-slide-up-down/-/vue-slide-up-down-2.0.1.tgz"
@@ -7837,9 +7832,10 @@
   "resolved" "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz"
   "version" "2.6.12"
 
-"vue2-daterange-picker@^0.6.3":
-  "resolved" "https://registry.yarnpkg.com/vue2-daterange-picker/-/vue2-daterange-picker-0.6.3.tgz"
-  "version" "0.6.3"
+"vue2-daterange-picker@^0.6.5":
+  "integrity" "sha512-8gXvbqMF8LpfArlCaeG/pveoM/Q+DQzfG4gt++NZqLabs859ch7zbuvjvvcMvchGp9yOIsBqw+jwpL/v5kr31A=="
+  "resolved" "https://registry.npmjs.org/vue2-daterange-picker/-/vue2-daterange-picker-0.6.5.tgz"
+  "version" "0.6.5"
   dependencies:
     "vue" "^2.6.10"
 

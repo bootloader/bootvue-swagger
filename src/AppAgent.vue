@@ -49,11 +49,11 @@
       
    
 
-      let css = document.createElement('link');
-      css.setAttribute('rel', 'stylesheet');
-      css.setAttribute('type', 'text/css');
-      css.setAttribute('href', '//www.w3schools.com/w3css/4/w3.css')
-      document.head.appendChild(css);
+      // let css = document.createElement('link');
+      // css.setAttribute('rel', 'stylesheet');
+      // css.setAttribute('type', 'text/css');
+      // css.setAttribute('href', '//www.w3schools.com/w3css/4/w3.css')
+      // document.head.appendChild(css);
 
       var THAT =  this;
       this.tunnel = tunnel.init().instance()

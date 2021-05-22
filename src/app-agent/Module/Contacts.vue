@@ -3,10 +3,9 @@
         <div class="card-header">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text menu_btn"
-                        @click="MyFlags.showSidebar = !MyFlags.showSidebar">
+                    <a class="input-group-text menu_btn mySidebar-open" v-b-toggle href="#my-sidebar" @click.prevent>
                         <i class="fa fa-bars"></i>
-                    </span>
+                    </a>
                 </div>
                 <input type="text" 
                     v-model="search.text"
@@ -292,6 +291,8 @@
     .contact_type.active {
       box-shadow: 0 0px 13px 3px rgb(0 0 0 / 45%);
     }
-
-
+    .card-footer .contact_type{
+        float: left;
+        margin-right: 5px;
+    } 
 </style>

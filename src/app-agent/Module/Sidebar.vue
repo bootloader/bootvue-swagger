@@ -1,13 +1,29 @@
 <template>
-        <div class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left mySidebar"
-            v-show="MyFlags.showSidebar" id="mySidebar">
-            <div class="mySidebar-container">
-                <button @click="MyFlags.showSidebar = !MyFlags.showSidebar"
-                    class="w3-bar-item w3-large menu_btn_close fa fa-arrow-left">&nbsp;</button>
-                <span class="w3-bar-item w3-button">
-                <i class="fas fa-user">&nbsp;&nbsp;</i>{{MyConst.agent}}</span>    
-                <a :href="MyConst.appPrefix + '/auth/logout'" class="w3-bar-item w3-button"><i
-                    class="fas fa-sign-out-alt"></i> Logout</a>
+        <div class="mySidebar" id="mySidebar">
+
+
+    <b-sidebar id="my-sidebar" title="Sidebar" 
+        width="200px" 
+        :backdrop-variant="'transparent'"
+        backdrop
+        no-header
+        shadow>
+
+        <div class="mySidebar-container">
+            <nav class="mb-3">
+                <b-nav vertical>
+                    <b-nav-item v-b-toggle href="#my-sidebar" @click.prevent v-b-toggle.my-sidebar class="menu_btn_close">
+                        <i class="fa fa-arrow-left">&nbsp;&nbsp;</i>
+                    </b-nav-item>
+                    <b-nav-item href="#link-user">
+                        <i class="fas fa-user">&nbsp;&nbsp;</i>{{MyConst.agent}} 
+                    </b-nav-item>
+                    <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </b-nav-item>
+                </b-nav>
+            </nav>
+
                 <hr />
                 <span theme="dashboard.agent.metalic" class="w3-bar-item w3-button"
                     hidden><i class="fas fa-atom"></i> Metalic</span> <span
@@ -15,18 +31,26 @@
                     class="fas fa-atom"></i> Indigo</span> <span
                     theme="dashboard.agent.bubble" class="w3-bar-item w3-button" hidden><i
                     class="fas fa-atom"></i> Bubble</span>
+
+
+
                 <div class="s logo-src" v-bind:style="logoStyle" >
                     
                 </div>
             </div>
+
+
+    </b-sidebar>
+
+
         </div>
 </template>
 
 <script>
-    import {SidebarMenu} from 'vue-sidebar-menu'
-    import VuePerfectScrollbar from 'vue-perfect-scrollbar'
     import { MyFlags,MyConst } from './../../services/global';
 
+    import { BSidebar } from 'bootstrap-vue'
+    import 'bootstrap-vue/dist/bootstrap-vue.css'
 
     function menuFilter(menu){
         var header = null;
@@ -51,8 +75,7 @@
     }
     export default {
         components: {
-            SidebarMenu,
-            VuePerfectScrollbar
+            BSidebar
         },
         props: {
             sidebarbg: String,
@@ -61,7 +84,8 @@
             MyFlags : MyFlags, MyConst : MyConst,
             logoStyle : {
                 "background-image" : "url("+MyConst.logo.full_inverse+")"
-            }
+            },
+            showSidebarOpening : false
         }),
         methods: {
             toggleBodyClass(className) {
@@ -101,11 +125,12 @@
             },
         },
         mounted() {
+            var THAT =  this;
             this.$nextTick(function () {
                 window.addEventListener('resize', this.getWindowWidth);
 
                 //Init
-                this.getWindowWidth()
+                this.getWindowWidth();
             })
         },
 
@@ -114,8 +139,7 @@
         }
     }
 </script>
-
-<style type="text/css" scoped>
+<style type="text/css" scoped >
     .logo-src{
         height: 45px;
         width: 165px;
@@ -140,11 +164,12 @@
       height : 100%;
     }
     .mySidebar .menu_btn_close {
-      background-color: rgba(0, 0, 0, 0.03) !important;
+      background-color: rgb(0 0 0 / 12%) !important;
       color: #ffffff;
     }
     .mySidebar a{
-      background-color: rgb(0 0 0 / 9%) !important;
+        color: #fff!important;
+        background-color: rgb(0 0 0 / 9%) !important;
     }
     .mySidebar a:hover{
       color : #FFF!important;

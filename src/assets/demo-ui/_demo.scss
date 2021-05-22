@@ -250,11 +250,10 @@
   background-color: #FFF;
   color : #0088cc;
 }
-.card-footer .contact_type{
-  float: left;
-  margin-right: 5px;
-} 
 
+.card.modal-content{
+  height: 100%!important;
+}
 
 /**   ============================== Utility classes  ==============================  */
 .my-disbaled {
