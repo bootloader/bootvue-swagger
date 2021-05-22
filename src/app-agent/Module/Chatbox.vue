@@ -173,8 +173,9 @@
                                         <i v-if="!showQuickReplies" class="fa fa-arrow-circle-up" ></i>
                                         <i v-if="showQuickReplies" class="fa fa-arrow-circle-down" ></i>
                                     </span> 
-                                    <span v-if="quickReplies && quickReplies.length>0" class="divider-v" ></span> 
-                                    <span class="msg_cotainer_smart" @click="closSession" v-tooltip="'End Chat'">
+                                    <span v-if="quickReplies && quickReplies.length>0 " class="divider-v" ></span> 
+                                    <span class="msg_cotainer_smart" @click="activeChat.assignedToAgent && closSession()" v-tooltip="'End Chat'" 
+                                        v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
                                         <i class="fa fa-check-circle" ></i>
                                     </span>
                                 </span>    
