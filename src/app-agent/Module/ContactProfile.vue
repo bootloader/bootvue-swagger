@@ -118,6 +118,8 @@
               :tags="labels"
               :add-only-from-autocomplete="true"
               :autocomplete-items="quickLabels"
+              :autocomplete-min-length="0"
+              :placeholder="'Select Labels'"
               @tags-changed="onLabelChange"
               >
 
