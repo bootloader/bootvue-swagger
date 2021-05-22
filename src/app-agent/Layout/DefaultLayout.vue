@@ -68,7 +68,7 @@
 </script>
 
 <style lang="css">
-    @import './../../assets/agent/css/dashboard.agent.css'
+    @import './../../assets/agent/css/dashboard.agent.css';
     .main-content-wrapper {
         overflow: hidden;
     }
