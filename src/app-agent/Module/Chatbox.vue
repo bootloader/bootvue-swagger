@@ -15,7 +15,7 @@
                         </div>
                         <div class="user_info"
                             v-if="activeChat">
-                            <span class="user_name" @click="showContactProfile" >{{activeChat.name}}- {{countQuickReplies}}</span>
+                            <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
                             <div v-if="activeChat.ilastmsg" class="user_stamp">{{activeChat.ilastmsg.timestamp | formatDate}} </div>
                             <div v-if="assignedToAgent" class="user_assignment">
                                 <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
