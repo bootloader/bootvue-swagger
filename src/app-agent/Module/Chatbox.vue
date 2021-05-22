@@ -15,7 +15,7 @@
                         </div>
                         <div class="user_info"
                             v-if="activeChat">
-                            <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
+                            <span class="user_name" @click="showContactProfile" >{{activeChat.name}}- {{countQuickReplies}}</span>
                             <div v-if="activeChat.ilastmsg" class="user_stamp">{{activeChat.ilastmsg.timestamp | formatDate}} </div>
                             <div v-if="assignedToAgent" class="user_assignment">
                                 <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
@@ -163,33 +163,40 @@
                     </div>
                     <div v-if="sendEnabled && activeChat && activeChat.active" class="msg_card_body-panel">
                         <hr/>
-                        <div class="msg_card_body-panel-tags">
-                            <span v-if="quickReplies">
-                                <span v-for="quickReply in quickReplies" v-if="quickReply.match"
-                                @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                                class="msg_cotainer_smart">  {{quickReply.title}}</span>    
-                            </span>
-
-                            <span class="msg_cotainer_smart" @click="(showQuickReplies=!showQuickReplies) && scrollToBottom(true)" v-tooltip="'Show More'">
-                                <i v-if="!showQuickReplies" class="fa fa-arrow-circle-up" ></i>
-                                <i v-if="showQuickReplies" class="fa fa-arrow-circle-down" ></i>
-                            </span>  
-
-                            <span v-if="quickReplies && quickReplies.length>0" class="divider-v" ></span>
-                            <span class="msg_cotainer_smart" @click="isShowMediaOptions=!isShowMediaOptions" v-tooltip="'Send QuickMedia'" hidden>
-                                <i class="fa fa-photo-video" ></i>
-                            </span> 
-                            <span class="msg_cotainer_smart" @click="closSession" v-tooltip="'End Chat'">
-                                <i class="fa fa-check-circle" ></i>
-                            </span>                        
+                        
+                        <div class="msg_card_body-panel-tags" >
+                            <div class="quick-replies-wrapper" ref="quickRepliesWrapper" >
+                                <span class="float-right"> 
+                                    <span class="msg_cotainer_smart"
+                                         @click="(showQuickReplies=!showQuickReplies) && scrollToBottom(true)" 
+                                         v-tooltip="showQuickReplies ? 'Show Less' : 'Show More'">
+                                        <i v-if="!showQuickReplies" class="fa fa-arrow-circle-up" ></i>
+                                        <i v-if="showQuickReplies" class="fa fa-arrow-circle-down" ></i>
+                                    </span> 
+                                    <span v-if="quickReplies && quickReplies.length>0" class="divider-v" ></span> 
+                                    <span class="msg_cotainer_smart" @click="closSession" v-tooltip="'End Chat'">
+                                        <i class="fa fa-check-circle" ></i>
+                                    </span>
+                                </span>    
+  
+                                <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
+                                    <span v-for="(quickReply, index) in quickReplies" v-if="quickReply.match && (index < countQuickReplies)"
+                                    @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
+                                    class="msg_cotainer_smart">  {{quickReply.title}}</span>    
+                                </span>
+      
+                                <span class="msg_cotainer_smart" @click="isShowMediaOptions=!isShowMediaOptions" v-tooltip="'Send QuickMedia'" hidden>
+                                    <i class="fa fa-photo-video" ></i>
+                                </span> 
+                            </div>
                         </div>
 
-                    <slide-up-down :active="sendEnabled && showQuickReplies && !!quickReplies" :duration="200" class="action-events">
-                            <span v-for="quickReply in quickReplies"  v-if="!quickReply.match"
-                            @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                            class="msg_cotainer_smart">  {{quickReply.title}}</span>
-                         <hr/>
-                    </slide-up-down>
+                        <slide-up-down :active="showQuickReplies && !!quickReplies" :duration="200" class="quick-replies-more"> 
+                                <span v-for="(quickReply, index) in quickReplies"  v-if="!quickReply.match || (index >= countQuickReplies)"
+                                @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
+                                class="msg_cotainer_smart">  {{quickReply.title}}</span>
+                             <hr/>
+                        </slide-up-down>
 
 
                     </div>
@@ -354,13 +361,16 @@
             MyDict,MyFlags,MyConst,
             isLoading : false,
             showQuickActions : false,
-            showQuickReplies : false,
+            showQuickReplies : false, countQuickReplies : 3,
             showAgentOption : false,
             assignedToAgent : null,
             activeChat : null,
             chatsVersionLocal : 0,
 
             winMode : null,
+
+            //Locla Dirty Flags
+            quickRepliesWrapperHeight : null,
 
             dz: {
               url: MyConst.context + '/api/sessions/message/upload',
@@ -423,7 +433,6 @@
                 if(msg.sessionId == THAT.$route.params.sessionId)
                     THAT.scrollToBottom(true);
             });
-
         },
         beforeUnmount (){
             this.tunnel.off();
@@ -551,16 +560,39 @@
             async loadQuickReplies(){
                 return await this.$store.dispatch('LoadQuickReplies');
             },
+            calcQuickReplies : debounce(function (argument) {
+                if(this.$refs.quickRepliesLess){
+                    console.log("calcQuickReplies = N",this.$refs.quickRepliesLess.childNodes.length);
+                    var totalWidth = this.$refs.quickRepliesLess.offsetWidth;
+                    var count = 0, innerWidth = 0;
+                    for (var i = 0; i < this.$refs.quickRepliesLess.childNodes.length; i++) {
+                        var node = this.$refs.quickRepliesLess.childNodes[i];
+                        if(node.tagName != 'SPAN')
+                            continue;
+                        innerWidth = innerWidth + node.offsetWidth + 6;
+                        if(innerWidth > totalWidth){
+                            break;
+                        }
+                        count++;
+                    }
+                    console.info("calcQuickReplies = C",count);
+                    //this.countQuickReplies = count;
+                }
+            },2000),
             async setQuickReplies(){
                 this.refreshActiveChats();
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
                 }
+
+               //this.calcQuickReplies();
+
                 var ilastmsg = activeChat.ilastmsg;
                 if(!ilastmsg){
                     return;
                 }
+
                 if(this.ilastMessageId == ilastmsg.messageId){
                     return;
                 }
@@ -764,13 +796,15 @@
 
     .msg_card_body-panel .msg_card_body-panel-tags {
         text-align: center;
-        width: 90%;
+        /*width: 90%;*/
         margin: 0 auto;
         display: table;
-        text-align:center;
         min-height : 25px;
     }
+    .msg_card_body-panel .quick-replies-wrapper {
 
+    }
+   
     .log_icon {
         color: red;
     }
@@ -878,6 +912,9 @@
         border: 0;
         border-top: 1px solid #ffffff61;
         margin: 10px 0;
+    }
+    .quick-replies-more {
+        text-align: center;
     }
     .chat-bubble .my-msg-template-tag  {
         font-size: smaller;
