@@ -23,22 +23,24 @@
                     v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
                     <font-awesome-icon v-if="row.item.isactive == 'Y'" icon="user" />
                     <font-awesome-icon v-if="row.item.isactive != 'Y'" icon="user-slash"/>
-                  </b-button>
-                  &nbsp;
+                  </b-button>&nbsp;
                   <b-button size="sm" @click="enableItemAdmin(row.item, row.index, $event.target)" 
                   v-bind:class=" { 'disabled' : !row.item.admin }"
                   variant="outline-primary"
                   v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false>
                     <font-awesome-icon icon="user-cog"/>
-                  </b-button>
-                  &nbsp;
+                  </b-button>&nbsp;
                  <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
                   v-tooltip="'Make Default Assignee'" >
                     <span v-if="!row.item.defaultValue" class="far fa-star" />
                     <span v-if="row.item.defaultValue" class="fas fa-star" />
-                  </button>
-
+                  </button>&nbsp;
+                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
+                     v-tooltip="row.item.message" variant="outline-primary">
+                     <font-awesome-icon icon="eye" title="View"/>
+                  </b-button>
                 </template>
+
 
             </b-table>
         </b-card>
@@ -88,7 +90,8 @@
                                   <label for="exampleEmail" class="">Username</label>
                                   <div class="input-group">
                                       <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                      <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.code">
+                                      <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.code"
+                                      :readonly="newItem.id">
                                   </div>
                               </div>
 
@@ -119,14 +122,14 @@
                                <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="exampleCustomMutlipleSelect" class="">Channels</label>
+                                    <label for="select-all-channel" class="float-right">Select All
+                                        <input type="checkbox" name="select-all-channel" @change="selectAllChannel"
+                                        v-model="isSelectAllChannel"></label>
+                                    
                                     <select multiple="" type="select" id="exampleCustomMutlipleSelect"
                                              name="customSelect" class="custom-select"
                                              v-model="newItem.channels">
-                                            <option>WHATSAPP</option>
-                                            <option>FACEBOOK</option>
-                                            <option>TWITTER</option>
-                                            <option>TELEGRAM</option>
-                                            <option>WEBSITE</option>
+                                            <option v-for="channel in channels">{{channel}}</option>
                                     </select>
                                 </div>
                                </div>
@@ -164,12 +167,12 @@
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
-        faUserSlash,faUser,faUserSecret,faUserCog
+        faUserSlash,faUser,faUserSecret,faUserCog,faEye
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
     library.add(
-        faUserSlash,faUser,faUserSecret,faUserCog
+        faUserSlash,faUser,faUserSecret,faUserCog,faEye
     );
 
     function newItem() {
@@ -196,8 +199,10 @@
            { key : 'code', label : "Username" }, { key : 'agent_email', label : "Email" },
            { key : 'channels', label : "Channels", class : "upper-case" },
            { key : 'actions', label : "Action" }],
-            newItem : newItem(),
-            modelName :  "MODAL_ADD_USERS",
+          channels : ["WHATSAPP","FACEBOOK","TWITTER","TELEGRAM","WEBSITE"],
+          newItem : newItem(),
+          modelName :  "MODAL_ADD_USERS",
+          isSelectAllChannel : false
         }),
         computed : {
             items : function (argument) {
@@ -246,6 +251,15 @@
              this.newItem = newItem();
              this.onAction({name : "CANCEL"});
           }, 
+          async editItem(item) {
+              this.newItem = newItem();
+              for(var i in item){
+                this.newItem[i] = item[i]
+              }
+              this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
+              this.onAction({name : "EDIT_ITEM"});
+             //await this.$store.dispatch('DeleteQuickReps', item);
+          },
           onAction : function (argument) {
             switch(argument.name){
               case "ADD_ITEM" :
@@ -264,6 +278,14 @@
               default:
                 console.log("NoMapping",argument) 
             }
+          },
+
+
+          //Customer function
+          selectAllChannel : function (argument) {
+            this.newItem.channels = (this.isSelectAllChannel) ? [] : this.channels.map(function(ch) {
+              return ch
+            });
           }
 
         }
