@@ -265,6 +265,7 @@
             switch(argument.name){
               case "ADD_ITEM" :
                 this.oldHash = JSON.stringify(this.newItem);
+                this.selectChannel();
                 this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
@@ -288,7 +289,7 @@
               return ch
             });
           },
-          selectChannel : function (argument) {
+          selectChannel : function () {
              this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
           }
         }
