@@ -177,6 +177,7 @@
 
     function newItem() {
       return {
+              "name" : null,
               "agent_code": "",
               "agent_email": "",
               "agent_id" : null,
@@ -254,7 +255,7 @@
           async editItem(item) {
               this.newItem = newItem();
               for(var i in item){
-                this.newItem[i] = item[i]
+                this.newItem[i] = item[i];
               }
               this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
               this.onAction({name : "EDIT_ITEM"});
@@ -268,7 +269,7 @@
                 console.log("ADD_ITEM",argument);
                 break;
               case "EDIT_ITEM" :
-              this.oldHash = JSON.stringify(this.newItem);
+                this.oldHash = JSON.stringify(this.newItem);
                 this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
