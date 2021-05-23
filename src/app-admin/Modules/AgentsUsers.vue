@@ -16,7 +16,7 @@
                      :fields="fields">
 
                 <template #cell(channels)="row">
-                  <span v-for="c in row.item.channels" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
+                  <span v-for="c in row.item.channels" v-if="c" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
                 </template>
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
@@ -127,7 +127,7 @@
                                         v-model="isSelectAllChannel"></label>
                                     
                                     <select multiple="" type="select" id="exampleCustomMutlipleSelect"
-                                             name="customSelect" class="custom-select"
+                                             name="customSelect" class="custom-select" @change="selectChannel"
                                              v-model="newItem.channels">
                                             <option v-for="channel in channels">{{channel}}</option>
                                     </select>
@@ -284,11 +284,13 @@
 
           //Customer function
           selectAllChannel : function (argument) {
-            this.newItem.channels = (this.isSelectAllChannel) ? [] : this.channels.map(function(ch) {
+            this.newItem.channels = (!this.isSelectAllChannel) ? [] : this.channels.map(function(ch) {
               return ch
             });
+          },
+          selectChannel : function (argument) {
+             this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
           }
-
         }
 
 
