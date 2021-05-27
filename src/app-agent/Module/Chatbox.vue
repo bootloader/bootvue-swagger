@@ -101,9 +101,9 @@
             <div v-if="m.attachments"> 
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
-                    <span v-for="atch in m.attachments" v-viewer>
-                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl" class="">
-                            <a v-else :href="atch.mediaURL | thumburl" class="fa fa-file-alt float-right"></a>
+                    <span v-for="atch in m.attachments" v-viewer="viewerOptions">
+                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl | https" class="" :data-src="atch.mediaURL | https">
+                            <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
                         <br/>
                         <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                     </span>
@@ -119,9 +119,9 @@
             <div v-if="m.attachments"> 
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
-                    <span v-for="atch in m.attachments" v-viewer>
-                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl" class="">
-                            <a v-else :href="atch.mediaURL | thumburl" class="fa fa-file-alt float-right"></a>
+                    <span v-for="atch in m.attachments" v-viewer="viewerOptions">
+                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl | https" class="" :data-src="atch.mediaURL | https">
+                        <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
                         <br/>
                         <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                     </span>
@@ -406,7 +406,9 @@
                 dragstart : null, dragend :  null, dragenter :  null, dragover : null, dragleave : null,
                 mouseleave : null, mouseenter : null
             },
-            
+            viewerOptions : {
+                url: 'data-src'
+            },
             Deselect: {
                 render: function(createElement) {
                     var elm = createElement('span',{
