@@ -846,6 +846,11 @@
         padding: 0px;
         line-height: 15px;
     }
+
+    .my-attachments img {
+        cursor: pointer;
+    }
+
     .divider-v {
         padding-left: 2px;
         padding-right: 4px;
