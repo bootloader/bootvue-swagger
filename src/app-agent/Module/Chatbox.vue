@@ -57,10 +57,10 @@
 
                     <div  class="chat-header-right">
                         <div v-if="activeChat" class="video_cam">
-                            <span  @click="showContactProfile('info')" v-tooltip="(MyFlags.agent.profileView == 'info' ? 'Hide' : 'Show' ) + ' Profile Info'" >
+                            <span  @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
                                 <i class="fa fa-user"></i>
                             </span> 
-                            <span  @click="showContactProfile('history')" v-tooltip="(MyFlags.agent.profileView =='history' ? 'Hide' : 'Show' ) + ' Chat History'" >
+                            <span  @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
                         </div>
@@ -529,11 +529,11 @@
                 this.sendText("/exit_chat");
                 this.$router.push("/app/chat")
             },
-            showContactProfile : function (type) {
+            showContactProfile : function (type, type2) {
                 if(typeof type !='string'){
                     type = "info";
                 }
-                if(MyFlags.agent.profileView == type){
+                if(false  && MyFlags.agent.profileView == type ){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                     if(!MyFlags.agent.showProfile){
                          MyFlags.agent.profileView = null;
