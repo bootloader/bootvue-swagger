@@ -91,12 +91,24 @@
 </div>
 <div v-else-if="activeChat" v-for="m in activeChat.messages">
     
-    <div v-if="m.type == 'I' && m.text" class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
+    <div v-if="m.type == 'I' && (m.text || m.attachments)" 
+            class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
         <div class="img_cont_msg">
-            <img src="assets/images/profile.png" class="rounded-circle user_img_msg">
+            <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
         </div>
         <div class="msg_cotainer">
-            <span>{{m.text | striphtml | newlines}}</span>
+            <span v-if="m.text">{{m.text | striphtml | newlines}}</span>
+            <div v-if="m.attachments"> 
+                <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
+                <div class="input-group my-attachments">
+                    <span v-for="atch in m.attachments" v-viewer>
+                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl" class="">
+                            <a v-else :href="atch.mediaURL | thumburl" class="fa fa-file-alt float-right"></a>
+                        <br/>
+                        <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
+                    </span>
+                </div>
+            </div>
         </div>
         <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
     </div>
@@ -107,7 +119,7 @@
             <div v-if="m.attachments"> 
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
-                    <span v-for="atch in m.attachments">
+                    <span v-for="atch in m.attachments" v-viewer>
                         <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl" class="">
                             <a v-else :href="atch.mediaURL | thumburl" class="fa fa-file-alt float-right"></a>
                         <br/>
@@ -143,7 +155,7 @@
             </span>
         </div>
         <div class="img_cont_msg">
-            <img src="assets/images/profile.png" class="rounded-circle user_img_msg">
+            <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
         </div>
     </div>
 

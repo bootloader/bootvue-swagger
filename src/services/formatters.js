@@ -109,6 +109,7 @@ var formatter = {
       return text;
     });
     Vue.filter('thumburl', function (mediaUrl) {
+      mediaUrl = mediaUrl.replace("http://","https://");
       var m = mediaUrl.match(/(.+)\/(res.cloudinary.com)\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9]+)\/(upload)\/([a-zA-Z0-9,_-]+)\/(.*)/);
       if(m && m.length){
         m[6] = "w_100,h_100";

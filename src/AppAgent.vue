@@ -20,7 +20,9 @@
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
 
-
+  import 'viewerjs/dist/viewer.css'
+  import Viewer from 'v-viewer'
+   Vue.use(Viewer)
 
   const default_layout = "default";
 
