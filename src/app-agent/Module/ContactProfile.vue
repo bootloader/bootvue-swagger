@@ -3,7 +3,7 @@
     
     <div class="card-header">
         <span class="fa fa-close float-right"
-        @click="MyFlags.agent.showProfile=false"></span>
+        @click="MyFlags.agent.showProfile=false;MyFlags.agent.mvu='CHATBOX'"></span>
         <center>{{MyFlags.agent.profileView}}</center>
 
     </div>

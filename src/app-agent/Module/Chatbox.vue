@@ -1,5 +1,5 @@
 <template>
-          <div class="card card-shadow" 
+          <div class="card card-shadow m-chatbox"
             @dragenter="dragEnter" 
             @dragover="dragEnter" 
             @dragleave="dragLeave"
@@ -8,6 +8,9 @@
         >
                 <div class="card-header msg_head chat-head">                   
                     <div class="d-flex bd-highlight chat-header-left">
+                        <div class="chat-header-left-left d-sm-block d-md-none">
+                            <i class="fa fa-arrow-left" @click="MyFlags.agent.mvu='CONTACTS'">&nbsp;&nbsp;</i>
+                        </div>
                         <div class="img_cont" 
                             @click="showContactProfile">
                             <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
@@ -35,20 +38,8 @@
                                     Assigned to {{assignedToAgent.code}}
                                 </span>
                             </div>
-
-                    <div>
-
-                    </div>
-
                         </div>
 
-                        <div class="video_cam">
-                            <span hidden><i class="fas fa-video" ></i></span>
-                            <span hidden><i class="fas fa-phone" ></i></span>
-                            <span  hidden  @click="showContactProfile" >
-                                <i class="fas fa-history"></i>
-                            </span> 
-                        </div>
                         <div class="chat_actions" hidden>
                             <button  @click="closSession" title="Close Chat"
                             class="btn"><i class="fa fa-check-circle"></i></button>                            
@@ -56,25 +47,36 @@
                     </div>
 
                     <div  class="chat-header-right">
-                        <div v-if="activeChat" class="video_cam">
-                            <span  @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
+                        <div v-if="activeChat" class="quick_options">
+                            <b-dropdown id="dropdown-offset" offset="10"
+                                class="float-right quick_option_menu d-sm-block d-md-none"
+                                ref="quick_option_menu" no-caret  variant="link" block right
+                                toggle-tag="span" toggle-class="quick_option_icon float-right">
+                                <template #button-content>
+                                   <i class="fas fa-ellipsis-v"></i>
+                                </template>
+                                <b-dropdown-item @click="showContactProfile('info')">
+                                    <i class="fa fa-user"></i>&nbsp;&nbsp;Show Profile Info
+                                </b-dropdown-item>
+                                <b-dropdown-item  @click="showContactProfile('history')">
+                                     <i class="fa fa-history"></i>&nbsp;&nbsp;Show Chat History
+                                </b-dropdown-item>
+                            </b-dropdown>
+                            <span class="float-right quick_option_icon d-none d-md-block" 
+                                @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
                                 <i class="fa fa-user"></i>
                             </span> 
-                            <span  @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
+                            <span class="float-right quick_option_icon d-none d-md-block"
+                                 @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
                         </div>
+
                     </div>
+
                     <div  class="chat-header-right"  @mouseover="showChatOptions = true"
                             @mouseleave="showChatOptions = false">
-                        <span id="action_menu_btn"> <i class="fas fa-user-clock" hidden></i></span>
-                        <div class="action_menu" v-show="showChatOptions">
-                            <ul style="padding-top: 10px">
-                                <li @click="showContactProfile">
-                                    <i class="fas fa-history"></i> Chat Hisotry</li>
-                                <li @click="closSession"><i class="fa fa-check-circle"></i> Resolve Ticket</li>
-                            </ul>
-                        </div>  
+ 
                     </div>
                 </div>
                 <div class="card-body msg_card_body" v-show="showChatWindow">
@@ -544,6 +546,7 @@
                 } else {
                     MyFlags.agent.profileView = type
                     MyFlags.agent.showProfile = true
+                    MyFlags.agent.mvu='CPROFILE'
                 }
             },
             scrollToBottom : function (force) {
@@ -703,6 +706,10 @@
                     this.isShowMediaOptions =  true
                 }
             },
+            showQuickOptionsMenu : function (argument) {
+                this.$refs.quick_option_menu.show();
+            },
+
             async dragEnter (argument) {
                 this.dz.file_dragging = true;
                 this.winMode = "UPLOAD_MEDIA";
@@ -758,42 +765,23 @@
     .chat-header-left{
         float: left;
     }
+    .chat-header-left-left{
+        color: white;
+        margin: auto 0px auto -16px;
+    }
     .chat-header-right{
         float: right;
     }
-    #action_menu_btn{
+    .quick_options {
+        margin-right: -25px;
         color: white;
-        cursor: pointer;
-        font-size: 20px;
-        line-height: 60px;
+        margin-top: 5px;
     }
-    .action_menu{
-        z-index: 1;
-        position: absolute;
-        padding: 15px 0;
-        background-color: rgb(255 255 255);
-        color: #060606;
-        border-radius: 5px;
-        top: 15px;
-        right: 10px;
-        border: solid 1px #d8d8d8;
-      }
-      .action_menu ul{
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .action_menu ul li{
-        width: 100%;
-        padding: 10px 15px;
-        margin-bottom: 5px;
-      }
-      .action_menu ul li i{
-
-      }
-      .action_menu ul li:hover{
-        cursor: pointer;
-        background-color: rgba(0,0,0,0.2);
+    .quick_option_menu{
+        width: 26px;
+        margin-left: 4px;
+        margin-top: -7px;
+        margin-right: -7px;
     }
     .msg_card_body-logo{
         min-height: calc(100% - 25px);
@@ -978,6 +966,12 @@
   }
 </style>
 <style type="text/css">
+  .m-chatbox .quick_options span.quick_option_icon {
+        color: white!important;
+        font-size: 20px;
+        cursor: pointer;
+        margin-right: 20px;
+    }
   .user_info .user_assignment .vs__selected {
     font-size: 13px !important;
     color: rgb(255 255 255);

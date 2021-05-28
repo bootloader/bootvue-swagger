@@ -6541,6 +6541,11 @@
     "is-core-module" "^2.2.0"
     "path-parse" "^1.0.6"
 
+"responsive-toolkit@^2.6.3":
+  "integrity" "sha1-QQwqQbgZ9GpW9NnCO9HZs3cfUCY="
+  "resolved" "https://registry.npmjs.org/responsive-toolkit/-/responsive-toolkit-2.6.3.tgz"
+  "version" "2.6.3"
+
 "restore-cursor@^2.0.0":
   "resolved" "https://registry.yarnpkg.com/restore-cursor/-/restore-cursor-2.0.0.tgz"
   "version" "2.0.0"

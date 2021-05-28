@@ -38,7 +38,7 @@
                         active_contact : (contactId == chat.contactId)
                     }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
-                    <div class="d-flex bd-highlight contact-preview">
+                    <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="online_icon"></span>
@@ -256,6 +256,11 @@
     }
     .card-footer .contact_type {
         cursor: pointer;
+    }
+    .contacts {
+        list-style: none;
+        padding: 0;
+        max-width: calc(100% - 5px);
     }
     .contact-tabs {
         background-color: #00000021;

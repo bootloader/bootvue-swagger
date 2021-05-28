@@ -22,6 +22,7 @@ export const MyFlags = {
   	showProfile : true,
   	profileView : 'history', //history,info
   	contactsTab : 'ME',
+  	mvu : 'CONTACTS', //CONTACTS,CHATBOX,CPROFILE
   }
 }
 
