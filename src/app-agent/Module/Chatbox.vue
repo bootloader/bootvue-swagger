@@ -102,8 +102,9 @@
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
                     <span v-for="atch in m.attachments" v-viewer="viewerOptions">
-                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl | https" class="" :data-src="atch.mediaURL | https">
-                            <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
+                        <img v-if="atch.mediaType == 'IMAGE'"  
+                            v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
+                        <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
                         <br/>
                         <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                     </span>
@@ -120,7 +121,8 @@
                 <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
                     <span v-for="atch in m.attachments" v-viewer="viewerOptions">
-                        <img v-if="atch.mediaType == 'IMAGE'" :src="atch.mediaURL | thumburl | https" class="" :data-src="atch.mediaURL | https">
+                        <img v-if="atch.mediaType == 'IMAGE'" 
+                            v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
                         <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
                         <br/>
                         <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
@@ -220,7 +222,7 @@
                             <div v-for="media in mediaOptions" class="media_thumb">
                                     <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media.name" v-model="selectedMedia" />
                                     <label class="media_thumb_label" :for="'mdeia-'+media.name">
-                                        <img :src="media.url | thumburl">
+                                        <img v-lazy="formatters.https_thumburl(media.url)">
                                     </label>
                             </div>
                         </div>
@@ -407,7 +409,7 @@
                 mouseleave : null, mouseenter : null
             },
             viewerOptions : {
-                url: 'data-src'
+                url: 'data-full-src'
             },
             Deselect: {
                 render: function(createElement) {
@@ -424,6 +426,7 @@
                    // return ("<span>S</span>");
                 }
             },
+            formatters : formatters
         }),
         created () {
             // fetch the data when the view is created and the data is
@@ -851,6 +854,9 @@
 
     .my-attachments img {
         cursor: pointer;
+        margin: 10px;
+        max-width: 200px;
+        min-width: 100px;
     }
 
     .divider-v {

@@ -74,6 +74,19 @@ var formatter = {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4()
         + s4() + s4();
   },
+  https : function (mediaUrl) {
+    return mediaUrl.replace("http://","https://");
+  },
+  thumburl : function (mediaUrl) {
+      var m = mediaUrl.match(/(.+)\/(res.cloudinary.com)\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9]+)\/(upload)\/([a-zA-Z0-9,_-]+)\/(.*)/);
+      if(m && m.length){
+        m[6] = "w_100,h_100";
+        return m.slice(1).join("/");
+      } return mediaUrl;
+  },
+  https_thumburl : function (mediaUrl) {
+    return this.thumburl(this.https(mediaUrl));
+  },
   init : function () {
     var THAT = this;
 
@@ -109,15 +122,11 @@ var formatter = {
       return text;
     });
     Vue.filter('https', function (mediaUrl) {
-      return mediaUrl.replace("http://","https://");
+        return THAT.https(mediaUrl);
     });
 
     Vue.filter('thumburl', function (mediaUrl) {
-      var m = mediaUrl.match(/(.+)\/(res.cloudinary.com)\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9]+)\/(upload)\/([a-zA-Z0-9,_-]+)\/(.*)/);
-      if(m && m.length){
-        m[6] = "w_100,h_100";
-        return m.slice(1).join("/");
-      } return mediaUrl;
+        return THAT.thumburl(mediaUrl);
     });
 
     Vue.filter('contact_label', function (id) {

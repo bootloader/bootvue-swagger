@@ -24,6 +24,18 @@
   import Viewer from 'v-viewer'
    Vue.use(Viewer)
 
+
+  const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
+  const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
+  import VueLazyload from 'vue-lazyload'
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: errorimage,
+    loading: loadimage,
+    attempt: 1,
+    throttleWait : 1000
+  })
+
   const default_layout = "default";
 
   Vue.component('default-layout', () => import('./app-agent/Layout/DefaultLayout.vue'));
