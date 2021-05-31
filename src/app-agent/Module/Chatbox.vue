@@ -95,7 +95,17 @@
 <div v-if="!activeChat" class="msg_card_body-logo">
     <span class=""></span>
 </div>
-<div v-else-if="activeChat" v-for="m in activeChat.messages">
+<div v-else-if="activeChat">
+    <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
+        <div class="msg_card_body-bubbles-lane">
+            <span class="text-align-right">{{activeChat.contact.name}}&nbsp;</span>
+            <i class="fa fa-long-arrow-alt-left"/>&nbsp;
+            <i class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>
+            &nbsp;<i class="fa fa-long-arrow-alt-right"/>
+            <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
+        </div>
+    </div>  
+  <div v-for="m in activeChat.messages">
     
     <div v-if="m.type == 'I' && (m.text || m.attachments)" 
             class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
@@ -178,7 +188,7 @@
 
         </div>
     </div>    
-
+  </div>
 </div>
                     </div>
                     <div v-if="sendEnabled && activeChat && activeChat.active" class="msg_card_body-panel">
@@ -786,6 +796,36 @@
         margin-left: 4px;
         margin-top: -7px;
         margin-right: -7px;
+    }
+    .msg_card_body-bubbles-header {
+        text-align: center;
+    }
+    .msg_card_body-bubbles-lane {
+        padding: 20px;
+        text-align: center;
+        margin: 14px;
+        color: #737373;
+        border: solid 1px #eaeaea;
+        background-color: #f1f1f1;
+        border-radius: 8px;
+        display: inline-block;
+    }
+     .msg_card_body-bubbles-header span{
+    font-size: 16px;
+    width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 15px;
+     }
+    .msg_card_body-bubbles-header .contact_type{
+    line-height: 35px;
+    font-size: 30px;
+    height: 45px;
+    /* padding: 16px; */
+    /* margin: 0px; */
+    /* display: inline-block; */
+    width: 45px;
     }
     .msg_card_body-logo{
         min-height: calc(100% - 25px);
