@@ -86,6 +86,9 @@
         }).on("/message/update/status", function(status){
             console.log("/message/update/status===",status)
             THAT.$store.dispatch('UpdateChatMessageStatus', status);
+        }).on("/session/agent/update", function(status){
+            console.log("/session/agent/update",status)
+            THAT.$store.dispatch('SetAgentOptionsStatus', [status]);
         });
     },
     beforeUnmount (){

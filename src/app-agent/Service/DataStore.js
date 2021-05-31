@@ -134,14 +134,12 @@ const actions = {
   },
 
   async AddChat({ commit },chat) {
-    console.log("AddChat",chat)
     for(var c in state.chats){
       if(state.chats[c].contactId == chat.contactId){
         state.chats[c].active = !!chat.active;
         state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
         state.chats[c].resolved = chat.resolved;
         setChatFlags(state.chats[c])
-        console.log(state.chats[c],chat)
         state.chats.splice(c,1);
         //commit("setChats", state.chats);
         //return;
@@ -153,13 +151,11 @@ const actions = {
   },
 
   async AddHistoryChat({ commit },chat) {
-    console.log("AddChatHistory",chat)
     var sessions = state.chatHistory.sessions;
     for(var c in sessions){
       if(sessions[c].sessionId == chat.sessionId){
         sessions[c].active = !!chat.active;
         sessions[c] = chat;
-        console.log("AddChatHistory:M",c)
       }
     }
     commit("setChatHistory", state.chatHistory);
@@ -199,7 +195,6 @@ const actions = {
           ){
               msg.stamps = msg.stamps || {};
               msg.stamps[msgStatus.status] = msgStatus.timestamp;
-              console.log("Voila!!!!!")
               commit("setChats", state.chats);
               return;
           }
@@ -224,7 +219,6 @@ const actions = {
           if(eq(msg.messageId,m.messageId) || eq(msg, m) 
                 || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
             index = j;
-            console.log("ReadChat================",m.version, msg.version)
             if(m.version < msg.version){
               m=msg;
             }            
@@ -237,7 +231,6 @@ const actions = {
         } else {
           chat.messages.splice(index, 1, m);
         }
-        console.log("ReadChat================   DONE",index,m.version, msg.version)
         //state.chats[c].newmsg = true;
         break;
       }
@@ -255,11 +248,30 @@ const actions = {
     commit("setMeta", state.meta);
   },
 
-  async LoadAgentOptions({ commit }) {
-    let response = await axios.get("/api/options/agents");
-    validateResponse(response);
-    if(response.data && response.data.results){
-       commit("setAgents", response.data.results);
+  async SetAgentOptionsStatus({ commit },agentSessons) {
+    for(var i in agentSessons){
+      state.agents.map(function(agent) {
+        if(agent.code == agentSessons[i].agentCode){
+          agent.session = agentSessons[i];
+        }
+      });
+    }
+    commit("setAgents", state.agents);
+  },
+
+  async LoadAgentOptions({ commit,dispatch }) {
+    let p1 = axios.get("/api/options/agents");
+    let p2 = axios.get("/api/options/agents/status");
+
+    let r1 = await p1;
+    validateResponse(r1);
+    if(r1.data && r1.data.results){
+       commit("setAgents", r1.data.results);
+    }
+    let r2 = await p2;
+    validateResponse(r2);
+    if(r2.data && r2.data.results){
+       dispatch("SetAgentOptionsStatus", r2.data.results);
     }
   },
 
@@ -357,7 +369,6 @@ const actions = {
 const mutations = {
   //Contacts
   setChats(state, chats) {
-    console.log("==================setChats    START")
     for(var c in chats){
       chats[c].lastmsg = {};
       if(chats[c].messages)
@@ -375,7 +386,6 @@ const mutations = {
     state.chatsSize = chats.length;
     state.chats = chats;
     state.chatsVersion++;
-    console.log("==================setChats:   DONE")
   },
   setChatHistory(state, chatHistory) {
     state.chatHistory = chatHistory;

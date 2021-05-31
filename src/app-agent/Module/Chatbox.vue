@@ -22,7 +22,7 @@
                             <div v-if="activeChat.ilastmsg" class="user_stamp">{{activeChat.ilastmsg.timestamp | formatDate}} </div>
                             <div v-if="assignedToAgent" class="user_assignment">
                                 <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
-                                @option:selected="onAssignedToAgent"
+                                @option:selected="onAssignedToAgent" label="code"
                                 :components="{Deselect}">
                                     <template #selected-option="option">
                                       <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
@@ -30,8 +30,12 @@
                                     <template #open-indicator="{ attributes }">
                                       <span v-bind="attributes" class="fa fa-caret-down"></span>
                                     </template>
-                                    <template #option="{ code, name, dept }">
-                                      <em>{{ code }} - {{ name }}</em>
+                                    <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
+                                        'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
+                                        'fa-check-circle' : session && session.isOnline,
+                                        'fa-minus-circle' : session && !session.isOnline
+                                    }" />
+                                     {{ code }}<em>  - {{ name }}</em>
                                     </template>
                                 </v-select>
                                 <span v-if="!isChatActive" class="vs__selected">
@@ -996,5 +1000,32 @@
  }
   .user_assignment .vs__search, .vs__search:focus{
     width: 100%;
+  }
+  .user_assignment .vs__dropdown-option {
+    padding: 3px 7px;
+    max-width: 250px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .user_assignment .vs__dropdown-option--highlight {
+     background: #ddd;
+     color: #000;
+  }
+  .user_assignment .vs__dropdown-option em {
+    color: #929292;
+    font-size: smaller;
+    text-overflow: ellipsis;
+  }
+  .user_assignment .vs__dropdown-option .fa-check-circle {
+    color: #3aa233;
+    font-size: smaller;
+  }
+  .user_assignment .vs__dropdown-option .fa-minus-circle {
+    color: #c10505;
+    font-size: smaller;
+  }
+  .user_assignment .vs__dropdown-option .fa-times-circle {
+    color: #929292;
+    font-size: smaller;
   }
 </style>
