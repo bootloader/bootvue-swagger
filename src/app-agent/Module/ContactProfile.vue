@@ -331,6 +331,10 @@
         float: left;
         margin-right: 5px;
     } 
+    .vue-tags-input .ti-item.ti-selected-item .my-item {
+        background: #fdfbea;
+        color: #283944;
+    }
 </style>
 <style type="text/css">
     #tagmodal li.ti-tag, #tagmodal li.ti-item{

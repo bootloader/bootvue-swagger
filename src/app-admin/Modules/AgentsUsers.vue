@@ -20,15 +20,15 @@
                 </template>
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
-                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
-                    <font-awesome-icon v-if="row.item.isactive == 'Y'" icon="user" />
-                    <font-awesome-icon v-if="row.item.isactive != 'Y'" icon="user-slash"/>
+                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'" class="fa-stack fa-1x">
+                      <i class="fas fa-user fa-stack-1x"></i>
+                      <i v-if="row.item.isactive != 'Y'" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
                   </b-button>&nbsp;
                   <b-button size="sm" @click="enableItemAdmin(row.item, row.index, $event.target)" 
-                  v-bind:class=" { 'disabled' : !row.item.admin }"
                   variant="outline-primary"
-                  v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false>
-                    <font-awesome-icon icon="user-cog"/>
+                  v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false class="fa-stack fa-1x"> 
+                      <i class="fas fa-user-cog fa-stack-1x"></i>
+                      <i v-if="!row.item.admin" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
                   </b-button>&nbsp;
                  <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
                   v-tooltip="'Make Default Assignee'" >
@@ -167,12 +167,12 @@
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
-        faUserSlash,faUser,faUserSecret,faUserCog,faEye
+        faUserSlash,faUser,faUserSecret,faUserCog,faEye,faSlash
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
     library.add(
-        faUserSlash,faUser,faUserSecret,faUserCog,faEye
+        faUserSlash,faUser,faUserSecret,faUserCog,faEye, faSlash
     );
 
     function newItem() {
