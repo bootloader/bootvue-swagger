@@ -195,6 +195,7 @@ const actions = {
           ){
               msg.stamps = msg.stamps || {};
               msg.stamps[msgStatus.status] = msgStatus.timestamp;
+              console.log("msg.stamps",msg.stamps)
               commit("setChats", state.chats);
               return;
           }

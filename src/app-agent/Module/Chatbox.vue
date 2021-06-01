@@ -155,10 +155,13 @@
 
                 <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
                     <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin msg_status_send" >&nbsp;</i>
-                    <b-icon v-else-if="m.logs || m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
+                    <b-icon v-else-if="m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
                         variant="danger" class="msg_status_send" ></b-icon>
-                    <b-icon v-else-if="m.logs || m.stamps.SENTX_ERR" icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
-                        variant="danger" class="msg_status_send" ></b-icon>
+                    <b-icon v-else-if="m.stamps.BLCKD" icon="slash-circle-fill"  scale=.8 v-tooltip="m.logs+''"
+                        variant="danger" class="msg_status_send" ></b-icon>  
+                    <b-icon v-else-if="m.logs || m.stamps.FAILD || m.stamps.NSENT || m.stamps.SENTX_ERR" 
+                        icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
+                        variant="danger" class="msg_status_send" ></b-icon>  
                     <b-icon v-else-if="m.stamps.READ" icon="check-all" 
                         variant="success" class="msg_status_send"></b-icon>
                      <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 

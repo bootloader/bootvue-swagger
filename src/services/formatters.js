@@ -87,6 +87,20 @@ var formatter = {
   https_thumburl : function (mediaUrl) {
     return this.thumburl(this.https(mediaUrl));
   },
+
+  keys : function keys(map,prefix){
+      prefix = prefix || "" ;
+      var list = [];
+      for(var key in map){
+         if(typeof map[key] != 'object'){
+          list.push(prefix + key);
+         } else {
+          list = list.concat(keys(map[key],prefix + key + "."));
+         }
+      }
+      return list;
+  },
+
   init : function () {
     var THAT = this;
 

@@ -32,6 +32,11 @@
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Reply '" size="xl"
         @hidden="cancelReps">
+
+
+                  
+
+
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group">
                               <ValidationProvider v-slot="v" rules="required">
@@ -57,16 +62,16 @@
                            <div class="position-relative form-group col-md-6">
                                <ValidationProvider v-slot="v" >
                                     <label for="examplePassword" class="">Template</label>
-                                    <textarea name="template" id="examplePassword" rows="10"
-                                     :placeholder="'eg: Hello {{contact.name}}'" type="text"
-                                      class="form-control" v-model="newItem.template">
-                                    </textarea>
+                                    <text-complete v-model="newItem.template" 
+                                      :placeholder="'eg: Hello {{contact.name}}'"
+                                      :rows="12"
+                                      areaClass="form-control" :strategies="strategies"></text-complete>
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                             </div>
                             <div class="position-relative form-group col-md-6">
                                 <label for="examplePassword" class="">Template Preview</label>
-                                <textarea name="template" id="examplePassword" rows="10" readonly="readonly" 
+                                <textarea name="template" id="examplePassword" rows=10 readonly="readonly" 
                                   type="text"
                                   class="form-control" v-model="templatePreview">
                                 </textarea>
@@ -104,6 +109,9 @@
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import mustache from 'mustache';
+    import formatters from './../../services/formatters';
+
+    import TextComplete from 'v-textcomplete'
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -115,9 +123,18 @@
               "title": "",
               "template" : ""            };
     }
+
+    var sampleJson = {
+        contact : {
+          name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
+        }
+    };
+
+    var sampleJsonKeys = formatters.keys(sampleJson);
+
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TextComplete
         },
         data: () => ({
             heading: 'Quick Replies',
@@ -129,12 +146,22 @@
             fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
               { key: 'actions', label: 'Actions' }],
             newItem : newItem(),
-            sample : {
-              contact : {
-                name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
-              }
-            },
+            sample : sampleJson,
             modelName :  "MODAL_ADD_QUICK_REPLIES",
+            strategies: [{
+              match: /(^|\s)\{\{([a-z0-9+\-\_\.]*)$/,
+              search(term, callback) {
+                callback(sampleJsonKeys.filter(function (name) {
+                  return name.startsWith(term);
+                }).slice(0, 10))
+              },
+              template(name) {
+                return name;
+              },
+              replace(value) {
+                return '$1{{' + value + '}} '
+              },
+            }]
         }),
         computed : {
             teams : function (argument) {
