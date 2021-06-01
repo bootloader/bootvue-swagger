@@ -362,6 +362,9 @@ body {
     position: absolute;
     text-align: center;
 }
+.bigbrandlogo-o {
+  width: 60%;
+}
 .bigbrandlogo_text {
         /* margin: auto; */
     width: 50%;
