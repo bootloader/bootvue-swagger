@@ -67,10 +67,12 @@
                                 </b-dropdown-item>
                             </b-dropdown>
                             <span class="float-right quick_option_icon d-none d-md-block" 
+                                 v-bind:class="{'my-selected' : profileViewInfo }"
                                 @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
                                 <i class="fa fa-user"></i>
                             </span> 
                             <span class="float-right quick_option_icon d-none d-md-block"
+                                 v-bind:class="{'my-selected' : profileViewHistory }"
                                  @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
@@ -384,6 +386,11 @@
             }, 
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
+            },
+            profileViewInfo : function (argument) {
+                return MyFlags.agent.profileView =='info' && MyFlags.agent.showProfile
+            }, profileViewHistory : function (argument) {
+                return MyFlags.agent.profileView =='history' && MyFlags.agent.showProfile
             }
         },
         data: () => ({
@@ -790,15 +797,9 @@
         float: right;
     }
     .quick_options {
-        margin-right: -25px;
+        margin-right: -10px;
         color: white;
         margin-top: 5px;
-    }
-    .quick_option_menu{
-        width: 26px;
-        margin-left: 4px;
-        margin-top: -7px;
-        margin-right: -7px;
     }
     .msg_card_body-bubbles-header {
         text-align: center;
@@ -1017,8 +1018,19 @@
         color: white!important;
         font-size: 20px;
         cursor: pointer;
-        margin-right: 20px;
+        opacity: 0.9;
+        padding : 0px; 
+        width: 30px;
+        height : 30px;
+        text-align: center;
+        margin-left: 5px;
     }
+     .m-chatbox .quick_options span.quick_option_icon.my-selected {
+        opacity: 1.0;
+        border-radius: 40px;
+        box-shadow: inset 0 0 15px #0000005e;
+     }
+
   .user_info .user_assignment .vs__selected {
     font-size: 13px !important;
     color: rgb(255 255 255);

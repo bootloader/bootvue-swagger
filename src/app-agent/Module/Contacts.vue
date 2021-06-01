@@ -65,16 +65,17 @@
             </ul>
         </div>
         <div class="card-footer">
-            &nbsp;<span class="contact_type fa fa-facebook" @click="searchTag(':facebook')" 
-                    v-bind:class="{active : search.text==':facebook' }"></span>
-            <span class="contact_type fa fa-whatsapp" @click="searchTag(':whatsapp')" 
-                    v-bind:class="{active : search.text==':whatsapp' }"></span>
-            <span class="contact_type fa fa-twitter"  @click="searchTag(':twitter')" 
-                    v-bind:class="{active : search.text==':twitter' }"></span>
-            <span class="contact_type fa fa-telegram"  @click="searchTag(':telegram')" 
-                    v-bind:class="{active : search.text==':telegram' }"></span>
-            <span class="contact_type fa fa-chrome" @click="searchTag(':website')" 
-                    v-bind:class="{active : search.text==':website' }"></span>
+            &nbsp; <i class="contact_type fa fa-facebook" @click="searchTag(':facebook')"
+                    v-bind:class="{'my-selected' : search.text==':facebook' }"></i>
+                <i class="contact_type fa fa-whatsapp"  @click="searchTag(':whatsapp')"
+                    v-bind:class="{'my-selected' : search.text==':whatsapp' }" ></i>
+                <i class="contact_type fa fa-twitter"  @click="searchTag(':twitter')" 
+                    v-bind:class="{'my-selected' : search.text==':twitter' }"></i>
+                <i class="contact_type fa fa-telegram"  @click="searchTag(':telegram')"
+                    v-bind:class="{'my-selected' : search.text==':telegram' }"></i>
+                <i class="contact_type fa fa-chrome" @click="searchTag(':website')"
+                    v-bind:class="{'my-selected' : search.text==':website' }"></i>
+            
             <span
                  v-bind:class="{'toggle-active' : isOnline, 'fa-rotate-180' : !isOnline }" 
                  @click="toggleOnline"
@@ -254,9 +255,25 @@
     ul.contacts .user_info *, ul.contacts .contact-time p{
        color : rgba(21, 21, 21, 0.68) !important
     }
-    .card-footer .contact_type {
+    .card-footer .fa::before {
+        display: inline-block;
+        margin: 0px;
         cursor: pointer;
     }
+     .card-footer .contact_type {
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        margin: 0px -1px;
+        padding: 5px;
+        opacity: 0.9;
+     }
+     .contact_type.my-selected, .contact_type:hover {
+        opacity: 1.0;
+        border-radius: 40px;
+        box-shadow: inset 0 0 15px #0000005e;
+     }
+
     .contacts {
         list-style: none;
         padding: 0;
@@ -293,11 +310,4 @@
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;
     }
-    .contact_type.active {
-      box-shadow: 0 0px 13px 3px rgb(0 0 0 / 45%);
-    }
-    .card-footer .contact_type{
-        float: left;
-        margin-right: 5px;
-    } 
 </style>

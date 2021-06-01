@@ -220,7 +220,7 @@
   right: 0px;
   position: absolute;
 }
-.contact_type {
+.contact_type::before {
   background-color: #fff;
   border-radius: 50%;
   height: 25px;
@@ -230,23 +230,23 @@
   display: block;
   padding: 5px;
 }
-.contact_type.fa-facebook{
+.contact_type.fa-facebook::before{
   background-color: #4267B2;
   color : #FFF;
 }
-.contact_type.fa-whatsapp{
+.contact_type.fa-whatsapp::before{
   background-color: #25D366;
   color : #FFF;
 }
-.contact_type.fa-twitter{
+.contact_type.fa-twitter::before{
   background-color: #1DA1F2;
   color : #FFF;
 }
-.contact_type.fa-chrome{
+.contact_type.fa-chrome::before{
   background-color: #4c8bf5;
   color : #FFF;
 }
-.contact_type.fa-telegram{
+.contact_type.fa-telegram::before{
   background-color: #FFF;
   color : #0088cc;
 }
