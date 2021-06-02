@@ -94,22 +94,6 @@
         color: white !important;
         cursor: pointer;
     }
-    .contacts{
-      list-style: none;
-      padding: 0;
-      max-width: 348px;
-    }
-    .contacts li{
-      width: 100% !important;
-      padding: 5px 10px;
-      margin-bottom: 3px !important;
-      cursor: pointer;
-      border-left: 5px solid #0000;
-    }
-    .contacts li.router-link-exact-active{
-      border-left: 5px solid #1d3752;
-      background-color: rgba(0,0,0,0.3);
-    }
     .user_img{
       height: 50px;
       width: 50px;
@@ -334,15 +318,7 @@
   background-color: #FFF!important;
   overflow: auto;
 }
-.new-message{
-    border-radius: 50%;
-    background-color: #62d138;
-    height: 15px;
-    width: 15px;
-    text-align: center;
-}
-  
-  
+    
   .card-shadow
 {
     position:relative;

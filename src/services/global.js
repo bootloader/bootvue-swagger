@@ -14,7 +14,7 @@ export const MyConst = {
 		short : window.CONST.CDN_URL + "/logo/logo-short.png",
 		short_inverse : window.CONST.CDN_URL + "/logo/logo-short-o.png",
 	},
-	onlineTimeout : 1000*60*5
+	onlineTimeout : 1000*1*30
 }
 export const MyFlags = {
   showSidebar: false,

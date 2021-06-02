@@ -35,7 +35,8 @@
                     v-bind:class="{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
-                        active_contact : (contactId == chat.contactId)
+                        active_contact : (contactId == chat.contactId),
+                        contact_attention : chat._attention
                     }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
@@ -50,9 +51,19 @@
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
                             <p class="font-preview" v-if="chat.ilastmsg" >{{chat.ilastmsg.text}}</p>
                         </div>
-                        <div class="contact-time" v-if="chat.ilastmsg" :title="chat.ilastmsg.timestamp">
-                            <p>{{chat.ilastmsg.timestamp | formatDate}} </p>
-                            <div v-if="chat.newmsg" class="new-message" id="'nm' + c.contactId"><p>&nbsp;</p></div>  
+                        <div class="contact-time" :title="chat.lastInComingStamp">
+                            <p>{{chat.lastInComingStamp | formatDate}} </p>
+                            <div  class="" id="'nm' + c.contactId" class="chat_flags">
+                                <span>
+                                    <b-icon v-if="chat.newmsg" icon="circle-fill" class="new_message" variant="red"></b-icon>
+                                </span>
+                                <span>
+                                    <b-icon v-if="chat._attention" icon="phone-vibrate" class="icon_attention" variant="red"></b-icon>
+                                </span>
+                                <span>
+                                    <b-icon icon="alarm-fill" class="very_old"></b-icon>
+                                </span>
+                            </div>  
                         </div>
                     </div>
                 </router-link>
@@ -108,7 +119,7 @@
         },
         computed : {
             activeChats : function(){ 
-                console.log("store",this.$store.getters.StateChats); 
+                console.log("activeChats",this.$store.getters.StateChats.length); 
                 let searchTags = this.search.text.split(/(:[\w]+\ )/).filter(function (argument) {
                     return !!argument;
                 }).map(function (argument) {
@@ -256,6 +267,30 @@
     .contacts_body{
         background-color: #f5f5f5;
     }
+    .contacts{
+        list-style: none;
+        padding: 0;
+        max-width: 348px;
+
+        list-style: none;
+        padding: 0;
+        max-width: calc(100% - 0px);
+    }
+    .contacts li{
+        width: 100% !important;
+        padding: 5px 10px;
+        margin-bottom: 3px !important;
+        cursor: pointer;
+        border-left: 5px solid #0000;
+        border-right: 5px solid #0000;
+    }
+    .contacts li:hover{
+        border-right: 5px solid #00000024;
+    }
+    .contacts li.router-link-exact-active{
+      border-left: 5px solid #1d3752;
+      background-color: rgba(0,0,0,0.3);
+    }
     .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
     }
@@ -280,11 +315,6 @@
         box-shadow: inset 0 0 15px #0000005e;
      }
 
-    .contacts {
-        list-style: none;
-        padding: 0;
-        max-width: calc(100% - 5px);
-    }
     .contact-tabs {
         background-color: #00000021;
         padding: 2px 10px;
@@ -316,4 +346,49 @@
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;
     }
+
+    @keyframes blinking {
+      0% {
+        background-color: #ffffffd1;
+      }
+      50% {
+        background-color: #ffffff75;
+      }
+      100% {
+        background-color: #00000017;
+      }
+    }
+    .contacts li.contact_attention {
+      animation: blinking 1s infinite;
+      /*border-right: 5px solid #e20a0a;*/
+    }
+    .chat_flags {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-count: 2;
+    }
+     .chat_flags>span {
+        display: inline-block;
+        width: 33%;
+     }
+    .contacts li.contact_attention .icon_attention {
+        font-size: 17px;
+        color: red;
+        text-align: right;
+        float: right;
+    }
+    .contacts li .new_message{
+        font-size: 17px;
+        color: #4cd137;
+        text-align: right;
+        float: right;
+    }
+    .contacts li .very_old{
+        font-size: 17px;
+        color: #ffa214;
+        text-align: right;
+        float: right;
+    }
+
 </style>

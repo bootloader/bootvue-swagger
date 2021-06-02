@@ -40,6 +40,16 @@ function setChatFlags(chat) {
   } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){
      chat._tab = "TEAM";
   }
+  if(chat.lastmsg){
+      if(chat.lastmsg.type == "I"){
+        chat.lastInComingStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
+      } else if(chat.lastmsg.type == "O"){
+        chat.lastResponseStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
+      }
+  }
+  var attentionStamp = new Date().getTime()-MyConst.onlineTimeout;
+  chat._attention = (chat.lastResponseStamp < chat.lastInComingStamp) && (chat.lastResponseStamp < attentionStamp);
+  console.log("_attention",chat._attention,chat.lastResponseStamp,chat.lastInComingStamp,attentionStamp)
 
 }
 
@@ -47,7 +57,7 @@ const state = {
   user: null,agents : [],
   posts: null,
   contacts : null,
-  chats : null,chatsVersion : 0, chatsSize : null,
+  chats : [],chatsVersion : 0, chatsSize : null,
   chatsCounter : 1,
   meta : null,
   mediaOptions : null, quickActions : null, quickLabels : null,
@@ -227,11 +237,15 @@ const actions = {
           }
         }
         m.name = m.name || state.chats[c].name;
-        if(index < 0) {
-          chat.messages.push(m);
-        } else {
-          chat.messages.splice(index, 1, m);
+
+        if(chat.messages){
+            if(index < 0) {
+              chat.messages.push(m);
+            } else {
+              chat.messages.splice(index, 1, m);
+            }
         }
+        chat.lastmsg = m;
         //state.chats[c].newmsg = true;
         break;
       }
@@ -242,7 +256,6 @@ const actions = {
 
   async OnlineStatus({ commit },newStatus) {
     let StatusForm = new FormData();
-    var currentStatus = state.meta.isOnline;
     StatusForm.append('status', newStatus)
     let response = await axios.post("/auth/online/status",StatusForm);
     state.meta.isOnline = response.data.meta;
@@ -383,8 +396,8 @@ const mutations = {
   //Contacts
   setChats(state, chats) {
     for(var c in chats){
-      chats[c].lastmsg = {};
-      if(chats[c].messages)
+      chats[c].lastmsg = chats[c].lastmsg || {};
+      if(chats[c].messages){
         for (var i = 0; i < chats[c].messages.length; i++) {
           if(chats[c].messages[i].type == 'I'){
             chats[c].ilastmsg = chats[c].messages[i];
@@ -394,6 +407,7 @@ const mutations = {
           }
           chats[c].messages[i].stamps = chats[c].messages[i].stamps || { }
         }
+      } 
       setChatFlags(chats[c])
     }
     state.chatsSize = chats.length;

@@ -61,8 +61,7 @@
       recaptchaScript.setAttribute('src', 'https://kit.fontawesome.com/1153462312.js')
       document.head.appendChild(recaptchaScript);
       
-   
-
+  
       // let css = document.createElement('link');
       // css.setAttribute('rel', 'stylesheet');
       // css.setAttribute('type', 'text/css');
