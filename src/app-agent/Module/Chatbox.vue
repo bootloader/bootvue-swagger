@@ -236,7 +236,7 @@
                 <div v-show="is_QUICK_MEDIA" class="card-body media_card_body" >
                     <div class="media_card_body-bubbles">
                         <div class="media_card_body-bubbles-wrapper">
-                            <div v-for="media in mediaOptions" class="media_thumb">
+                            <div v-for="media in mediaOptions" class="media_thumb"  @dblclick="sendQuickMedia(media)">
                                     <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media.name" v-model="selectedMedia" />
                                     <label class="media_thumb_label" :for="'mdeia-'+media.name">
                                         <img v-lazy="formatters.https_thumburl(media.url)">
@@ -288,11 +288,11 @@
                         v-bind:class="{ invisible : !sendEnabled}"
                         >
                         <div class="input-group-prepend">
-                            <span 
-                            @click="toggleView('QUICK_MEDIA')"
+                            <span
+                            @click="toggleView('QUICK_MEDIA')"  v-tooltip="'Select Quick Media'"
                             class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
                             <span 
-                            @click="toggleView('QUICK_ACTIONS')"
+                            @click="toggleView('QUICK_ACTIONS')" v-tooltip="'Trigger Quick Action'"
                             class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
 
                         </div>
@@ -305,10 +305,10 @@
                             @keydown.enter.shift.exact="newline"></textarea>
                         <div class="input-group-append">
                             <span
-                                @click="onSendMessage"
+                                @click="onSendMessage" v-tooltip="'Send'" 
                              class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
                             <span 
-                            @click="openFileUpload"
+                            @click="openFileUpload" v-tooltip="'Select File to upload'"
                             class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
                         </div>
                     </div>
@@ -401,7 +401,6 @@
         data: () => ({
             message_text : "",quickReplies : null,
             selectedMedia : null,
-            isShowMediaOptions : false,
             showChatOptions : false,
             lastMessageId : null,ilastMessageId :  null,
             MyDict,MyFlags,MyConst,
@@ -522,7 +521,6 @@
             },
             async sendText(text,template, action){
                 this.showQuickReplies = false;
-                this.isShowMediaOptions = false;
                 this.selectedMedia = null;
 
                 if(this.winMode == "UPLOAD_MEDIA" && this.$refs.myVueDropzone.getQueuedFiles().length > 0){
@@ -551,16 +549,19 @@
                 this.scrollToBottom(true);
             },
             onSendMessage :  function () {
-                this.sendText(this.message_text,this.isShowMediaOptions ?   this.selectedMedia : null);
+                this.sendText(this.message_text,this.is_QUICK_MEDIA ?   this.selectedMedia : null);
                 this.message_text = "";
             }, newline : function (argument) {
                 this.value = `${this.message_text}\n`;
             },
             sendQuickReply : function (argument) {
-                this.sendText(argument || event.target.innerText,this.isShowMediaOptions ?   this.selectedMedia : null);
+                this.sendText(argument || event.target.innerText,this.is_QUICK_MEDIA ?   this.selectedMedia : null);
             },
             sendQuickAction : function (argument) {
                 this.sendText(null, null, argument);
+            },
+            sendQuickMedia : function (media) {
+                this.sendText(null, media.name, null);
             },
             closSession :  function () {
                 this.sendText("/exit_chat");
@@ -734,7 +735,6 @@
                     this.winMode = null;
                 } else {
                     this.winMode = argument;
-                    this.isShowMediaOptions =  true
                 }
             },
             showQuickOptionsMenu : function (argument) {
@@ -1005,6 +1005,9 @@
   .user_info .user_stamp{
     font-size: 10px;
     color: rgba(255,255,255,0.6);
+  }
+  .my-input-section .input-group-text:hover {
+    background-color: #00000069!important;
   }
 </style>
 <style type="text/css">
