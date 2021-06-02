@@ -61,7 +61,7 @@
                                     <b-icon v-if="chat._attention" icon="phone-vibrate" class="icon_attention" variant="red"></b-icon>
                                 </span>
                                 <span>
-                                    <b-icon icon="alarm-fill" class="very_old"></b-icon>
+                                    <b-icon v-if="chat._attention && false" icon="alarm-fill" class="very_old"></b-icon>
                                 </span>
                             </div>  
                         </div>
