@@ -85,7 +85,7 @@
  
                     </div>
                 </div>
-                <div class="card-body msg_card_body" v-show="showChatWindow">
+                <div class="card-body msg_card_body" v-show="is_CHAT_BOX">
 
                     <div class="msg_card_body-bubbles">
 
@@ -100,6 +100,7 @@
 <div v-else-if="activeChat">
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
+            <div><small>Channel Details</small></div>
             <i class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
         </div>
@@ -134,7 +135,7 @@
         <div class="msg_cotainer_send">
             <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> 
-                <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
+                <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
                 <div class="input-group my-attachments">
                     <span v-for="atch in m.attachments" v-viewer="viewerOptions">
                         <img v-if="atch.mediaType == 'IMAGE'" 
@@ -219,9 +220,6 @@
                                     class="msg_cotainer_smart">  {{quickReply.title}}</span>    
                                 </span>
       
-                                <span class="msg_cotainer_smart" @click="isShowMediaOptions=!isShowMediaOptions" v-tooltip="'Send QuickMedia'" hidden>
-                                    <i class="fa fa-photo-video" ></i>
-                                </span> 
                             </div>
                         </div>
 
@@ -235,7 +233,7 @@
 
                     </div>
                 </div>
-                <div v-show="winMode=='QUICK_MEDIA'" class="card-body media_card_body" >
+                <div v-show="is_QUICK_MEDIA" class="card-body media_card_body" >
                     <div class="media_card_body-bubbles">
                         <div class="media_card_body-bubbles-wrapper">
                             <div v-for="media in mediaOptions" class="media_thumb">
@@ -255,7 +253,7 @@
                     </div>
                 </div>
 
-                <div v-show="winMode=='UPLOAD_MEDIA'" class="card-body upload_card_body" >
+                <div v-show="is_UPLOAD_MEDIA" class="card-body upload_card_body" >
                     <div class="card-body-title">Upload Preview <span class="fa fa-close align-right" @click="cancelUpload"/></div>
                     <div  class="upload_card_body-bubbles">
                       <vue-dropzone ref="myVueDropzone"
@@ -274,7 +272,7 @@
                 
 
                 <div class="card-footer">
-                    <slide-up-down :active="showQuickActions && sendEnabled" :duration="200" class="action-events">
+                    <slide-up-down :active="is_QUICK_ACTIONS && sendEnabled" :duration="200" class="action-events">
                             <span v-if="quickActions" v-for="quickAction in quickActions" 
                              @click="sendQuickAction(quickAction.action)"
                             class="msg_cotainer_smart">  {{quickAction.title}}</span>
@@ -291,10 +289,10 @@
                         >
                         <div class="input-group-prepend">
                             <span 
-                            @click="showWinMode('QUICK_MEDIA')"
+                            @click="toggleView('QUICK_MEDIA')"
                             class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
                             <span 
-                            @click="showQuickActions=!showQuickActions"
+                            @click="toggleView('QUICK_ACTIONS')"
                             class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
 
                         </div>
@@ -376,12 +374,18 @@
                 //console.log("quickActions=",this.$store.getters.StateQuickActions)
                 return this.$store.getters.StateQuickActions;
             },
-            showChatWindow : function (argument) {
-                return (this.winMode === null) || this.winMode == "CHAT_BOX";
+            is_CHAT_BOX : function (argument) {
+                return (this.winMode === null) || this.winMode == "CHAT_BOX" || this.winMode == "QUICK_ACTIONS";
             },
-            showMediaUpload : function (argument) {
-                return (this.dz.file_dragging || this.dz.file_dropped) && this.winMode == 'UPLOAD_MEDIA';
-            }, 
+            is_QUICK_MEDIA : function (argument) {
+                return this.winMode == "QUICK_MEDIA"
+            },
+            is_QUICK_ACTIONS : function (argument) {
+                return this.winMode == "QUICK_ACTIONS"
+            },
+            is_UPLOAD_MEDIA : function (argument) {
+                return this.winMode == "UPLOAD_MEDIA"
+            },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
             },
@@ -399,7 +403,10 @@
             lastMessageId : null,ilastMessageId :  null,
             MyDict,MyFlags,MyConst,
             isLoading : false,
-            showQuickActions : false,
+            is : {
+                QUICK_ACTIONS  : false,
+                QUICK_MEDIA :  false
+            },
             showQuickReplies : false, countQuickReplies : 3,
             showAgentOption : false,
             assignedToAgent : null,
@@ -487,7 +494,7 @@
             '$route.params.sessionId': function (contactId) {
                 //this.loadChat();
                 this.loadArchiveMessages();
-                this.showWinMode("CHAT_BOX");
+                this.toggleView("CHAT_BOX");
             }
         },
         methods: {
@@ -525,7 +532,7 @@
                     return;
                 }
                 //activeChat.messages.push(msg);
-                this.showWinMode("CHAT_BOX");
+                this.toggleView("CHAT_BOX");
                 this.scrollToBottom();
 
                 try {
@@ -537,7 +544,7 @@
                     console.error(e)
                     msg.logs = ["Error While Sending"];
                 }
-                this.showWinMode("CHAT_BOX");
+                this.toggleView("CHAT_BOX");
                 this.scrollToBottom(true);
             },
             onSendMessage :  function () {
@@ -572,7 +579,7 @@
                 }
             },
             scrollToBottom : function (force) {
-                if(!this.showChatWindow){
+                if(!this.is_CHAT_BOX){
                     return;
                 }
 
@@ -719,8 +726,7 @@
                 });
                 this.refreshActiveChats();
             },
-
-            showWinMode : function (argument) {
+            toggleView : function (argument) {
                 if(this.winMode === argument){
                     this.winMode = null;
                 } else {
