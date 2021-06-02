@@ -217,7 +217,7 @@
                 clearInterval(this.intervalid1);        
                 this.intervalid1 = setInterval(function(){
                     this.$store.dispatch('OnlineStatus', this.isOnline);
-                }.bind(this), 1000*60*5);
+                }.bind(this), MyConst.onlineTimeout);
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){

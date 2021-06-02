@@ -13,7 +13,8 @@ export const MyConst = {
 		full_inverse : window.CONST.CDN_URL + "/logo/logo-long-o.png",
 		short : window.CONST.CDN_URL + "/logo/logo-short.png",
 		short_inverse : window.CONST.CDN_URL + "/logo/logo-short-o.png",
-	}
+	},
+	onlineTimeout : 1000*60*5
 }
 export const MyFlags = {
   showSidebar: false,

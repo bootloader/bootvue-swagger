@@ -250,13 +250,25 @@ const actions = {
   },
 
   async SetAgentOptionsStatus({ commit },agentSessons) {
+    var offlineStamp = new Date().getTime()-MyConst.onlineTimeout;
     for(var i in agentSessons){
       state.agents.map(function(agent) {
-        if(agent.code == agentSessons[i].agentCode){
-          agent.session = agentSessons[i];
+        var session = agentSessons[i];
+        if(agent.code == session.agentCode){
+          agent.session = session;
+          session.isLoggedIn = (session.isLoggedIn && (session.lastOnlineStamp > offlineStamp))
+          session.isOnline = (session.isOnline && session.isLoggedIn)
         }
       });
     }
+    state.agents = state.agents.sort(function (a,b) {
+      if(a.session && a.session.isOnline){
+        return -1;
+      } else if(!b.session || !b.session.isLoggedIn){
+        return -1;
+      }
+      return 0;
+    });
     commit("setAgents", state.agents);
   },
 

@@ -32,7 +32,7 @@
                                     </template>
                                     <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
                                         'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
-                                        'fa-check-circle' : session && session.isLoggedIn && session.isOnline,
+                                        'fa-check-circle' : session && session.isOnline,
                                         'fa-minus-circle' : session && !session.isOnline
                                     }" />
                                      {{ code }}<em>  - {{ name }}</em>
