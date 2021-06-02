@@ -15,8 +15,9 @@
                     <b-nav-item v-b-toggle href="#my-sidebar" @click.prevent v-b-toggle.my-sidebar class="menu_btn_close">
                         <i class="fa fa-arrow-left">&nbsp;&nbsp;</i>
                     </b-nav-item>
-                    <b-nav-item href="#link-user">
-                        <i class="fas fa-user">&nbsp;&nbsp;</i>{{MyConst.agent}} 
+                    <b-nav-item disabled class="text-align-center user-info">
+                            {{MyConst.agent}} <br/>
+                        <small> <em>Agent</em></small>
                     </b-nav-item>
                     <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
                         <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout
@@ -157,7 +158,9 @@
         padding: 0px;
 
     }
-
+    .user-info {
+        background-color: #0006;
+    }
     .mySidebar {
       color: #ffffff!important;
       background-color: transparent!important
