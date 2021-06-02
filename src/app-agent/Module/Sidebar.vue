@@ -16,8 +16,9 @@
                         <i class="fa fa-arrow-left">&nbsp;&nbsp;</i>
                     </b-nav-item>
                     <b-nav-item disabled class="text-align-center user-info">
-                            {{MyConst.agent}} <br/>
-                        <small> <em>Agent</em></small>
+                        {{MyConst.agent}}<br/>
+                        <i class="fa" v-bind:class="{ 'fa-check-circle' : isOnline, 'fa-minus-circle' : !isOnline }"/>&nbsp;
+                        <small> <em>{{ isOnline ? 'Available' : 'Not Available'}}</em></small>
                     </b-nav-item>
                     <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
                         <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout
@@ -91,6 +92,14 @@
             },
             showSidebarOpening : false
         }),
+        computed : {
+            isOnline :  function (){
+                if(this.$store.getters.StateMeta){
+                    return this.$store.getters.StateMeta.isOnline;
+                }
+                return false;
+            },
+        },
         methods: {
             toggleBodyClass(className) {
                 const el = document.body;
@@ -184,5 +193,13 @@
     .w3-button:hover {
         color: #fff!important;
         background-color: #424ca9!important;
+    }
+    .fa-check-circle {
+        color: #3aa233;
+        font-size: smaller;
+      }
+    .fa-minus-circle {
+        color: #c10505;
+        font-size: smaller;
     }
 </style>
