@@ -16,9 +16,17 @@
                         <i class="fa fa-arrow-left">&nbsp;&nbsp;</i>
                     </b-nav-item>
                     <b-nav-item disabled class="text-align-center user-info">
-                        {{MyConst.agent}}<br/>
-                        <i class="fa" v-bind:class="{ 'fa-check-circle' : isOnline, 'fa-minus-circle' : !isOnline }"/>&nbsp;
-                        <small> <em>{{ isOnline ? 'Available' : 'Not Available'}}</em></small>
+<div style="height: 40px">
+    <span class="fa-stack fa-1x float-left" style="font-size: 19px;">
+      <i class="fas fa-user fa-stack-1x"></i>
+      <i class="far fa-circle fa-stack-2x"></i>
+    </span>
+    <span class="float-left">
+        {{MyConst.agent}}<br/>
+        <i class="fa" v-bind:class="{ 'fa-check-circle' : isOnline, 'fa-minus-circle' : !isOnline }"/>&nbsp;
+        <small> <em>{{ isOnline ? 'Available' : 'Not Available'}}</em></small>
+    </span>
+</div>
                     </b-nav-item>
                     <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
                         <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout
