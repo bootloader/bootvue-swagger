@@ -256,7 +256,6 @@
        color : rgba(21, 21, 21, 0.68) !important
     }
     .card-footer .fa::before {
-        display: inline-block;
         margin: 0px;
         cursor: pointer;
     }

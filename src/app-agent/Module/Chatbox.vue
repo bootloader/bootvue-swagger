@@ -100,12 +100,10 @@
 <div v-else-if="activeChat">
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
-            <span class="text-align-right">{{activeChat.contact.name}}&nbsp;</span>
-            <i class="fa fa-long-arrow-alt-left"/>&nbsp;
-            <i class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>
-            &nbsp;<i class="fa fa-long-arrow-alt-right"/>
+            <i class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
         </div>
+        <hr/>
     </div>  
   <div v-for="m in activeChat.messages">
     
@@ -802,34 +800,17 @@
         margin-top: 5px;
     }
     .msg_card_body-bubbles-header {
-        text-align: center;
     }
     .msg_card_body-bubbles-lane {
-        padding: 20px;
-        text-align: center;
-        margin: 14px;
+        text-align: right;
         color: #737373;
-        border: solid 1px #eaeaea;
-        background-color: #f1f1f1;
-        border-radius: 8px;
-        display: inline-block;
+        font-size: 16px;
     }
-     .msg_card_body-bubbles-header span{
-    font-size: 16px;
-    width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    line-height: 15px;
-     }
     .msg_card_body-bubbles-header .contact_type{
-    line-height: 35px;
-    font-size: 30px;
-    height: 45px;
-    /* padding: 16px; */
-    /* margin: 0px; */
-    /* display: inline-block; */
-    width: 45px;
+        line-height: 20px;
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
     }
     .msg_card_body-logo{
         min-height: calc(100% - 25px);
@@ -998,7 +979,7 @@
     color: white;
   }
   .user_info .font-name{
-    text-overflow: ellipsis;
+        text-overflow: ellipsis;
       max-width: 187px;
       display: inline-block;
       overflow: hidden;

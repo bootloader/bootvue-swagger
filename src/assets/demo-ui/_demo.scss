@@ -223,8 +223,6 @@
 .contact_type::before {
   background-color: #fff;
   border-radius: 50%;
-  height: 25px;
-  width: 25px;
   text-align: center;
   margin: auto;
   display: block;
@@ -249,6 +247,10 @@
 .contact_type.fa-telegram::before{
   background-color: #FFF;
   color : #0088cc;
+}
+.contact_type.fa-telegram-plane::before{
+  background-color: #0088cc;
+  color : #fff;
 }
 
 .card.modal-content{

@@ -300,6 +300,7 @@
 <style type="text/css" scoped>
     .contact_type{
         height: 23px;
+        width: 23px;
     }
     .card.card_contact_profile .card-body {
         background-color: #f5f5f5!important;
@@ -341,6 +342,9 @@
         background-color: #efefef!important;
         color: #212529!important;
         border: #ccc 1px solid;
+    }
+     #tagmodal .vue-tags-input .ti-autocomplete {
+        width: calc( 100% - 134px);
     }
     .modal-dialog.card-dialog {
         box-shadow: none!important;
