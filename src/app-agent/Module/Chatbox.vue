@@ -32,7 +32,7 @@
                                     </template>
                                     <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
                                         'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
-                                        'fa-check-circle' : session && session.isOnline,
+                                        'fa-check-circle' : session && session.isLoggedIn && session.isOnline,
                                         'fa-minus-circle' : session && !session.isOnline
                                     }" />
                                      {{ code }}<em>  - {{ name }}</em>
@@ -60,20 +60,20 @@
                                    <i class="fas fa-ellipsis-v"></i>
                                 </template>
                                 <b-dropdown-item @click="showContactProfile('info')">
-                                    <i class="fa fa-user"></i>&nbsp;&nbsp;Show Profile Info
+                                    <i class="fa fa-user"></i>&nbsp;&nbsp;Profile Info
                                 </b-dropdown-item>
                                 <b-dropdown-item  @click="showContactProfile('history')">
-                                     <i class="fa fa-history"></i>&nbsp;&nbsp;Show Chat History
+                                     <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
                                 </b-dropdown-item>
                             </b-dropdown>
                             <span class="float-right quick_option_icon d-none d-md-block" 
                                  v-bind:class="{'my-selected' : profileViewInfo }"
-                                @click="showContactProfile('info')" v-tooltip="'Show Profile Info'" >
+                                @click="showContactProfile('info')" v-tooltip="'Profile Info'" >
                                 <i class="fa fa-user"></i>
                             </span> 
                             <span class="float-right quick_option_icon d-none d-md-block"
                                  v-bind:class="{'my-selected' : profileViewHistory }"
-                                 @click="showContactProfile('history')" v-tooltip="'Show Chat History'" >
+                                 @click="showContactProfile('history')" v-tooltip="'Chat History'" >
                                 <i class="fa fa-history"></i>
                             </span> 
                         </div>

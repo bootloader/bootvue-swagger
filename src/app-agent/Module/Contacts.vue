@@ -188,6 +188,7 @@
                     }
                 });
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
+            this.pingOnline();
         },
         beforeUnmount (){
             this.tunnel.off();
@@ -210,7 +211,13 @@
                 this.$emit('loaded', {});
             },
             async toggleOnline(){
-                await this.$store.dispatch('OnlineStatus');
+                await this.$store.dispatch('OnlineStatus', !this.isOnline);
+            },
+            async pingOnline(){ 
+                clearInterval(this.intervalid1);        
+                this.intervalid1 = setInterval(function(){
+                    this.$store.dispatch('OnlineStatus', this.isOnline);
+                }.bind(this), 1000*60*5);
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){

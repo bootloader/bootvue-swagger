@@ -240,10 +240,10 @@ const actions = {
     commit("setChats", state.chats);
   },
 
-  async OnlineStatus({ commit }) {
+  async OnlineStatus({ commit },newStatus) {
     let StatusForm = new FormData();
     var currentStatus = state.meta.isOnline;
-    StatusForm.append('status', !currentStatus)
+    StatusForm.append('status', newStatus)
     let response = await axios.post("/auth/online/status",StatusForm);
     state.meta.isOnline = response.data.meta;
     commit("setMeta", state.meta);
