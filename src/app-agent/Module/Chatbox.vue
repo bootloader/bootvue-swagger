@@ -306,7 +306,10 @@
                         <div class="input-group-append">
                             <span
                                 @click="onSendMessage"
-                             class="input-group-text input-group-text-right send_btn"><i class="fa fa-location-arrow"></i></span>
+                             class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
+                            <span 
+                            @click="openFileUpload"
+                            class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
                         </div>
                     </div>
                 </div>
@@ -763,6 +766,10 @@
                 console.log("Cancel UPload")
                 this.dz.file_dragging = false;
                 this.$refs.myVueDropzone.removeAllFiles(true)
+            },
+            openFileUpload : function (argument) {
+                this.$refs.myVueDropzone.$el.click();
+                this.winMode = "UPLOAD_MEDIA";
             },
             //DZ options
             async fileAdded(argument) {
