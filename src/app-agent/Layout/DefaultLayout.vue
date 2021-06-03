@@ -79,5 +79,15 @@
     .main-content-wrapper {
         overflow: hidden;
     }
+    .modal-dialog.modal-dialog-sm  .modal-header, .modal-dialog.modal-dialog-sm  .modal-footer{
+        padding: 8px 16px;
+    }
+    .modal-dialog.modal-dialog-sm .modal-title {
+        font-size: 16px;
+    }
+
+
+
+
 </style>
 

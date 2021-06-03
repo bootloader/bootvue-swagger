@@ -21,12 +21,6 @@
       border-radius: 15px !important;
       background-color: #4b56c0 !important;
     }
-    .contacts_body{
-      padding:  0.75rem 0 !important;
-      overflow-y: auto;
-      white-space: nowrap;
-      background-color: #003f779c;
-    }
     .card-header{
       background-color: rgba(0,0,0,.03);
       border-radius: 15px 15px 0 0 !important;
@@ -130,30 +124,7 @@
   .offline{
     background-color: #c23616 !important;
   }
-  .user_info{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 15px;
-  }
-  .user_info span{
-    font-size: 20px;
-    color: white;
-  }
-  .user_info .font-name{
-    text-overflow: ellipsis;
-      max-width: 187px;
-      display: inline-block;
-      overflow: hidden;
-  }
-  .user_info .font-preview{
-    text-overflow: ellipsis;
-      max-width: 187px;
-      overflow: hidden;
-  }
-  .user_info p{
-    font-size: 10px;
-    color: rgba(255,255,255,0.6);
-  }
+
   .video_cam{
     margin-left: 50px;
     margin-top: 5px;
@@ -280,25 +251,6 @@
 @keyframes blinker {  
   50% { opacity: 0; }
 }
-
-.contact-time {
-    width: 60px;
-    color: #ffffff;
-    font-size: 0.7em;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0px;
-    margin-left: auto;
-    white-space : break-spaces;
-    max-width:65px;
-}
-.contact-text {
-    height: 40px;
-}
-
-
-
 
 
 .information img {

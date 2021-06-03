@@ -111,15 +111,18 @@
     </div>
         
         <b-modal v-if="activeChat && activeChat.contact" id="tagmodal" title="Contact Labels"
+
             @ok="tagmodalOk"
             content-class="card"
             footer-class="card-footer"
             header-class="card-header"
             header-text-variant="white"
             body-class="card-body"
-            dialog-class="card-dialog"
+            dialog-class="card-dialog modal-dialog-sm"
+            button-size="sm"
             >
-                
+               
+
                 <vue-tags-input
                     v-model="labelInput"
                     :tags="labels"

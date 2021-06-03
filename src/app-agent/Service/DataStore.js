@@ -48,8 +48,12 @@ function setChatFlags(chat) {
       }
   }
   var attentionStamp = new Date().getTime()-MyConst.onlineTimeout;
-  chat._attention = (chat.lastResponseStamp < chat.lastInComingStamp) && (chat.lastResponseStamp < attentionStamp);
-  console.log("_attention",chat._attention,chat.lastResponseStamp,chat.lastInComingStamp,attentionStamp)
+  chat._waiting = (chat.lastResponseStamp < chat.lastInComingStamp);
+  chat._attention = chat._waiting && (chat.lastResponseStamp < attentionStamp);
+  chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
+                && (!chat._lastReadStamp || (chat._lastReadStamp < chat.lastInComingStamp));
+
+  console.log("_new",chat.sessionId,chat._attention,chat.lastResponseStamp,chat.lastInComingStamp,attentionStamp,chat._lastReadStamp)
 
 }
 
@@ -128,6 +132,10 @@ const actions = {
     commit("setChats", response.data.results);
     commit("setMeta", response.data.meta);
     return response;
+  },
+
+  async RefreshChats({ commit }) {
+    commit("setChats", state.chats);
   },
 
   async GetChats({ commit,dispatch }) {

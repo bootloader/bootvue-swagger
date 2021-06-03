@@ -23,7 +23,7 @@
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ME')}" @click="MyFlags.agent.contactsTab = 'ME'">
                     <span class="fa fa-user"/> Me</span>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
@@ -36,7 +36,8 @@
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
                         active_contact : (contactId == chat.contactId),
-                        contact_attention : chat._attention
+                        contact_attention : chat._attention && (chat._tab == 'TEAM' ),
+                        contact_waiting : chat._waiting
                     }"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
@@ -44,18 +45,27 @@
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="online_icon"></span>
                                 <span class="contact_type fa"
-                                v-bind:class="MyDict.social[chat.contactType]"
-                                ></span>
+                                v-bind:class="MyDict.social[chat.contactType]"></span>
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
-                            <p class="font-preview" v-if="chat.ilastmsg" >{{chat.ilastmsg.text}}</p>
+                            <span hidden class="font-preview" v-if="chat.ilastmsg" >{{chat.ilastmsg.text}}</span>
+
+            <div data-v-5dda926d="" class="chat_tags">
+                <div data-v-5dda926d="" class="chat_tags text-align-left">
+                    <span data-v-5dda926d="" class="tag-chat-status" :class="'tag-chat-status-' + chat.status">
+                        {{chat.status+''}}
+                    </span>
+                </div>
+            </div>
+                            
                         </div>
-                        <div class="contact-time" :title="chat.lastInComingStamp">
-                            <p>{{chat.lastInComingStamp | formatDate}} </p>
+                        <div class="contact-flags" :title="chat.lastInComingStamp">
+                            <span class="contact-time">{{chat.lastInComingStamp | formatDate}} </span>
                             <div  class="" id="'nm' + c.contactId" class="chat_flags">
                                 <span>
-                                    <b-icon v-if="chat.newmsg" icon="circle-fill" class="new_message" variant="red"></b-icon>
+                                    <b-icon v-if="chat._new" icon="circle-fill" 
+                                        class="new_message" variant="red"></b-icon>
                                 </span>
                                 <span>
                                     <b-icon v-if="chat._attention" icon="phone-vibrate" class="icon_attention" variant="red"></b-icon>
@@ -118,6 +128,15 @@
             'font-awesome-icon': FontAwesomeIcon,
         },
         computed : {
+            urgentChat : function (argument) {
+                for(var i in this.$store.getters.StateChats){
+                    if(this.$store.getters.StateChats[i]._attention 
+                        && this.$store.getters.StateChats[i]._tab == 'TEAM'){
+                        return true;
+                    }
+                }
+                return false;
+            },
             activeChats : function(){ 
                 console.log("activeChats",this.$store.getters.StateChats.length); 
                 let searchTags = this.search.text.split(/(:[\w]+\ )/).filter(function (argument) {
@@ -181,23 +200,6 @@
             // fetch the data when the view is created and the data is
             // already being observed
             this.loadChats();
-            var THAT =  this;
-            this.tunnel = tunnel.init().instance()
-                .on("/agent/onmessage", function(msg){
-                    var activeChats = THAT.activeChats;
-                    if(!activeChats){
-                        return;
-                    }
-                    if(THAT.$route.params.sessionId != msg.sessionId){
-                        for (var i in activeChats) {
-                            var chat = activeChats[i];
-                            if(msg.sessionId == chat.sessionId){
-                                 chat.newmsg = true;
-                                 THAT.$forceUpdate();
-                            }
-                        }
-                    }
-                });
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
             this.pingOnline();
         },
@@ -210,8 +212,9 @@
                 for (var i in activeChats) {
                     var chat = activeChats[i];
                     if(sessionId == chat.sessionId){
-                         chat.newmsg = false;
-                         this.$forceUpdate();
+                        chat._lastReadStamp = chat.lastInComingStamp;
+                        this.$store.dispatch('RefreshChats');
+                        this.$forceUpdate();
                     }
                 }
             }
@@ -265,6 +268,9 @@
 </script>
 <style type="text/css" scoped="">
     .contacts_body{
+        padding:  0 0 !important;
+        overflow-y: auto;
+        white-space: nowrap;
         background-color: #f5f5f5;
     }
     .contacts{
@@ -273,13 +279,14 @@
         max-width: 348px;
 
         list-style: none;
-        padding: 0;
         max-width: calc(100% - 0px);
     }
     .contacts li{
         width: 100% !important;
         padding: 5px 10px;
-        margin-bottom: 3px !important;
+        /*margin-bottom: 3px !important;*/
+        /*box-shadow: inset 0 0 52px #0000000d;*/
+        border-bottom: 1px solid #00000008;
         cursor: pointer;
         border-left: 5px solid #0000;
         border-right: 5px solid #0000;
@@ -294,8 +301,42 @@
     .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
     }
-    ul.contacts .user_info *, ul.contacts .contact-time p{
-       color : rgba(21, 21, 21, 0.68) !important
+    .contact-text {
+        margin-left: 15px;
+        height: 40px;
+        font-size: 18px;
+        color : rgba(21, 21, 21, 0.68);
+    }
+    .contact-text .font-name{
+        text-overflow: ellipsis;
+        max-width: 187px;
+        overflow: hidden;
+        /*font-weight: 300;*/
+    }
+    .contact_waiting  .contact-text .font-name{
+        font-weight: 500;
+    }
+    .contact-text .font-preview{
+        text-overflow: ellipsis;
+        max-width: 187px;
+        overflow: hidden;
+        font-size: 10px;
+        display: block;
+    }
+
+    .contact-flags {
+        width: 60px;
+        font-size: 0.7em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0px;
+        margin-left: auto;
+        white-space : break-spaces;
+        max-width:65px;
+    }
+    .contact-time {
+        height: 28px;
     }
     .card-footer .fa::before {
         margin: 0px;
@@ -337,7 +378,7 @@
         float: right;
         font-size: 25px!important;
         border-radius: 48%;
-        line-height: 21px!important;
+        line-height: 35px!important;
         cursor: pointer;
     }
     .online-toggle.fa-toggle-on {
@@ -358,21 +399,21 @@
         background-color: #00000017;
       }
     }
-    .contacts li.contact_attention {
+    .contact_attention {
       animation: blinking 1s infinite;
-      /*border-right: 5px solid #e20a0a;*/
     }
     .chat_flags {
         display: flex;
         align-items: center;
         justify-content: center;
         column-count: 2;
+        height: 30px;
     }
      .chat_flags>span {
         display: inline-block;
         width: 33%;
      }
-    .contacts li.contact_attention .icon_attention {
+    .contacts li .icon_attention {
         font-size: 17px;
         color: red;
         text-align: right;

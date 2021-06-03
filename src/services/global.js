@@ -14,7 +14,8 @@ export const MyConst = {
 		short : window.CONST.CDN_URL + "/logo/logo-short.png",
 		short_inverse : window.CONST.CDN_URL + "/logo/logo-short-o.png",
 	},
-	onlineTimeout : 1000*1*30
+	onlineTimeout : 1000*60*5,
+	sessionLoadStamp : new Date().getTime()
 }
 export const MyFlags = {
   showSidebar: false,
@@ -30,6 +31,11 @@ export const MyFlags = {
 export const MyDict = {
 	social : {
 	 "FACEBOOK" : "fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fa-telegram",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
+	},
+	chatStatus : {
+		 "OPEN" : "OPEN", "UNASSIGNED" : "UNASSIGNED", "ATTENTION" : "ATTENTION",
+	 	"URGENT" : "URGENT", "ONHOLD" : "ONHOLD", 
+	  	"EXPIRED" : "EXPIRED", "RESOLVED" : "RESOLVED", "CLOSED" : "CLOSED"
 	},
 	socialPrefix : function (argument) {
 		argument = argument || "";

@@ -6,85 +6,115 @@
             @mouseleave="dragLeave"
             :id="chatsVersionGlobal"
         >
-                <div class="card-header msg_head chat-head">                   
-                    <div class="d-flex bd-highlight chat-header-left">
-                        <div class="chat-header-left-left d-sm-block d-md-none">
-                            <i class="fa fa-arrow-left" @click="MyFlags.agent.mvu='CONTACTS'">&nbsp;&nbsp;</i>
-                        </div>
-                        <div class="img_cont" 
-                            @click="showContactProfile">
-                            <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
-                            <span class="online_icon" hidden ></span>
-                        </div>
-                        <div class="user_info"
-                            v-if="activeChat">
-                            <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
-                            <div v-if="activeChat.ilastmsg" class="user_stamp">{{activeChat.ilastmsg.timestamp | formatDate}} </div>
-                            <div v-if="assignedToAgent" class="user_assignment">
-                                <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
-                                @option:selected="onAssignedToAgent" label="code"
-                                :components="{Deselect}">
-                                    <template #selected-option="option">
-                                      <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
-                                    </template>
-                                    <template #open-indicator="{ attributes }">
-                                      <span v-bind="attributes" class="fa fa-caret-down"></span>
-                                    </template>
-                                    <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
-                                        'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
-                                        'fa-check-circle' : session && session.isOnline,
-                                        'fa-minus-circle' : session && !session.isOnline
-                                    }" />
-                                     {{ code }}<em>  - {{ name }}</em>
-                                    </template>
-                                </v-select>
-                                <span v-if="!isChatActive" class="vs__selected">
-                                    Assigned to {{assignedToAgent.code}}
-                                </span>
+                <div class="card-header msg_head chat-head">   
+                    <div class="d-block clear-both">               
+                        <div class="d-flex bd-highlight chat-header-left">
+                            <div class="chat-header-left-left d-sm-block d-md-none">
+                                <i class="fa fa-arrow-left" @click="MyFlags.agent.mvu='CONTACTS'">&nbsp;&nbsp;</i>
+                            </div>
+                            <div class="img_cont" 
+                                @click="showContactProfile">
+                                <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
+                                <span class="online_icon" hidden ></span>
+                            </div>
+                            <div class="user_info"
+                                v-if="activeChat">
+                                <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
+                                <div v-if="assignedToAgent" class="user_assignment">
+                                    <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
+                                    @option:selected="onAssignedToAgent" label="code"
+                                    :components="{Deselect}">
+                                        <template #selected-option="option">
+                                          <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
+                                        </template>
+                                        <template #open-indicator="{ attributes }">
+                                          <span v-bind="attributes" class="fa fa-caret-down"></span>
+                                        </template>
+                                        <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
+                                            'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
+                                            'fa-check-circle' : session && session.isOnline,
+                                            'fa-minus-circle' : session && !session.isOnline
+                                        }" />
+                                         {{ code }}<em>  - {{ name }}</em>
+                                        </template>
+                                    </v-select>
+                                    <span v-if="!isChatActive" class="vs__selected">
+                                        Assigned to {{assignedToAgent.code}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="chat_actions" hidden>
+                                <button  @click="closSession" title="Close Chat"
+                                class="btn"><i class="fa fa-check-circle"></i></button>                            
                             </div>
                         </div>
 
-                        <div class="chat_actions" hidden>
-                            <button  @click="closSession" title="Close Chat"
-                            class="btn"><i class="fa fa-check-circle"></i></button>                            
-                        </div>
-                    </div>
-
-                    <div  class="chat-header-right">
-                        <div v-if="activeChat" class="quick_options">
-                            <b-dropdown id="dropdown-offset" offset="10"
-                                class="float-right quick_option_menu d-sm-block d-md-none"
-                                ref="quick_option_menu" no-caret  variant="link" block right
-                                toggle-tag="span" toggle-class="quick_option_icon float-right">
-                                <template #button-content>
-                                   <i class="fas fa-ellipsis-v"></i>
-                                </template>
-                                <b-dropdown-item @click="showContactProfile('info')">
-                                    <i class="fa fa-user"></i>&nbsp;&nbsp;Profile Info
-                                </b-dropdown-item>
-                                <b-dropdown-item  @click="showContactProfile('history')">
-                                     <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
-                                </b-dropdown-item>
-                            </b-dropdown>
-                            <span class="float-right quick_option_icon d-none d-md-block" 
-                                 v-bind:class="{'my-selected' : profileViewInfo }"
-                                @click="showContactProfile('info')" v-tooltip="'Profile Info'" >
-                                <i class="fa fa-user"></i>
-                            </span> 
-                            <span class="float-right quick_option_icon d-none d-md-block"
-                                 v-bind:class="{'my-selected' : profileViewHistory }"
-                                 @click="showContactProfile('history')" v-tooltip="'Chat History'" >
-                                <i class="fa fa-history"></i>
-                            </span> 
+                        <div  class="chat-header-right">
+                            <div v-if="activeChat" class="quick_options">
+                                <b-dropdown id="dropdown-offset" offset="10"
+                                    class="float-right quick_option_menu d-sm-block d-md-none"
+                                    ref="quick_option_menu" no-caret  variant="link" block right
+                                    toggle-tag="span" toggle-class="quick_option_icon float-right">
+                                    <template #button-content>
+                                       <i class="fas fa-ellipsis-v"></i>
+                                    </template>
+                                    <b-dropdown-item @click="showContactProfile('info')">
+                                        <i class="fa fa-user"></i>&nbsp;&nbsp;Profile Info
+                                    </b-dropdown-item>
+                                    <b-dropdown-item  @click="showContactProfile('history')">
+                                         <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                                <span class="float-right quick_option_icon d-none d-md-block" 
+                                     v-bind:class="{'my-selected' : profileViewInfo }"
+                                    @click="showContactProfile('info')" v-tooltip="'Profile Info'" >
+                                    <i class="fa fa-user"></i>
+                                </span> 
+                                <span class="float-right quick_option_icon d-none d-md-block"
+                                     v-bind:class="{'my-selected' : profileViewHistory }"
+                                     @click="showContactProfile('history')" v-tooltip="'Chat History'" >
+                                    <i class="fa fa-history"></i>
+                                </span> 
+                            </div>
                         </div>
 
+                        <div  class="chat-header-right"  @mouseover="showChatOptions = true"
+                                @mouseleave="showChatOptions = false">
+                        </div>
+
+                    </div> 
+                    
+                    <div class="d-block clear-both chat-header-lower"> 
+                        <div data-v-5dda926d="" class="chat_tags text-align-right">
+                            <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
+                                v-b-modal.chattags >
+                                {{activeChat.status}}
+                            </span>
+
+                          <b-modal v-if="activeChat" id="chattags" title="Select Chat Status"
+                                content-class="card"
+                                footer-class="card-footer"
+                                header-class="card-header"
+                                header-text-variant="white"
+                                body-class="card-body"
+                                dialog-class="card-dialog modal-dialog-sm"
+                                button-size="sm"
+                                >  
+
+                            <span v-for="s in MyDict.chatStatus" 
+                                class="tag-chat-status-lg" 
+                                :class="'tag-chat-status-'+ s + ( s== activeChat.status ? ' tag-chat-status-active' : '')">
+                                {{s}}
+                            </span>
+
+                            </b-modal>
+
+                        </div> 
                     </div>
 
-                    <div  class="chat-header-right"  @mouseover="showChatOptions = true"
-                            @mouseleave="showChatOptions = false">
- 
-                    </div>
                 </div>
+
                 <div class="card-body msg_card_body" v-show="is_CHAT_BOX">
 
                     <div class="msg_card_body-bubbles">
@@ -313,6 +343,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 </template>
 
@@ -807,6 +838,9 @@
     .chat-header-right{
         float: right;
     }
+    .chat-header-lower{
+        height: 18px;
+    }
     .quick_options {
         margin-right: -10px;
         color: white;
@@ -990,9 +1024,12 @@
   .user_info .user_name{
     font-size: 15px;
     color: white;
+    line-height: 15px;
+    margin-bottom: 9px;
+    display: block;
   }
   .user_info .font-name{
-        text-overflow: ellipsis;
+      text-overflow: ellipsis;
       max-width: 187px;
       display: inline-block;
       overflow: hidden;
@@ -1008,6 +1045,9 @@
   }
   .my-input-section .input-group-text:hover {
     background-color: #00000069!important;
+  }
+  .tag-chat-status-lg {
+    margin: 3px;
   }
 </style>
 <style type="text/css">
@@ -1036,6 +1076,9 @@
   }
   .user_assignment .vs__dropdown-toggle {
     border : none;
+    color: #fff;
+    background-color: #0000002e;
+    border-radius: 6px;
   }
   .user_assignment .vs__selected-options{
     /*min-width: 200px;*/
