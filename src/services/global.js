@@ -9,7 +9,7 @@ export const MyConst = {
 	agent : window.CONST.APP_USER,
 	config : Object.assign({
 		chatSessionTimeout : 86400000, // After which chat is expired
-		idleChatTimeout : 1000*60*5, // Time after which  chat raised attention
+		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
 	}, window.CONST.CONFIG || window.CONST.CONFG),
 	logo : {
