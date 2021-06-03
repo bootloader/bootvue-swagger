@@ -207,11 +207,13 @@
             this.tunnel.off();
         },
         watch: {
-            '$route.params.sessionId': function (sessionId) {
+            '$route.params.sessionId': function (sessionId, sessionIdFrom) {
+                console.log("$route.params.sessionId", sessionId, sessionIdFrom)
                 var activeChats = this.activeChats;
                 for (var i in activeChats) {
                     var chat = activeChats[i];
-                    if(sessionId == chat.sessionId){
+                    if((sessionId == chat.sessionId) 
+                        || (sessionIdFrom == chat.sessionId)){
                         chat._lastReadStamp = chat.lastInComingStamp;
                         this.$store.dispatch('RefreshChats');
                         this.$forceUpdate();
@@ -231,7 +233,7 @@
                 clearInterval(this.intervalid1);        
                 this.intervalid1 = setInterval(function(){
                     this.$store.dispatch('OnlineStatus', this.isOnline);
-                }.bind(this), MyConst.onlineTimeout);
+                }.bind(this), MyConst.config.agentSessionTimeout);
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){
@@ -425,7 +427,10 @@
         text-align: right;
         float: right;
     }
-    .contacts li .very_old{
+    .contacts li.router-link-exact-active .new_message {
+        display: none;
+    }
+    .contacts li .very_old {
         font-size: 17px;
         color: #ffa214;
         text-align: right;

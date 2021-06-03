@@ -7,14 +7,17 @@ export const MyConst = {
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	agent : window.CONST.APP_USER,
-	config : window.CONST.CONFIG || window.CONST.CONFG,
+	config : Object.assign({
+		chatSessionTimeout : 86400000, // After which chat is expired
+		idleChatTimeout : 1000*60*5, // Time after which  chat raised attention
+		agentSessionTimeout : 1000*60*10, // Time to ping server
+	}, window.CONST.CONFIG || window.CONST.CONFG),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",
 		full_inverse : window.CONST.CDN_URL + "/logo/logo-long-o.png",
 		short : window.CONST.CDN_URL + "/logo/logo-short.png",
 		short_inverse : window.CONST.CDN_URL + "/logo/logo-short-o.png",
 	},
-	onlineTimeout : 1000*60*5,
 	sessionLoadStamp : new Date().getTime()
 }
 export const MyFlags = {

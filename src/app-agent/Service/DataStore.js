@@ -47,7 +47,7 @@ function setChatFlags(chat) {
         chat.lastResponseStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
       }
   }
-  var attentionStamp = new Date().getTime()-MyConst.onlineTimeout;
+  var attentionStamp = new Date().getTime()-MyConst.config.idleChatTimeout;
   chat._waiting = (chat.lastResponseStamp < chat.lastInComingStamp);
   chat._attention = chat._waiting && (chat.lastResponseStamp < attentionStamp);
   chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
