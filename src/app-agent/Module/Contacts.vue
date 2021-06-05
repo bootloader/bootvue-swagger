@@ -267,6 +267,9 @@
                 return await this.$store.dispatch('LoadQuickLabels');
             },
         },
+        beforeUnmount : function (argument) {
+          clearInterval(this.intervalid1);  
+        }
     }
 </script>
 <style type="text/css" scoped="">
@@ -303,6 +306,13 @@
     }
     .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
+    }
+    .contact-preview .contact_type{
+      bottom: 0px;
+      right: 0px;
+      position: absolute;
+      width: 24px;
+      height: 24px;
     }
     .contact-text {
         margin-left: 15px;

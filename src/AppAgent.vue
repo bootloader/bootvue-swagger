@@ -73,11 +73,11 @@
         .on("/agent/onmessage", function(msg){
             msg.version = 3;
             console.log("/agent/onmessage===",msg)
-            THAT.$store.dispatch('ReadChat', msg);
+            THAT.$store.dispatch('ReadChatMessage', msg);
         }).on("/message/receive/new", function(msg){
             msg.version = 3;
             console.log("/message/receive/new:msg===",msg);
-            THAT.$store.dispatch('ReadChat', msg);
+            THAT.$store.dispatch('ReadChatMessage', msg);
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
             THAT.$store.dispatch('AddChat', testresponse);
         }).on("/dept/onassign-__DEPT__", function(testresponse){

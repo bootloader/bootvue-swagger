@@ -182,10 +182,10 @@ const actions = {
   async SendChatPre({ commit,dispatch }, msg) {
       msg.messageIdRef = msg.messageIdRef || guid();
       msg.version=msg.version || 0;
-      dispatch("ReadChat",msg);
+      dispatch("ReadChatMessage",msg);
   },
   async SendChatPost({ commit,dispatch }, msg) {
-    dispatch("ReadChat",msg);
+    dispatch("ReadChatMessage",msg);
   },
   async SendChat({ commit,dispatch }, msg) {
     dispatch("SendChatPre",msg);
@@ -222,7 +222,7 @@ const actions = {
     }
   },
 
-  async ReadChat({ commit },m) {
+  async ReadChatMessage({ commit },m) {
     if(!m) return;
     m.messageIdRef = m.messageIdRef || guid();
     for(var c in state.chats){
