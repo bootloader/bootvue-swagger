@@ -393,6 +393,7 @@
                             v-model="sticky_note"
                             rows=8
                     ></textarea>
+                   <small>* Only your colleagues can see <em>Sticky Notes</em></small> 
 
 
                 </b-modal>
