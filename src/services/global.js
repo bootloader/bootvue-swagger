@@ -11,7 +11,10 @@ export const MyConst = {
 		chatSessionTimeout : 86400000, // After which chat is expired
 		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
-	}, window.CONST.CONFIG || window.CONST.CONFG),
+		CHAT_TAG_ENABLED : true
+	}, window.CONST.CONFIG || window.CONST.CONFG,{
+		//CHAT_TAG_ENABLED : true
+	}),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",
 		full_inverse : window.CONST.CDN_URL + "/logo/logo-long-o.png",
@@ -36,9 +39,14 @@ export const MyDict = {
 	 "FACEBOOK" : "fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fa-telegram",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
 	},
 	chatStatus : {
-		 "OPEN" : "OPEN", "UNASSIGNED" : "UNASSIGNED", "ATTENTION" : "ATTENTION",
-	 	"URGENT" : "URGENT", "ONHOLD" : "ONHOLD", 
-	  	"EXPIRED" : "EXPIRED", "RESOLVED" : "RESOLVED", "CLOSED" : "CLOSED"
+		"UNASSIGNED"	: {label : "UNASSIGNED" }, 
+		"OPEN" 		: {label : "OPEN",editable : true}, 
+		"ATTENTION" : {label :"ATTENTION", editable : true}, 
+		"URGENT" 	: {label :"URGENT",editable : true}, 
+		"ONHOLD" 	: {label :"ONHOLD",editable : true}, 
+	  	"EXPIRED" 	: {label : "EXPIRED"},
+	  	"RESOLVED" 	: {label : "RESOLVED",editable : true}, 
+	  	"CLOSED" 	: {label :"CLOSED"}
 	},
 	socialPrefix : function (argument) {
 		argument = argument || "";

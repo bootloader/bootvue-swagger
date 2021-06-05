@@ -49,15 +49,16 @@
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
-                            <span hidden class="font-preview" v-if="chat.ilastmsg" >{{chat.ilastmsg.text}}</span>
 
-            <div data-v-5dda926d="" class="chat_tags">
-                <div data-v-5dda926d="" class="chat_tags text-align-left">
-                    <span data-v-5dda926d="" class="tag-chat-status" :class="'tag-chat-status-' + chat.status">
-                        {{chat.status+''}}
-                    </span>
-                </div>
-            </div>
+                            <div v-if="MyConst.config.CHAT_TAG_ENABLED" data-v-5dda926d="" class="chat_tags">
+                                <div data-v-5dda926d="" class="chat_tags text-align-left">
+                                    <span data-v-5dda926d="" class="tag-chat-status" :class="'tag-chat-status-' + chat.status">
+                                        {{chat.status+''}}
+                                    </span>
+                                </div>
+                            </div>
+                            <span v-else-if="chat.ilastmsg" class="font-preview">{{chat.ilastmsg.text}}</span>
+
                             
                         </div>
                         <div class="contact-flags" :title="chat.lastInComingStamp">
@@ -216,7 +217,7 @@
                         || (sessionIdFrom == chat.sessionId)){
                         chat._lastReadStamp = chat.lastInComingStamp;
                         this.$store.dispatch('RefreshChats');
-                        this.$forceUpdate();
+                        //this.$forceUpdate();
                     }
                 }
             }
@@ -401,7 +402,7 @@
         background-color: #00000017;
       }
     }
-    .contact_attention {
+    .nav-item.contact_attention {
       animation: blinking 1s infinite;
     }
     .chat_flags {

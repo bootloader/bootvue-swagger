@@ -87,12 +87,15 @@
                     
                     <div class="d-block clear-both chat-header-lower"> 
                         <div data-v-5dda926d="" class="chat_tags text-align-right">
+
+                            
+
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
                                 {{activeChat.status}}
                             </span>
 
-                          <b-modal v-if="activeChat" id="chattags" title="Select Chat Status"
+                          <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
                                 header-class="card-header"
@@ -102,10 +105,10 @@
                                 button-size="sm"
                                 >  
 
-                            <span v-for="s in MyDict.chatStatus" 
-                                class="tag-chat-status-lg" 
+                            <span v-for="(status,s) in MyDict.chatStatus" v-if="status.editable"
+                                class="tag-chat-status-lg" @click="updateStatus(s)"
                                 :class="'tag-chat-status-'+ s + ( s== activeChat.status ? ' tag-chat-status-active' : '')">
-                                {{s}}
+                                {{status.label}}
                             </span>
 
                             </b-modal>
@@ -225,7 +228,7 @@
   </div>
 </div>
                     </div>
-                    <div v-if="sendEnabled && activeChat && activeChat.active" class="msg_card_body-panel">
+                    <div v-if="isActionable && activeChat && activeChat.active" class="msg_card_body-panel">
                         <hr/>
                         
                         <div class="msg_card_body-panel-tags" >
@@ -302,7 +305,7 @@
                 
 
                 <div class="card-footer">
-                    <slide-up-down :active="is_QUICK_ACTIONS && sendEnabled" :duration="200" class="action-events">
+                    <slide-up-down :active="is_QUICK_ACTIONS && isActionable" :duration="200" class="action-events">
                             <span v-if="quickActions" v-for="quickAction in quickActions" 
                              @click="sendQuickAction(quickAction.action)"
                             class="msg_cotainer_smart">  {{quickAction.title}}</span>
@@ -315,7 +318,7 @@
 
 
                     <div class="input-group my-input-section" 
-                        v-bind:class="{ invisible : !sendEnabled}"
+                        v-bind:class="{ invisible : !isActionable}"
                         >
                         <div class="input-group-prepend">
                             <span
@@ -388,7 +391,7 @@
             isChatActive : function (argument) {
                 return (!!this.activeChat && this.activeChat.active);
             },
-            sendEnabled : function (argument) {
+            isActionable : function (argument) {
                return (!!this.$route.params.contactId && !!this.activeChat && this.activeChat.active)
                && (this.$route.params.profileId == this.$route.params.contactId)
                && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
@@ -593,6 +596,13 @@
             },
             sendQuickMedia : function (media) {
                 this.sendText(null, media.name, null);
+            },
+            updateStatus : function (status) {
+                this.$store.dispatch('UpdateSessionTags', {
+                    status : status, 
+                    sessionId : this.activeChat.sessionId
+                });
+                this.$refs.chattags.hide();
             },
             closSession :  function () {
                 this.sendText("/exit_chat");

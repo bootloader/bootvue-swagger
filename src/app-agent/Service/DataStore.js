@@ -53,7 +53,7 @@ function setChatFlags(chat) {
   chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
                 && (!chat._lastReadStamp || (chat._lastReadStamp < chat.lastInComingStamp));
 
-  console.log("_new",chat.sessionId,chat._attention,chat.lastResponseStamp,chat.lastInComingStamp,attentionStamp,chat._lastReadStamp)
+  console.log("setChatFlags");
 
 }
 
@@ -262,6 +262,19 @@ const actions = {
     commit("setChats", state.chats);
   },
 
+  async ReadSession({ commit },chatSessions) {
+    for(var s in chatSessions){
+      var chatSession = chatSessions[s];
+      for(var i in state.chats){
+        var chat = state.chats[i];
+        if(chat.sessionId == chatSession.sessionId){
+          chat.status = chatSession.status;
+        }
+      }
+    }
+    commit("setChats", state.chats);
+  },
+
   async OnlineStatus({ commit },newStatus) {
     let StatusForm = new FormData();
     StatusForm.append('status', newStatus)
@@ -271,7 +284,7 @@ const actions = {
   },
 
   async SetAgentOptionsStatus({ commit },agentSessons) {
-    var offlineStamp = new Date().getTime()-MyConst.onlineTimeout;
+    var offlineStamp = new Date().getTime()-MyConst.config.agentSessionTimeout;
     for(var i in agentSessons){
       state.agents.map(function(agent) {
         var session = agentSessons[i];
@@ -333,6 +346,16 @@ const actions = {
     });
     validateResponse(response);
     //commit("setQuickTags", response.data);
+    return response.data;
+  },
+
+  async UpdateSessionTags({ commit,dispatch },{ sessionId,status }) {
+    let StatusForm = new FormData();
+    StatusForm.append('status', status)
+    StatusForm.append('sessionId', sessionId)
+    let response = await axios.post("/api/session/status",StatusForm);
+    validateResponse(response);
+    dispatch("ReadSession", response.data.results);
     return response.data;
   },
 
