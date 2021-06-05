@@ -86,9 +86,8 @@
                     </div> 
                     
                     <div class="d-block clear-both chat-header-lower"> 
-                        <div data-v-5dda926d="" class="chat_tags text-align-right">
 
-                            
+                        <div class="chat_tags text-align-right float-right">
 
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
@@ -114,6 +113,11 @@
                             </b-modal>
 
                         </div> 
+
+                        <div class="chat-actions float-right">
+                            
+                        </div>
+
                     </div>
 
                 </div>
@@ -214,23 +218,35 @@
         </div>
     </div>
 
-    <div v-else-if="m.type=='A' || m.type=='L'" 
+    <div v-else-if="m.type=='A' || m.type=='L' || m.type=='N'" 
         class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
         <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
-        <div class="msg_cotainer_action">
-            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
+        
+        <!-- Sticky Note  -->
+        <div v-if="m.type=='N'" class="msg_cotainer_note">
+            <div class="text">{{m.text | striphtml | newlines}}</div>
 
+            <span class="msg_user" v-bind:class="{'float-right' : m.sender == MyConst.agent}">{{m.name ||'---'}}</span>
+            <span v-bind:class="{'float-right' : m.name == MyConst.agent}">
+                {{m.timestamp|formatDate}}&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div v-else class="msg_cotainer_action">
+            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
             <i v-if="m.logs" v-for="log in m.logs" class="prepend-comma">
                 &nbsp;{{log | log_option(m.action)| striphtml | newlines}}</i>
-
         </div>
-    </div>    
+    </div>  
+
+
   </div>
 </div>
                     </div>
+
+
                     <div v-if="isActionable && activeChat && activeChat.active" class="msg_card_body-panel">
                         <hr/>
-                        
                         <div class="msg_card_body-panel-tags" >
                             <div class="quick-replies-wrapper" ref="quickRepliesWrapper" >
                                 <span class="float-right"> 
@@ -245,6 +261,12 @@
                                         v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
                                         <i class="fa fa-check-circle" ></i>
                                     </span>
+
+                                     <span class="msg_cotainer_smart" v-b-modal.stickynote v-tooltip="'Add Sticky Note'" 
+                                            v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
+                                             <i class="fas fa-sticky-note"></i> 
+                                    </span>
+                                   
                                 </span>    
   
                                 <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
@@ -262,9 +284,9 @@
                                 class="msg_cotainer_smart">  {{quickReply.title}}</span>
                              <hr/>
                         </slide-up-down>
-
-
                     </div>
+
+
                 </div>
                 <div v-show="is_QUICK_MEDIA" class="card-body media_card_body" >
                     <div class="media_card_body-bubbles">
@@ -335,7 +357,10 @@
                             v-model="message_text"
                             @keydown.enter.exact.prevent
                             @keyup.enter.exact="onSendMessage"
-                            @keydown.enter.shift.exact="newline"></textarea>
+                            @keydown.enter.shift.exact="newline"
+                            @input="onInputType"
+                            rows=1
+                            ></textarea>
                         <div class="input-group-append">
                             <span
                                 @click="onSendMessage" v-tooltip="'Send'" 
@@ -346,6 +371,33 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+              <b-modal v-if="isActionable" id="stickynote" ref="stickynote" title="Add Sticky Note"
+                    content-class="card"
+                    footer-class="card-footer"
+                    header-class="card-header"
+                    header-text-variant="white"
+                    body-class="card-body"
+                    dialog-class="card-dialog modal-dialog-sm"
+                    button-size="sm"
+                    @ok="addStickNote"
+                    >  
+
+                    <textarea name="" class="form-control input-message type_note" 
+                            placeholder="Type your message..." 
+                            autocomplete="off"
+                            v-model="sticky_note"
+                            rows=8
+                    ></textarea>
+
+
+                </b-modal>
+  
+
 
             </div>
 </template>
@@ -433,7 +485,7 @@
             }
         },
         data: () => ({
-            message_text : "",quickReplies : null,
+            message_text : "",quickReplies : null,sticky_note : null, 
             selectedMedia : null,
             showChatOptions : false,
             lastMessageId : null,ilastMessageId :  null,
@@ -546,7 +598,7 @@
                 //this.scrollToBottom();
                 var msg = {
                     text : text, timestamp : new Date().getTime(),
-                    sender : MyConst.agent,name : MyConst.agent,
+                    sender : MyConst.agent, name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
                     template : template,
                     action : action, type : "O"
@@ -603,6 +655,11 @@
                     sessionId : this.activeChat.sessionId
                 });
                 this.$refs.chattags.hide();
+            },
+            addStickNote :  function (argument) {
+                this.sendText(this.sticky_note,null,"/add_stick_note");
+                this.sticky_note = null;
+                //this.$refs.stickynote.hide();
             },
             closSession :  function () {
                 this.sendText("/exit_chat");
@@ -771,6 +828,14 @@
                 });
                 this.refreshActiveChats();
             },
+
+            //DOMS
+            onInputType : function onInputType (event) { //type_msg,type_note
+                event.target.style.height = "auto";
+                event.target.style.height = event.target.scrollHeight + "px";
+                console.log("onInputType",event) 
+            },
+
             toggleView : function (argument) {
                 if(this.winMode === argument){
                     this.winMode = null;
@@ -850,6 +915,7 @@
     }
     .chat-header-lower{
         height: 18px;
+        color: #FFF;
     }
     .quick_options {
         margin-right: -10px;
@@ -967,7 +1033,7 @@
     box-shadow: 0 1.5px 1.5px #00000052;
 
     }
-    .msg_cotainer_action {
+    .msg_cotainer_action, .msg_cotainer_note {
         margin-top: auto;
         margin-bottom: auto;
         margin-right: 10px;
@@ -977,6 +1043,21 @@
         position: relative;
         font-size: 10px;
     }
+    .msg_cotainer_note {
+        background-color: #fff9caf2;
+        font-size: 10px;
+        box-shadow: 0 1.5px 1.5px #00000052;
+        min-width: 250px;
+        max-width: 85%;
+    }
+    .msg_cotainer_note .text {
+        border-bottom: 1px dashed #00000017;
+        font-size: 13px;
+        color: #481e00;
+        box-shadow: 0px 16px 1px #ffffff29
+        /*font-family: 'Reenie Beanie';*/
+    }
+    
     .upload_card_body {
 /*    overflow-y: auto;
     height: 100%;*/
@@ -1059,6 +1140,32 @@
   .tag-chat-status-lg {
     margin: 3px;
   }
+
+    .type_msg{
+      background-color: rgba(0,0,0,0.3) !important;
+      border:0 !important;
+      color:white !important;
+      min-height: 60px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .type_msg:focus{
+        box-shadow:none !important;
+        outline:0px !important;
+    }
+    .type_note {
+        background-color: #fff9caf2 !important;
+        border: 1px solid #d6cf01 !important;
+        color: #584600 !important;
+        min-height: 60px;
+        max-height: 180px;
+        overflow-y: auto;
+        -webkit-box-shadow: none !important;
+        box-shadow: inset !important;
+        outline: 1px #000 !important;
+        border-radius: 14px;
+    }
+
 </style>
 <style type="text/css">
   .m-chatbox .quick_options span.quick_option_icon {

@@ -70,9 +70,8 @@
 
       var THAT =  this;
       this.tunnel = tunnel.init().instance()
-        .on("/agent/onmessage", function(msg){
-            msg.version = 3;
-            console.log("/agent/onmessage===",msg)
+        .on("/message/sent/new", function(msg){
+            console.log("/message/sent/new===",msg)
             THAT.$store.dispatch('ReadChatMessage', msg);
         }).on("/message/receive/new", function(msg){
             msg.version = 3;

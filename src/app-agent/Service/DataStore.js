@@ -244,6 +244,7 @@ const actions = {
             break;
           }
         }
+
         m.name = m.name || state.chats[c].name;
 
         if(chat.messages){
