@@ -602,7 +602,7 @@
                     sender : MyConst.agent, name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
                     template : template,
-                    action : action, type : "O"
+                    action : action, type : (action ? "A" : "O")
                 };
                 return msg;
             },

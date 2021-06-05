@@ -29,6 +29,28 @@ var CONTACT_LABELS_DICT = {};
       return moment(DATE).format('h:mm a DD MMM YY');
     }
   }
+  function formatStamp(timestamp,gap) {
+    const DATE = new Date(timestamp);
+    return moment(DATE).format('h:mm a DD MMM YY');
+  }
+
+  var HOUR = 3600;
+  var DAY = HOUR*24;
+  var WEEK = DAY*7;
+  function timespan (value) {
+        if(value<60){
+          return numeral(value).format("0.0") + ' sec';
+        } else if(value<HOUR){
+          return numeral(value/60).format("0.0") + ' min';
+        } else if(value<DAY){
+          return numeral(value/3600).format("0.0") + ' hrs';
+        } else if(value<WEEK){
+          return numeral(value/DAY).format("0.0") + ' days';
+        } else if(value>=WEEK){
+          return numeral(value/WEEK).format("0.0a") + ' wks';
+        } 
+        return moment(value).format("0.0").toLowerCase();//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
+    }
 
   function hashCode(str) { // java String#hashCode
       var hash = 0;
@@ -52,6 +74,7 @@ var formatter = {
       CONTACT_LABELS_DICT[labels[i].id] = labels[i];
     }
   },
+  timespan : timespan,
   hexacode : function (str) {
     return intToRGB(hashCode(str));
   },
@@ -105,6 +128,7 @@ var formatter = {
     var THAT = this;
 
     Vue.filter('formatDate', formatTime);
+    Vue.filter('formatStamp', formatStamp);
     Vue.filter('newlines', function (html_str) {
         return html_str.trim() ;//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
     });
@@ -112,23 +136,7 @@ var formatter = {
         var _format = format || "0,0a"
         return numeral(value).format(_format).toUpperCase();//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
     });
-    var HOUR = 3600;
-    var DAY = HOUR*24;
-    var WEEK = DAY*7;
-    Vue.filter('timespan', function (value) {
-        if(value<60){
-          return numeral(value).format("0.0") + ' sec';
-        } else if(value<HOUR){
-          return numeral(value/60).format("0.0") + ' min';
-        } else if(value<DAY){
-          return numeral(value/3600).format("0.0") + ' hrs';
-        } else if(value<WEEK){
-          return numeral(value/DAY).format("0.0") + ' days';
-        } else if(value>=WEEK){
-          return numeral(value/WEEK).format("0.0a") + ' wks';
-        } 
-        return moment(value).format("0.0").toLowerCase();//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
-    });
+    Vue.filter('timespan', timespan);
     Vue.filter('striphtml', function (value) {
       var div = document.createElement("div");
       div.innerHTML = value;

@@ -61,15 +61,27 @@
 
                             
                         </div>
-                        <div class="contact-flags" :title="chat.lastInComingStamp">
-                            <span class="contact-time">{{chat.lastInComingStamp | formatDate}} </span>
+                        <div class="contact-flags">
+                            <p hidden>
+                                Calc : {{chat._gracestamp | formatStamp}}
+                                LastOut : {{chat.lastResponseStamp | formatStamp}}
+                                LastIn : {{chat.lastInComingStamp | formatStamp}}
+                            </p>
+                            <span class="contact-time" :title="chat.lastInComingStamp | formatStamp">{{chat.lastInComingStamp | formatDate}} </span>
                             <div  class="" id="'nm' + c.contactId" class="chat_flags">
                                 <span>
-                                    <b-icon v-if="chat._new" icon="circle-fill" 
-                                        class="new_message" variant="red"></b-icon>
+                                    <b-icon v-if="chat._new" icon="circle-fill" class="new_message" variant="red"
+                                        v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
                                 <span>
-                                    <b-icon v-if="chat._attention" icon="phone-vibrate" class="icon_attention" variant="red"></b-icon>
+                                    <b-icon v-if="chat._attention"  class="icon_attention" variant="red"
+                                            icon="alarm-fill" 
+                                            v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
+                                    ></b-icon>
+                                    <b-icon v-else-if="chat._waiting"  class="icon_attention" variant="red"
+                                            icon="phone-vibrate" 
+                                            v-tooltip="(chat.name || chat.contactId) + ' has replied \n& is waiting for response'"
+                                    ></b-icon>
                                 </span>
                                 <span>
                                     <b-icon v-if="chat._attention && false" icon="alarm-fill" class="very_old"></b-icon>

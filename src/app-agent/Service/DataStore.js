@@ -31,7 +31,8 @@ function eq(a,b) {
   }
 
 function setChatFlags(chat) {
-  var expiryDateStamp = new Date().getTime()-MyConst.config.chatSessionTimeout;
+  chat._stamp = new Date().getTime();
+  var expiryDateStamp = chat._stamp-MyConst.config.chatSessionTimeout;
   chat.expired = chat.expired || (chat.lastInComingStamp < expiryDateStamp);
   chat.active = chat.active && !chat.expired
   chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
@@ -47,9 +48,10 @@ function setChatFlags(chat) {
         chat.lastResponseStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
       }
   }
-  var attentionStamp = new Date().getTime()-MyConst.config.chatIdleTimeout;
+  chat._gracestamp = chat._stamp-MyConst.config.chatIdleTimeout;
   chat._waiting = (chat.lastResponseStamp < chat.lastInComingStamp);
-  chat._attention = chat._waiting && (chat.lastResponseStamp < attentionStamp);
+  chat._waitingstamp_en= formatters.timespan((chat._stamp-chat.lastResponseStamp)/1000);
+  chat._attention = chat._waiting && (chat.lastResponseStamp < chat._gracestamp);
   chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
                 && (!chat._lastReadStamp || (chat._lastReadStamp < chat.lastInComingStamp));
 
