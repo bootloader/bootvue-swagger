@@ -310,7 +310,7 @@
         border-right: 5px solid #0000;
     }
     .contacts li:hover{
-        border-right: 5px solid #00000024;
+        border-left: 5px solid #1d375273;
     }
     .contacts li.router-link-exact-active{
       border-left: 5px solid #1d3752;
@@ -378,7 +378,8 @@
      .contact_type.my-selected, .contact_type:hover {
         opacity: 1.0;
         border-radius: 40px;
-        box-shadow: inset 0 0 15px #0000005e;
+        /*box-shadow: inset 0 0 15px #0000005e;*/
+        box-shadow: inset -5px -12px 25px #f7f7f757
      }
 
     .contact-tabs {

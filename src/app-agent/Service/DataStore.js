@@ -278,12 +278,18 @@ const actions = {
     commit("setChats", state.chats);
   },
 
-  async OnlineStatus({ commit },newStatus) {
+  async OnlineStatus({ commit,dispatch },newStatus) {
     let StatusForm = new FormData();
-    StatusForm.append('status', newStatus)
+    if(newStatus !== undefined){
+          StatusForm.append('status', newStatus)
+        }
     let response = await axios.post("/auth/online/status",StatusForm);
+    validateResponse(response);
     state.meta.isOnline = response.data.meta;
     commit("setMeta", state.meta);
+    if(response.data && response.data.results){
+       dispatch("SetAgentOptionsStatus", response.data.results);
+    }
   },
 
   async SetAgentOptionsStatus({ commit },agentSessons) {
@@ -311,7 +317,7 @@ const actions = {
 
   async LoadAgentOptions({ commit,dispatch }) {
     let p1 = axios.get("/api/options/agents");
-    let p2 = axios.get("/api/options/agents/status");
+    let p2 = dispatch("OnlineStatus");
 
     let r1 = await p1;
     validateResponse(r1);
@@ -319,10 +325,6 @@ const actions = {
        commit("setAgents", r1.data.results);
     }
     let r2 = await p2;
-    validateResponse(r2);
-    if(r2.data && r2.data.results){
-       dispatch("SetAgentOptionsStatus", r2.data.results);
-    }
   },
 
   async LoadMediaOptions({ commit }) {

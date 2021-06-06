@@ -36,6 +36,7 @@ $( document ).ready(function() {
  	   	 return $.post(window.CONST.CONTEXT + "/auth/login/submit",{
  	   		 username :   $("#login-username").val(),
 			 password :  $("#login-password").val(),
+             rememberme : $("#rememberme").is(":checked")
 		 }).done(function(rsp){
 			 console.log(rsp);
 			 if(rsp.data && (rsp.data.success || rsp.data == 'success'))

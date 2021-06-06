@@ -288,9 +288,9 @@ body {
         font-size: 1.3rem; }
       .form-login-body .login-desk .loginform p {
         font-size: .8rem;
-        margin-bottom: 50px; }
+        margin-bottom: 30px; }
       .form-login-body .login-desk .loginform .login-det .form-row {
-        margin-top: 20px; }
+        margin-top: 0px; }
         .form-login-body .login-desk .loginform .login-det .form-row label {
           font-size: .85rem; }
       .form-login-body .login-desk .loginform .login-det .input-group .input-group-prepend .input-group-text {
@@ -380,4 +380,25 @@ body {
 }
 #login_error{
 	color : #FFF;
+}
+
+.row[data-page='setpass'][data-action='setpass'][data-status='SUCCESS'] .form-row#newpassword-row {
+  display: none!important;
+}
+.row[data-page='setpass'][data-action='setpass'][data-status='SUCCESS'] .form-row#confirmpassword-row{
+  display: none!important;
+}
+.row[data-page='setpass'][data-action='setpass'][data-status='SUCCESS'] #btn-reset-pass{
+  display: none!important;
+}
+.row[data-page='setpass'][data-action='setpass'][data-status='SUCCESS']  #link-login-pass,#btn-login-pass  {
+  display: none!important;
+}
+.row[data-page='setpass'][data-action='setpass'][data-status='SUCCESS'] #btn-login-pass,#link-login-pass {
+  display: block!important;
+}
+
+
+p#message-row.form-row {
+  text-align: center;
 }
