@@ -79,7 +79,7 @@
 
         </b-modal>
 
-        <input type="file" ref="file" @change="onFileChange">
+        <input hidden type="file" ref="file" @change="onFileChange">
     </div>
 </template>
 
@@ -136,7 +136,7 @@
         },
         methods : {
           async loadAgentTeams (){
-            await this.$store.dispatch('GetTeams');
+            //await this.$store.dispatch('GetTeams');
           },
           async createTeam () {
             await this.$store.dispatch('CreatTeam', this.newItem);
