@@ -3,7 +3,8 @@
         <div class="app-header__logo">
             <div class="logo-src"/>
             <div class="header__pane ml-auto">
-                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" v-bind:class="{ 'is-active' : isOpen }" @click="toggleBodyClass('closed-sidebar')">
+                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" v-bind:class="{ 'is-active' : isOpen }"
+                         @click="toggleBodyClass('closed-sidebar')">
                     <span class="hamburger-box">
                         <span class="hamburger-inner"></span>
                     </span>
@@ -12,7 +13,7 @@
         </div>
         <div class="app-sidebar-content">
             <VuePerfectScrollbar class="app-sidebar-scroll" v-once>
-                <sidebar-menu showOneChild :menu="menu"/>
+                <sidebar-menu showOneChild :menu="menu" hideToggle="true"/>
             </VuePerfectScrollbar>
         </div>
 
@@ -81,6 +82,16 @@
                         icon: 'pe-7s-chat',
                         href: '/app/reports/taxonomy',
                         enabled : true
+                    },
+                    {
+                        header: true,
+                        title: 'Moderator',
+                    },
+                    {
+                        title: 'Import Chat',
+                        icon: 'pe-7s-chat',
+                        enabled : true,
+                        href: '/app/moderate/import-chat'
                     },
                     {
                         header: true,
@@ -326,7 +337,7 @@
 
             toggleBodyClass(className) {
                 const el = document.body;
-                this.isOpen = !this.isOpen;
+                this.isOpen = true; //!this.isOpen;
 
                 if (this.isOpen) {
                     el.classList.add(className);
@@ -353,7 +364,7 @@
 
                 this.windowWidth = document.documentElement.clientWidth;
 
-                if (this.windowWidth < '1350') {
+                if (this.windowWidth < '1350' || true) {
                     el.classList.add('closed-sidebar', 'closed-sidebar-md');
                 } else {
                     el.classList.remove('closed-sidebar', 'closed-sidebar-md');

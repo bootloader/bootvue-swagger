@@ -18,7 +18,7 @@
 
     <div style="width: 100%;clear: both;">
             <vue-word-cloud
-              style=" height: 300px; width: 80%;"
+              style=" height: 300px; width: 80%; margin: auto; "
               :words="tags"
               :font-size-ratio="5" :spacing=".25"
               :color="([, weight]) => weight > 10 ? 'DeepPink' : weight > 5 ? 'RoyalBlue' : 'Indigo'"
@@ -126,7 +126,7 @@
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-            heading: 'Chat Sessions',
+            heading: 'Taxonomy',
             subheading: 'Select date range for report',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure',
             input : {

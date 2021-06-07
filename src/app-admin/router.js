@@ -21,6 +21,13 @@ export default AppRouter.route({
             name: 'dept',
             component: () => import('./Modules/ReportTaxonomy.vue'),
         },
+
+        {
+            path: '/app/moderate/import-chat',
+            name: 'ImportChat',
+            component: () => import('./Modules/ModImportChat.vue'),
+        },
+
         {
             path: '/app/admins/agents',
             name: 'agents_users',

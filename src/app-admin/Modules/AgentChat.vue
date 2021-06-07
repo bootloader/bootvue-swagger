@@ -56,8 +56,8 @@
         <div class="msg_cotainer_send">
             <span>{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> <span class="fa fa-paperclip"></span>&nbsp;{{m.template}} 
-                <div class="input-group my-attachments">
-                    <img v-for="atch in m.attachments" :src="atch.mediaURL | thumburl" class="">
+                <div class="input-group my-attachments" style="max-width: 200px;">
+                    <img v-for="atch in m.attachments" :src="atch.mediaURL | thumburl" class="" style="max-width: 200px;">
                 </div>
             </div>
             <div v-else-if="m.template" class="my-msg-template-tag">

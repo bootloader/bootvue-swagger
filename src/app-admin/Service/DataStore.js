@@ -287,6 +287,17 @@ const actions = {
   },
 
 
+  async ParseChatFile({ commit },params) {
+    const fd = new FormData();
+    fd.append("file",params.file);
+    fd.append("contactType",params.contactType);
+    fd.append("clientDate",params.clientDate);
+    let response = await post('/api/message/session/parse',fd);
+    validateResponse(response);
+    return response.data;
+  },
+
+
 };
 
 const mutations = {
