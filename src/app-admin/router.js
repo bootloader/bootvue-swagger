@@ -17,6 +17,11 @@ export default AppRouter.route({
             component: () => import('./Modules/AgentSessions.vue'),
         },
         {
+            path: '/app/reports/taxonomy',
+            name: 'dept',
+            component: () => import('./Modules/ReportTaxonomy.vue'),
+        },
+        {
             path: '/app/admins/agents',
             name: 'agents_users',
             component: () => import('./Modules/AgentsUsers.vue'),

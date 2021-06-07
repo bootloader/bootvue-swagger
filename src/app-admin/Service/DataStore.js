@@ -279,6 +279,14 @@ const actions = {
     return response.data.data;
   },
 
+  //Taxonomy
+  async GetTaxonomy({ commit },filter) {
+    let response = await axios.post("/admin/tag-analytics",filter);
+    //commit("setTaxonomy", response.data.results);
+    return response.data;
+  },
+
+
 };
 
 const mutations = {

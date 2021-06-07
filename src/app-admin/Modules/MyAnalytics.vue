@@ -391,7 +391,5 @@
 
 </script>
 <style type="text/css">
-    .daterangepicker.show-calendar .ranges {
-        padding: 0px !important;
-    }
+
 </style>

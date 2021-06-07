@@ -77,6 +77,12 @@
                         enabled : true
                     },
                     {
+                        title: 'Taxonomy',
+                        icon: 'pe-7s-chat',
+                        href: '/app/reports/taxonomy',
+                        enabled : true
+                    },
+                    {
                         header: true,
                         title: 'Admin',
                     },
