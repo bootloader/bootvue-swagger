@@ -292,11 +292,16 @@ const actions = {
     fd.append("file",params.file);
     fd.append("contactType",params.contactType);
     fd.append("clientDate",params.clientDate);
+    fd.append("clientDateFormat",params.clientDateFormat);
     let response = await post('/api/message/session/parse',fd);
     validateResponse(response);
     return response.data;
   },
-
+  async UploadParsedChat({ commit },req) {
+    let response = await post('/api/message/session/import',req);
+    validateResponse(response);
+    return response.data;
+  },
 
 };
 

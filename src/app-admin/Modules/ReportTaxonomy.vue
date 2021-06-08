@@ -6,8 +6,6 @@
     <div style="width: 100%;clear: both;">
           <vue-multi-select
             v-model="input.tagtypes.selected"
-            search
-            historyButton
             :btnLabel="input.tagtypes.btnLabel"
             :options="input.tagtypes.options"
             :selectOptions="input.tagtypes.values"

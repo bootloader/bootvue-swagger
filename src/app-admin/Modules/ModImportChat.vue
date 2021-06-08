@@ -4,12 +4,68 @@
         @action="onAction"></page-title>
 
           <div class="row">
-              <div class="col-md-4">
-                
+              <b-card class="col-md-4" >
+                <ValidationObserver ref="session_form" v-slot="{ invalid }" >
 
-              </div>
+                      <ValidationProvider v-slot="v" rules="required" tag="div" class="form-row">
+                        <label>Account Details</label>
+                        <div class="input-group input-group-sm "> 
+                            <div class="input-group-append w-50">
+                                <vue-multi-select class="w-100"
+                                v-model="input.lane.selected"
+                                :btnLabel="input.lane.btnLabel"
+                                btnClass="w-100"
+                                :options="input.lane.options"
+                                :selectOptions="input.lane.values"
+                                @selectionChanged="onInputChange" disabledUnSelect
+                                />
+                            </div>
+                            <b-form-input class="" placeholder="Enter Contact No." v-model="meta.sender" readonly>
+                            </b-form-input>
+                        </div>
+                      </ValidationProvider>
 
-              <b-table class="col-md-4"
+                      <br>
+                      <ValidationProvider v-slot="v" rules="required|phone"  class="form-row" vid="input_contact_number" 
+                           name="Contact Number">
+                          <label>Contact Details</label>
+                          <div class="input-group input-group-sm">
+                              <input vid="input_contact_number" type="tel" name="phone" 
+                              class="form-control" @change="onInputChange" v-model="meta.contactNumber" placeholder="Enter Contact No."/>
+                              <div class="input-group-prepend w-50">
+                                  <vue-multi-select class="w-100"
+                                    v-model="input.contact.selected"
+                                    :btnLabel="input.contact.btnLabel"
+                                     btnClass="w-100"
+                                    :options="input.contact.options"
+                                    :selectOptions="input.contact.values"
+                                    @selectionChanged="onInputChange"  disabledUnSelect
+                                    />
+                              </div>
+                          </div>
+                           <span class="v-input-error">{{ v.errors[0] }}</span>
+                      </ValidationProvider> 
+
+                      <br>
+                      <div class="form-row">
+                                             <div class="input-group input-group-sm">
+                            <input  type="text" name="contactName" 
+                                class="form-control" v-model="meta.contactName" placeholder="Optional Name for contact"/>
+                         </div>
+                      </div>
+
+                        
+                      <br/>
+                      <b-form-row>
+                          <button @click="uploadChat"
+                              name="password" id="examplePassword" :disabled="invalid"
+                              class="form-control btn btn-primary">Save</button>
+                      </b-form-row>
+
+                </ValidationObserver>    
+            </b-card>
+            <b-card class="col-md-5 session-list" >
+              <b-table
                      :striped=true
                      :bordered=true
                      :outlined=false
@@ -18,18 +74,39 @@
                      :dark=false
                      :fixed=false
                      :foot-clone=false
-                     :items="teams"
-                     :fields="fields"
+                     :items="table.items"
+                     :fields="table.fields"
                      :stickyColumn=true
-                     :isRowHeader=true>
+                     :isRowHeader=true
+                     sticky-header responsive
+                     >
 
+                <template #cell(assignedToAgent)="row">
+                    <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
+                    <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
+                    &nbsp;{{ row.item.assignedToAgent}}
+                </template>
+                <template #cell(contactId)="row">
+                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
+                    {{ row.item.contactName || row.item.contactId}}
+                </template>
+                <template #cell(startSessionStamp)="row">
+                    {{ row.item.startSessionStamp | formatDate}}
+                </template>
+                <template #cell(fistResponseStamp)="row">
+                    {{ row.item.fistResponseStamp | formatDate}} 
+                </template>
+                <template #cell(closeSessionStamp)="row">
+                    {{ row.item.closeSessionStamp | formatDate}}
+                    <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
+                </template>   
                 <template #cell(actions)="row">
                     <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" > </span>
                 </template>
 
             </b-table>
 
-
+ </b-card>
           </div>
 
           
@@ -42,51 +119,24 @@
             </div>
 
         </div>
-
-
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Team '"
-        @hidden="cancelReps">
-                  <ValidationObserver ref="form">
-                            <div class="position-relative form-group">
-                              <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Name</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Online Team" type="text"
-                                      class="form-control" v-model="newItem.name">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
-
-                            <div class="position-relative form-group">
-                                <label for="exampleEmail" class="">Code</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.code">
-                                </div>
-                            </div>
- 
-
-
-                  </ValidationObserver>
-
-                  <template #modal-footer>
-                      <div class="position-relative form-group">
-                        <button @click="createTeam"
-                          name="password" id="examplePassword" :disabled="!isChanged"
-                          class="form-control btn btn-primary">Create</button>
-                        </div>
-                  </template>
-
-        </b-modal>
-
         <input hidden type="file" ref="file" @change="onFileChange">
+
+
+      <div class="chat_archive"  v-bind:class="{closed : !session}" >
+          <mod-import-chat-preview v-if="session" :session="session" :key="session.sessionId"
+          :sender="meta.sender" :contact="meta.contact"
+          @close="hideChat">
+          </mod-import-chat-preview>
+      </div> 
+
     </div>
 </template>
 
 <script>
 
-    import axios from "axios";
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
     import PageTitle from "../Layout/PageTitleAction.vue";
+    import ModImportChatPreview from './ModImportChatPreview';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -98,6 +148,9 @@
         faUsersSlash,faUsers,faStar
     );
 
+    import vueMultiSelect from 'vue-multi-select'; 
+    import 'vue-multi-select/dist/lib/vue-multi-select.css';
+
     function newItem() {
       return {
               "code": "",
@@ -108,28 +161,59 @@
     }
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vueMultiSelect,ModImportChatPreview
         },
         data: () => ({
+            MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Import Chat',
             subheading: 'Import WhatsApp Chats from exported file',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure',
             actions : [{
-              label : "Import", icon : "plus", name : "UPLOAD_ITEM"
+              label : "Import", icon : "plus", name : "IMPORT_CHAT"
             }],
-            fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
-              //{ key : 'dept_email', label : "Email" },
-              { key: 'actions', label: 'Actions' }],
+            input : {
+                lane : {
+                  btnLabel : values => values.length > 0 ? (values.join(',')) : 'Select Account',
+                  options : { multi: false, labelName: 'Filter Types'},
+                  values : [],
+                  selected : [],
+                  sender : ""
+                },
+                contact : {
+                  btnLabel : values => values.length > 0 ? (values.join(',')) : 'Select Contact',
+                  options : { multi: false, labelName: 'Filter Types'},
+                  values : [],
+                  selected : [],
+                  number : ""
+                },
+            },
+            table : {
+              fields: [ 
+                  //{ key : 'assignedToAgent', label : "Assigned" },
+                  //{ key : 'contactId', label : "Contact" },
+                  { key : 'actions', label : "Action" },
+                  { key : 'startSessionStamp', label : "Start@" },
+                  //{ key : 'fistResponseStamp', label : "Agent@" },
+                  //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
+                  //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
+                  { key : 'closeSessionStamp', label : "Closed@" },
+                  //{ key : 'actions', label : "Action" }
+              ],
+              items : [],
+              perPage: 25,
+              currentPage: 1,
+              rows : 0
+            },
+            meta : { sender : null, contact :  null, contactMobile : null, contactMobile : null },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
+            session : null,
+
         }),
         computed : {
             teams : function (argument) {
               return this.$store.getters.StateTeams
-            },
-            isChanged :  function (argument) {
-              return this.oldHash !== JSON.stringify(this.newItem);
-            } 
+            }
         },
         created : function (argument) {
           this.loadAgentTeams();
@@ -157,7 +241,7 @@
           }, 
           onAction : function (argument) {
             switch(argument.name){
-              case "UPLOAD_ITEM" :
+              case "IMPORT_CHAT" :
                 this.$refs.file.click();
                 break;
               case "EDIT_ITEM" :
@@ -174,6 +258,22 @@
           },
 
 
+          async uploadChat(){
+              await this.$store.dispatch("UploadParsedChat", {
+                meta : {
+                    contact :  this.meta.contact, contactMobile : this.meta.contactMobile, contactName :  null,
+                    sender : this.meta.sender, lane : this.meta.lane, 
+                },
+                results : this.table.items
+              });
+          },
+
+          async onInputChange () {
+              this.meta.contact = this.input.contact.selected[0];
+              this.meta.sender = (this.meta.contact == this.input.contact.values[0]) 
+                                        ? this.input.contact.values[1] : this.input.contact.values[0];
+             console.log(this.meta.contact,this.meta.sender);
+          },
 
           //File upload
           onFileChange(e) {
@@ -181,15 +281,25 @@
               this.file = file;
               console.log("onFileChange",file);
               this.uploadFile(file);
+              this.$refs.session_form && this.$refs.session_form.validate();
           },
           async uploadFile(file) {
               try{
-                  await this.$store.dispatch("ParseChatFile", {
+                  let resp = await this.$store.dispatch("ParseChatFile", {
                     file : file,
                     contactType : "WHATSAPP",
-                    clientDate :  new Date().toString()
+                    clientDate :  new Date().toString().split("(")[0].trim(),
+                    clientDateFormat : "eee MMM dd yyyy HH:mm:ss 'GMT'Z"
                   });
                   this.message = 'Uploaded!!'
+                  this.table.items = resp.results;
+                  this.input.contact.values = [resp.meta.senderA,resp.meta.senderB];
+                  this.input.contact.selected = [resp.meta.senderA];
+
+                  this.input.lane.values = resp.meta.lanes;
+                  this.input.lane.selected = [resp.meta.lanes[0]];
+
+                  this.onInputChange();
               } catch(err){
                   console.log(err);
                   this.message  = "Something went wrong!!";
@@ -198,7 +308,22 @@
           },
           removeImage: function (e) {
               this.file  = '';
+          },
+
+
+          //Chat Previews
+          hideChat : function (argument) {
+            this.session = null;
+          },
+          showChat : function (r) {
+            if(this.session && this.session == r){
+              this.session = null;
+            } else {
+              this.session = r;
+            }
+            console.log("this.session ...", this.session);
           }
+
 
 
         }
@@ -206,3 +331,40 @@
 
     }
 </script>
+<style type="text/css" scoped="">
+  .chat_archive {
+    right: 0px;
+    position: fixed;
+    background-color: #f5f5f5;
+    bottom: 0px;
+    top: 60px;
+    width: 450px;
+    z-index: 5;
+  }
+  .chat_archive.closed {
+    width: 0px;
+    opacity : 0;
+    transition: width 0.5s, opacity 1s ease-in;
+  }
+  .chat_archive{
+    width: 450px;
+    opacity : 1;
+    transition: width 0.5s ease-out, opacity 0.2s ease-out;
+  }
+  .chat_archive>div {
+    width: 450px;
+  }
+  .session-list .b-table-sticky-header{
+    max-height: calc(100vh - 263px);
+    overflow-y: scroll;
+  }
+</style>>
+<style type="text/css">
+  .b-table-sticky-header .table.b-table>thead>tr>th {
+    background-color: white;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+  } 
+</style>

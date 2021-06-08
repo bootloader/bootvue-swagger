@@ -66,7 +66,31 @@ var CONTACT_LABELS_DICT = {};
       return "00000".substring(0, 6 - c.length) + c;
   }
 
+
+  function phoneFormatted (value) {
+    if(/^\d{10}$/.test(value))
+      return true;
+    //XXX-XXX-XXXX ,   XXX.XXX.XXXX,   XXX XXX XXXX
+    if(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value))
+      return true;
+    //+XX-XXXX-XXXX,   +XX.XXXX.XXXX,   +XX XXXX XXXX
+    if(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(value))
+      return true;
+
+    // +111 (202) 555-0125
+    if(/^(\+\d{1,3}( )?)?((\(\d{3}\))|\d{3})[- .]?\d{3}[- .]?\d{4}$/.test(value))
+      return true;
+    // 202 555 0125
+    if(/^(\d{3}[- .]?){2}\d{4}$/.test(value))
+      return true;
+    //(202) 555-0125
+    if(/^((\(\d{3}\))|\d{3})[- .]?\d{3}[- .]?\d{4}$/.test(value))
+      return true;
+    return false;
+  }
+
 var formatter = {
+  validators : ["phone"],
 	instance : function (argument) {
 	},
   addContactLabels : function (labels) {
@@ -98,9 +122,11 @@ var formatter = {
         + s4() + s4();
   },
   https : function (mediaUrl) {
+    if(!mediaUrl) return mediaUrl;
     return mediaUrl.replace("http://","https://");
   },
   thumburl : function (mediaUrl) {
+      if(!mediaUrl) return mediaUrl;
       var m = mediaUrl.match(/(.+)\/(res.cloudinary.com)\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9]+)\/(upload)\/([a-zA-Z0-9,_-]+)\/(.*)/);
       if(m && m.length){
         m[6] = "w_100,h_100";
@@ -122,6 +148,18 @@ var formatter = {
          }
       }
       return list;
+  },
+
+  //Validators
+  phone : function phoneValidator (value) {
+    if(phoneFormatted(value)){
+      return true
+    } 
+    if(phoneFormatted(value.replaceAll(" ",""))){
+      return true
+    } 
+
+    return 'Enter valid mobile number eg +91 XXXXX XXXXX';
   },
 
   init : function () {
