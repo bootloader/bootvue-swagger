@@ -31,7 +31,7 @@
                           <label>Contact Details</label>
                           <div class="input-group input-group-sm">
                               <input vid="input_contact_number" type="tel" name="phone" 
-                              class="form-control" @change="onInputChange" v-model="meta.contactNumber" placeholder="Enter Contact No."/>
+                              class="form-control" @change="onInputChange" v-model="meta.contactMobile" placeholder="Enter Contact No."/>
                               <div class="input-group-prepend w-50">
                                   <vue-multi-select class="w-100"
                                     v-model="input.contact.selected"
@@ -204,7 +204,7 @@
               currentPage: 1,
               rows : 0
             },
-            meta : { sender : null, contact :  null, contactMobile : null, contactMobile : null },
+            meta : { sender : null, contact :  null, contactMobile : null, contactName : null, lane : null },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
             session : null,
@@ -259,20 +259,24 @@
 
 
           async uploadChat(){
+              //+965 517 80410
               await this.$store.dispatch("UploadParsedChat", {
                 meta : {
-                    contact :  this.meta.contact, contactMobile : this.meta.contactMobile, contactName :  null,
+                    contact :  this.meta.contact, 
+                    contactMobile : this.meta.contactMobile.replace(/\D/g,''), contactName :  this.meta.contactName,
                     sender : this.meta.sender, lane : this.meta.lane, 
+                    contactType : "WHATSAPP",
                 },
                 results : this.table.items
               });
           },
 
           async onInputChange () {
+              this.meta.lane =  this.input.lane.selected[0]
               this.meta.contact = this.input.contact.selected[0];
               this.meta.sender = (this.meta.contact == this.input.contact.values[0]) 
                                         ? this.input.contact.values[1] : this.input.contact.values[0];
-             console.log(this.meta.contact,this.meta.sender);
+             
           },
 
           //File upload

@@ -44,14 +44,16 @@
 </div>
 <div v-else-if="activeChat" v-for="m in activeChat.messages">
     
-    <div v-if="m.type == 'I'" class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
+    <div v-if="m.type == 'I' || m.type == 'Ii'" 
+        class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
         <div class="msg_cotainer">
             <span>{{m.text | striphtml | newlines}}</span>
         </div>
         <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
     </div>
 
-    <div v-else-if="m.type=='O'" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
+    <div v-else-if="m.type=='O' || m.type=='Oi'" 
+          class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
         <div class="msg_cotainer_send">
             <span>{{m.text | striphtml | newlines}}</span>
