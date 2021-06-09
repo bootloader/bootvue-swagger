@@ -63,7 +63,7 @@
                     },
                     {
                         title: 'Summary',
-                        icon: 'pe-7s-graph3',
+                        icon: 'pe-7s-graph3 fa fa-chart-bar',
                         href: '/',
                         enabled : true
                     },
@@ -73,13 +73,13 @@
                     },
                     {
                         title: 'Sessions',
-                        icon: 'pe-7s-chat',
+                        icon: 'pe-7s-chat fa fa-chalkboard-teacher',
                         href: '/app/reports/sessions',
                         enabled : true
                     },
                     {
                         title: 'Taxonomy',
-                        icon: 'pe-7s-chat',
+                        icon: 'fa fa-tags',
                         href: '/app/reports/taxonomy',
                         enabled : true
                     },
@@ -89,7 +89,7 @@
                     },
                     {
                         title: 'Import Chat',
-                        icon: 'pe-7s-chat',
+                        icon: 'pe-7s-chat fa fa-file-import',
                         enabled : true,
                         href: '/app/moderate/import-chat'
                     },
@@ -99,13 +99,13 @@
                     },
                     {
                         title: 'Users',
-                        icon: 'pe-7s-users',
+                        icon: 'pe-7s-users fa fa-user-friends',
                         enabled : true,
                         href: '/app/admins/agents'
                     },
                    {
                         title: 'Agents',
-                        icon: 'pe-7s-users',
+                        icon: 'pe-7s-users fa fa-user-friends',
                         enabled : false,
                         href: '/app/admins/agents/list'
                     },
@@ -119,11 +119,11 @@
                         enabled : true,
                         href: '/app/admins/agents/teams',
                         title: 'Teams',
-                        icon: 'pe-7s-network',
+                        icon: 'pe-7s-network fa fa-users' ,
                     },
                     {
                         title: 'Templates',
-                        icon: 'pe-7s-browser',
+                        icon: 'pe-7s-browser fa fa-edit',
                         enabled : true,
                         child: [
                             {   
@@ -156,6 +156,17 @@
                             },
                         ]
                     },
+                    {
+                        header: true,
+                        title: 'Setup',
+                    },
+                    {
+                        enabled : true,
+                        href: '/app/setup/agent-panel',
+                        title: 'Agent Panel',
+                        icon: 'pe-7s-network fa fa-tools' ,
+                    },
+
                     {
                         title: 'Dashboards',
                         icon: 'pe-7s-rocket',
@@ -407,4 +418,12 @@
         background-size: 140px auto;
         background-repeat: no-repeat;
     }
+
+</style>
+<style type="text/css">
+    .v-sidebar-menu .vsm-icon.fa {
+        font-size: 20px!important;
+        opacity: .3;
+    }
+
 </style>

@@ -75,6 +75,13 @@ export default AppRouter.route({
             name: 'quickmedia',
             component: () => import('./Modules/TmplQuickMedia.vue'),    
         },
+
+        {
+            path : "/app/setup/agent-panel",
+            name: 'quickmedia',
+            component: () => import('./Modules/SetUpAgentPanel.vue'),    
+        },
+
         {
             path: 'app/admins/components/modals',
             name: 'modals',

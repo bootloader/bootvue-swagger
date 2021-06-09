@@ -65,7 +65,7 @@
                 </ValidationObserver>    
             </b-card>
             <b-card class="col-md-5 session-list" >
-              <b-table
+              <b-table v-if="table.items && table.items.length"
                      :striped=true
                      :bordered=true
                      :outlined=false

@@ -104,12 +104,11 @@
                             <div class="row">
                               <div class="col-md-6">
                                 <div class="position-relative form-group"><label for="exampleSelect" class="">Team</label>
-                                  <select name="select" id="exampleSelect" class="form-control"
-                                    v-model="newItem.dept_id">
+                                  <select name="select" id="exampleSelect" class="form-control" v-model="newItem.dept_id">
                                       <option v-for="team in teams"
-                                      v-if="team.isactive=='Y'" :value=team.id>
-                                      {{team.name}}</option>
-                                    </select>
+                                        v-if="team.isactive=='Y'" :value=team.id>
+                                        {{team.name}}</option>
+                                      </select>
                                 </div>
 
                                 <div class="form-check form-switch">
@@ -178,9 +177,8 @@
     function newItem() {
       return {
               "name" : null,
-              "agent_code": "",
               "agent_email": "",
-              "agent_id" : null,
+              "dept_id" : null,
               "channels": [],"agent_channels" : "", admin : false
             };
     }

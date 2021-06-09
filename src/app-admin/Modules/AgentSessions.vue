@@ -36,8 +36,10 @@
                     <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
                 </template>   
                 <template #cell(actions)="row">
-                    <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" > </span>
+                    <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" ></span>
+                    &nbsp;<span style="cursor: pointer;" class="fa fa-trash"  @click="deleteChat(row.item, row.index, $event.target)" ></span>
                 </template>
+
 
         </b-table>
 
@@ -152,6 +154,11 @@
                this.input.daterange.endDate = this.input.daterange.endDate.getTime();
                this.getSessions();
           },
+          async deleteChat (r,index) {
+             var resp = await this.$store.dispatch('DeleteSessionChats',this.session);
+             this.sessions.items.splice(index, 1);
+          },
+
           hideChat : function (argument) {
             this.session = null;
           },
@@ -161,7 +168,8 @@
             } else {
               this.session = r;
             }
-          }
+          },
+
         },
 
     }

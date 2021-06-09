@@ -164,12 +164,6 @@ const actions = {
     return response.data;
   },
 
-  async GetSessions({ commit },options) {
-    let response = await axios.get( "/api/message/session",{ params : options });
-    validateResponse(response);
-    return response.data;
-  },
-
   async CreatQuickReps({ commit },qReps) {
     let UserForm = new FormData()
     UserForm.append('id', qReps.id);
@@ -273,15 +267,28 @@ const actions = {
     commit("setQMeds", response.data.results);
   },
 
-//
+  // Chat
+  async GetSessions({ commit },options) {
+    let response = await axios.get( "/api/message/session",{ params : options });
+    validateResponse(response);
+    return response.data;
+  },
   async GetSessionChats({ commit },options) {
     let response = await axios.post("/api/message/messages",options);
+     validateResponse(response);
     return response.data.data;
   },
+  async DeleteSessionChats({ commit },options) {
+    let response = await axios.post("/api/message/session/remove",options);
+    validateResponse(response);
+    return response.data.data;
+  },
+
 
   //Taxonomy
   async GetTaxonomy({ commit },filter) {
     let response = await axios.post("/admin/tag-analytics",filter);
+     validateResponse(response);
     //commit("setTaxonomy", response.data.results);
     return response.data;
   },
@@ -302,6 +309,21 @@ const actions = {
     validateResponse(response);
     return response.data;
   },
+
+
+
+    //Setup Config
+  async GetConfigs({ commit }) {
+    let response = await axios.get("/api/config");
+    //commit("setTaxonomy", response.data.results);
+    return response.data;
+  },
+  async SetConfigs({ commit }, config) {
+    let response = await axios.post("/api/config/set", config);
+    //commit("setTaxonomy", response.data.results);
+    return response.data;
+  },
+
 
 };
 
