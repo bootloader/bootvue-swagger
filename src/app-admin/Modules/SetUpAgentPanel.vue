@@ -21,7 +21,7 @@
                 <template #cell(actions)="row">
                   <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
                      v-tooltip="row.item.message" variant="outline-primary">
-                     <font-awesome-icon icon="eye" title="View"/>
+                     <i class="fas fa-edit"></i>
                   </b-button>
                 </template>
 
@@ -40,7 +40,7 @@
         </div>
 
 
-        <b-modal v-if="oneItem" :id="modelName" :title="(oneItem.id ? 'Edit' : 'Add') + ' User '" size="md"
+        <b-modal v-if="oneItem" :id="modelName" :title="'Update Property '" size="md"
         @hidden="cancelItem">
 
                 <div class="form-row">
@@ -95,16 +95,6 @@
     import PageTitle from "../Layout/PageTitleAction.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
 
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faUserSlash,faUser,faUserSecret,faUserCog,faEye,faSlash
-    } from '@fortawesome/free-solid-svg-icons';
-    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-    library.add(
-        faUserSlash,faUser,faUserSecret,faUserCog,faEye, faSlash
-    );
-
     function newItem() {
       return {
               "config" : {},
@@ -113,17 +103,18 @@
     }
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,MyDict
+            PageTitle
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Agent Panel Setup',
             subheading: 'Control Agent Panel setting',
-            icon: 'pe-7s-users icon-gradient bg-happy-itmeo',
+            icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-tools',
             actions : [],
             table : {
               fields: [ 
                 { key : 'meta.title', label : "Property" },
+                { key : 'config.value', label : "Value" },
                 { key : 'config.description', label : "Desc" },
                 { key : 'actions', label : "Action" }],
               items : [],

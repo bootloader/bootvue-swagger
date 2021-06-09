@@ -120,7 +120,7 @@
         data: () => ({
             heading: 'Quick Media',
             subheading: 'Once created, can be used by Agent',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-photo-video',
             actions : [{
               label : "Add Quick Media", icon : "plus", name : "ADD_ITEM"
             }],

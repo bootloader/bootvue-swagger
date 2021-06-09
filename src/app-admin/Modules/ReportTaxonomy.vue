@@ -126,7 +126,7 @@
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Taxonomy',
             subheading: 'Select date range for report',
-            icon: 'pe-7s-chat icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-tags',
             input : {
                 daterange : {
                     startDate : null,

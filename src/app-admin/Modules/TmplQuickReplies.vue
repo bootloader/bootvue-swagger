@@ -139,7 +139,7 @@
         data: () => ({
             heading: 'Quick Replies',
             subheading: 'Once created, can be used by Agent',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
             actions : [{
               label : "Add Quick Reply", icon : "plus", name : "ADD_ITEM"
             }],

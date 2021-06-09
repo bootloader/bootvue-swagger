@@ -115,7 +115,7 @@
         data: () => ({
             heading: 'Quick Labels',
             subheading: 'Once created, can be used by Agent',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             actions : [{
               label : "Add Quick Label", icon : "plus", name : "ADD_ITEM"
             }],

@@ -103,7 +103,7 @@
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Chat Sessions',
             subheading: 'Select date range for report',
-            icon: 'pe-7s-chat icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-chalkboard-teacher',
             input : {
                 daterange : {
                     startDate : null,

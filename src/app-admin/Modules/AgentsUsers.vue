@@ -190,7 +190,7 @@
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Users',
             subheading: 'List of all users',
-            icon: 'pe-7s-users icon-gradient bg-happy-itmeo',
+            icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-user-friends',
             actions : [{
               label : "Add User", icon : "plus", name : "ADD_ITEM"
             }],

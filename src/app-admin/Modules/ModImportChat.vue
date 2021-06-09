@@ -167,7 +167,7 @@
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Import Chat',
             subheading: 'Import WhatsApp Chats from exported file',
-            icon: 'pe-7s-chat icon-gradient bg-tempting-azure',
+            icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-file-import',
             actions : [{
               label : "Import", icon : "plus", name : "IMPORT_CHAT"
             }],
