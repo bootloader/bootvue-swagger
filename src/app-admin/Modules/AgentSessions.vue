@@ -37,7 +37,9 @@
                 </template>   
                 <template #cell(actions)="row">
                     <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" ></span>
-                    &nbsp;<span style="cursor: pointer;" class="fa fa-trash"  @click="deleteChat(row.item, row.index, $event.target)" ></span>
+                    &nbsp;
+
+                    <span v-if="row.item.channel == 'IMPORT'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteChat(row.item, row.index, $event.target)" ></span>
                 </template>
 
 
@@ -155,7 +157,7 @@
                this.getSessions();
           },
           async deleteChat (r,index) {
-             var resp = await this.$store.dispatch('DeleteSessionChats',this.session);
+             var resp = await this.$store.dispatch('DeleteSessionChats',r);
              this.sessions.items.splice(index, 1);
           },
 
