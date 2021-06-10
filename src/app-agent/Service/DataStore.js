@@ -282,33 +282,51 @@ const actions = {
     let StatusForm = new FormData();
     if(newStatus !== undefined){
           StatusForm.append('status', newStatus)
-        }
+    }
     let response = await axios.post("/auth/online/status",StatusForm);
     validateResponse(response);
-    state.meta.isOnline = response.data.meta;
-    commit("setMeta", state.meta);
+    if(newStatus !== undefined){
+      state.meta.isOnline = newStatus;
+      commit("setMeta", state.meta);
+    }
     if(response.data && response.data.results){
        dispatch("SetAgentOptionsStatus", response.data.results);
     }
+    return response;
   },
 
   async SetAgentOptionsStatus({ commit },agentSessons) {
-    var offlineStamp = new Date().getTime()-MyConst.config.agentSessionTimeout;
+    var awayStamp = new Date().getTime()-MyConst.config.agentSessionTimeout;
+    var offlineStamp = awayStamp-MyConst.config.agentSessionTimeout*2;
     for(var i in agentSessons){
       state.agents.map(function(agent) {
         var session = agentSessons[i];
         if(agent.code == session.agentCode){
           agent.session = session;
+
           session.isLoggedIn = (session.isLoggedIn && (session.lastOnlineStamp > offlineStamp))
-          session.isOnline = (session.isOnline && session.isLoggedIn)
+          session.isAvailable = session.isLoggedIn && session.isOnline && (session.lastOnlineStamp > awayStamp);
+          session.isAvailableNot = session.isLoggedIn && !session.isOnline;
+          session.isAway =      session.isOnline && session.isLoggedIn && (session.lastOnlineStamp < awayStamp);
+          agent.statusScore = 0;
+          if(session.isAvailable ) {
+             agent.statusScore = 4;
+          } else if(session.isAway) {
+             agent.statusScore = 3;
+          } else if(session.isAvailableNot) {
+             agent.statusScore = 2;
+          } else if(session.isLoggedIn){
+             agent.statusScore = 1;
+          }
+
         }
       });
     }
     state.agents = state.agents.sort(function (a,b) {
-      if(a.session && a.session.isOnline){
+      if(a.statusScore > b.statusScore || !b.statusScore){
         return -1;
-      } else if(!b.session || !b.session.isLoggedIn){
-        return -1;
+      } else {
+        return 1;
       }
       return 0;
     });
@@ -325,6 +343,9 @@ const actions = {
        commit("setAgents", r1.data.results);
     }
     let r2 = await p2;
+      if(r2.data && r2.data.results){
+         dispatch("SetAgentOptionsStatus", r2.data.results);
+      }
   },
 
   async LoadMediaOptions({ commit }) {
@@ -454,7 +475,7 @@ const mutations = {
     state.chatHistory = chatHistory;
   },
   setMeta(state, meta) {
-    state.meta = meta;
+      state.meta = meta;
   },
   setQuickReply(state, quickReplies) {
     state.quickReplies = quickReplies;

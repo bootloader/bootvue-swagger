@@ -22,9 +22,9 @@
       <i class="far fa-circle fa-stack-2x"></i>
     </span>
     <span class="float-left">
-        {{MyConst.agent}}<br/>
+        {{MyConst.agent}}<br/><small>{{MyConst.dept}}</small><br>
         <i class="fa" v-bind:class="{ 'fa-check-circle' : isOnline, 'fa-minus-circle' : !isOnline }"/>&nbsp;
-        <small> <em>{{ isOnline ? 'Available' : 'Not Available'}}</em></small>
+        <small><em>{{ isOnline ? 'Available' : 'Not Available'}}</em></small>
     </span>
 </div>
                     </b-nav-item>

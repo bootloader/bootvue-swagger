@@ -114,7 +114,7 @@
         },
         data: () => ({
             heading: 'Quick Labels',
-            subheading: 'Once created, can be used by Agent',
+            subheading: 'are used to label customers at contact level',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             actions : [{
               label : "Add Quick Label", icon : "plus", name : "ADD_ITEM"

@@ -126,7 +126,7 @@
         },
         data: () => ({
             heading: 'Quick Actions',
-            subheading: 'Once created, can be used by Agent',
+            subheading: 'are used by agents to trigger functionalty in core business app ',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-location-arrow',
             actions : [{
               label : "Add Quick Action", icon : "plus", name : "ADD_ITEM"

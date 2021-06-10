@@ -109,7 +109,7 @@
         },
         data: () => ({
             heading: 'Teams',
-            subheading: 'Once created, can be used to assign to Agent',
+            subheading: 'can be used to handle chats in organized way',
             icon: 'pe-7s-network icon-gradient bg-tempting-azure fa fa-users',
             actions : [{
               label : "Add Team", icon : "plus", name : "ADD_ITEM"

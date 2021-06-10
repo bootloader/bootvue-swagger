@@ -30,12 +30,13 @@
                                         <template #open-indicator="{ attributes }">
                                           <span v-bind="attributes" class="fa fa-caret-down"></span>
                                         </template>
-                                        <template #option="{ code, name, dept, session }"><i class="fa" v-bind:class="{
-                                            'fa-times-circle' : !session || !session.isEnabled || !session.isLoggedIn,
-                                            'fa-check-circle' : session && session.isOnline,
-                                            'fa-minus-circle' : session && !session.isOnline
-                                        }" />
-                                         {{ code }}<em>  - {{ name }}</em>
+                                        <template #option="{ code, name, dept, session,statusScore }">
+                                        <i v-if="!session || !session.isEnabled || !session.isLoggedIn" class="fa fa-times-circle"/>
+                                        <i v-else-if="session.isAway" class="fa fa-question-circle"/>
+                                        <i v-else-if="session.isOnline" class="fa fa-check-circle"/> 
+                                        <i v-else-if="!session.isOnline" class="fa fa-minus-circle"/>
+
+                                        {{ code }}<em>  - {{ name }}</em>
                                         </template>
                                     </v-select>
                                     <span v-if="!isChatActive" class="vs__selected">
@@ -1235,6 +1236,10 @@
   }
   .user_assignment .vs__dropdown-option .fa-minus-circle {
     color: #c10505;
+    font-size: smaller;
+  }
+  .user_assignment .vs__dropdown-option .fa-question-circle {
+    color: #f1993c;
     font-size: smaller;
   }
   .user_assignment .vs__dropdown-option .fa-times-circle {

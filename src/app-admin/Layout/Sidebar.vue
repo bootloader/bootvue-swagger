@@ -422,7 +422,7 @@
 </style>
 <style type="text/css">
     .v-sidebar-menu .vsm-icon.fa {
-        font-size: 20px!important;
+        font-size: 18px!important;
         opacity: .3;
     }
 
