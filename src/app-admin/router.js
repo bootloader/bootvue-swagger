@@ -13,12 +13,12 @@ export default AppRouter.route({
         },
         {
             path: '/app/reports/sessions',
-            name: 'dept',
+            name: 'AgentSessions',
             component: () => import('./Modules/AgentSessions.vue'),
         },
         {
             path: '/app/reports/taxonomy',
-            name: 'dept',
+            name: 'ReportTaxonomy',
             component: () => import('./Modules/ReportTaxonomy.vue'),
         },
 
@@ -27,31 +27,36 @@ export default AppRouter.route({
             name: 'ImportChat',
             component: () => import('./Modules/ModImportChat.vue'),
         },
+        {
+            path: '/app/moderate/imported-chat-logs',
+            name: 'ModImportChatLogs',
+            component: () => import('./Modules/ModImportChatLogs.vue'),
+        },
 
         {
             path: '/app/admins/agents',
-            name: 'agents_users',
+            name: 'AgentsUsers',
             component: () => import('./Modules/AgentsUsers.vue'),
         },
         {
             path: '/app/admins/agents/list',
-            name: 'agents_list',
+            name: 'AgentsList',
             component: () => import('./Modules/AgentsList.vue'),
         },
         {
             path: '/app/admins/agents/add',
-            name: 'agents_add',
+            name: 'AgentsAdd',
             component: () => import('./Modules/AgentsAdd.vue'),
         },
 
         {
             path: '/app/admins/agents/teams',
-            name: 'dept',
+            name: 'AgentsTeams',
             component: () => import('./Modules/AgentsTeams.vue'),
         },
         {
             path: '/auth/login',
-            name: 'login',
+            name: 'LoginBoxed',
             meta: {layout: 'userpages'},
             component: () => import('./Modules/LoginBoxed.vue'),
         },

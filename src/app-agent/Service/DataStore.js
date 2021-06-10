@@ -445,7 +445,8 @@ const actions = {
     dispatch("AddChat",response.data.results[0]);
     //commit("setQuickTags", response.data);
     return response.data;
-  }
+  },
+
 
 };
 

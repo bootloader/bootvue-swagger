@@ -59,7 +59,7 @@
                       <b-form-row>
                           <button @click="uploadChat"
                               name="password" id="examplePassword" :disabled="invalid"
-                              class="form-control btn btn-primary">Save</button>
+                              class="form-control btn btn-primary">Upload</button>
                       </b-form-row>
 
                 </ValidationObserver>    
@@ -109,19 +109,8 @@
  </b-card>
           </div>
 
-          
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-
-                </div>
-            </div>
-
-        </div>
         <input hidden type="file" ref="file" @change="onFileChange">
-
-
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
           <mod-import-chat-preview v-if="session" :session="session" :key="session.sessionId"
           :sender="meta.sender" :contact="meta.contact"
@@ -169,7 +158,10 @@
             subheading: 'Import WhatsApp Chats from exported file',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-file-import',
             actions : [{
-              label : "Import", icon : "plus", name : "IMPORT_CHAT"
+              label : "See past uploads", name : "PAST_IMPORTS", link : "/app/moderate/imported-chat-logs",
+              type : "link"
+            }, {
+              label : "Import File", icon : "plus", name : "IMPORT_CHAT"
             }],
             input : {
                 lane : {
@@ -266,9 +258,11 @@
                     contactMobile : this.meta.contactMobile.replace(/\D/g,''), contactName :  this.meta.contactName,
                     sender : this.meta.sender, lane : this.meta.lane, 
                     contactType : "WHATSAPP",
+                    importDetails : this.meta.importDetails
                 },
                 results : this.table.items
               });
+              this.$router.push("/app/moderate/imported-chat-logs");
           },
 
           async onInputChange () {
@@ -302,8 +296,10 @@
 
                   this.input.lane.values = resp.meta.lanes;
                   this.input.lane.selected = [resp.meta.lanes[0]];
+                  this.meta.importDetails = resp.meta.importDetails
 
                   this.onInputChange();
+
               } catch(err){
                   console.log(err);
                   this.message  = "Something went wrong!!";
