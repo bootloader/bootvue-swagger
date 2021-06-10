@@ -798,8 +798,11 @@
                 this.refreshActiveChats(true);
                 var activeChat = this.activeChat;
                 if(!activeChat){
+                     MyFlags.agent.showProfileAllowed = false;
                     return;
                 }
+                MyFlags.agent.showProfileAllowed = true;
+                
                 if( activeChat._tab && activeChat.active){
                     console.log("Setting Tab to ",activeChat,activeChat._tab)
                     MyFlags.agent.contactsTab = activeChat._tab;

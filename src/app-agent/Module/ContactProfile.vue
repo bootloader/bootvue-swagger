@@ -212,12 +212,14 @@
                     return (THAT.activeChat.contact.labelId || []).map(function (labelId) {
                         return tagFormat(THAT.$store.getters.StateQuickLabels.filter(t => {
                             return t.id == labelId;
-                        })[0]);
+                        })[0] || {
+                            id : labelId
+                        });
                     });
                 return [];
             },
             quickLabels : function(){ 
-                return this.$store.getters.StateQuickLabels.filter(i => {
+                return (this.$store.getters.StateQuickLabels || []).filter(i => {
                   return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
                 }).map(function (argument) {
                     return tagFormat(argument);
@@ -272,6 +274,7 @@
                     this.sessions.rows = 0;
                     return;
                 }
+
                 this.isLoading = true;
                 var resp = await this.$store.dispatch('GetSessions',{
                     contactId : this.$route.params.profileId

@@ -11,16 +11,17 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6  chat""
                     v-bind:class="{
-                        'col-lg-6' : MyFlags.agent.showProfile,
-                        'col-lg-9' : !MyFlags.agent.showProfile,
-                        'col-xl-6' : MyFlags.agent.showProfile,
-                        'col-xl-9' : !MyFlags.agent.showProfile,
+                        'col-lg-6' : (MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
+                        'col-lg-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
+                        'col-xl-6' : (MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
+                        'col-xl-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CHATBOX',
                     }" >
                      <Chatbox/>
                 </div>
                 
-                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat" v-if="MyFlags.agent.showProfile"
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat" 
+                        v-if="MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed"
                        v-bind:class="{
                             'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CPROFILE',
                         }">

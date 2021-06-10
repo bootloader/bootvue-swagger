@@ -66,7 +66,7 @@ const state = {
   chats : [],chatsVersion : 0, chatsSize : null,
   chatsCounter : 1,
   meta : null,
-  mediaOptions : null, quickActions : null, quickLabels : null,
+  mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   chatHistory : { sessions : []}
 };

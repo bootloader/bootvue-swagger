@@ -27,7 +27,7 @@ export const MyFlags = {
   showSidebar: false,
   showContactProfile : true,
   agent : {
-  	showProfile : true,
+  	showProfile : true, showProfileAllowed : false,
   	profileView : 'history', //history,info
   	contactsTab : 'ME',
   	mvu : 'CONTACTS', //CONTACTS,CHATBOX,CPROFILE
