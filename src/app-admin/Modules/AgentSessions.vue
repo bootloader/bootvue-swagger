@@ -38,8 +38,6 @@
                 <template #cell(actions)="row">
                     <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" ></span>
                     &nbsp;
-
-                    <span v-if="row.item.channel == 'IMPORT'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteChat(row.item, row.index, $event.target)" ></span>
                 </template>
 
 

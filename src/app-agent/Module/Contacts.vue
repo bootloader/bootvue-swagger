@@ -67,8 +67,19 @@
                                 LastOut : {{chat.lastResponseStamp | formatStamp}}
                                 LastIn : {{chat.lastInComingStamp | formatStamp}}
                             </p>
-                            <span class="contact-time" :title="chat.lastInComingStamp | formatStamp">{{chat.lastInComingStamp | formatDate}} </span>
-                            <div  class="" id="'nm' + c.contactId" class="chat_flags">
+
+                            <b-popover triggers="hover focus" :target="'time-details'+ chat.contactId" >
+                              <template #title><small> 
+                                <div class="text-align-left"> @ {{chat._gracestamp | formatStamp}}</div>
+                                <div v-if="chat.lastResponseStamp" class="text-align-left"> LastOut : {{chat.lastResponseStamp | formatStamp}}</div>
+                                <div v-if="chat.lastInComingStamp" class="text-align-left"> LastIn : {{chat.lastInComingStamp | formatStamp}}</div></small>
+                              </template>
+                            </b-popover>
+
+                            <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
+                                :id="'time-details'+ chat.contactId" >{{chat.lastInComingStamp | formatDate}} </span>
+
+                            <div id="'nm' + c.contactId" class="chat_flags">
                                 <span>
                                     <b-icon v-if="chat._new" icon="circle-fill" class="new_message" variant="red"
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
