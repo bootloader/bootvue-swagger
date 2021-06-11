@@ -49,8 +49,9 @@ function setChatFlags(chat) {
       }
   }
   chat._gracestamp = chat._stamp-MyConst.config.chatIdleTimeout;
+  chat._waitingSinceStamp = Math.max(chat.lastResponseStamp,chat.agentSessionStamp);
   chat._waiting = (chat.lastResponseStamp < chat.lastInComingStamp);
-  chat._waitingstamp_en= formatters.timespan((chat._stamp-chat.lastResponseStamp)/1000);
+  chat._waitingstamp_en= formatters.timespan((chat._stamp - chat._waitingSinceStamp)/1000);
   chat._attention = chat._waiting && (chat.lastResponseStamp < chat._gracestamp);
   chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
                 && (!chat._lastReadStamp || (chat._lastReadStamp < chat.lastInComingStamp));
