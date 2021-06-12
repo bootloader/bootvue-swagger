@@ -3,7 +3,7 @@
         <div class="logo-src"/>
         <div class="app-header__content">
             <div class="app-header-left">
-                <SearchBox/>
+                <SearchBox hidden/>
             </div>
             <div class="app-header-right">
                 <UserArea/>
