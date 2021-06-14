@@ -5708,6 +5708,13 @@
   "resolved" "https://registry.yarnpkg.com/pe7-icon/-/pe7-icon-1.0.4.tgz"
   "version" "1.0.4"
 
+"pebounce@^0.0.3":
+  "integrity" "sha512-NBM8Bmeb9bFqx2DKv4G2RMVzoN86qPoDDgjggmqSGKw9zz7m7y8yovzi2a5zU7Zo3bMU2WKlsrNORh2yGVMs0w=="
+  "resolved" "https://registry.npmjs.org/pebounce/-/pebounce-0.0.3.tgz"
+  "version" "0.0.3"
+  dependencies:
+    "debounce" "^1.2.1"
+
 "perfect-scrollbar@^1.4.0":
   "resolved" "https://registry.yarnpkg.com/perfect-scrollbar/-/perfect-scrollbar-1.5.0.tgz"
   "version" "1.5.0"
@@ -7105,6 +7112,11 @@
   dependencies:
     "safe-buffer" "~5.1.0"
 
+"string_score@^0.1.22":
+  "integrity" "sha1-gOESIjru8wlp2FAvONtyp2jqqP0="
+  "resolved" "https://registry.npmjs.org/string_score/-/string_score-0.1.22.tgz"
+  "version" "0.1.22"
+
 "string-width@^1.0.1":
   "resolved" "https://registry.yarnpkg.com/string-width/-/string-width-1.0.2.tgz"
   "version" "1.0.2"
@@ -7817,11 +7829,6 @@
   "version" "4.6.0"
   dependencies:
     "vue" "^2.6.10"
-
-"vue-multiselect@^2.1.6":
-  "integrity" "sha512-s7jmZPlm9FeueJg1RwJtnE9KNPtME/7C8uRWSfp9/yEN4M8XcS/d+bddoyVwVnvFyRh9msFo0HWeW0vTL8Qv+w=="
-  "resolved" "https://registry.npmjs.org/vue-multiselect/-/vue-multiselect-2.1.6.tgz"
-  "version" "2.1.6"
 
 "vue-perfect-scrollbar@^0.1.0":
   "resolved" "https://registry.yarnpkg.com/vue-perfect-scrollbar/-/vue-perfect-scrollbar-0.1.0.tgz"

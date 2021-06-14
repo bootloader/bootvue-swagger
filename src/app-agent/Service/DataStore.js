@@ -6,6 +6,9 @@ import Vue from 'vue';
 import formatters from '../../services/formatters';
 import {MyConst} from '../../services/global';
 
+import pebounce from 'pebounce';
+import string_score from 'string_score';
+
 var guid = formatters.guid
 
 function eq(a,b) {
@@ -91,7 +94,32 @@ const cache = {
       x =  x || (axios.get("/api/sessions/assigned.json"));
       return x;
     };
-  })()
+  })(),
+  _MatchQuickReplies : pebounce(function (tags) {
+    tags = (tags || {categories : [], text : ""})
+    var categories = tags.categories;
+    var _categories = [];
+    var text = (tags.text || "").toLowerCase() ;
+    var resps = state.quickReplies.map(function (quickReply) {
+          quickReply.title = quickReply.title || "";
+          quickReply.title_len = (quickReply.title).length || 1;
+
+          quickReply.template = quickReply.template || "";
+          quickReply.matchIndex = quickReply.title.toLowerCase().indexOf(text);
+
+          quickReply.match = (categories.indexOf(quickReply.category)>-1)
+          quickReply.matchScore = 
+            (quickReply.matchIndex==0 ? 1 : 0) +  (quickReply.matchIndex > 0 ? quickReply.matchIndex/quickReply.title_len : 0)
+            + (quickReply.match?0.5:0) + text.score(quickReply.title) + text.score(quickReply.template)
+            + quickReply.title.score(text) + quickReply.template.score(text);
+          console.log("_MatchQuickReplies score",quickReply.matchScore)
+          return quickReply;
+    });
+    return resps.sort(function(a,b) {
+        return b.matchScore - a.matchScore;
+    });
+
+  },500)
 }
 
 const actions = {
@@ -386,7 +414,7 @@ const actions = {
     return response.data;
   },
 
-  async LoadQuickReplies({ commit },tags) {
+  async LoadQuickReplies({ commit }, tags) {
     if(!state.quickReplies || state.quickReplies.length == 0){
         let response = await axios.get("/category/map/smart_reply.json");
         validateResponse(response);
@@ -395,22 +423,7 @@ const actions = {
         }
         commit("setQuickReply",response.data)
     }
-
-    var categories = (tags || {categories : []}).categories;
-    var _categories = [];
-    var resps = state.quickReplies.map(function (quickReply) {
-          if(categories.indexOf(quickReply.category)>-1){
-            quickReply.match = true
-          }
-          return quickReply;
-    });
-    return resps.sort(function(a,b) {
-        if(a.match)
-          return -1
-        else if(b.match){
-          return 1
-        } else 1
-    });
+    return cache._MatchQuickReplies(tags);
     //commit("setMediaOptions", response.data);
   },
 

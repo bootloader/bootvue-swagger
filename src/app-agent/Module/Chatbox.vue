@@ -271,7 +271,7 @@
                                 </span>    
   
                                 <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
-                                    <span v-for="(quickReply, index) in quickReplies" v-if="quickReply.match && (index < countQuickReplies)"
+                                    <span v-for="(quickReply, index) in quickReplies" v-if="(index < countQuickReplies)"
                                     @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
                                     class="msg_cotainer_smart">  {{quickReply.title}}</span>    
                                 </span>
@@ -280,7 +280,7 @@
                         </div>
 
                         <slide-up-down :active="showQuickReplies && !!quickReplies" :duration="200" class="quick-replies-more"> 
-                                <span v-for="(quickReply, index) in quickReplies"  v-if="!quickReply.match || (index >= countQuickReplies)"
+                                <span v-for="(quickReply, index) in quickReplies"  v-if="(index >= countQuickReplies)"
                                 @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
                                 class="msg_cotainer_smart">  {{quickReply.title}}</span>
                              <hr/>
@@ -559,7 +559,7 @@
         },
         updated (){
             this.scrollToBottom();
-            this.setQuickReplies();
+            this.refreshQuickReplies();
         },
         mounted (){
             this.scrollToBottom();
@@ -718,6 +718,7 @@
                 return await this.$store.dispatch('LoadQuickReplies');
             },
             calcQuickReplies : debounce(function (argument) {
+                console.log("calcQuickReplies")
                 if(this.$refs.quickRepliesLess){
                     console.log("calcQuickReplies = N",this.$refs.quickRepliesLess.childNodes.length);
                     var totalWidth = this.$refs.quickRepliesLess.offsetWidth;
@@ -736,7 +737,7 @@
                     //this.countQuickReplies = count;
                 }
             },2000),
-            async setQuickReplies(){
+            async refreshQuickReplies(force){
                 this.refreshActiveChats();
                 var activeChat = this.activeChat;
                 if(!activeChat){
@@ -744,17 +745,24 @@
                 }
 
                //this.calcQuickReplies();
-
+                var categories = [];
                 var ilastmsg = activeChat.ilastmsg;
-                if(!ilastmsg){
+                if(ilastmsg){
+                    categories = ilastmsg.tags.categories;
+                } else if(!force){
                     return;
                 }
 
-                if(this.ilastMessageId == ilastmsg.messageId){
+                if( (this.ilastMessageId == ilastmsg.messageId) && !force){
                     return;
                 }
+
                 this.ilastMessageId = ilastmsg.messageId;
-                var quickReplies = await this.$store.dispatch('LoadQuickReplies',ilastmsg.tags);
+
+                var quickReplies = await this.$store.dispatch('LoadQuickReplies',{
+                    categories : categories,
+                    text : this.message_text
+                });
                 this.quickReplies = quickReplies.map(function (quickReply) {
                     if(quickReply.template){
                         quickReply._message = mustache.render(quickReply.template, { 
@@ -763,6 +771,7 @@
                     } else {
                         quickReply._message = quickReply.message || quickReply.title;
                     }
+                    quickReply._message = quickReply._message;
                     return quickReply
                 });
                 this.scrollToBottom(true);
@@ -839,6 +848,7 @@
                 event.target.style.height = "auto";
                 event.target.style.height = event.target.scrollHeight + "px";
                 console.log("onInputType",event) 
+                this.refreshQuickReplies(true);
             },
 
             toggleView : function (argument) {
