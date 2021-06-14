@@ -436,7 +436,6 @@
 
     import { Textcomplete } from "@textcomplete/core";
     import { TextareaEditor } from "@textcomplete/textarea";
-    import TextComplete from 'v-textcomplete'
 
 
     var sampleJson = {
@@ -451,7 +450,7 @@
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
-            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,TextComplete
+            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect
         },
         computed : {
             inputTextEnabled : function (argument) {
@@ -604,16 +603,16 @@
                     THAT.scrollToBottom(true);
             });
 
-            const editor = new TextareaEditor(this.$refs.message_text);
-            this.textcomplete = new Textcomplete(editor,this.strategies, {
-                dropdown :  { 
-                    placement: "top" 
-                }
-            })
+            // const editor = new TextareaEditor(this.$refs.message_text);
+            // this.textcomplete = new Textcomplete(editor,this.strategies, {
+            //     dropdown :  { 
+            //         placement: "top" 
+            //     }
+            // })
         },
         beforeUnmount (){
             this.tunnel.off();
-            this.textcomplete.destroy()
+            //this.textcomplete.destroy()
         },
         watch: {
             '$route.params.contactId': function (contactId) {
