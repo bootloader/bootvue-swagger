@@ -112,7 +112,7 @@ const cache = {
             (quickReply.matchIndex==0 ? 1 : 0) +  (quickReply.matchIndex > 0 ? quickReply.matchIndex/quickReply.title_len : 0)
             + (quickReply.match?0.5:0) + text.score(quickReply.title) + text.score(quickReply.template)
             + quickReply.title.score(text) + quickReply.template.score(text);
-          console.log("_MatchQuickReplies score",quickReply.matchScore)
+          //console.log("_MatchQuickReplies score",quickReply.matchScore)
           return quickReply;
     });
     return resps.sort(function(a,b) {

@@ -352,7 +352,7 @@
                             class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
 
                         </div>
-                        <textarea name="" class="form-control type_msg input-message" 
+                        <textarea name="" class="form-control type_msg input-message"  ref="message_text" 
                             placeholder="Type your message..." 
                             autocomplete="off" :disabled="!inputTextEnabled"
                             v-model="message_text"
@@ -429,14 +429,29 @@
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
     import debounce from 'debounce';
+    import throttle from 'throttleit';
 
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
 
+    import { Textcomplete } from "@textcomplete/core";
+    import { TextareaEditor } from "@textcomplete/textarea";
+    import TextComplete from 'v-textcomplete'
+
+
+    var sampleJson = {
+        contact : {
+          name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
+        }
+    };
+
+    var sampleJsonKeys = formatters.keys(sampleJson);
+
+
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
-            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect
+            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,TextComplete
         },
         computed : {
             inputTextEnabled : function (argument) {
@@ -547,7 +562,23 @@
                    // return ("<span>S</span>");
                 }
             },
-            formatters : formatters
+            formatters : formatters,
+
+            strategies: [{
+              match: /(^|\s)\/([a-z0-9+\-\_\.]*)$/,
+              search(term, callback) {
+                callback(sampleJsonKeys.filter(function (name) {
+                  return name.startsWith(term);
+                }).slice(0, 10))
+              },
+              template(name) {
+                return name;
+              },
+              replace(value) {
+                return '' + value + ''
+              },
+            }]
+
         }),
         created () {
             // fetch the data when the view is created and the data is
@@ -572,9 +603,17 @@
                 if(msg.sessionId == THAT.$route.params.sessionId)
                     THAT.scrollToBottom(true);
             });
+
+            const editor = new TextareaEditor(this.$refs.message_text);
+            this.textcomplete = new Textcomplete(editor,this.strategies, {
+                dropdown :  { 
+                    placement: "top" 
+                }
+            })
         },
         beforeUnmount (){
             this.tunnel.off();
+            this.textcomplete.destroy()
         },
         watch: {
             '$route.params.contactId': function (contactId) {
@@ -844,12 +883,12 @@
             },
 
             //DOMS
-            onInputType : function onInputType (event) { //type_msg,type_note
+            onInputType : throttle(function onInputType (event,a,b,c) { //type_msg,type_note
+                console.log("onInputType",event,a,b,c) 
                 event.target.style.height = "auto";
                 event.target.style.height = event.target.scrollHeight + "px";
-                console.log("onInputType",event) 
                 this.refreshQuickReplies(true);
-            },
+            },600),
 
             toggleView : function (argument) {
                 if(this.winMode === argument){
