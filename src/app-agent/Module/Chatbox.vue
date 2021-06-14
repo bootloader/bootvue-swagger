@@ -146,7 +146,7 @@
     </div>  
   <div v-for="m in activeChat.messages">
     
-    <div v-if="m.type == 'I' && (m.text || m.attachments)" 
+    <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
             class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
         <div class="img_cont_msg">
             <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
@@ -169,7 +169,7 @@
         <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
     </div>
 
-    <div v-else-if="m.type=='O'" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
+    <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
         <div class="msg_cotainer_send">
             <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> 
@@ -418,7 +418,7 @@
         faWhatsapp
     } from '@fortawesome/free-solid-svg-icons'
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import { MyFlags,MyDict,MyConst,MyFunc } from './../../services/global';
     import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
     import tunnel from './../../services/tunnel';
@@ -491,7 +491,7 @@
             selectedMedia : null,
             showChatOptions : false,
             lastMessageId : null,ilastMessageId :  null,
-            MyDict,MyFlags,MyConst,
+            MyDict,MyFlags,MyConst, MyFunc,
             isLoading : false,
             is : {
                 QUICK_ACTIONS  : false,

@@ -66,3 +66,12 @@ export const MyDict = {
 	},
 	profilePic : require('./../assets/agent/images/profile.png')
 }
+
+export const MyFunc  = {
+	isInbound(mType){
+		return ["I","Ii"].indexOf(mType) > -1
+	},
+	isOutbound(mType){
+		return ["O","Oi"].indexOf(mType) > -1
+	}
+}
