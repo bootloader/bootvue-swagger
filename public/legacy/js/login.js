@@ -32,19 +32,31 @@ $( document ).ready(function() {
         }
     })
 
-    $("#btn-login").click(function(){
- 	   	 return $.post(window.CONST.CONTEXT + "/auth/login/submit",{
- 	   		 username :   $("#login-username").val(),
-			 password :  $("#login-password").val(),
+    function loginSubmit() {
+         return $.post(window.CONST.CONTEXT + "/auth/login/submit",{
+             username :   $("#login-username").val(),
+             password :  $("#login-password").val(),
              rememberme : $("#rememberme").is(":checked")
-		 }).done(function(rsp){
-			 console.log(rsp);
-			 if(rsp.data && (rsp.data.success || rsp.data == 'success'))
-				 location.href = window.CONST.CONTEXT + "/app/home";
-			 else {
-				 $("#login_error").text(rsp.message);
-			 }
-		 });
+         }).done(function(rsp){
+             console.log(rsp);
+             if(rsp.data && (rsp.data.success || rsp.data == 'success'))
+                 location.href = window.CONST.CONTEXT + "/app/home";
+             else {
+                 $("#login_error").text(rsp.message);
+             }
+         });
+    }
+
+
+    $("#btn-login").click(function(){
+        return loginSubmit();
+    });
+
+    $('.login-det').on('keypress', function(e) {
+        var code = e.keyCode || e.which;
+        if(code==13){
+            return loginSubmit();
+        }
     });
 
 });
