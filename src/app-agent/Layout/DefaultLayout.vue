@@ -3,11 +3,21 @@
         <Sidebar/>
         <div class="container-fluid h-100">
             <div class="row h-100">
+
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat"
                     v-bind:class="{
                         'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CONTACTS',
                     }">
-                      <Contacts v-on:loaded="closeLoading"/>
+
+                    <div id="my-contact-search" title="ContactSearch" 
+                        class="chat hSlider-wrapper"
+                         v-bind:class="{
+                            'open' : MyFlags.agent.showContactSearch,
+                        }">
+                        <ContactSearch/>                     
+                    </div>
+                      
+                    <Contacts v-on:loaded="closeLoading"/>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6  chat""
                     v-bind:class="{
@@ -39,6 +49,7 @@
 
     import Sidebar from './../Module/Sidebar';
     import Contacts from './../Module/Contacts';
+    import ContactSearch from './../Module/ContactSearch';
     import Chatbox from './../Module/Chatbox';
     import ContactProfile from './../Module/ContactProfile';
     import VuePerfectScrollbar from 'vue-perfect-scrollbar';
@@ -56,7 +67,7 @@
     export default {
         name: 'app',
         components: {
-            Contacts,Chatbox,ContactProfile,Sidebar,
+            Contacts,Chatbox,ContactProfile,Sidebar,ContactSearch,
             VuePerfectScrollbar,
             'font-awesome-icon': FontAwesomeIcon,
         },
@@ -90,6 +101,31 @@
 
 
 
+
+.hSlider-wrapper {
+  position: absolute; 
+  z-index: 100;
+  top: 0;
+  transition: all 0.5s ease-out; 
+  padding: 0px; 
+  margin: 0px;
+  background: #ddd0;
+  overflow: hidden;
+  left: 0; 
+  background: #000;
+  width: 100%;
+}
+
+.hSlider-wrapper .hSlider {
+    width: 100%;
+}
+.hSlider-wrapper:not(.open) {
+  left: -100%;
+}
+.hSlider-wrapper.open {
+  left: 0; 
+  
+}
 
 </style>
 

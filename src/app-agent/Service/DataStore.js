@@ -462,6 +462,20 @@ const actions = {
   },
 
 
+
+
+  async GetRequest({commit,dispatch},{ url,params }) {
+    let response = await axios.get(url,{ params : params });
+    validateResponse(response);
+    return response.data;
+  },
+
+  async PostRequest({commit,dispatch},{ url,params }) {
+    let response = await axios.post(url,params);
+    validateResponse(response);
+    return response.data;
+  },
+
 };
 
 const mutations = {

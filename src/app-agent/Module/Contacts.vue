@@ -1,6 +1,6 @@
 <template>
      <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow">
-        <div class="card-header">
+        <div class="card-header contacts-header">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <a class="input-group-text menu_btn mySidebar-open" v-b-toggle href="#my-sidebar" @click.prevent>
@@ -13,6 +13,12 @@
                 <div class="input-group-prepend">
                     <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
                     <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
+                </div>
+                <div class="input-group-append">
+                    <a class="input-group-text menu_btn new-chat fa fa-edit" v-b-toggle 
+                    @click="MyFlags.agent.showContactSearch=!MyFlags.agent.showContactSearch"
+                     @click.prevent>
+                    </a>
                 </div>
             </div>
 
@@ -229,7 +235,7 @@
             this.pingOnline();
         },
         beforeUnmount (){
-            this.tunnel.off();
+            //this.tunnel.off();
         },
         watch: {
             '$route.params.sessionId': function (sessionId, sessionIdFrom) {
@@ -302,6 +308,14 @@
         overflow-y: auto;
         white-space: nowrap;
         background-color: #f5f5f5;
+    }
+    .contacts-header {
+        padding : 0.75rem 0.5rem; 
+    }
+    .contacts-header .new-chat {
+        font-size: 20px;
+        text-decoration: none;
+        line-height: 23px;
     }
     .contacts{
         list-style: none;

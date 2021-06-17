@@ -80,7 +80,7 @@
                       <div class="position-relative form-group">
                         <button @click="saveItem"
                           name="password" id="examplePassword" :disabled="!(isChanged)"
-                          class="form-control btn btn-primary">Create</button>
+                          class="form-control btn btn-primary">Save</button>
                         </div>
                   </template>
 
