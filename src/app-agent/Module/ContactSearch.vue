@@ -1,58 +1,75 @@
 <template>
      <div class="m-contact-search card mb-sm-3 mb-md-0 contacts_card card-shadow">
         <div class="card-header contacts-header">
+
             <div class="input-group">
-                <input type="text" 
-                    v-model="search.text"
-                    placeholder="Search..." name="" class="form-control search">
-                <div class="input-group-prepend">
-                    <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
-                    <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
-                </div>
-                <div class="input-group-append">
-                    <a class="input-group-text menu_btn new-chat fa fa-close" v-b-toggle 
-                    @click="MyFlags.agent.showContactSearch=!MyFlags.agent.showContactSearch"
-                     @click.prevent>
-                    </a>
-                </div>
-            </div>
+
             <div class="input-wrapper my-lane">
                 <v-select :options="input.lane.values" 
-                    :searchable="false">
+                    v-model="input.lane.selected"
+                    @option:selected="loadContacts" 
+                    :searchable="false"
+                    placeholder="Select Account"
+                    >
                     <template #selected-option="option">
-                      <div class="user_assignment-selected"> {{ option.contactType }} - {{ option.lane }}</div>
+                      <div class="user_assignment-selected">
+                         <span class="contact_type fab"
+                                v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
                     </template>
                     <template #open-indicator="{ attributes }">
                       <span v-bind="attributes" class="fa fa-caret-down"></span>
                     </template>
                     <template #option="{ contactType, lane }">
-                        {{ contactType }} - {{ lane }}</em>
+                         <span class="contact_type fab"
+                                v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}</em>
                     </template>
                 </v-select>
             </div>
+
+            <div class="input-group-append">
+                    <a class="input-group-text menu_btn new-chat fa fa-arrow-left" v-b-toggle 
+                    @click="MyFlags.agent.showContactSearch=!MyFlags.agent.showContactSearch"
+                     @click.prevent>
+                    </a>
+            </div>
+
+
+            </div>
+
+
+            <div class="input-group">
+                <input type="text" 
+                    v-model="input.search.text"
+                    placeholder="Search..." name="" class="form-control search"
+                    @keyup="loadContacts">
+                <div class="input-group-prepend">
+                    <span v-if="!!input.search.text" 
+                        class="input-group-text search_btn" @click="(input.search.text='');loadContacts()" ><i class="fa fa-close"></i></span>
+                    <span v-if="!input.search.text" 
+                        class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
+                </div>
+
+            </div>
+
         </div>
         <div class="card-body contacts_body">
-            <ul class="contacts contact-list" v-if="activeChats.length>0">
+            <ul class="contacts contact-list" v-if="activeChats && activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
                      :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId">
                     <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
                         <div class="img_cont">
-                            <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
+                            <img v-lazy="{
+                                    src : formatters.https_thumburl(chat.profilePic || MyDict.profilePic),
+                                    error : MyDict.profilePic
+                                }"
+                                class="rounded-circle user_img" alt="profilpicture">
                                 <span class="online_icon"></span>
-                                <span class="contact_type fa"
+                                <span class="contact_type fab"
                                 v-bind:class="MyDict.social[chat.contactType]"></span>
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
-
-                            <div v-if="MyConst.config.CHAT_TAG_ENABLED" data-v-5dda926d="" class="chat_tags">
-                                <div data-v-5dda926d="" class="chat_tags text-align-left">
-                                    <span data-v-5dda926d="" class="tag-chat-status" :class="'tag-chat-status-' + chat.status">
-                                        {{chat.status+''}}
-                                    </span>
-                                </div>
-                            </div>
-                            <span v-else-if="chat.ilastmsg" class="font-preview">{{chat.ilastmsg.text}}</span>  
+                            <span class="font-preview">{{chat.phone || chat.email}}</span>  
                         </div>
                     </div>
                 </router-link>
@@ -71,7 +88,10 @@
 
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import tunnel from './../../services/tunnel';
-    
+    import formatters from './../../services/formatters';
+    import debounce from 'debounce';
+    import throttle from 'throttleit';
+
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
 
@@ -81,7 +101,12 @@
         },
         computed : {
             activeChats : function(){ 
-                return this.$store.getters.StateChats;
+                var THAT = this;
+                return (this.contacts || []).filter(function(contact) {
+                    return (contact.name + contact.phone + contact.email)
+                            .toLowerCase()
+                            .indexOf(THAT.input.search.text.toLowerCase()) > -1
+                });
             },
             isOnline :  function (){
                 if(this.$store.getters.StateMeta){
@@ -94,19 +119,20 @@
             },
         },
         data:() => ({
-             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-             search: {
-                contactType : null,
-                text : ""
-             }, 
+            MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             input : {
+                search: {
+                    text : ""
+                }, 
                 lane : {
                   options : { multi: false, labelName: 'Filter Types'},
                   values : [],
-                  selected : [],
+                  selected : null,
                   sender : ""
                 }
             },
+            contacts : [],
+            formatters
         }),
         mounted () {
             // fetch the data when the view is created and the data is
@@ -114,6 +140,7 @@
             this.loadLanes();
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
             //this.pingOnline();
+            this.loadContacts();
 
         },
         beforeUnmount (){
@@ -127,13 +154,19 @@
                 let resp = await this.$store.dispatch('GetRequest',{
                     url : '/api/options/lanes'
                 });
-                console.log("resp.results",resp.results)
                 this.input.lane.values = resp.results;
             },
-            async loadContacts(){
-                await this.$store.dispatch('GetChats');
-                this.$emit('loaded', {});
-            },
+            loadContacts :  debounce(async function(){
+                if(!this.input.lane.selected) return;
+                let resp = await this.$store.dispatch('GetRequest',{
+                     url : '/api/options/contacts',
+                     params : {
+                        search : this.input.search.text, 
+                        lane : this.input.lane.selected.lane
+                     }
+                });
+               this.contacts = resp.results;
+            },1000),
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', !this.isOnline);
             },
@@ -199,7 +232,6 @@
         line-height: 23px;
     }
 
-   
 
     .contacts{
         list-style: none;
@@ -212,8 +244,6 @@
     .contacts li{
         width: 100% !important;
         padding: 5px 10px;
-        /*margin-bottom: 3px !important;*/
-        /*box-shadow: inset 0 0 52px #0000000d;*/
         border-bottom: 1px solid #00000008;
         cursor: pointer;
         border-left: 5px solid #0000;
@@ -229,13 +259,25 @@
     .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
     }
+
+
+    .img_cont,
+    .user_img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .contact_type {
+        width: 24px;
+        height: 22px;
+        font-size: 12px;
+    }
     .contact-preview .contact_type{
       bottom: 0px;
       right: 0px;
       position: absolute;
-      width: 24px;
-      height: 24px;
     }
+
     .contact-text {
         margin-left: 15px;
         height: 40px;
@@ -248,9 +290,6 @@
         overflow: hidden;
         /*font-weight: 300;*/
     }
-    .contact_waiting  .contact-text .font-name{
-        font-weight: 500;
-    }
     .contact-text .font-preview{
         text-overflow: ellipsis;
         max-width: 187px;
@@ -262,13 +301,41 @@
 </style>
 <style lang="scss">
     .m-contact-search {
-        .input-wrapper.my-lane .v-select{
-            margin-top: 8px;
-            color: #000;
-            width: 100%;
-        }
-        .input-wrapper.my-lane .v-select .vs__selected{
-            color: #FFF;
+        .input-wrapper.my-lane {
+            width: calc( 100% - 50px);
+
+            .v-select{
+                margin-bottom: 8px;
+                color: #000;
+                width: 100%;
+
+            }
+             .v-select .vs__selected{
+                color: #FFF;
+                background: transparent;
+                border: none;
+                padding-left: 19px;
+            }
+            .vs__dropdown-toggle  {
+                border : none;
+                color: #fff;
+                background-color: #0000002e;
+                border-radius: 6px;
+            }
+            .v-select .vs__search {
+                visibility: none;
+                width: 0px;
+                padding: 0px;
+                color: #FFF;
+                padding: 2px 0px;
+                text-align: center;
+            }
+           .v-select.vs--open .vs__search {
+                opacity: 0.5;
+            }
+            .vs__clear {
+                display: none;;
+            }
         }
     }
 </style>

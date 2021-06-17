@@ -9,7 +9,7 @@
                         'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CONTACTS',
                     }">
 
-                    <div id="my-contact-search" title="ContactSearch" 
+                    <div id="my-contact-search"
                         class="chat hSlider-wrapper"
                          v-bind:class="{
                             'open' : MyFlags.agent.showContactSearch,

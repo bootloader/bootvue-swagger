@@ -46,7 +46,7 @@
                       </template>
                     </b-popover>
                     &nbsp;
-                    <span style="cursor: pointer;" class="fa fa-trash"  @click="deleteItem(row.item, row.index, $event.target)" ></span>
+                    <span v-if="row.item.status=='COMPLETED'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteItem(row.item, row.index, $event.target)" ></span>
                 </template>
 
 

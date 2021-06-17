@@ -11,7 +11,8 @@ export const MyConst = {
 		chatSessionTimeout : 86400000, // After which chat is expired
 		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
-		CHAT_TAG_ENABLED : true
+		CHAT_TAG_ENABLED : true,
+		AGENT_CHAT_INIT : false
 	}, window.CONST.CONFIG || window.CONST.CONFG,{
 		//CHAT_TAG_ENABLED : true
 	}),
@@ -37,7 +38,7 @@ export const MyFlags = {
 
 export const MyDict = {
 	social : {
-	 "FACEBOOK" : "fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fa-telegram",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
+	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fab fa-telegram-plane",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
 	},
 	chatStatus : {
 		"UNASSIGNED"	: {label : "UNASSIGNED" }, 
