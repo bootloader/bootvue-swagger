@@ -62,7 +62,7 @@
                     {{ (row.item.startSessionStamp||row.item.fistResponseStamp||row.item.lastInComingStamp||row.item.assignedDeptStamp||row.item.assignedAgentStamp||row.item.lastResponseStamp||row.item.closeSessionStamp) | formatDate}}
                 </template>
                 <template #cell(contactType)="row">
-                    <span class="contact_type fa"
+                    <span class="contact_type"
                                 v-bind:class="MyDict.social[row.item.contactType]"
                                 ></span>
                 </template>
