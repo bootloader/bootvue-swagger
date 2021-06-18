@@ -1,4 +1,7 @@
 export const myVar = 'This is my variable'
+
+window.CONST.dev =  window.CONST.dev != 'false';
+
 export const MyConst = {
  	some: 'Settings',
 	app : window.CONST.APP,
@@ -7,15 +10,17 @@ export const MyConst = {
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	agent : window.CONST.APP_USER,
+	agent : window.CONST.APP_USER,
 	config : Object.assign({
 		chatSessionTimeout : 86400000, // After which chat is expired
 		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
 		CHAT_TAG_ENABLED : true,
 		AGENT_CHAT_INIT : false
-	}, window.CONST.CONFIG || window.CONST.CONFG,{
-		//CHAT_TAG_ENABLED : true
-	}),
+	}, window.CONST.CONFIG || window.CONST.CONFG,window.CONST.dev ? {
+		CHAT_TAG_ENABLED : true,
+		AGENT_CHAT_INIT : true,
+	}: {}),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",
 		full_inverse : window.CONST.CDN_URL + "/logo/logo-long-o.png",

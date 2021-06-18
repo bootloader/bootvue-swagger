@@ -50,7 +50,7 @@
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="online_icon"></span>
-                                <span class="contact_type fa"
+                                <span class="contact_type fab"
                                 v-bind:class="MyDict.social[chat.contactType]"></span>
                         </div>
                         <div class="user_info contact-text">
