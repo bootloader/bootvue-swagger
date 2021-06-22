@@ -4,6 +4,7 @@ import Vue from 'vue'
 
 import mainrouter from './router';
 import store from './store';
+import service from './services/DataService';
 import axios from 'axios';
 
 import { BootstrapVue,BootstrapVueIcons} from "bootstrap-vue"
@@ -58,7 +59,7 @@ Vue.use(VueToast);
 	 console.log("This is Admin App")
     new Vue({
 	  el: '#app',
-	  store,
+	  store,service,
 	  router : mainrouter.router(),
 	  template: '<AppAdmin/>',
 	  components: { AppAdmin }
@@ -68,7 +69,7 @@ Vue.use(VueToast);
    console.log("This is Agent App")
    new Vue({
 	  el: '#app',
-	  store,
+	  store,service,
 	  router : mainrouter.router(),
 	  template: '<AppAgent/>',
 	  components: { AppAgent }
@@ -76,7 +77,7 @@ Vue.use(VueToast);
 })("dev", function(agent){ //Agent App
    new Vue({
 	  el: '#app',
-	  store,
+	  store,service,
 	  router : mainrouter.router(),
 	  template: '<AppDev/>',
 	  components: { AppDev }

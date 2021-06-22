@@ -376,16 +376,55 @@
   cursor: pointer!important;
 }
 
-/****================= WIDGET CLASS ===============================================  */
-.input-group .input-group-append .select>.btn-select{
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-right: 0px;
-} 
-.input-group .input-group-prepend .select>.btn-select{
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
-  border-left: 0px;
+/****================= WIDGET CLASS Compatibility ===============================================  */
+.input-group {
+  .input-group-append .select>.btn-select{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-right: 0px;
+  } 
+  .input-group-prepend .select>.btn-select{
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    border-left: 0px;
+  }
+  .v-select{
+      margin: 0px;
+      padding: 0px;
+      width: 100%;
+      border: 0px solid #000;
+      height: calc(1.8125rem + 2px);
+      font-size: calc(0.9rem + 0px);
+      line-height: 10px;
+  }
+  .input-group-prepend .v-select .vs__dropdown-toggle{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-right: 0px;
+  }
+  .input-group-append .v-select .vs__dropdown-toggle{
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    // border-left: 0px;
+  }
+  .vs__dropdown-toggle{
+    padding : 0px;
+    height: calc(1.8125rem + 2px);
+    .vs__selected-options .vs__selected{
+      padding: 0px;
+      margin: 0px;
+    }
+  }
+
+}
+
+.v-select.vs--unsearchable .vs__search {
+    visibility: none;
+    width: 0px;
+    padding: 0px;
+    color: #FFF;
+    padding: 2px 0px;
+    text-align: center;
 }
 
 /***  ========================= Admin Panel ==========================================*/

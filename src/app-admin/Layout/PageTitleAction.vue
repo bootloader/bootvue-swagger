@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <span v-for="action in actions" >
+                <span v-for="action in actions" v-if="!action.hidden" >
                     <router-link v-if="action.link" tag="button" :to="action.link"
                         type="button" class="btn-shadow d-inline-flex align-items-center btn"
                         v-bind:class="{
@@ -34,7 +34,7 @@
                     </button>
                 </span>
 
-               <date-range-picker v-if="dateranegeinput" v-model="dateranegeinput.range"
+               <date-range-picker v-if="dateranegeinput && dateranegeinput.hidden" v-model="dateranegeinput.range"
                     :opens="'left'"
                     :time-picker="false"
                     :ranges="dateranegeinput.ranges"

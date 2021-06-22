@@ -89,6 +89,7 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import tunnel from './../../services/tunnel';
     import formatters from './../../services/formatters';
+
     import debounce from 'debounce';
     import throttle from 'throttleit';
 
@@ -151,19 +152,14 @@
         },
         methods: {
             async loadLanes(){
-                let resp = await this.$store.dispatch('GetRequest',{
-                    url : '/api/options/lanes'
-                });
+                let resp = await this.$service.get('/api/options/lanes');
                 this.input.lane.values = resp.results;
             },
             loadContacts :  debounce(async function(){
                 if(!this.input.lane.selected) return;
-                let resp = await this.$store.dispatch('GetRequest',{
-                     url : '/api/options/contacts',
-                     params : {
-                        search : this.input.search.text, 
-                        lane : this.input.lane.selected.lane
-                     }
+                let resp = await this.$service.get('/api/options/contacts', {
+                    search : this.input.search.text, 
+                    lane : this.input.lane.selected.lane
                 });
                this.contacts = resp.results;
             },1000),
@@ -308,7 +304,6 @@
                 margin-bottom: 8px;
                 color: #000;
                 width: 100%;
-
             }
              .v-select .vs__selected{
                 color: #FFF;

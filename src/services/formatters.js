@@ -150,6 +150,43 @@ var formatter = {
       }
       return list;
   },
+  map_from_string : function (string) {
+    var splitter_char = ";",  key_value_separator_char = ":";
+    var map = {};
+    return (string || "").split(splitter_char).reduce(function(total,currentValue) {
+      var stub = (currentValue || "").split(key_value_separator_char);
+      var key = (stub[0]||"").trim();
+      if(key) total[key] = stub[1];
+      return total;
+    },{});
+  },
+  message_form_options : function (options) {
+    var inputs = [];
+    var buttons = [];
+
+    Object.keys(options).map(function(key) {
+        if (key.indexOf("form-input-") == 0) {
+          var params = (options[key] || "").split("\\|");
+          inputs.push({ 
+              name : key.replace("form-input-", ""),
+              label : params[0] || "",
+              type : params[0] || ""
+          });
+        } else if (key.indexOf("actions-button-") == 0) {
+          var params = (options[key] || "").split("\\|");
+          buttons.push({ 
+              name : key.replace("actions-button-", ""),
+              label : params[0] || "",
+              type : params[0] || ""
+          });
+        }
+    });
+
+    options["inputs"] = inputs;
+    options["buttons"] = buttons;
+
+    return options;
+  },
 
   //Validators
   phone : function phoneValidator (value) {

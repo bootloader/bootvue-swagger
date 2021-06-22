@@ -618,10 +618,11 @@
             '$route.params.contactId': function (contactId) {
                 this.scrollToBottom();
                 this.loadQuickReplies();
+                this.onSessionChange();
             },
             '$route.params.sessionId': function (contactId) {
                 //this.loadChat();
-                this.loadArchiveMessages();
+                this.onSessionChange();
                 this.toggleView("CHAT_BOX");
             }
         },
@@ -819,6 +820,20 @@
                 await this.$store.dispatch('LoadAgentOptions');
                 this.loadArchiveMessages();
             },
+            onSessionChange : debounce(async function(){
+                console.log("onSessionChange : Session On Change")
+                if(this.$route.params.sessionId == "active-sesssion"){
+                    let resp = await this.$service.get('/api/sessions/contact/active', {
+                            contactId : this.$route.params.contactId 
+                    });
+                    if(resp.results.length==0){
+                        
+                    }
+                    this.loadArchiveMessages();
+                } else {
+                    this.loadArchiveMessages();
+                }
+            },200),
             loadActiveChat (argument) {
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];

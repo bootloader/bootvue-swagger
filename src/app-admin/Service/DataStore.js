@@ -16,23 +16,6 @@ function guid() {
 }
 
   function validateResponse(response){
-    if(response.request.responseURL.endsWith("/auth/login")){
-      //https://app.mehery.com/admin/auth/login
-      console.log("===>",response.request.responseURL)
-      window.location.href = response.request.responseURL;
-    }
-
-    if(response.data){
-        if(response.data.errors){
-            for(var i in response.data.errors){
-              Vue.$toast.success(response.data.errors[i].descriptionKey + ":" + response.data.errors[i].field)
-            }
-        } else if(response.data.message){
-            Vue.$toast.success(response.data.message)
-        } else if(response.data.message){
-          Vue.$toast.success(response.data.message)
-        }
-    }
     return response;
   }
 

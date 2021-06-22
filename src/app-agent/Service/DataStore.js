@@ -538,4 +538,9 @@ export default {
   getters,
   actions,
   mutations,
+  myGet : async function (url, params) {
+    let response = await axios.get(url,{ params : params });
+    validateResponse(response);
+    return response.data;
+  }
 };

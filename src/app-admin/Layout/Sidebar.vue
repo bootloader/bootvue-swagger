@@ -94,6 +94,23 @@
                         href: '/app/moderate/import-chat'
                     },
                     {
+                        title: 'Bulk Messaging',
+                        icon: 'pe-7s-chat fa fa-mail-bulk',
+                        enabled : true,
+                        child: [
+                            {   
+                                enabled : true,
+                                href: '/app/moderate/bulk-push-jobs',
+                                title: 'View Jobs',
+                            },
+                            {   
+                                enabled : true,
+                                href: '/app/moderate/bulk-push-new',
+                                title: 'Send New',
+                            }
+                        ]
+                    },
+                    {
                         header: true,
                         title: 'Admin',
                     },
@@ -145,6 +162,11 @@
                                 enabled : true,
                                 href: '/app/admins/tmpl/quickmedia',
                                 title: 'Quick Media',
+                            },
+                           {   
+                                enabled : true,
+                                href: '/app/admins/tmpl/pushtemplate',
+                                title: 'Push Templates',
                             },
                             {
                                 href: '/pages/register-boxed',
