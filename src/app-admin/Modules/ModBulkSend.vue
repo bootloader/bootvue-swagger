@@ -227,7 +227,7 @@
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,
-              "templateId": this.input.lane.selected.id,
+              "templateId": this.input.templates.selected.id,
               "contact" : {
                 "contactType": this.input.lane.selected.contactType,
                 "lane" : this.input.lane.selected.lane,
