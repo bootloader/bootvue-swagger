@@ -31,8 +31,8 @@
                       </ValidationProvider>
 
                       <br>
-                      <ValidationProvider v-slot="v" rules="required|phone"  class="form-row" vid="input_contact_number" 
-                           name="Contact Number">
+                      <ValidationProvider v-slot="v" rules="required|phoneML"  class="form-row" vid="input_contact_number" 
+                           name="Contact Number" mode="lazy">
                           <label>Contacts</label>
                             <textarea class="form-control" rows="10" v-model="input.contacts" >
 

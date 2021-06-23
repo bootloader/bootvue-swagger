@@ -26,16 +26,29 @@
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
                       {{row.item.lane}}
                 </template>
+                <template #cell(template)="row">
+                  {{row.item.templateId}}
+                    <span cursor-pointer class="fa fa-comment" :id="'template-details-'+ row.index ">
+                    </span>
+                    <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
+                      custom-class="message-preview">
+                      <template #default class="message-preview"> 
+                          <div class="message-text">{{row.item.message}}</div>
+                      </template>
+                    </b-popover>
+                </template>
                 <template #cell(createdStamp)="row">
                     {{ row.item.createdStamp | formatDate}}
                 </template>  
-                <template #cell(actions)="row">
-                    <span cursor-pointer class="far fa-file-alt" :id="'file-details'+ row.index "></span>
-                    <b-popover triggers="hover focus" :target="'file-details'+ row.index ">
-                      <template #title><small> 
-                        <div class="text-align-left"> Name : {{row.item.fileName}}</div>
-                        <div class="text-align-left">MD5 : <em>{{row.item.fileMD5}}</em></div>
-                        <div class="text-align-left"> Size : {{row.item.fileSize}} KB</div></small>
+                <template #cell(status)="row">
+                    {{row.item.status}}
+                    <span cursor-pointer class="fa fa-info-circle" :id="'job-stats-details-'+ row.index ">
+                    </span>
+                    <b-popover triggers="hover focus" :target="'job-stats-details-'+ row.index ">
+                      <template #title>
+                        <div class="text-align-left" v-for="(count,stat) in row.item.stats"> 
+                          {{stat}} : {{count}}
+                        </div>
                       </template>
                     </b-popover>
                     &nbsp;
@@ -116,8 +129,7 @@
                 fields: [ 
                     { key : 'contact', label : "Account" },
                     { key : 'bulkSessionId', label : "SessionId" },
-                    { key : 'templateId', label : "TemplateId" },
-                    { key : 'message', label : "Message" },
+                    { key : 'template', label : "Template" },
                     { key : 'messageCount', label : "Messages" },
                     { key : 'createdBy', label : "by" },
                     { key : 'createdStamp', label : "@" },
@@ -181,6 +193,10 @@
 
 
 </script>
+<style lang="scss">
+  @import "./../../assets/demo-ui/_chat-preview.scss";
+
+</style>
 <style type="text/css" scoped >
  
 </style>

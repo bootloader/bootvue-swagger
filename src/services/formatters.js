@@ -71,6 +71,10 @@ var CONTACT_LABELS_DICT = {};
   function phoneFormatted (value) {
     if(/^\d{10}$/.test(value))
       return true;
+
+    if(/^[1-9]{1}[0-9]{3,14}$/.test(value))
+      return true;
+
     //XXX-XXX-XXXX ,   XXX.XXX.XXXX,   XXX XXX XXXX
     if(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value))
       return true;
@@ -91,7 +95,7 @@ var CONTACT_LABELS_DICT = {};
   }
 
 var formatter = {
-  validators : ["phone"],
+  validators : ["phone","phoneML"],
 	instance : function (argument) {
 	},
   addContactLabels : function (labels) {
@@ -193,11 +197,18 @@ var formatter = {
     if(phoneFormatted(value)){
       return true
     } 
-    if(phoneFormatted(value.replaceAll(" ",""))){
+    if(phoneFormatted(value.replace(/[\ \+]/g,""))){
       return true
     } 
-
     return 'Enter valid mobile number eg +91 XXXXX XXXXX';
+  },
+  phoneML : function phoneValidator (lineString) {
+    var lines = lineString.match(/[^\r\n\,]+/g);
+    for(var i in lines){
+      if(lines[i] && !phoneFormatted(lines[i]) && !phoneFormatted(lines[i].replace(/[\ \+]/g,"")))
+          return 'Enter valid mobile number eg 91XXXXXXXXXX per line';
+    }
+    return true;
   },
 
   init : function () {
