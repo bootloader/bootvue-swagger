@@ -119,7 +119,7 @@
                     { key : 'lane', label : "Account" },
                     { key : 'sender', label : "Agent" },
                     { key : 'createdBy', label : "by" },
-                    { key : 'createdStamp', label : "on" },
+                    { key : 'createdStamp', label : "@" },
                     { key : 'status', label : "Status" },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },

@@ -120,7 +120,7 @@
                     { key : 'message', label : "Message" },
                     { key : 'messageCount', label : "Messages" },
                     { key : 'createdBy', label : "by" },
-                    { key : 'createdStamp', label : "on" },
+                    { key : 'createdStamp', label : "@" },
                     { key : 'status', label : "Status" },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
