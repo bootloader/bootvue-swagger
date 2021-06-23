@@ -26,16 +26,9 @@
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
                       {{row.item.lane}}
                 </template>
-                <template #cell(startSessionStamp)="row">
-                    {{ row.item.startSessionStamp | formatDate}}
-                </template>
-                <template #cell(fistResponseStamp)="row">
-                    {{ row.item.fistResponseStamp | formatDate}} 
-                </template>
-                <template #cell(closeSessionStamp)="row">
-                    {{ row.item.closeSessionStamp | formatDate}}
-                    <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
-                </template>   
+                <template #cell(createdStamp)="row">
+                    {{ row.item.createdStamp | formatDate}}
+                </template>  
                 <template #cell(actions)="row">
                     <span cursor-pointer class="far fa-file-alt" :id="'file-details'+ row.index "></span>
                     <b-popover triggers="hover focus" :target="'file-details'+ row.index ">
