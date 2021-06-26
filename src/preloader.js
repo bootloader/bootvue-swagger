@@ -6,7 +6,9 @@ if(window.CONST && window.CONST.CDN_URL){
 window.CONST = (window.CONST || {});
 window.CONST.APP = "admin";
 var pathname = location.pathname;
-if(pathname.indexOf("/admin") == 0){
+if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname)){
+	window.CONST.APP  = "customer";
+} else if(pathname.indexOf("/admin") == 0){
 	window.CONST.APP  = "admin";
 } else if(pathname.indexOf("/agent") == 0){
 	window.CONST.APP = "agent";

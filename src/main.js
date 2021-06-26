@@ -20,6 +20,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 
 import AppAdmin from './AppAdmin'
 import AppAgent from './AppAgent'
+import AppCustomer from './AppCustomer'
 import AppDev from './AppDev'
 
 axios.defaults.withCredentials = true
@@ -30,7 +31,8 @@ axios.defaults.baseURL = (function() {
 	}
 	return origin
 })();
-console.log("ADMIN====",axios.defaults.baseURL);
+console.log("baseURL====",axios.defaults.baseURL);
+console.log("location.pathname====",location.pathname);
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
@@ -43,7 +45,6 @@ VTooltip.options.defaultClass = 'my-tooltip';
 VTooltip.options.defaultTemplate =
   '<div class="foo" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
 Vue.use(VueToast);
-
 
 ;(function mapper(condition){ //Funtion
 	var result = (typeof condition == "function") ? condition() : condition;
@@ -73,6 +74,15 @@ Vue.use(VueToast);
 	  router : mainrouter.router(),
 	  template: '<AppAgent/>',
 	  components: { AppAgent }
+	});
+})("customer", function(customer){ //Customer App
+   console.log("This is Customer App")
+   new Vue({
+	  el: '#app',
+	  store,service,
+	  router : mainrouter.router(),
+	  template: '<AppCustomer/>',
+	  components: { AppCustomer }
 	});
 })("dev", function(agent){ //Agent App
    new Vue({

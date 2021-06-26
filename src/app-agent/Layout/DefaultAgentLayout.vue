@@ -75,6 +75,7 @@
             MyFlags
         }),
         mounted:function(){
+            console.log("THIS IS AGENT LAYOUT");
             //this.closeLoading(); //method1 will execute at pageload
         },
         methods: {

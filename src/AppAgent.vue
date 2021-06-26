@@ -38,14 +38,14 @@
 
   const default_layout = "default";
 
-  Vue.component('default-layout', () => import('./app-agent/Layout/DefaultLayout.vue'));
+  Vue.component('default-agent-layout', () => import('./app-agent/Layout/DefaultAgentLayout.vue'));
 
   var LOADED_JS = {};
 
   export default {
     computed: {
       layout() {
-        return (this.$route.meta.layout || default_layout) + '-layout';
+        return (this.$route.meta.layout || default_layout) + '-agent-layout';
       }
     },
     data: () => ({

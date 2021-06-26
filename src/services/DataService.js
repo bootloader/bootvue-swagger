@@ -5,7 +5,7 @@ import store from './../store';
 import axios from "axios";
 
 
-axios.interceptors.response.use(
+let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
 	if(response.request.responseURL.endsWith("/auth/login")){
 	  //https://app.mehery.com/admin/auth/login
@@ -53,6 +53,13 @@ const DataService = {
     });
     return response.data;
   },
+  config (argument) {
+    switch (argument) {
+      case "DISABLE_RESPONSE_INTERCEPTOR" :
+        axios.interceptors.response.eject(myRespInterceptor);
+        break;
+    };
+  }
 };
 
 Vue.prototype.$service = DataService;

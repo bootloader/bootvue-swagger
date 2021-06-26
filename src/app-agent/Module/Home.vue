@@ -1,13 +1,9 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon></page-title>
-
         <div class="row">
             <div class="col-md-6 col-xl-6" v-for="graph in graphs">
                 <b-card :title="graph.title" class="main-card mb-3">
-                  <lineeg
-                    :cdata="graph.data"
-                  ></lineeg>
+
                 </b-card>
             </div>
         </div>
