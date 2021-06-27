@@ -82,7 +82,7 @@
             var THAT = this;
             document.querySelector('body').addEventListener('click', function (e) {
                 e.target.matches = e.target.matches || e.target.msMatchesSelector;
-                if (e.target.matches('#botTitleBar')) { 
+                if (e.target.matches('#myChatTitleBar')) { 
                     THAT.postMessage( { event : "CHAT_TOGGLE" });
                 };
             });
