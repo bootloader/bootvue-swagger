@@ -1,9 +1,9 @@
 (function (win) {
 
     var maxHeight = 500;
-    var minHeight = 60;
+    var minHeight = 70;
     var maxWidth = 400;
-    var minWidth = 60;
+    var minWidth = 70;
     var UNIQUEID = '3ix5ju9kqbtr2W';
 
     var myChat = {
@@ -31,10 +31,9 @@
             <style>
                 #myChatDiv {
                     height: ${minHeight+2}px; width: ${minWidth+2}px; 
-                    position: fixed; bottom: 10px; right:10px; z-index: 1000; 
+                    position: fixed; bottom: 0px; right:0px; z-index: 1000; 
                     background-color: transparent; 
                     overflow:hidden;
-                    border-radius: 150px!important;
                     padding:0px!important; 
                     margin:0px!important
                 }

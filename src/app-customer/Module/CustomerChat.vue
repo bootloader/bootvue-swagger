@@ -9,7 +9,7 @@
       :close="closeChat"
       :open="openChat"
       :showEmoji="true"
-      :showFile="true"
+      :showFile="false"
       :showTypingIndicator="showTypingIndicator"
       :showLauncher="true"
       :showCloseButton="true"
@@ -34,11 +34,13 @@
             v-for="atch in message.data.attachments">
               <img v-if="atch.mediaType == 'IMAGE'"  
                   :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https">
-              <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
+              <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
+              <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
+              </a>
               <br/>
-              <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
+
         </p>
-        <ul v-if="message.data.inputs">
+        <ul v-if="message.data.inputs && message.data.inputs.length>0">
             <li>{{message.data.inputs[0].label}}</li>
         </ul>
         <p v-if="message.data.timestamp" class="sc-message--meta" :style="{color: messageColors.color}">
@@ -59,6 +61,7 @@
     import Chat from 'vue-beautiful-chat'
     Vue.use(Chat);
 
+    import { required, email,regex } from 'vee-validate/dist/rules';
     import formatters from './../../services/formatters';
 
 
@@ -79,10 +82,10 @@
             url : formatters.https_thumburl(msg.attachments[0].mediaURL)
           } : null,
           inputs : msg.options ? msg.options.inputs : null,
-          suggestions: (msg.options && msg.options.buttons) ? msg.options.buttons.map(function (button) {
-              return button.label;
-          }) : null
-        } 
+        } ,
+        suggestions: (msg.options && msg.options.buttons) ? msg.options.buttons.map(function (button) {
+            return button.label;
+        }) : null
       };
     }
 
@@ -132,7 +135,7 @@
               text: '#565867'
             }
           }, // specifies the color scheme for the component
-          alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
+          alwaysScrollToBottom: true, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
           messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown),
           csid : null,
           form_input :  null,
@@ -147,19 +150,17 @@
         },
         addMessage : function (message) {
           //message.type = message.data.file ? "file" : message.type; 
-          this.messageList = [ ...this.messageList, message ]
+          this.messageList = [ ...this.messageList, message ].sort(function(a,b) {
+            return a.data.timestamp - b.data.timestamp;
+          })
         },
-        async onMessageWasSentAsync (message) {
+        async onMessageWasSentAsync (message, form) {
           // called when the user sends a message
           message.id=null;
           message.data.type="I"; 
           message.data.timestamp = Date.now();
           this.addMessage(message);
-          var form = {};
-          if(this.form_input){
-            form[this.form_input.name] = message.data.text;
-          }
-          this.form_input = null;
+
           let resp = await this.$service.post("/ext/inbound/web/callback",{
              message : (message.data.text || message.data.emoji || "") , from : this.csid,
              form : form
@@ -170,11 +171,21 @@
           message.data.attachments = _msg.data.attachments;
         },
         onMessageWasSent (message) {
+          var form = {};
+          if(this.form_input){
+              if(this.form_input.type == "EMAIL" && !email.validate(message.data.text)){
+                this.addMessage({ type : "system", data : { text : "Invalid Input" }});
+                return false;
+              }
+              form[this.form_input.name] = message.data.text;
+              this.form_input = null;
+          }
           if(message.data.text || message.data.emoji )
-              this.onMessageWasSentAsync(message);
+              this.onMessageWasSentAsync(message,form);
         },
         onMessageRecvd (message) {
-          this.form_input = message.data.inputs[0];
+          this.form_input = message.data.inputs ? message.data.inputs[0] : null;
+          this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
           this.addMessage(message);
         },
         openChat () {
@@ -303,13 +314,13 @@
 </script>
 <style type="text/css">
   .sc-launcher {
-    right: 0px!important;
-    bottom: 0px!important;
+    right: 5px!important;
+    bottom: 5px!important;
   }
   .sc-launcher .sc-closed-icon, .sc-launcher .sc-open-icon{
       position: fixed;
-      right: 0!important;
-      bottom: 0!important;
+      right: 5px!important;
+      bottom: 5px!important;
   }
   .sc-header {
     min-height: 55px!important;
