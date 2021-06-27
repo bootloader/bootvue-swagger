@@ -233,8 +233,10 @@
                 "lane" : this.input.lane.selected.lane,
                 "channel" : this.input.lane.selected.channel
               },
-              "to": this.input.contacts.split(",").map(function(item) {
+              "to": this.input.contacts.match(/[^\r\n\,]+/g).map(function(item) {
                   return item.trim()
+              }).filter(function (argument) {
+                return !!argument
               })
             });
 
