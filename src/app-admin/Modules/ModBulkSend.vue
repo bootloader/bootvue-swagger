@@ -239,12 +239,10 @@
                 return !!argument
               })
             });
-
-
+            this.$router.push("/app/moderate/bulk-push-jobs");
           }
 
         }
-
 
     }
 </script>

@@ -41,9 +41,10 @@
                     {{ row.item.createdStamp | formatDate}}
                 </template>  
                 <template #cell(status)="row">
-                    {{row.item.status}}
                     <span cursor-pointer class="fa fa-info-circle" :id="'job-stats-details-'+ row.index ">
                     </span>
+                    {{row.item.status}}
+
                     <b-popover triggers="hover focus" :target="'job-stats-details-'+ row.index ">
                       <template #title>
                         <div class="text-align-left" v-for="(count,stat) in row.item.stats"> 
@@ -51,8 +52,6 @@
                         </div>
                       </template>
                     </b-popover>
-                    &nbsp;
-                    <span v-if="row.item.status=='COMPLETED'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteItem(row.item, row.index, $event.target)" ></span>
                 </template>
 
 
