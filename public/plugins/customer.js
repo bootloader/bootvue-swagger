@@ -15,13 +15,13 @@
             options.path = ["https://",options.entity,".mehery.com/postman/plugin/customer/app/chat/"].join("");
             //options.path = ["http://local-kwt.amxremit.com:8082/postman/plugin/customer/app/chat/"].join("");
             //local-kwt.amxremit.com:8083/agent/app/home
-            options.query = ["CDN_URL=http://127.0.0.1:8080"]
+            //options.query = ["CDN_URL=http://127.0.0.1:8080"]
             console.log("init",options);
             var div = document.createElement("div");
             document.getElementsByTagName('body')[0].appendChild(div);
             div.outerHTML = `
             <div id='myChatDiv' class="myChatDivClose">
-                <div id='botTitleBar' 
+                <div id='myChatTitleBar' 
                      style='height: ${minHeight}px; width: ${minWidth}px; position:fixed; cursor: pointer;'></div>
                 <div id='myChatFrame' style='margin: 0px 0px 0px 0px;'>
                     <iframe id="myChatIFrame-${UNIQUEID}"
