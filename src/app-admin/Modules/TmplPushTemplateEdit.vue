@@ -1,54 +1,10 @@
 <template>
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-          @action="onAction" ref="pageTitle" :actionShow="{
-            'ADD_ITEM' : mode=='view',
-            'CANCEL' : mode=='edit'
-          }"></page-title>
+        @action="onAction" ></page-title>
 
-          <b-card v-if="mode=='view'" title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="table.items"
-                     :fields="table.fields"
-                     :tbody-tr-class="rowClass">
-
-                <template #cell(actions)="row">
-                  <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
-                    <font-awesome-icon icon="trash" title="Delete"/>
-                  </b-button>
-                  &nbsp;
-                  <b-button size="sm" cursor-pointer  :id="'template-details-'+ row.item.id " variant="outline-primary">
-                    <span class="fa fa-eye" title="View" /> 
-                  </b-button> 
-                  <b-popover triggers="hover focus" :target="'template-details-'+ row.item.id"
-                      custom-class="message-preview">
-                      <template #default class="message-preview"> 
-                          <div class="message-text">{{row.item.template}}</div>
-                      </template>
-                  </b-popover> 
-                  &nbsp;
-                  <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
-                    <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
-                         <span class="fa fa-edit" title="Edit"/>
-                    </b-button>   
-                  </router-link>
-
-                </template>
-
-            </b-table>
-        </b-card>
-          
-        <b-card v-else-if="mode=='edit' && newItem" 
-              :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Push Template '" size="xl"
-          @hidden="cancelItem">
-                  <ValidationObserver ref="form">
+          <b-card title="" class="main-card mb-4">
+                              <ValidationObserver ref="form">
                             <div class="position-relative form-group row">
                               <ValidationProvider v-slot="v" rules="required" class="col-md-6">
                                     <label for="examplePassword" class="">Category</label>
@@ -97,10 +53,15 @@
                         </div> 
 
                   </ValidationObserver>
+        </b-card>
+          
+
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Push Template '" size="xl"
+        @hidden="cancelReps">
 
                   <template #modal-footer>
                       <div class="text-center form-group">
-                        <button @click="cancelItem"
+                        <button @click="cancelReps"
                           class="btn btn-warning">Cancel</button>
 &nbsp;
                         <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged"
@@ -111,7 +72,7 @@
                       </div>
                   </template>
 
-        </b-card>
+        </b-modal>
 
 
     </div>
@@ -157,12 +118,10 @@
         },
         data: () => ({
             heading: 'Push Templates',
-            subheading: 'are HSM messages which can be  sent to contacts without session.',
+            subheading: 'are prompt suggestion shown to Agent for Quick response.',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
             actions : [{
-              label : "Add Template", icon : "plus", name : "ADD_ITEM",  link : "/app/admins/tmpl/pushtemplate/edit/new"
-            },{
-              label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
+              label : "Add Template", icon : "plus", name : "ADD_ITEM"
             }],
             table : {
               fields: [ 
@@ -177,8 +136,6 @@
             newItem : newItem(),
             sample : sampleJson,
             modelName :  "MODAL_ADD_QUICK_REPLIES",
-            mode : "view",
-            itemId : 'all',
             strategies: [{
               match: /(^|\s)\{\{([a-z0-9+\-\_\.]*)$/,
               search(term, callback) {
@@ -208,36 +165,13 @@
               return this.oldHash !== JSON.stringify(this.newItem);
             }   
         },
-        watch: {
-            '$route.params.mode': function (mode) {
-              this.mode = mode;
-            },
-            '$route.params.itemId': function (itemId) {
-              this.itemId = itemId;
-              this.selectItem();
-            }
-        },
         created : function (argument) {
-          this.mode = this.$route.params.mode;
-          this.itemId = this.$route.params.itemId;
           this.loadItems();
         },
         methods : {
           async loadItems (){
             let resp = await this.$service.get('/api/tmpl/pushtemplate');
             this.table.items = resp.results;
-            this.selectItem();
-          },
-          selectItem : function () {
-            if(this.mode == "edit" && this.itemId != "all"){
-              var itemSelected = null;
-              for(var i in this.table.items){
-                if(this.table.items[i].id == this.itemId ){
-                    itemSelected = this.table.items[i];
-                }
-              }
-              this.editItem(itemSelected);
-            }
           },
           async createItem () {
             let success = await this.$refs.form.validate();
@@ -249,24 +183,22 @@
               this.loadItems ();
             }
           },
-          async deleteItem(item) {
+          async deleteReps(item) {
              await this.$service.delete('/api/tmpl/pushtemplate', item);
           }, 
-          async cancelItem(item) {
+          async cancelReps(item) {
              this.newItem = newItem();
             this.onAction({name : "CANCEL"});
           }, 
-          async editItem(item) {
-              console.log("editItem",item)
+          async editReps(item) {
               this.newItem = newItem();
-              if(item){
-                this.newItem.id = item.id;
-                this.newItem.category = item.category;
-                this.newItem.title = item.title;
-                this.newItem.name = item.name;
-                this.newItem.message = item.message;
-                this.newItem.template = item.template;
-              }
+              this.newItem.id = item.id;
+              this.newItem.category = item.category;
+              this.newItem.title = item.title;
+              this.newItem.name = item.name;
+              this.newItem.message = item.message;
+              this.newItem.template = item.template;
+
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
@@ -278,19 +210,16 @@
             switch(argument.name){
               case "ADD_ITEM" :
                 this.oldHash = JSON.stringify(this.newItem);
-                //this.$bvModal.show(this.modelName)
-                this.mode = "edit";
+                this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
               case "EDIT_ITEM" :
-                this.oldHash = JSON.stringify(this.newItem);
-                this.mode = "edit";
-                //this.$bvModal.show(this.modelName)
+              this.oldHash = JSON.stringify(this.newItem);
+                this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
               case "CANCEL" :
-                this.mode = "view";
-                //this.$bvModal.hide(this.modelName)
+                this.$bvModal.hide(this.modelName)
                 break;
               default:
                 console.log("NoMapping",argument) 
@@ -304,7 +233,3 @@
 
     }
 </script>
-<style lang="scss">
-  @import "./../../assets/demo-ui/_chat-preview.scss";
-
-</style>

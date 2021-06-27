@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <span v-for="action in actions" v-if="!action.hidden" >
+                <span v-for="action in actions" v-if="!action.hidden && actionShow[action.name]!==false" >
                     <router-link v-if="action.link" tag="button" :to="action.link"
                         type="button" class="btn-shadow d-inline-flex align-items-center btn"
                         v-bind:class="{
@@ -147,6 +147,14 @@
             },
             clickAction : function (argument) {
                 this.$emit('action',argument);
+            },
+            action : function (name,prop,value) {
+                for(var i in this.actions){
+                    if(this.actions[i].name == name){
+                        this.actions[i][prop] = value;
+                        break;
+                    }
+                }
             }
         },
 
@@ -157,6 +165,12 @@
             actions : Array,
             daterange : {
                 type: Object
+            },
+            actionShow : {
+                type: Object,
+                default: function () {
+                    return { message: 'hello' }
+                }
             }
         },
 

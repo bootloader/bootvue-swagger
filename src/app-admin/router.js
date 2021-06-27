@@ -36,12 +36,12 @@ export default AppRouter.route({
 //Bulk Messaging
         {
             path: '/app/moderate/bulk-push-jobs',
-            name: 'ModImportChatLogs',
+            name: 'ModBulkJobs',
             component: () => import('./Modules/ModBulkJobs.vue'),
         },
         {
             path: '/app/moderate/bulk-push-new',
-            name: 'ModImportChatLogs',
+            name: 'ModBulkSend',
             component: () => import('./Modules/ModBulkSend.vue'),
         },
 
@@ -94,7 +94,7 @@ export default AppRouter.route({
             component: () => import('./Modules/TmplQuickMedia.vue'),    
         },
         {
-            path : "/app/admins/tmpl/pushtemplate",
+            path : "/app/admins/tmpl/pushtemplate/:mode/:itemId",
             name: 'pushtemplate',
             component: () => import('./Modules/TmplPushTemplate.vue'),    
         },
@@ -102,7 +102,7 @@ export default AppRouter.route({
 
         {
             path : "/app/setup/agent-panel",
-            name: 'quickmedia',
+            name: 'SetUpAgentPanel',
             component: () => import('./Modules/SetUpAgentPanel.vue'),    
         },
 

@@ -165,7 +165,7 @@
                             },
                            {   
                                 enabled : true,
-                                href: '/app/admins/tmpl/pushtemplate',
+                                href: '/app/admins/tmpl/pushtemplate/view/all',
                                 title: 'Push Templates',
                             },
                             {
