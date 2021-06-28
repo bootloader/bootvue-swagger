@@ -46,23 +46,32 @@
         </b-card>
           
         <b-card v-else-if="mode=='edit' && newItem" 
-              :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Push Template '" size="xl"
+              :id="modelName" size="xl"
           @hidden="cancelItem">
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group row">
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-6">
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
                                     <label for="examplePassword" class="">Category</label>
                                     <input name="category" id="examplePassword"
                                      placeholder="greeting" type="text"
                                       class="form-control" v-model="newItem.category">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-6">
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
                                     <label for="examplePassword" class="">Name</label>
                                     <input name="agent_name" id="examplePassword"
                                      placeholder="Hello User" type="text"
                                       class="form-control" v-model="newItem.name" @change="nameOnChange">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
+                                    <label for="examplePassword" class="">Message Category</label>
+                                    <ModalSelector class="form-control"
+                                      :options="input.messageCategories.values"
+                                      v-model="input.messageCategories.selected"
+                                      placeholder="Select Account">
+                                      
+                                    </ModalSelector>
                               </ValidationProvider>
                             </div>
 
@@ -77,41 +86,48 @@
                             </div>
 
                            <div class="row">
-                           <div class="position-relative form-group col-md-6">
+                           <div class="position-relative form-group col-md-4">
                                <ValidationProvider v-slot="v" >
                                     <label for="examplePassword" class="">Template</label>
                                     <text-complete v-model="newItem.template" 
                                       :placeholder="'eg: Hello {{contact.name}}'"
-                                      :rows="12"
-                                      areaClass="form-control" :strategies="strategies"></text-complete>
+                                      :rows="19"
+                                      areaClass="form-control template-message-editor" :strategies="strategies"></text-complete>
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                             </div>
-                            <div class="position-relative form-group col-md-6">
+                            <div class="position-relative form-group col-md-4">
+                                  <label for="examplePassword" class="">Sample Data</label>
+                                  <v-jsoneditor v-model="newItem.data" :show-btns="false" :expandedOnStart="true"
+                                    :options="{
+                                      'mode' : 'code', 'modes' : ['code'],
+                                      'navigationBar' : false,'mainMenuBar' : false
+                                    }" height="400px">
+                                  </v-jsoneditor>
+                            </div>
+                            <div class="position-relative form-group col-md-4">
                                 <label for="examplePassword" class="">Template Preview</label>
-                                <textarea name="template" id="examplePassword" rows=10 readonly="readonly" 
-                                  type="text"
-                                  class="form-control" v-model="templatePreview">
-                                </textarea>
+                                <TemplatePreview :template="newItem" style="height: 400px;"/>
                             </div>
                         </div> 
 
                   </ValidationObserver>
 
-                  <template #modal-footer>
-                      <div class="text-center form-group">
-                        <button @click="cancelItem"
-                          class="btn btn-warning">Cancel</button>
+                  <div class="text-center form-group">
+                    <router-link  @click="cancelItem"  tag="button"  :to="'/app/admins/tmpl/pushtemplate/view/all'"
+                      class="btn btn-warning">Cancel</router-link >
 &nbsp;
-                        <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged"
-                          class="btn btn-primary">Update</button>
+                    <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged" 
+                      class="btn btn-primary">Update</button>
 &nbsp;
-                        <button v-if="!newItem.id"  @click="createItem" :disabled="!isChanged"
-                          class="btn btn-primary">Create</button>
-                      </div>
-                  </template>
+                    <button v-if="!newItem.id"  @click="createItem" :disabled="!isChanged" 
+                      class="btn btn-primary">Create</button>
+                  </div>
 
         </b-card>
+
+
+
 
 
     </div>
@@ -120,7 +136,9 @@
 <script>
 
     import PageTitle from "../Layout/PageTitleAction.vue";
-
+    import TemplatePreview from "./../../Layout/Components/TemplatePreview.vue";
+    import ModalSelector from "./../../Layout/Components/ModalSelector.vue";
+    
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUsersSlash,faUsers,faTrash,faEye
@@ -129,7 +147,10 @@
     import mustache from 'mustache';
     import formatters from './../../services/formatters';
 
+    import VJsoneditor from 'v-jsoneditor'
     import TextComplete from 'v-textcomplete'
+    import vSelect from 'vue-select'
+    import 'vue-select/dist/vue-select.css';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -139,8 +160,10 @@
       return {
               "category": "",
               "title": "",
-              "name" : undefined,
-              "template" : ""          };
+              "name" : undefined, 
+              "template" : "" ,
+              options : {}, data : {}, meta : {}       
+            };
     }
 
     var sampleJson = {
@@ -153,7 +176,7 @@
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TextComplete
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TextComplete,TemplatePreview,VJsoneditor,vSelect,ModalSelector
         },
         data: () => ({
             heading: 'Push Templates',
@@ -164,6 +187,34 @@
             },{
               label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
             }],
+            input : {
+                messageCategories : {
+                  values : [
+                    { key : "account_update", 
+                      label : "Account Update", desc : "Let customers know about updates or changes to their account.", icon : "fa fa-cog" },
+                    { key : "alert_update",
+                      label : "Alert Update", desc : "Send important updates or news to customers.", icon : "fa fa-bell" },
+                    { key : "appointment_update",
+                      label : "Appointment Update", desc : "Send confirmations, reminders or other updates to customers about their appointments.", icon : "fa fa-calendar" },
+                    {  key : "auto_reply",
+                      label : "Auto Reply", desc : "Send auto-replies to customers when your business isn't open", icon : "fa fa-reply" },
+                    {  key : "issue_resolution",
+                      label : "Issue Resolution", desc : "Respond to questions, concerns or feedback from customers about your business.", icon : "far fa-meh" },
+                    { key : "payment_update",
+                      label : "Payment Update", desc : "Send a message to customers about their payment.", icon : "fa fa-credit-card" },
+                    { key : "personal_finance_update",
+                      label : "Personal Finance Update", desc : "Send a message to customers about their personal finances.", icon : "fa fa-dollar-sign " },
+                    { label : "Reservation Update", desc : "Send confirmations, reminders or other updates to customers about their reservations.", icon : "far fa-calendar" },
+                    { key : "shipping_update",
+                      label : "Shipping Update", desc : "Send shipping updates to customers about their orders.", icon : "fa fa-truck" },
+                    { key : "ticket_finance_update",
+                      label : "Ticket Finance Update", desc : "Send ticketing information or updates to customers.", icon : "fa fa-ticket" },
+                    { key : "transportation_update",
+                      label : "Transportation Update", desc : "Send transportation information or updates to customers.", icon : "fa fa-plane" },
+                  ],
+                  selected : "shipping_update",
+                },
+            },
             table : {
               fields: [ 
                         { key : 'category', label : "Category" }, 
@@ -199,7 +250,9 @@
               if(!this.newItem.template)
                   return this.newItem.template;
               try {
-                  return mustache.render(this.newItem.template, this.sample);
+                  return mustache.render(this.newItem.template, Object.assign(sampleJson,{
+                    data : this.newItem.data
+                  }));
               } catch (e){
                   return this.newItem.template
               }
@@ -306,5 +359,7 @@
 </script>
 <style lang="scss">
   @import "./../../assets/demo-ui/_chat-preview.scss";
-
+  textarea.template-message-editor {
+     height: 400px;
+  }
 </style>

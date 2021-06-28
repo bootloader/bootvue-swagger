@@ -394,14 +394,8 @@
             },
             getWindowWidth() {
                 const el = document.body;
-
                 this.windowWidth = document.documentElement.clientWidth;
-
-                if (this.windowWidth < '1350' || true) {
-                    el.classList.add('closed-sidebar', 'closed-sidebar-md');
-                } else {
-                    el.classList.remove('closed-sidebar', 'closed-sidebar-md');
-                }
+                el.classList.add('closed-sidebar', 'closed-sidebar-md');
             },
         },
         mounted() {

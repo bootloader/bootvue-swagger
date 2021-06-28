@@ -100,7 +100,6 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import formatters from './../../services/formatters';
     import PageTitle from "../Layout/PageTitleAction.vue";
-    import ModImportChatPreview from './ModImportChatPreview';
     import mustache from 'mustache';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
@@ -133,7 +132,7 @@
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,ModImportChatPreview
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
