@@ -30,6 +30,16 @@ const DataService = {
   async dispatch (a,b,c) {
   	return store.dispatch(a,b,c);
   },
+
+  async getX(url,query) {
+    let response = await axios.get(url,{ params : query });
+    if(url.indexOf('/api/') == 0){
+      console.log("getX",response.data)
+      store.dispatch('UpdateApiStore',{ path : url, data : response.data.results })
+    }   
+    return response.data;
+  },
+
   async get(url,query) {
     let response = await axios.get(url,{ params : query });
     return response.data;

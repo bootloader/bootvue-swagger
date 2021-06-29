@@ -50,40 +50,93 @@
           @hidden="cancelItem">
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group row">
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
+                              
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
                                     <label for="examplePassword" class="">Category</label>
                                     <input name="category" id="examplePassword"
                                      placeholder="greeting" type="text"
                                       class="form-control" v-model="newItem.category">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
-                                    <label for="examplePassword" class="">Name</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Hello User" type="text"
-                                      class="form-control" v-model="newItem.name" @change="nameOnChange">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-4">
-                                    <label for="examplePassword" class="">Message Category</label>
+
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
+                                    <label for="examplePassword" class="">Message Type</label>
                                     <ModalSelector class="form-control"
-                                      :options="input.messageCategories.values"
-                                      v-model="input.messageCategories.selected"
+                                      :options="message_types"
+                                      v-model="input.message_types.selected"
                                       placeholder="Select Account">
                                       
                                     </ModalSelector>
                               </ValidationProvider>
-                            </div>
 
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Title</label>
+                               <ValidationProvider v-slot="v" rules="required" class="col-md-6">
+                                    <label for="examplePassword" class="">Description</label>
                                     <input name="agent_name" id="examplePassword"
                                      placeholder="Hello User" type="text"
-                                      class="form-control" v-model="newItem.title">
+                                      class="form-control" v-model="newItem.desc">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
+
                             </div>
+
+                            <div class="position-relative form-group row">
+
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
+                                    <label for="examplePassword" class="">Name</label>
+                                    <input name="agent_name" id="examplePassword"
+                                     placeholder="Hello User" type="text"
+                                      class="form-control" v-model="newItem.name" readonly>
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
+                                    <label for="examplePassword" class="">Template Code</label>
+                                    <input name="agent_name" id="examplePassword"
+                                     placeholder="Hello User" type="text"
+                                      class="form-control" v-model="newItem.code" @change="codeOnChange">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-2">
+                                    <label for="examplePassword" class="">Contact Type</label>
+                                    <ModalSelector class="form-control"
+                                      :emptyLabel="'ALL'"
+                                      :options="contactTypes"
+                                      v-model="newItem.contactType"
+                                      placeholder="Select Account">
+                                      
+                                    </ModalSelector>
+                              </ValidationProvider>
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
+                                    <label for="examplePassword" class="">Message Language</label>
+                                    <ModalSelector class="form-control"
+                                      :emptyLabel="'ALL'"
+                                      :options="langs"
+                                      v-model="newItem.lang"
+                                      placeholder="Select Language">
+                                      
+                                    </ModalSelector>
+                              </ValidationProvider>
+
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-1">
+                                    <label for="examplePassword" class="">Content Type</label>
+                                    <ModalSelector class="form-control"
+                                      :options="message_content_types"
+                                      v-model="input.message_content_types.selected"
+                                      placeholder="Select Conent Type">
+                                      
+                                    </ModalSelector>
+                              </ValidationProvider>
+
+                            </div>
+
+
+                            <div class="position-relative form-group row">
+
+
+  
+                            </div>
+
+
 
                            <div class="row">
                            <div class="position-relative form-group col-md-4">
@@ -162,8 +215,9 @@
               "title": "",
               "name" : undefined, 
               "template" : "" ,
+              "code" : "" ,"contactType" : "", lang : 'en_US',
               options : {}, data : {}, meta : {}       
-            };
+      };
     }
 
     var sampleJson = {
@@ -188,32 +242,15 @@
               label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
             }],
             input : {
-                messageCategories : {
-                  values : [
-                    { key : "account_update", 
-                      label : "Account Update", desc : "Let customers know about updates or changes to their account.", icon : "fa fa-cog" },
-                    { key : "alert_update",
-                      label : "Alert Update", desc : "Send important updates or news to customers.", icon : "fa fa-bell" },
-                    { key : "appointment_update",
-                      label : "Appointment Update", desc : "Send confirmations, reminders or other updates to customers about their appointments.", icon : "fa fa-calendar" },
-                    {  key : "auto_reply",
-                      label : "Auto Reply", desc : "Send auto-replies to customers when your business isn't open", icon : "fa fa-reply" },
-                    {  key : "issue_resolution",
-                      label : "Issue Resolution", desc : "Respond to questions, concerns or feedback from customers about your business.", icon : "far fa-meh" },
-                    { key : "payment_update",
-                      label : "Payment Update", desc : "Send a message to customers about their payment.", icon : "fa fa-credit-card" },
-                    { key : "personal_finance_update",
-                      label : "Personal Finance Update", desc : "Send a message to customers about their personal finances.", icon : "fa fa-dollar-sign " },
-                    { label : "Reservation Update", desc : "Send confirmations, reminders or other updates to customers about their reservations.", icon : "far fa-calendar" },
-                    { key : "shipping_update",
-                      label : "Shipping Update", desc : "Send shipping updates to customers about their orders.", icon : "fa fa-truck" },
-                    { key : "ticket_finance_update",
-                      label : "Ticket Finance Update", desc : "Send ticketing information or updates to customers.", icon : "fa fa-ticket" },
-                    { key : "transportation_update",
-                      label : "Transportation Update", desc : "Send transportation information or updates to customers.", icon : "fa fa-plane" },
-                  ],
-                  selected : "shipping_update",
+                message_types : {
+                  values : [], selected : "shipping_update",
                 },
+                message_content_types : {
+                  values : [], selected : "TEXT",
+                },
+                langs : {
+                  values : [], selected : "en_US",
+                }
             },
             table : {
               fields: [ 
@@ -259,6 +296,18 @@
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
+            },
+            contactTypes : function () {
+              return ['','WHATSAPP','TELEGRAM','TWITTER','FACEBOOK','WEBSITE']
+            },
+            langs : function () {
+              return this.$store.getters.StateApi.MetaLangs
+            },
+            message_types : function () {
+              return this.$store.getters.StateApi.MetaMessageTypes
+            },
+            message_content_types : function () {
+              return this.$store.getters.StateApi.MetaMessageContentTypes
             }   
         },
         watch: {
@@ -274,8 +323,14 @@
           this.mode = this.$route.params.mode;
           this.itemId = this.$route.params.itemId;
           this.loadItems();
+          this.loadOptions();
         },
         methods : {
+          async loadOptions (argument) {
+              this.$service.getX('/api/meta/message_types');
+              this.$service.getX('/api/meta/message_content_types');
+              this.$service.getX('/api/meta/langs');
+          },
           async loadItems (){
             let resp = await this.$service.get('/api/tmpl/pushtemplate');
             this.table.items = resp.results;
@@ -349,8 +404,11 @@
                 console.log("NoMapping",argument) 
             }
           },
-          nameOnChange : function (argument) {
-            this.newItem.name = this.newItem.name.toUpperCase();
+          codeOnChange : function (argument) {
+            this.newItem.code = this.newItem.code.replace(/\s/g,"_").replace(/\_\_+/g, '_').toUpperCase();
+            this.newItem.name = [this.newItem.code,this.newItem.contactType,this.newItem.lang].filter(function (argument) {
+                return !!argument;
+            }).join("_");
           }
         }
 

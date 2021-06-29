@@ -1,10 +1,10 @@
 <template>
     <span class="modal-selector">
-        <button class="selected-option-button" v-b-modal.modal-selector-modal>
+        <button class="selected-option-button" @click="showModal">
             <slot name="selected-option">
-              <span v-if="selectedOption">
+              <span v-if="selectedOption!==undefined && selectedOption!==null">
                     <i v-if="selectedOption.icon" v-bind:class="selectedOption.icon"></i>
-                      {{selectedOption.label}}
+                      {{getEmptyLabel(getOptionLabel(selectedOption),emptyLabel)}}
               </span>  
               <span v-else-if="placeholder">
                 {{placeholder}}
@@ -12,7 +12,7 @@
             </slot>
         </button>  
         <input type="hidden" v-bind:value="value" v-on:input="$emit('input', $event.target.value)" >
-        <b-modal id="modal-selector-modal" ref="modal-selector-modal" title="Select Message Category"
+        <b-modal :id="'modal-selector-modal-'+selectorId" ref="modal-selector-modal" title="Select Message Category"
               hide-header
               hide-footer
               hide-backdrop
@@ -27,15 +27,13 @@
                 <button class="btn">
                   <slot name="option">
                     <i v-if="option.icon" v-bind:class="option.icon"></i>
-                    {{option.label}}
+                    {{getEmptyLabel(getOptionLabel(option),emptyLabel)}}
                   </slot>
                 </button>
                 
               </span>
           </div>
 
-
-         ----|  {{selectedIndex}} |-----
         </b-modal>
 
     </span>
@@ -43,10 +41,7 @@
 
 <script>
 
-
-
-
-    var getOptionKey =  function (option) {
+    var getOptionKey =  function (option,defKey) {
        if(!option ){
         return option;
        }
@@ -54,6 +49,8 @@
           return option;
         } else  if (typeof option === 'object' && (option.id || option.key)) {
           return (option.id || option.key);
+        } else if(defKey){
+          return defKey;
         } else {
           try {
             return JSON.stringify(option)
@@ -69,12 +66,38 @@
         };
     };
 
+    var getOptionLabel =  function (option,emptyLabel) {
+       if(!option ){
+        return option;
+       }
+       if (typeof option !== 'object') {
+          return option;
+        } else  if (typeof option === 'object' && (option.label!==undefined)) {
+          return (option.label);
+        } else if(emptyLabel){
+          return emptyLabel;
+        } else {
+          return getOptionKey(option,option.toString())
+        };
+    };
+
+    var getEmptyLabel =  function (value,emptyLabel) {
+      //console.log("getEmptyLabel",value,emptyLabel)
+      if(value === "" || value === null){
+        return emptyLabel;
+      } else return value;
+    }
+
+    var counter = 0;
+
     export default {
         components: {
 
         },
         data: () => ({
-            selectedIndex : null
+            selectedIndex : null,
+            selectorId : ++counter,
+            getOptionLabel,getEmptyLabel
         }),
         computed : {
           selectedOption : function () {
@@ -83,15 +106,20 @@
                 return this.options[i];
               }
             }
-          }
+          },
         },
         methods : {
           valueOnSelect : function (option) {
-            this.$emit('input', option);
-            this.$bvModal.hide('modal-selector-modal')
+            if(typeof this.value === 'string')
+              this.$emit('input', getOptionKey(option));
+            else this.$emit('input', option);
+            this.$bvModal.hide('modal-selector-modal-'+this.selectorId)
           },
           isSelected : function (option) {
              return (getOptionKey(option) == getOptionKey(this.value));
+          },
+          showModal : function (argument) {
+             this.$bvModal.show('modal-selector-modal-'+this.selectorId)
           }
         },
         created : function (argument) {
@@ -99,6 +127,9 @@
         },
         props: {
             placeholder : String,
+            emptyLabel : {
+              default :  null
+            },
             value : {
               default : ""
             },
