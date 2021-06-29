@@ -65,8 +65,8 @@
                                       :options="message_types"
                                       v-model="newItem.meta.messageType"
                                       placeholder="Select Account">
-                                      
                                     </ModalSelector>
+                                    <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
 
                                <ValidationProvider v-slot="v" rules="required" class="col-md-6">
@@ -95,8 +95,8 @@
                                       :options="contactTypes"
                                       v-model="newItem.contactType"
                                       placeholder="Select Account">
-                                      
                                     </ModalSelector>
+                                    <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                               <ValidationProvider v-slot="v"  class="col-md-3">
                                     <label for="examplePassword" class="">Message Language</label>
@@ -105,8 +105,8 @@
                                       :options="langs"
                                       v-model="newItem.lang"
                                       placeholder="Select Language">
-                                      
                                     </ModalSelector>
+                                    <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
 
                               <ValidationProvider v-slot="v" rules="required" class="col-md-3">
@@ -115,8 +115,8 @@
                                       :options="message_content_types"
                                       v-model="newItem.meta.contentType"
                                       placeholder="Select Content Type">
-                                      
                                     </ModalSelector>
+                                    <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
 
                             </div>
@@ -361,12 +361,12 @@
               console.log("editItem",item)
               this.newItem = newItem();
               if(item){
-                this.newItem.id = item.id;
-                this.newItem.category = item.category;
-                this.newItem.title = item.title;
-                this.newItem.name = item.name;
-                this.newItem.message = item.message;
-                this.newItem.template = item.template;
+                var itemCopy = JSON.parse(JSON.stringify(item));
+                for(var key in itemCopy){
+                  this.newItem[key] = itemCopy[key];
+                }
+                this.newItem.meta = this.newItem.meta || {};
+                this.newItem.data = this.newItem.data || {};
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);

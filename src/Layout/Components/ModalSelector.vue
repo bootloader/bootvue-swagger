@@ -41,19 +41,27 @@
 
 <script>
 
-    var getOptionKey =  function (option,defKey) {
-       if(!option ){
-        return option;
-       }
-       if (typeof option !== 'object') {
+    var getOptionValue = function (option,defKey) {
+        if(!option ){
+          return option;
+        }
+        if (typeof option !== 'object') {
           return option;
         } else  if (typeof option === 'object' && (option.id || option.key)) {
           return (option.id || option.key);
         } else if(defKey){
           return defKey;
+        }
+        return option;
+    };
+
+    var getOptionKey =  function (option,defKey) {
+        var optionValue = getOptionValue(option,defKey);
+        if (typeof optionValue !== 'object') {
+          return optionValue;
         } else {
           try {
-            return JSON.stringify(option)
+            return JSON.stringify(optionValue)
           } catch(e) {
             return console.warn(
               `[vue-select warn]: Could not stringify option ` +
@@ -112,7 +120,7 @@
           valueOnSelect : function (option) {
             if(typeof this.value === 'string')
               this.$emit('input', getOptionKey(option));
-            else this.$emit('input', option);
+            else this.$emit('input', getOptionValue(option));
             this.$bvModal.hide('modal-selector-modal-'+this.selectorId)
           },
           isSelected : function (option) {
