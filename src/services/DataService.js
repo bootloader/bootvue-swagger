@@ -7,21 +7,30 @@ import axios from "axios";
 
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
-	if(response.request.responseURL.endsWith("/auth/login")){
-	  //https://app.mehery.com/admin/auth/login
-	  console.log("===>",response.request.responseURL)
-	  window.location.href = response.request.responseURL;
-	}
+  	if(response.request.responseURL.endsWith("/auth/login")){
+  	  //https://app.mehery.com/admin/auth/login
+  	  console.log("===>",response.request.responseURL)
+  	  window.location.href = response.request.responseURL;
+  	}
 
-   	if(response.data && response.data.message){
-	    //Vue.toaster.success(response.data.message);
-	     console.log("===>",response.data.message)
-	     if(Vue.$toast && Vue.$toast.success)
-	        Vue.$toast.success(response.data.message)
-	}
+    if(response.data && response.data.message){
+      //Vue.toaster.success(response.data.message);
+      console.log("===>",response.data.message)
+      if(Vue.$toast && Vue.$toast.success)
+        Vue.$toast.success(response.data.message)
+    }
+    //console.log("myRespInterceptor:success")
     return response;
   }, 
-  function(error) {
+  function(error,s) {
+    //console.log("myRespInterceptor:error",error.response,s);
+    let response  = error.response;
+    if(response.data && response.data.message){
+      console.log("===>",response.data.message)
+      if(Vue.$toast && Vue.$toast.error)
+        Vue.$toast.error(response.data.message)
+    }
+
     return Promise.reject(error);
   }
 );
