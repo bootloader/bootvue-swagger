@@ -63,7 +63,7 @@
                                     <label for="examplePassword" class="">Message Type</label>
                                     <ModalSelector class="form-control"
                                       :options="message_types"
-                                      v-model="input.message_types.selected"
+                                      v-model="newItem.meta.messageType"
                                       placeholder="Select Account">
                                       
                                     </ModalSelector>
@@ -82,21 +82,13 @@
                             <div class="position-relative form-group row">
 
                               <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Name</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Hello User" type="text"
-                                      class="form-control" v-model="newItem.name" readonly>
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
                                     <label for="examplePassword" class="">Template Code</label>
                                     <input name="agent_name" id="examplePassword"
                                      placeholder="Hello User" type="text"
                                       class="form-control" v-model="newItem.code" @change="codeOnChange">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-2">
+                              <ValidationProvider v-slot="v" class="col-md-3">
                                     <label for="examplePassword" class="">Contact Type</label>
                                     <ModalSelector class="form-control"
                                       :emptyLabel="'ALL'"
@@ -106,7 +98,7 @@
                                       
                                     </ModalSelector>
                               </ValidationProvider>
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
+                              <ValidationProvider v-slot="v"  class="col-md-3">
                                     <label for="examplePassword" class="">Message Language</label>
                                     <ModalSelector class="form-control"
                                       :emptyLabel="'ALL'"
@@ -117,12 +109,12 @@
                                     </ModalSelector>
                               </ValidationProvider>
 
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-1">
+                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
                                     <label for="examplePassword" class="">Content Type</label>
                                     <ModalSelector class="form-control"
                                       :options="message_content_types"
-                                      v-model="input.message_content_types.selected"
-                                      placeholder="Select Conent Type">
+                                      v-model="newItem.meta.contentType"
+                                      placeholder="Select Content Type">
                                       
                                     </ModalSelector>
                               </ValidationProvider>
@@ -141,7 +133,7 @@
                            <div class="row">
                            <div class="position-relative form-group col-md-4">
                                <ValidationProvider v-slot="v" >
-                                    <label for="examplePassword" class="">Template</label>
+                                    <label for="examplePassword" class="">Template : <em>{{newItem.name}}</em></label>
                                     <text-complete v-model="newItem.template" 
                                       :placeholder="'eg: Hello {{contact.name}}'"
                                       :rows="19"
@@ -216,7 +208,7 @@
               "name" : undefined, 
               "template" : "" ,
               "code" : "" ,"contactType" : "", lang : 'en_US',
-              options : {}, data : {}, meta : {}       
+              options : {}, data : {}, meta : { messageType : null,contentType : null}       
       };
     }
 
@@ -349,6 +341,7 @@
           },
           async createItem () {
             let success = await this.$refs.form.validate();
+            console.log("validSuccess",success)
             if(success === true){
               await this.$service.post('/api/tmpl/pushtemplate', this.newItem);
               this.newItem = newItem();
