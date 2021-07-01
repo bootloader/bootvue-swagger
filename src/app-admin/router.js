@@ -44,6 +44,11 @@ export default AppRouter.route({
             name: 'ModBulkSend',
             component: () => import('./Modules/ModBulkSend.vue'),
         },
+        {
+            path: '/app/moderate/bulk-push-msgs/:bulkSessionId',
+            name: 'ModBulkMessages',
+            component: () => import('./Modules/ModBulkMessages.vue'),
+        },
 
 //Agent Screens
         {

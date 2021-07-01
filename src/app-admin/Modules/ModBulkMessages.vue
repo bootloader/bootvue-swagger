@@ -1,8 +1,7 @@
 <template>
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon
-        :actions=actions
-        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate" ></page-title>
+        :actions=actions ></page-title>
 
 
        <b-table id="agent-session-list" :striped=true
@@ -13,18 +12,25 @@
                      :dark=false
                      :fixed=false
                      :foot-clone=false
-                     :per-page="sessions.perPage"
-                     :current-page="sessions.currentPage"
-                     :items="sessions.items"
-                     :fields="sessions.fields">
+                     :per-page="table.perPage"
+                     :current-page="table.currentPage"
+                     :items="table.items"
+                     :fields="table.fields">
                 <template #cell(assignedToAgent)="row">
                     <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
                     <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
                     &nbsp;{{ row.item.assignedToAgent}}
                 </template>
+                <template #cell(account)="row">
+                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
+                      {{session.lane}}
+                </template>
                 <template #cell(contact)="row">
-                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
-                      {{row.item.lane}}
+                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
+                      {{row.item.contact.phone}}
+                </template>
+                <template #cell(createdBy)="row">
+                      {{session.createdBy}}
                 </template>
                 <template #cell(template)="row">
                     <span cursor-pointer class="fa fa-comment" :id="'template-details-'+ row.index ">
@@ -32,40 +38,46 @@
                     <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
                       custom-class="message-preview">
                       <template #default class="message-preview"> 
-                          <div class="message-text">{{row.item.message}}</div>
+                          <div class="message-text">{{row.item.text}}</div>
                       </template>
                     </b-popover>
                 </template>
-                <template #cell(createdStamp)="row">
-                    {{ row.item.createdStamp | formatDate}}
-                </template>  
-                <template #cell(message)="row">
-                    {{ row.item.messageCount}}&nbsp;<router-link v-if="row.item.bulkSessionId" tag="a" 
-                      :to="'/app/moderate/bulk-push-msgs/'+row.item.bulkSessionId">
-                      view
-                    </router-link>
+                <template #cell(initiated)="row">
+                    {{ row.item.stamps.INIT | formatDate}}
                 </template>  
                 <template #cell(status)="row">
-                    <span cursor-pointer class="fa fa-info-circle" :id="'job-stats-details-'+ row.index ">
-                    </span>
-                    {{row.item.status}}
+                    <div cursor-pointer class="fa fa-info-circle" :id="'job-status-details-'+ row.index ">
+                    </div>
+                      {{row.item.status}}
+                    <div v-if="row.item.logs" style="line-height: 21px;" 
+                      cursor-pointer class="fa fa-exclamation-triangle float-right" :id="'job-logs-details-'+ row.index ">
+                    </div> 
+                    
 
-                    <b-popover triggers="hover focus" :target="'job-stats-details-'+ row.index ">
+                    <b-popover triggers="hover focus" :target="'job-status-details-'+ row.index ">
                       <template #title>
-                        <div class="text-align-left" v-for="(count,stat) in row.item.stats"> 
-                          {{stat}} : {{count}}
+                        <div class="text-align-left row" v-for="(stamp,status) in row.item.stamps" style="width: 400px"> 
+                         <small class="col-2"> {{status}} </small> <small class="col-10">:&nbsp;&nbsp;{{stamp | formatDate}}</small>
                         </div>
                       </template>
                     </b-popover>
-                </template>
 
+                    <b-popover v-if="row.item.logs" triggers="hover focus" :target="'job-logs-details-'+ row.index ">
+                      <template #title>
+                        <small class="text-align-left" v-for="(log,status) in row.item.logs"> 
+                         {{log}}
+                        </small>
+                      </template>
+                    </b-popover>
+
+                </template>
 
         </b-table>
 
           <b-pagination
-              v-model="sessions.currentPage"
-              :total-rows="sessions.rows"
-              :per-page="sessions.perPage"
+              v-model="table.currentPage"
+              :total-rows="table.rows"
+              :per-page="table.perPage"
               aria-controls="agent-session-list"
             ></b-pagination>
         
@@ -119,7 +131,7 @@
             subheading: 'Select date range for report',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-mail-bulk',
             actions : [{
-              label : "Send New", name : "BULK_PUSH_NEW", link : "/app/moderate/bulk-push-new",
+              label : "View Past Jobs", name : "BULK_PUSH_JOBS", link : "/app/moderate/bulk-push-jobs",
               type : "link"
             }],
             input : {
@@ -129,15 +141,15 @@
                     endDate : null,
                 }
             },
-            sessions : {
+            table : {
                 fields: [ 
-                    { key : 'contact', label : "Account" },
-                    { key : 'bulkSessionId', label : "SessionId" },
+                    { key : 'account', label : "Account" },
+                    { key : 'contact', label : "Contact" },
+                    { key : 'sessionId', label : "SessionId" },
                     { key : 'template', label : "Template" },
                     { key : 'createdBy', label : "by" },
-                    { key : 'createdStamp', label : "@" },
+                    { key : 'initiated', label : "@" },
                     { key : 'status', label : "Status" },
-                    { key : 'message', label : "Messages" },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
                     //{ key : 'closeSessionStamp', label : "Closed@" },
@@ -156,20 +168,14 @@
         },
         methods: {
           async getItems (){
-            var resp = await this.$service.get("/api/message/bulk/push/logs",{
+            var resp = await this.$service.submit("/api/message/bulk/push/messages",{
                 "contactType": "WHATSAPP",
-                "startStamp": this.input.daterange.startDate,
-                "endStamp": this.input.daterange.endDate
+                "bulkSessionId" : this.$route.params.bulkSessionId
             });
-            this.sessions.items = resp.results;
-            this.sessions.rows = this.sessions.items.length;
-            console.log("sessions",resp,this.sessions )
-          },
-          dateRangeOnUpdate : function (r) {
-               console.log("dateRangeOnUpdate",r);
-               this.input.daterange.startDate = this.input.daterange.startDate.getTime();
-               this.input.daterange.endDate = this.input.daterange.endDate.getTime();
-               this.getItems();
+            this.table.items = resp.results;
+            this.table.rows = this.table.items.length;
+            this.session = resp.meta;
+            console.log("sessions",resp,this.table )
           },
           async deleteItem (r,index) {
               var resp = await this.$store.dispatch('PostRequest',{

@@ -24,6 +24,18 @@
                 <template #cell(contactId)="row">
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
                     {{ row.item.contactName || row.item.contactId}}
+
+                    <span cursor-pointer class="fa fa-info-circle" :id="'template-details-'+ row.index ">
+                    </span>
+                    <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
+                      custom-class="message-preview">
+                      <template #default class="message-preview"> 
+                          <div class="message-text">Name : {{row.item.contactName}}</div>
+                          <div class="message-text">Id : {{row.item.contactId}}</div>
+                          <div class="message-text">Session : {{row.item.sessionId}}</div>
+                      </template>
+                    </b-popover>
+
                 </template>
                 <template #cell(startSessionStamp)="row">
                     {{ row.item.startSessionStamp | formatDate}}
