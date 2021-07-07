@@ -32,6 +32,11 @@ export default AppRouter.route({
             name: 'ModImportChatLogs',
             component: () => import('./Modules/ModImportChatLogs.vue'),
         },
+        {
+            path: '/app/moderate/contacts',
+            name: 'ModContactMaster',
+            component: () => import('./Modules/ModContactMaster.vue'),
+        },
 
 //Bulk Messaging
         {

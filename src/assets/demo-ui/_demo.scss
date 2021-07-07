@@ -215,6 +215,10 @@
 
 
 /* ===================================== Contact Type ==================================== */
+.contact_type-24::before {
+  width: 24px;
+  height: 24px;
+}
 .contact_type::before {
   background-color: #fff;
   border-radius: 50%;

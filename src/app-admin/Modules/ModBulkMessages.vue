@@ -1,7 +1,14 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon
-        :actions=actions ></page-title>
+        <page-title :heading=heading :icon=icon
+        :actions=actions >
+          <template #subheading>
+            <span v-if="session">
+              published by {{session.createdBy}} @ {{session.createdStamp | formatDate}}
+            </span>
+          </template>
+
+        </page-title>
 
 
        <b-table id="agent-session-list" :striped=true
@@ -16,11 +23,6 @@
                      :current-page="table.currentPage"
                      :items="table.items"
                      :fields="table.fields">
-                <template #cell(assignedToAgent)="row">
-                    <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
-                    <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
-                    &nbsp;{{ row.item.assignedToAgent}}
-                </template>
                 <template #cell(account)="row">
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
                       {{session.lane}}
@@ -30,7 +32,10 @@
                       {{row.item.contact.phone}}
                 </template>
                 <template #cell(createdBy)="row">
-                      {{session.createdBy}}
+                      {{row.item.sender}}
+                </template>
+                <template #cell(sendType)="row">
+                      {{row.item.meta.composeType}}-{{row.item.meta.sendType}}
                 </template>
                 <template #cell(template)="row">
                     <span cursor-pointer class="fa fa-comment" :id="'template-details-'+ row.index ">
@@ -143,12 +148,13 @@
             },
             table : {
                 fields: [ 
-                    { key : 'account', label : "Account" },
+                    { key : 'messageId', label : "Id" },
                     { key : 'contact', label : "Contact" },
                     { key : 'sessionId', label : "SessionId" },
                     { key : 'template', label : "Template" },
                     { key : 'createdBy', label : "by" },
                     { key : 'initiated', label : "@" },
+                    { key : 'sendType', label : "SendType" },
                     { key : 'status', label : "Status" },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },

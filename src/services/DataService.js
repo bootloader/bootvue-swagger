@@ -10,7 +10,9 @@ let myRespInterceptor = axios.interceptors.response.use(
   	if(response.request.responseURL.endsWith("/auth/login")){
   	  //https://app.mehery.com/admin/auth/login
   	  console.log("===>",response.request.responseURL)
-  	  window.location.href = response.request.responseURL;
+      var nextURL = new URL(response.request.responseURL);
+      nextURL.searchParams.append("referer",encodeURIComponent(window.location.href))
+  	  window.location.href = nextURL.toString();
   	}
 
     if(response.data && response.data.message){
@@ -35,16 +37,26 @@ let myRespInterceptor = axios.interceptors.response.use(
   }
 );
 
+function path2key(path) {
+  return path.replace(/\/$/, "").replace(/^\//,'').replace(/^api\//,'').split(/[\/\_]/).map(function(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }).join("")
+}
+
 const DataService = {
   async dispatch (a,b,c) {
   	return store.dispatch(a,b,c);
   },
 
   async getX(url,query) {
+    var pathKey = path2key(url);
+    if(store.getters.StateApi[pathKey]){
+      return store.getters.StateApi[pathKey];
+    }
     let response = await axios.get(url,{ params : query });
     if(url.indexOf('/api/') == 0){
       console.log("getX",response.data)
-      store.dispatch('UpdateApiStore',{ path : url, data : response.data.results })
+      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : response.data.results })
     }   
     return response.data;
   },

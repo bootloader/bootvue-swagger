@@ -87,6 +87,12 @@
                         header: true,
                         title: 'Moderator',
                     },
+                   {
+                        title: 'Contacts',
+                        icon: 'pe-7s-chat fa fa-address-book',
+                        enabled : true,
+                        href: '/app/moderate/contacts'
+                    },
                     {
                         title: 'Import Chat',
                         icon: 'pe-7s-chat fa fa-file-import',

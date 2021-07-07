@@ -192,7 +192,7 @@
             subheading: 'Add edit users',
             icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-user-friends',
             actions : [{
-              label : "Add User", icon : "plus", name : "ADD_ITEM"
+              label : "Add User", icon : "fa fa-plus", name : "ADD_ITEM"
             }],
           fields: [ { key : 'dept.name', label : "Team" },{ key : 'name', label : "Name" },
            { key : 'code', label : "Username" }, { key : 'agent_email', label : "Email" },

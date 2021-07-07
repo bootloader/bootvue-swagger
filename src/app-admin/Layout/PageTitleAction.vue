@@ -9,29 +9,67 @@
                     {{heading}}
                     <div
                         class="page-title-subheading">
-                        {{subheading}}
+                        <slot name="subheading">
+                            {{subheading}}
+                        </slot>
                     </div>
                 </div>
             </div>
             <div class="page-title-actions">
-                <span v-for="action in actions" v-if="!action.hidden && actionShow[action.name]!==false" >
+                <span class="action-wrapper" v-for="action in actions" v-if="!action.hidden && actionShow[action.name]!==false" >
                     <router-link v-if="action.link" tag="button" :to="action.link"
                         type="button" class="btn-shadow d-inline-flex align-items-center btn"
                         v-bind:class="{
                             'btn-link' : (action.type == 'link'),
                             'btn-success' : (!action.type || action.type == 'button')
                         }">
-                        <font-awesome-icon v-if="action.icon" class="mr-2" :icon="action.icon"/>
+                        <i v-if="action.icon" class="mr-2" :class="action.icon" />
                         {{action.label}} 
                     </router-link>
-                    <button v-else @click="clickAction(action)" class="btn-shadow d-inline-flex align-items-center btn"
-                        v-bind:class="{
-                            'btn-link' : (action.type == 'link'),
-                            'btn-success' : (!action.type || action.type == 'button')
-                        }">
-                        <font-awesome-icon v-if="action.icon" class="mr-2" :icon="action.icon"/>
-                        {{action.label}} 
-                    </button>
+
+                    <div v-else-if="action.type == 'lane'" class="d-inline-flex align-items-center" style="min-width: 220px;">
+                        <v-select  :options="input.lane.options"  class="w-100"
+                              v-model="input.lane.value"
+                              :searchable="false" :clearable="false"
+                              placeholder="Select Account"
+                              @input="clickAction(action)">
+                              <template #selected-option="option">
+                                <div class="">
+                                   <span class="contact_type contact_type-24 fab"
+                                          v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
+                              </template>
+                              <template #open-indicator="{ attributes }">
+                                <span v-bind="attributes" class="fa fa-caret-down"></span>
+                              </template>
+                              <template #option="{ contactType, lane }">
+                                   <span class="contact_type contact_type-24 fab"
+                                          v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}</em>
+                              </template>
+                      </v-select>
+                    </div>
+
+                    <div v-else-if="action.type == 'search'" class="d-inline-flex">
+                        <input class="form-control" type="text" name="" v-model="input.search.value">
+                    </div>
+
+                    <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
+                        <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
+                            <i v-if="action.icon" class="mr-2" :icon="action.icon"/>
+                            {{action.label}} 
+                        </button>
+                    </div>
+
+                    <div v-else class="d-inline-flex" >
+                        <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn"
+                            v-bind:class="{
+                                'btn-link' : (action.type == 'link'),
+                                'btn-success' : (!action.type || action.type == 'button')
+                            }">
+                            <i v-if="action.icon" class="mr-2" :class="action.icon"/>
+                            {{action.label}} 
+                        </button>
+                    </div>
+
                 </span>
 
                <date-range-picker v-if="dateranegeinput && dateranegeinput.hidden" v-model="dateranegeinput.range"
@@ -54,23 +92,18 @@
 </template>
 
 <script>
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faStar,
-        faPlus
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
     import DateRangePicker from 'vue2-daterange-picker'
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
     import VueMoment from 'vue-moment'
     import moment from 'moment'
 
-    library.add(
-        faStar,
-        faPlus,
-    );
 
+    import vSelect from 'vue-select'
+    import 'vue-select/dist/vue-select.css';
+
+
+import { MyFlags,MyDict,MyConst } from './../../services/global';
 
     function hour0(mmt){
         return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
@@ -81,13 +114,13 @@
 
     export default {
         components: {
-            'font-awesome-icon': FontAwesomeIcon,
-             DateRangePicker,
+             DateRangePicker,vSelect,
         },
 
         data () {
 
             return {
+                MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
                 //DateRangeDateKeys 
                 dateranegeinput : (() => { 
                     if(!this.daterange) return null;
@@ -115,11 +148,28 @@
                     }
                 })(),
                //OtherDateKeys 
+
+                input : {
+                    lane : {
+                      options : [],
+                      value : null,
+                      sender : ""
+                    },
+                    search : {
+                      value : null,
+                    },
+                    contacts : ""
+                },
+
+
             } 
             
         },
+        computed : {
+            
+        },
         filters: {
-          date(val) {
+          date(val) {   
             return val ? val.toLocaleString() : ''
           }
         },
@@ -132,10 +182,15 @@
                     this.daterange.endDate = hour24(moment()).toDate()
                 }  
             }
+            this.loadLanes();
         },
         methods : {
+            async loadLanes (){
+                let resp = await this.$service.getX('/api/options/lanes');
+                this.input.lane.options = this.$store.getters.StateApi.OptionsLanes;
+            },
             onDateRangeSelect : function (r) {
-                console.log("select",r,);
+                console.log("select",r);
             },
             onDateRangeUpdate : function (r) {
                 console.log("c_update",r);
@@ -155,6 +210,9 @@
                         break;
                     }
                 }
+            },
+            getInput : function (name) {
+                return this.input[name]?.value
             }
         },
 
@@ -197,4 +255,34 @@
     font-size: inherit;
     font-weight: bold;
   }
+
+</style>
+<style lang="scss">
+    .page-title-actions {
+        .action-wrapper {
+            margin-left: 3px;
+            max-height: 36px;
+            display: inline-block;
+            input.form-control {
+                height: calc(2.25rem + -1px);
+                margin-top: 1px;
+            }
+            button.btn {
+                height: calc(2.25rem + -1px);
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+            .v-select {
+                input.vs__search {
+                    color: #5a5a5a;
+                }
+                margin-top: 0px;
+                height: calc(2.25rem + -1px);
+                .vs__dropdown-toggle {
+                    height: calc(2.25rem + -1px);
+                }
+            }
+
+        }
+    }
 </style>

@@ -13,11 +13,8 @@ const getters = {
 
 const actions = {
   async UpdateApiStore({ commit },options) {
-  	var path = options.path.replace(/\/$/, "").replace(/^\//,'').replace(/^api\//,'').split(/[\/\_]/).map(function(string) {
-  		return string.charAt(0).toUpperCase() + string.slice(1);
-  	}).join("");
   	var api = {};
-  	api[path] = options.data;
+  	api[options.pathKey] = options.data;
   	commit('setApiStore',api);
   },
 
