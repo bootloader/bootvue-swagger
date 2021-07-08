@@ -12,6 +12,19 @@
             {{row.item.name || row.item.csid}}
       </template>
 
+      <template #cell(createdStamp)="row">
+            {{row.item.createdStamp | formatDate}}
+      </template>
+
+      <template #cell(lastInBoundStamp)="row">
+            {{row.item.lastInBoundStamp | formatDate}}
+      </template>
+
+
+      <template #cell(lastOutBoundStamp)="row">
+            {{row.item.lastOutBoundStamp | formatDate}}
+      </template>
+      
       </MasterView>
         
     </div>
