@@ -279,6 +279,9 @@
         height: 40px;
         font-size: 18px;
         color : rgba(21, 21, 21, 0.68);
+        width: calc(100% - 55px);
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .contact-text .font-name{
         text-overflow: ellipsis;
