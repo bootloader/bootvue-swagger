@@ -104,7 +104,7 @@
             activeChats : function(){ 
                 var THAT = this;
                 return (this.contacts || []).filter(function(contact) {
-                    return (contact.name + contact.phone + contact.email)
+                    return (contact.name + contact.phone + contact.email + "")
                             .toLowerCase()
                             .indexOf(THAT.input.search.text.toLowerCase()) > -1
                 });
