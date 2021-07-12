@@ -167,6 +167,7 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
     import formatters from '../../services/formatters';
+    import debounce from 'debounce';
 
     import VueTagsInput from '@johmun/vue-tags-input';
 
@@ -257,35 +258,42 @@
         updated (){
         },
         mounted (){
-            this.getSessions();
+            this.loadSessions();
         },
         watch: {
             '$route.params.profileId': function (profileId) {
-                this.getSessions();
+                this.loadSessions();
+            },
+           '$route.params.profileView': function (profileId) {
+                this.loadSessions();
             }
         },
         methods: {
             async loadQuickLabels(){
                 return await this.$store.dispatch('LoadQuickLabels');
             },
-            async getSessions (){
+            loadSessions : debounce(async function(){
                 if(!this.$route.params.profileId){
                     this.sessions.items = [];
                     this.sessions.rows = 0;
                     return;
                 }
 
-                this.isLoading = true;
-                var resp = await this.$store.dispatch('GetSessions',{
-                    contactId : this.$route.params.profileId
-                    //contactType : this.activeChat.contactType
-                });
-                this.sessions.items = (resp || []).sort(function(a,b){
-                    return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
-                });
-                this.sessions.rows = this.sessions.items.length;
-                this.isLoading = false;
-            },
+                if(this.$route.params.profileView == "history"){
+                    this.isLoading = true;
+                    var resp = await this.$store.dispatch('GetSessions',{
+                        contactId : this.$route.params.profileId
+                        //contactType : this.activeChat.contactType
+                    });
+                    this.sessions.items = (resp || []).sort(function(a,b){
+                        return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
+                    });
+                    this.sessions.rows = this.sessions.items.length;
+                    this.isLoading = false;
+                }
+
+
+            },200),
             async tagmodalOk(argument) {
                 var resp = await this.$store.dispatch('AttachQuickLabels',{
                     sessionId : this.$route.params.sessionId,

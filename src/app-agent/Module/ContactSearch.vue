@@ -55,7 +55,7 @@
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats && activeChats.length>0">
                 <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
-                     :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/active-sesssion/' + chat.contactId">
+                     :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId  + '/' + chat.contactId + '/info'">
                     <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
                         <div class="img_cont">
                             <img v-lazy="{

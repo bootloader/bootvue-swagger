@@ -6,8 +6,11 @@ import Vue from 'vue';
 import formatters from '../../services/formatters';
 import {MyConst} from '../../services/global';
 
+import DataProcessor from '../../services/DataProcessor';
+
 import pebounce from 'pebounce';
 import string_score from 'string_score';
+
 
 var guid = formatters.guid
 
@@ -34,33 +37,8 @@ function eq(a,b) {
   }
 
 function setChatFlags(chat) {
-  chat._stamp = new Date().getTime();
-  var expiryDateStamp = chat._stamp-MyConst.config.chatSessionTimeout;
-  chat.expired = chat.expired || (chat.lastInComingStamp < expiryDateStamp);
-  chat.active = chat.active && !chat.expired
-  chat._assignedToMe = ((MyConst.agent == chat.assignedToAgent) && !chat.resolved)
-  if((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent){
-    chat._tab = "ME";
-  } else if(!((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent)){
-     chat._tab = "TEAM";
-  }
-  if(chat.lastmsg){
-      if(chat.lastmsg.type == "I"){
-        chat.lastInComingStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
-      } else if(chat.lastmsg.type == "O"){
-        chat.lastResponseStamp = Math.max(chat.lastInComingStamp,chat.lastmsg.timestamp);
-      }
-  }
-  chat._gracestamp = chat._stamp-MyConst.config.chatIdleTimeout;
-  chat._waitingSinceStamp = Math.max(chat.lastResponseStamp,chat.agentSessionStamp);
-  chat._waiting = (chat.lastResponseStamp < chat.lastInComingStamp);
-  chat._waitingstamp_en= formatters.timespan((chat._stamp - chat._waitingSinceStamp)/1000);
-  chat._attention = chat._waiting && (chat.lastResponseStamp < chat._gracestamp);
-  chat._new = chat._waiting && (chat.lastInComingStamp > MyConst.sessionLoadStamp) 
-                && (!chat._lastReadStamp || (chat._lastReadStamp < chat.lastInComingStamp));
-
+  return DataProcessor.session(chat);
   console.log("setChatFlags");
-
 }
 
 const state = {

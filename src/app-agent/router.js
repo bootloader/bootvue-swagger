@@ -21,6 +21,11 @@ export default AppRouter.route({
             component: () => import('./Module/Home.vue'),
         },
         {
+            path: '/app/chat/:contactId/:sessionId/:profileId/:profileView',
+            name: 'agent-chat-profile-view',
+            component: () => import('./Module/Home.vue'),
+        },
+        {
             path: '/app/chistory/:contactId/:sessionId',
             name: 'agent-chat-session',
             component: () => import('./Module/Home.vue'),

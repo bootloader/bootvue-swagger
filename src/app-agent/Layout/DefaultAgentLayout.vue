@@ -54,22 +54,13 @@
     import ContactProfile from './../Module/ContactProfile';
     import VuePerfectScrollbar from 'vue-perfect-scrollbar';
     import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import debounce from 'debounce';
 
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faCog,
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-
-    library.add(
-        faCog,
-    );
     export default {
         name: 'app',
         components: {
             Contacts,Chatbox,ContactProfile,Sidebar,ContactSearch,
             VuePerfectScrollbar,
-            'font-awesome-icon': FontAwesomeIcon,
         },
         data : ()=> ({
             MyFlags
@@ -77,12 +68,22 @@
         mounted:function(){
             console.log("THIS IS AGENT LAYOUT");
             //this.closeLoading(); //method1 will execute at pageload
+            this.viewUpdate();
+        },
+        watch: {
+           '$route.params.profileView': function (profileView) {
+                this.viewUpdate();
+            }
         },
         methods: {
             closeLoading : function (argument) {
                 var element = document.getElementsByTagName("html")[0];
                 element.className = element.className.replace(/\loading\b/g, "")
-            }
+            },
+            viewUpdate : debounce(function () {
+                console.log("profileView",this.$route.params.profileView)
+               MyFlags.agent.profileView = this.$route.params.profileView || MyFlags.agent.profileView;
+            },200)
         },
     }
 </script>

@@ -710,6 +710,15 @@
                 if(typeof type !='string'){
                     type = "info";
                 }
+                if(this.$route.params.profileView != type){
+                    this.$router.push({
+                        name: 'agent-chat-profile-view', 
+                        params: { 
+                            profileView : type
+                        } 
+                    }) 
+                }
+
                 if(false  && MyFlags.agent.profileView == type ){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                     if(!MyFlags.agent.showProfile){
@@ -818,23 +827,26 @@
             async loadChats(){
                 await this.$store.dispatch('GetChats');
                 await this.$store.dispatch('LoadAgentOptions');
-                this.loadArchiveMessages();
+                this.onSessionChange();
             },
             onSessionChange : debounce(async function(){
                 console.log("onSessionChange : Session On Change")
-                if(this.$route.params.sessionId == "active-sesssion"){
+                this.activeChat = this.loadActiveChat();
+
+                if(this.activeChat == null && this.$route.params.contactId){
                     let resp = await this.$service.get('/api/sessions/contact/active', {
-                            contactId : this.$route.params.contactId 
+                            contactId : this.$route.params.contactId,
+                            sessionId : this.$route.params.sessionId,
+                            _processor : "session"
                     });
-                    if(resp.results.length==0){
-                        
+                    if(resp.results.length > 0){
+                        this.activeChat = resp.results[0];
                     }
-                    this.loadArchiveMessages();
-                } else {
-                    this.loadArchiveMessages();
                 }
+                this.loadArchiveMessages();
+
             },200),
-            loadActiveChat (argument) {
+            loadActiveChat () {
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.sessionId == chat.sessionId){
@@ -846,6 +858,9 @@
                     if(this.$route.params.sessionId == chat.sessionId){
                         return chat;
                     }
+                }
+                if(this.activeChat && (this.$route.params.sessionId == this.activeChat.sessionId)){
+                    return this.activeChat;
                 }
                 return null;
             },
