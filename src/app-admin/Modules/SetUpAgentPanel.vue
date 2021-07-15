@@ -119,7 +119,7 @@
               fields: [ 
                 { key : 'meta.title', label : "Property" },
                 { key : 'value', label : "Value" },
-                { key : 'config.value', label : "Value" },
+                //{ key : 'config.value', label : "Value" },
                 { key : 'config.description', label : "Desc" },
                 { key : 'actions', label : "Action" }],
               items : [],
