@@ -242,6 +242,14 @@ var formatter = {
         return THAT.contactLabels(id).title;
     });
 
+    Vue.filter('display', function (value,options,key) {
+      var option = ((options||[]).filter((option)=> (option.value == value))[0])||{};
+      if(option && option.label !== undefined && option.label !== null){
+        return option.label;
+      }
+      return value;
+    });
+
     Vue.filter('log_option', function (id,event_type) {
         switch(event_type){
           case 'LABEL_ADDED':

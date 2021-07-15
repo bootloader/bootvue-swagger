@@ -15,8 +15,11 @@
                      :items="table.items"
                      :fields="table.fields">
 
-                <template #cell(channels)="row">
-                  <span v-for="c in row.item.channels" v-if="c" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
+                <template #cell(value)="row">
+                  <span v-if="row.item.meta.inputType=='OPTIONS'">
+                    {{row.item.config.value|display(row.item.meta.options)}}
+                  </span>
+                  <span v-else>{{row.item.config.value}}</span>
                 </template>
                 <template #cell(actions)="row">
                   <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
@@ -59,6 +62,7 @@
                       id="btn-radios-2"
                       v-model="oneItem.config.value"
                       :options="oneItem.meta.options"
+                      html-field="label"
                       :aria-describedby="ariaDescribedby"
                       button-variant="outline-primary"
                       size="sm"
@@ -114,6 +118,7 @@
             table : {
               fields: [ 
                 { key : 'meta.title', label : "Property" },
+                { key : 'value', label : "Value" },
                 { key : 'config.value', label : "Value" },
                 { key : 'config.description', label : "Desc" },
                 { key : 'actions', label : "Action" }],
