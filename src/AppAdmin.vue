@@ -40,7 +40,7 @@ formatters.validators.forEach(ruleName => {
   }
 });
 
-
+  console.log("ADMIN APP IS LOADED")
   export default {
     name:"AppAdmin",
     computed: {

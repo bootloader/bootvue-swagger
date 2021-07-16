@@ -2,7 +2,7 @@
 import './preloader'
 import Vue from 'vue'
 
-import mainrouter from './router';
+import mainrouter from './services/router';
 import store from './store';
 import service from './services/DataService';
 import axios from 'axios';
@@ -17,11 +17,6 @@ import VTooltip from 'v-tooltip'
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 
-
-import AppAdmin from './AppAdmin'
-import AppAgent from './AppAgent'
-import AppCustomer from './AppCustomer'
-import AppDev from './AppDev'
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = (function() {
@@ -46,52 +41,47 @@ VTooltip.options.defaultTemplate =
   '<div class="foo" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
 Vue.use(VueToast);
 
-;(function mapper(condition){ //Funtion
+ import AppWrapper from './AppWrapper'
+// import AppAdmin from './AppAdmin'
+// import AppAgent from './AppAgent'
+// import AppCustomer from './AppCustomer'
+// import AppDev from './AppDev'
+
+;(function mapper(condition,onmatch){ //Funtion
+	//console.log(condition,onmatch)
 	var result = (typeof condition == "function") ? condition() : condition;
 	return function (option,execute) {
 		if(option == result){
-			execute(result);
+			onmatch(result,execute(result));
 		}
-		return mapper(result);
+		return mapper(result,onmatch);
 	}
 })(function () { //Condition
 	return window.CONST.APP
-})("admin",function (admin) { //Admin App
-	 console.log("This is Admin App")
-    new Vue({
-	  el: '#app',
-	  store,service,
-	  router : mainrouter.router(),
-	  template: '<AppAdmin/>',
-	  components: { AppAdmin }
-	});
+},function(result,config){
+	console.log("ALWAYS",result,config);
+	 import(`./app-${result}/router`).then(function (argument) {
 
+    new Vue({
+		  el: '#app',
+		  store,service,
+		  router : mainrouter.router(),
+		  template: '<AppWrapper/>',
+		  components: { AppWrapper }
+		});
+
+
+	 });
+
+
+})("admin",function (admin) { //Admin App
+	 return { path : './AppAdmin.vue', name : 'AppAdmin'};
 })("agent", function(agent){ //Agent App
-   console.log("This is Agent App")
-   new Vue({
-	  el: '#app',
-	  store,service,
-	  router : mainrouter.router(),
-	  template: '<AppAgent/>',
-	  components: { AppAgent }
-	});
+   return { path : './AppAgent', name : 'AppAgent'};
 })("customer", function(customer){ //Customer App
-   console.log("This is Customer App")
-   new Vue({
-	  el: '#app',
-	  store,service,
-	  router : mainrouter.router(),
-	  template: '<AppCustomer/>',
-	  components: { AppCustomer }
-	});
+   return { path : './AppCustomer.vue', name : 'AppCustomer'};
 })("dev", function(agent){ //Agent App
-   new Vue({
-	  el: '#app',
-	  store,service,
-	  router : mainrouter.router(),
-	  template: '<AppDev/>',
-	  components: { AppDev }
-	});
+	return { path : './AppDev.vue', name : 'AppDev'};
 });
 
 

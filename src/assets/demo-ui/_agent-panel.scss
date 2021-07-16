@@ -1,0 +1,48 @@
+  body,html{
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  }
+  body {
+  background: var(--scheme-color,#292d79)!important;
+  /*          background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+        background: linear-gradient(to right, #55cff9,#1377f5, #1377f5); */
+        /*border-radius: 15px !important;*/
+        -webkit-font-smoothing: auto!important;
+      }
+  html.loadable.loading {
+    background-color : var(--scheme-color, #4b56c0)!important;
+  }
+
+  .scheme-color {
+    background-color : var(--scheme-color, #4b56c0)!important;
+  }
+
+  .app-wrapper {
+      background: #00000045;
+  }
+  
+  .chat {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0px 5px!important;
+  }
+  
+  .card {
+    height: 100vh;
+    border-radius: 15px !important;
+    background-color: var(--scheme-color, #4b56c0) !important;
+
+    .card-header{
+      background-color: rgba(0,0,0,.03);
+      border-radius: 15px 15px 0 0 !important;
+      border-bottom: 0 !important;
+    }
+    
+    .card-footer{
+      background-color: rgba(0,0,0,.03);
+      border-radius: 0 0 15px 15px !important;
+      border-top: 0 !important;
+    }
+
+}

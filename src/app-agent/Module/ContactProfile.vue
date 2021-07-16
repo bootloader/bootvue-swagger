@@ -1,5 +1,5 @@
 <template>
-<div class="card mb-sm-3 mb-md-0 card_contact_profile">
+<div class="card mb-sm-3 mb-md-0 card_contact_profile scheme-color ">
     
     <div class="card-header">
         <span class="fa fa-close float-right"

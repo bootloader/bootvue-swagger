@@ -1,4 +1,4 @@
-import AppRouter from './../router';
+import AppRouter from './../services/router';
 
 export default AppRouter.route({
     app : "customer",

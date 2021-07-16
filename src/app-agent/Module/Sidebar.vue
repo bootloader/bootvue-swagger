@@ -2,14 +2,14 @@
         <div class="mySidebar" id="mySidebar">
 
 
-    <b-sidebar id="my-sidebar" title="Sidebar" 
+    <b-sidebar id="my-sidebar" title="Sidebar" class="scheme-color"
         width="200px" 
         :backdrop-variant="'transparent'"
         backdrop
         no-header
         shadow>
 
-        <div class="mySidebar-container">
+        <div class="mySidebar-container scheme-color">
             <nav class="mb-3">
                 <b-nav vertical>
                     <b-nav-item v-b-toggle href="#my-sidebar" @click.prevent v-b-toggle.my-sidebar class="menu_btn_close">
@@ -183,7 +183,7 @@
       background-color: transparent!important
     }
     .mySidebar .mySidebar-container {
-      background-color: #4953ba !important;
+      /*background-color: #4953ba !important;*/
       height : 100%;
     }
     .mySidebar .menu_btn_close {

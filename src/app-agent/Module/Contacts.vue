@@ -1,5 +1,5 @@
 <template>
-     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow">
+     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color ">
         <div class="card-header contacts-header">
             <div class="input-group">
                 <div class="input-group-prepend">

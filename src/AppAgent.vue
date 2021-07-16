@@ -43,6 +43,7 @@
   var LOADED_JS = {};
 
   export default {
+    name:"AppAgent",
     computed: {
       layout() {
         return (this.$route.meta.layout || default_layout) + '-agent-layout';
@@ -97,3 +98,8 @@
     },
   }
 </script>
+
+<style lang="scss">
+    @import "./assets/base.scss";
+    @import "./assets/demo-ui/_agent-panel.scss";
+</style>

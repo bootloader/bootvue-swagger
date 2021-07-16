@@ -42,6 +42,9 @@
             </div>
         </div>
 
+    <component is="style" v-html="style">
+    </component>
+
     </div>
 </template>
 
@@ -63,8 +66,17 @@
             VuePerfectScrollbar,
         },
         data : ()=> ({
-            MyFlags
+            MyFlags,MyConst
         }),
+        computed: {
+            style() {
+                return `
+                    :root {
+                        --scheme-color: ${MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR};
+                    }
+                    `;
+            }
+        },
         mounted:function(){
             console.log("THIS IS AGENT LAYOUT");
             //this.closeLoading(); //method1 will execute at pageload
@@ -102,8 +114,6 @@
     }
 
 
-
-
 .hSlider-wrapper {
   position: absolute; 
   z-index: 100;
@@ -128,6 +138,8 @@
   left: 0; 
   
 }
+
+
 
 </style>
 

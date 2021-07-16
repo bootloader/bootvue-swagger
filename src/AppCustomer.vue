@@ -39,6 +39,7 @@
   var LOADED_JS = {};
 
   export default {
+    name:"AppCustomer",
     computed: {
       layout() {
         return (this.$route.meta.layout || default_layout) + '-layout';

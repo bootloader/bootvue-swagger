@@ -19,6 +19,17 @@
                   <span v-if="row.item.meta.inputType=='OPTIONS'">
                     {{row.item.config.value|display(row.item.meta.options)}}
                   </span>
+                  <span v-if="row.item.meta.inputType=='COLOR'">
+                     <v-swatches
+                        :value="row.item.config.value"
+                        show-fallback
+                        popover-x="left"
+                        disabled
+                        swatch-size="10"
+
+                        :trigger-style="{ width: '25px', height: '25px', 'border-radius' : '8px' }"
+                      ></v-swatches>
+                  </span>
                   <span v-else>{{row.item.config.value}}</span>
                 </template>
                 <template #cell(actions)="row">
@@ -73,6 +84,24 @@
 
 
                 </div>
+                <div  v-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 
+                      <v-swatches class="d-flex justify-content-center"
+                        v-model="oneItem.config.value"
+                        show-fallback
+                        fallback-input-class="swatches-fallback-input-class"
+                        inline
+                        :swatches="[
+                          '#1FBC9C','#1CA085','#2ECC70','#27AF60', '#3398DB', '#2980B9', '#A463BF', '#8E43AD',
+                          '#3D556E','#222F3D','#F2C511','#F39C19', '#E84B3C', '#C0382B', '#DDE6E8', '#BDC3C8',
+                          '#4b56c0','#ffc976', '#40a6db', '#f1a948' ,'#db3a70', '#25d366', '#00BFFF', '#4267b2',
+                        ]"
+                        :swatch-style="{ margin: '5px'}"
+                        :wrapper-style="{
+                              margin: 'auto',
+                              width: '90%'
+                        }"
+                      ></v-swatches>
+                </div>
                 <div  v-else class="form-row">
                   <input name="email"
                           placeholder="A,1232, https://soem.url etc"
@@ -99,6 +128,11 @@
     import PageTitle from "../Layout/PageTitleAction.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
 
+    import VSwatches from 'vue-swatches'
+
+    // Import the styles too, typically in App.vue or main.js
+    import 'vue-swatches/dist/vue-swatches.css'
+
     function newItem() {
       return {
               "config" : {},
@@ -107,7 +141,7 @@
     }
     export default {
         components: {
-            PageTitle
+            PageTitle,VSwatches
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -155,6 +189,7 @@
               });
               this.oneItem = newItem();
               this.onAction({name : "CANCEL"});
+              this.loadItems();
           },
           async cancelItem(item) {
              this.oneItem = newItem();
@@ -163,7 +198,7 @@
           async editItem(item) {
               this.oneItem = newItem();
               for(var i in item){
-                this.oneItem[i] = item[i];
+                this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
@@ -195,3 +230,9 @@
 
     }
 </script>
+<style type="text/css">
+  .swatches-fallback-input-class {
+    text-align: center;
+    width: 450px;
+  }
+</style>

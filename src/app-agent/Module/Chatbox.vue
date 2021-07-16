@@ -1,5 +1,5 @@
 <template>
-          <div class="card card-shadow m-chatbox"
+          <div class="card card-shadow m-chatbox scheme-color"
             @dragenter="dragEnter" 
             @dragover="dragEnter" 
             @dragleave="dragLeave"
