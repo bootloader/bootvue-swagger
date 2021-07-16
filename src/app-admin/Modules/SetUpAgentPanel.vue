@@ -19,7 +19,7 @@
                   <span v-if="row.item.meta.inputType=='OPTIONS'">
                     {{row.item.config.value|display(row.item.meta.options)}}
                   </span>
-                  <span v-if="row.item.meta.inputType=='COLOR'">
+                  <span v-else-if="row.item.meta.inputType=='COLOR'">
                      <v-swatches
                         :value="row.item.config.value"
                         show-fallback
