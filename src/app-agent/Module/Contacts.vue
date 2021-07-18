@@ -52,9 +52,10 @@
                             contactId: chat.contactId,
                             sessionId : chat.sessionId,
                             profileId : chat.contactId,
+                            profileView : $route.params.profileView || 'hide',
                             mvu : 'CHATBOX'
                         }}">
-                    <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
+                    <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="online_icon"></span>
