@@ -10,7 +10,13 @@
                     <div class="d-block clear-both">               
                         <div class="d-flex bd-highlight chat-header-left">
                             <div class="chat-header-left-left d-sm-block d-md-none">
-                                <i class="fa fa-arrow-left" @click="MyFlags.agent.mvu='CONTACTS'">&nbsp;&nbsp;</i>
+                                <router-link tag="i" class="fa fa-arrow-left" 
+                                    :to="{ 
+                                        name: 'defAgentView', 
+                                        params: { 
+                                            mvu : 'CONTACTS'
+                                    }}"
+                                >&nbsp;&nbsp;</router-link >
                             </div>
                             <div class="img_cont" 
                                 @click="showContactProfile">
@@ -620,9 +626,10 @@
                 }
                 if(this.$route.params.profileView != type){
                     this.$router.push({
-                        name: 'agent-chat-profile-view', 
+                        name: 'defAgentView', 
                         params: { 
-                            profileView : type
+                            profileView : type,
+                            mvu : 'CPROFILE'
                         } 
                     }) 
                 }

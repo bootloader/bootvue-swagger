@@ -136,7 +136,12 @@ var formatter = {
       if(m && m.length){
         m[6] = "w_100,h_100";
         return m.slice(1).join("/");
-      } return mediaUrl;
+      } 
+      var aws = mediaUrl.match(/(.+)\/(.+).(s3.amazonaws.com)\/(.+)/);
+      if(aws && aws.length){
+        return `https://ik.imagekit.io/meherysoccom/${aws[2]}/${aws[4]}?tr=w-100,h-100`
+      } 
+      return mediaUrl;
   },
   https_thumburl : function (mediaUrl) {
     return this.thumburl(this.https(mediaUrl));

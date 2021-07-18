@@ -3,7 +3,7 @@
     
     <div class="card-header">
         <span class="fa fa-close float-right"
-        @click="MyFlags.agent.showProfile=false;MyFlags.agent.mvu='CHATBOX'"></span>
+        @click="onCardClose"></span>
         <center>{{MyFlags.agent.profileView}}</center>
 
     </div>
@@ -77,8 +77,17 @@
                     <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
                 </template>   
                 <template #cell(actions)="row">
-                    <router-link tag="button" :id="row.item.sessionId" :to="'/app/chat/'+row.item.contactId.replace('/','-')+ '/' + row.item.sessionId + '/' + profileId" active-class="disabled"
-                    class="btn btn-outline-primary btn-xs">
+                    <router-link tag="button" :id="row.item.sessionId" 
+                        :to="{ 
+                            name: 'defAgentView', 
+                            params: { 
+                                contactId: row.item.contactId.replace('/','-'),
+                                sessionId : row.item.sessionId,
+                                profileId : profileId,
+                                mvu : 'CHATBOX'
+                            }}"
+                        active-class="disabled"
+                        class="btn btn-outline-primary btn-xs">
                             View Chat
                  </router-link>
 
@@ -304,6 +313,17 @@
             },
             onLabelChange : function (newLabels) {
                 this.newLabels = newLabels; 
+            },
+            onCardClose : function (argument) {
+                MyFlags.agent.mvu='CHATBOX'
+                this.$router.push({
+                    name: 'defAgentView', 
+                    params: { 
+                        profileView : 'hide',
+                        mvu : 'CHATBOX'
+                    } 
+                }) 
+
             }
         },
 

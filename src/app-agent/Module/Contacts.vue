@@ -45,7 +45,15 @@
                         contact_attention : chat._attention && (chat._tab == 'TEAM' ),
                         contact_waiting : chat._waiting
                     }"
-                     :id="chat.contactId" :to="'/app/chat/' + chat.contactId + '/' + chat.sessionId + '/' + chat.contactId + '/' +  MyFlags.agent.profileView ">
+                    :id="chat.contactId"
+                    :to="{ 
+                        name: 'defAgentView', 
+                        params: { 
+                            contactId: chat.contactId,
+                            sessionId : chat.sessionId,
+                            profileId : chat.contactId,
+                            mvu : 'CHATBOX'
+                        }}">
                     <div class="d-flex bd-highlight contact-preview" @click="MyFlags.agent.mvu='CHATBOX'">
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">

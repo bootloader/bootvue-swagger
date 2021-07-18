@@ -86,6 +86,9 @@
         watch: {
            '$route.params.profileView': function (profileView) {
                 this.viewUpdate();
+            },
+            '$route.params.mvu': function (profileView) {
+                this.viewUpdate();
             }
         },
         methods: {
@@ -95,7 +98,9 @@
             },
             viewUpdate : debounce(function () {
                 console.log("profileView",this.$route.params.profileView)
-               MyFlags.agent.profileView = this.$route.params.profileView || MyFlags.agent.profileView;
+                MyFlags.agent.profileView = this.$route.params.profileView || MyFlags.agent.profileView;
+                MyFlags.agent.mvu = this.$route.params.mvu || MyFlags.agent.mvu;
+                MyFlags.agent.showProfile = (MyFlags.agent.profileView !== 'hide');
             },200),
             hex2rgb : function (color) {
                 if ( color[0] == '#' ) {
