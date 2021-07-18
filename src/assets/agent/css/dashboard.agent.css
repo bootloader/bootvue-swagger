@@ -104,94 +104,8 @@
     cursor: pointer;
     margin-right: 20px;
   }
-  .chat-bubble{
-    flex-wrap: wrap;
-    padding-bottom : 10px;
-  }
-  .msg_cotainer{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 10px;
-    border-radius: 7px;
-    background-color: #4b56c0d1;
-    color : #fff;
-    padding: 6px;
-    position: relative;
-    font-size: 14px;
-    -border : 1px solid #0000001c;
-    box-shadow: 0 1.5px 1.5px #00000052;
-  }
-  .msg_cotainer span, .msg_cotainer_send span{
-        white-space: pre-wrap;
-  }
-  .msg_cotainer_send{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 10px;
-    border-radius: 7px;
-    background-color: #FFF;
-    padding: 6px;
-    position: relative;
-    font-size: 14px;
-    -border : 1px solid #0000001c;
-    box-shadow: 0 1.5px 1.5px #00000052;
-  }
-  .msg_time{
-      bottom: -22px;
-      color: rgb(21 21 21 / 68%);
-      font-size: 10px;
-      margin-left: 5px;
-      width: 100%;
-      padding: 6px;
-  }
-  .msg_time_send{
-    position: absolute;
-    right:0;
-    bottom: -22px;
-    color: rgb(21 21 21 / 68%);
-    font-size: 10px;
-    min-width: 250px;
-      text-align: right;
-      margin-right : 5px;
-  }
-  .msg_user {
-    font-size: 10px;
-    flex: 0 0 100%; 
-    font-weight: 600;
-  }
-  .msg_cotainer:after{
-      content: "";
-      position: absolute;
-      width: 0;
-      height: 0;
-      bottom: -7px;
-      left: 4px;
-      box-sizing: border-box;
-      border: 4px solid black;
-      border-color: transparent transparent #4b56c0d1 #4b56c0d1;
-      transform-origin: 0 0;
-      transform: rotate(-45deg);
-      box-shadow: -1px 1px 1px 0 rgb(0 0 0 / 22%);
-  }
-  .msg_cotainer_send:after{
-    content: "";
-      position: absolute;
-      width: 0;
-      height: 0;
-      bottom: -7px;
-      right: 7px;
-      box-sizing: border-box;
-      border: 4px solid black;
-      border-color: transparent transparent #FFF #FFFF;
-      transform-origin: 0 0;
-      transform: rotate(-45deg);
-      box-shadow: -1px 1px 1px 0 rgb(0 0 0 / 22%);
-  }
-  .chat-bubble .sending { 
-    height: 15px;
-    width: 15px;
-    margin: 8px;
-  }
+
+
   .msg_head{
     position: relative;
   }
@@ -201,15 +115,6 @@
   }
   }
   
-.blink_me {
-  animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {  
-  50% { opacity: 0; }
-}
-
-
 .information img {
     width: 200px;
     height: 200px;

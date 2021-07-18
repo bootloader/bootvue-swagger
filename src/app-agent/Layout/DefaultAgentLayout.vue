@@ -73,6 +73,7 @@
                 return `
                     :root {
                         --scheme-color: ${MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR};
+                        --scheme-color-rgb : ${this.hex2rgb(MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR)}
                     }
                     `;
             }
@@ -95,7 +96,27 @@
             viewUpdate : debounce(function () {
                 console.log("profileView",this.$route.params.profileView)
                MyFlags.agent.profileView = this.$route.params.profileView || MyFlags.agent.profileView;
-            },200)
+            },200),
+            hex2rgb : function (color) {
+                if ( color[0] == '#' ) {
+                        color= color.substr(1);
+                }
+
+                console.log("color",color);
+
+                var r,g,b;
+                if ( color.length == 6 ) {
+                    [ r, g, b ] = [ `${color[0]}${color[1]}`, `${color[2]}${color[3]}`, `${color[4]}${color[5]}` ];
+                } else if ( color.length == 3 ) {
+                        [ r, g, b ] = [ `${color[0]}${color[0]}`, `${color[1]}${color[1]}`, `${color[2]}${color[2]}` ];
+                } else {
+                        return false;
+                }
+                r = parseInt( r,16 );
+                g = parseInt( g,16 );
+                b = parseInt( b,16 );
+                return `${r} ${g} ${b}`;
+            }
         },
     }
 </script>

@@ -136,6 +136,7 @@
     <span class=""></span>
 </div>
 <div v-else-if="activeChat">
+
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
             <div><small>Channel Details</small></div>
@@ -144,104 +145,12 @@
         </div>
         <hr/>
     </div>  
-  <div v-for="m in activeChat.messages">
-    
-    <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
-            class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
-        <div class="img_cont_msg">
-            <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
-        </div>
-        <div class="msg_cotainer">
-            <span v-if="m.text">{{m.text | striphtml | newlines}}</span>
-            <div v-if="m.attachments"> 
-                <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
-                <div class="input-group my-attachments">
-                    <span v-for="atch in m.attachments" v-viewer="viewerOptions">
-                        <img v-if="atch.mediaType == 'IMAGE'"  
-                            v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
-                        <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
-                        <br/>
-                        <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
-    </div>
 
-    <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
-        <div class="msg_cotainer_send">
-            <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
-            <div v-if="m.attachments"> 
-                <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
-                <div class="input-group my-attachments">
-                    <span v-for="atch in m.attachments" v-viewer="viewerOptions">
-                        <img v-if="atch.mediaType == 'IMAGE'" 
-                            v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
-                        <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
-                        <br/>
-                        <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
-                    </span>
-                </div>
-            </div>
-            <div v-else-if="m.template" class="my-msg-template-tag">
-                <span class="fa fa-tag"></span>&nbsp;{{m.template}}
-            </div>
-            <span class="msg_time_send">
-                
-                <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
-                <span>&nbsp;&nbsp;</span>
+    <ChatMessages
+        :activeChat="activeChat"
+        v-show="is_CHAT_BOX"
+    />
 
-                <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
-                    <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin msg_status_send" >&nbsp;</i>
-                    <b-icon v-else-if="m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="m.logs+''"
-                        variant="danger" class="msg_status_send" ></b-icon>
-                    <b-icon v-else-if="m.stamps.BLCKD" icon="slash-circle-fill"  scale=.8 v-tooltip="m.logs+''"
-                        variant="danger" class="msg_status_send" ></b-icon>  
-                    <b-icon v-else-if="m.logs || m.stamps.FAILD || m.stamps.NSENT || m.stamps.SENTX_ERR" 
-                        icon="exclamation-triangle-fill"  scale=.8 v-tooltip="m.logs+''"
-                        variant="danger" class="msg_status_send" ></b-icon>  
-                    <b-icon v-else-if="m.stamps.READ" icon="check-all" 
-                        variant="success" class="msg_status_send"></b-icon>
-                     <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 
-                        variant="dark" class="msg_status_send"></b-icon>
-                     <b-icon v-else-if="m.stamps.SENTX" icon="check" 
-                        variant="dark" class="msg_status_send"></b-icon>
-                     <b-icon v-else-if="m.stamps.SENT" icon="check" 
-                        variant="muted" class="msg_status_send muted"></b-icon>
-                     <b-icon v-else="" icon="check" 
-                        variant="light" class="msg_status_send"></b-icon>
-                </span>
-            </span>
-        </div>
-        <div class="img_cont_msg">
-            <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
-        </div>
-    </div>
-
-    <div v-else-if="m.type=='A' || m.type=='L' || m.type=='N'" 
-        class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
-        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
-        
-        <!-- Sticky Note  -->
-        <div v-if="m.type=='N'" class="msg_cotainer_note">
-            <div class="text">{{m.text | striphtml | newlines}}</div>
-
-            <span class="msg_user" v-bind:class="{'float-right' : m.sender == MyConst.agent}">{{m.name ||'---'}}</span>
-            <span v-bind:class="{'float-right' : m.name == MyConst.agent}">
-                {{m.timestamp|formatDate}}&nbsp;&nbsp;
-            </span>
-        </div>
-
-        <div v-else class="msg_cotainer_action">
-            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
-            <i v-if="m.logs" v-for="log in m.logs" class="prepend-comma">
-                &nbsp;{{log | log_option(m.action)| striphtml | newlines}}</i>
-        </div>
-    </div>  
-
-
-  </div>
 </div>
                     </div>
 
@@ -437,6 +346,7 @@
     import { Textcomplete } from "@textcomplete/core";
     import { TextareaEditor } from "@textcomplete/textarea";
 
+    import ChatMessages from "./ChatMessages";
 
     var sampleJson = {
         contact : {
@@ -450,7 +360,8 @@
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
-            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect
+            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,
+            ChatMessages
         },
         computed : {
             inputTextEnabled : function (argument) {
@@ -542,9 +453,6 @@
             win : {
                 dragstart : null, dragend :  null, dragenter :  null, dragover : null, dragleave : null,
                 mouseleave : null, mouseenter : null
-            },
-            viewerOptions : {
-                url: 'data-full-src'
             },
             Deselect: {
                 render: function(createElement) {
@@ -1116,30 +1024,7 @@
     box-shadow: 0 1.5px 1.5px #00000052;
 
     }
-    .msg_cotainer_action, .msg_cotainer_note {
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-right: 10px;
-        border-radius: 7px;
-        background-color: #e2e2e2f2;
-        padding: 4px;
-        position: relative;
-        font-size: 10px;
-    }
-    .msg_cotainer_note {
-        background-color: #fff9caf2;
-        font-size: 10px;
-        box-shadow: 0 1.5px 1.5px #00000052;
-        min-width: 250px;
-        max-width: 85%;
-    }
-    .msg_cotainer_note .text {
-        border-bottom: 1px dashed #00000017;
-        font-size: 13px;
-        color: #481e00;
-        box-shadow: 0px 16px 1px #ffffff29
-        /*font-family: 'Reenie Beanie';*/
-    }
+
     
     .upload_card_body {
 /*    overflow-y: auto;
@@ -1182,13 +1067,8 @@
     .quick-replies-more {
         text-align: center;
     }
-    .chat-bubble .my-msg-template-tag  {
-        font-size: smaller;
-        color: #00000085;
-    }
-    .prepend-comma+.prepend-comma:before {
-        content: ",";
-    }
+
+
 /* User Info Panel */    
   .user_info{
     margin-top: auto;
