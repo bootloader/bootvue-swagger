@@ -439,17 +439,17 @@
     background-color : $secondary;
   }
   .daterangepicker td.active, .daterangepicker td.active:hover {
-    background-color: darken($success,15%);
+    background-color: darken($success,5%);
     border-color: transparent;
     color: #fff;
   }
   .daterangepicker .ranges li.active {
-    background-color: darken($success,15%);
+    background-color: darken($success,5%);
   }
-  .reportrange-text{
-      background-color: #56CC9D;
-      border-color : #56CC9D;
-      color: #484848 !important;
+  .reportrange-text {
+      background-color: $success;
+      border-color :$success!important;
+      //color: #484848 !important;
   }
 }
 

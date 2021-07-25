@@ -73,7 +73,7 @@
                        <date-range-picker v-model="dateranegeinput.range" class=""
                         :opens="'left'"
                         :time-picker="false"
-                        control-container-class="form-control reportrange-text btn btn-success"
+                        control-container-class="reportrange-text btn btn-success"
                         :ranges="dateranegeinput.ranges"
                         @select="onDateRangeSelect"
                         @update="onDateRangeUpdate"
@@ -84,11 +84,9 @@
                     </template>
                   </date-range-picker>
                  </span>
-
-
-
             </div>
         </div>
+        <div style="clear: both;height: 0px;"></div>
     </div>
 </template>
 
@@ -271,18 +269,16 @@
     .page-title-actions {
         .action-wrapper {
             margin-left: 3px;
-            max-height: 36px;
             display: block;
             float:left;
             input.form-control {
-                height: calc(2.25rem + -1px);
-                margin-top: 1px;
+                height: calc(2.25rem + 0px);
+                margin-top: 0px;
             }
             button.btn {
-                height: calc(2.25rem + -1px);
+                height: calc(2.25rem + 0px);
                 margin-top: 0px;
                 margin-bottom: 0px;
-                color: #404040 !important;
             }
             .v-select {
                 input.vs__search {
@@ -291,14 +287,14 @@
                 margin-top: 0px;
                 height: calc(2.25rem + -1px);
                 .vs__dropdown-toggle {
-                    height: calc(2.25rem + -1px);
+                   // height: calc(2.25rem + -1px);
                 }
             }
             .vue-daterange-picker {
-                max-height: 35px;
-                height: calc(2.25rem + -1px);
+                min-height: 35px;
+                //height: calc(2.25rem + -1px);
                 .reportrange-text{
-                    height: calc(2.25rem + -1px);
+                    min-height: calc(2.25rem + 0px);
                     margin-top: 0px;
                     font-size: inherit;
                     font-weight: bold;

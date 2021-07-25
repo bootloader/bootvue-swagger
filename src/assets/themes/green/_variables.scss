@@ -57,7 +57,7 @@ $blue-light: #cceed6;
 
 $primary: $brand;
 $secondary: #e9908c;
-$success: $green;
+$success: darken($green,15%); // @Lalit modifiied to get better text
 $info: $cyan;
 $warning: $yellow;
 $danger: $red;
