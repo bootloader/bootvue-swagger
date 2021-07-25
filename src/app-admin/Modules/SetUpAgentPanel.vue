@@ -86,7 +86,7 @@
 
 
                 </div>
-                <div  v-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 
+                <div  v-else-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 
                       <v-swatches class="d-flex justify-content-center"
                         v-model="oneItem.config.value"
                         show-fallback
