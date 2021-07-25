@@ -74,6 +74,8 @@
                       v-model="oneItem.config.value"
                       :options="oneItem.meta.options"
                       html-field="label"
+                      text-field="value"
+
                       :aria-describedby="ariaDescribedby"
                       button-variant="outline-primary"
                       size="sm"
