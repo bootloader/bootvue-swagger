@@ -4,6 +4,7 @@
             @dragover="dragEnter" 
             @dragleave="dragLeave"
             @mouseleave="dragLeave"
+            @paste="onpaste"
             :id="chatsVersionGlobal"
         >
                 <div class="card-header msg_head chat-head">   
@@ -236,6 +237,7 @@
                         v-on:vdropzone-file-added="fileAdded" 
                         v-on:vdropzone-sending="fileUploading"
                         v-on:vdropzone-success="fileUploaded"
+
                         v-on:vdropzone-queue-complete="fileUploadedAll"
                         ></vue-dropzone>
                     </div>
@@ -845,7 +847,23 @@
                 this.$refs.quick_option_menu.show();
             },
 
-            async dragEnter (argument) {
+
+            async onpaste (event){
+                console.log("Paste",event)
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (var index in items) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        console.log("adds the file to your dropzone instance",item.getAsFile())
+                        this.$refs.myVueDropzone.addFile(item.getAsFile());
+                         this.winMode = "UPLOAD_MEDIA";
+                         this.dragLeave();
+                         event.preventDefault();
+                    }
+                }
+            },
+
+            async dragEnter (event) {
                 this.dz.file_dragging = true;
                 this.winMode = "UPLOAD_MEDIA";
                 //window.clearTimeout(this.dz.showcounter);
@@ -885,14 +903,14 @@
                 console.log("fileUploading2",msg)
                 formData.append('message', JSON.stringify(msg));
             },
-            async fileUploaded(argument,resp) {
-                console.log("fileUploaded",resp)
+            async fileUploaded(file,resp) {
                 if(resp){
-                    this.$store.dispatch("ReadChat",resp.results[0]);                  
+                    this.$store.dispatch("ReadChatMessage",resp.results[0]);                  
                 }
+                this.$refs.myVueDropzone.removeFile(file);
             },
-            async fileUploadedAll(argument){
-
+            async fileUploadedAll(e){
+                this.toggleView("CHAT_BOX");
             }
 
         },
