@@ -54,9 +54,7 @@
 
                     <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
                         <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
-                            <i v-if="action.icon" class="mr-2" :icon="action.icon"/>
-                            {{action.label}} 
-                        </button>
+                            <i v-if="action.icon" class="" :class="action.icon"/>{{action.label}}</button>
                     </div>
 
                     <div v-else class="d-inline-flex" >
@@ -71,19 +69,22 @@
                     </div>
 
                 </span>
+                 <span class="action-wrapper" v-if="dateranegeinput && !dateranegeinput.hidden" >
+                       <date-range-picker v-model="dateranegeinput.range" class=""
+                        :opens="'left'"
+                        :time-picker="false"
+                        control-container-class="form-control reportrange-text btn btn-success"
+                        :ranges="dateranegeinput.ranges"
+                        @select="onDateRangeSelect"
+                        @update="onDateRangeUpdate"
+                   >
+                    <!--    input slot (new slot syntax)-->
+                    <template #input="picker" style="min-width: 350px;">
+                      <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
+                    </template>
+                  </date-range-picker>
+                 </span>
 
-               <date-range-picker v-if="dateranegeinput && !dateranegeinput.hidden" v-model="dateranegeinput.range"
-                    :opens="'left'"
-                    :time-picker="false"
-                    :ranges="dateranegeinput.ranges"
-                    @select="onDateRangeSelect"
-                    @update="onDateRangeUpdate"
-               >
-                <!--    input slot (new slot syntax)-->
-                <template #input="picker" style="min-width: 350px;">
-                  {{ picker.startDate | date }} - {{ picker.endDate | date }}
-                </template>
-              </date-range-picker>
 
 
             </div>
@@ -103,7 +104,7 @@
     import 'vue-select/dist/vue-select.css';
 
 
-import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import { MyFlags,MyDict,MyConst } from './../../services/global';
 
     function hour0(mmt){
         return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
@@ -264,12 +265,6 @@ import { MyFlags,MyDict,MyConst } from './../../services/global';
   .text-black {
     color: #000;
   }
-  .vue-daterange-picker .form-control.reportrange-text{
-    background: #6bab8d;
-    color: #FFF;
-    font-size: inherit;
-    font-weight: bold;
-  }
 
 </style>
 <style lang="scss">
@@ -277,7 +272,8 @@ import { MyFlags,MyDict,MyConst } from './../../services/global';
         .action-wrapper {
             margin-left: 3px;
             max-height: 36px;
-            display: inline-block;
+            display: block;
+            float:left;
             input.form-control {
                 height: calc(2.25rem + -1px);
                 margin-top: 1px;
@@ -286,6 +282,7 @@ import { MyFlags,MyDict,MyConst } from './../../services/global';
                 height: calc(2.25rem + -1px);
                 margin-top: 0px;
                 margin-bottom: 0px;
+                color: #404040 !important;
             }
             .v-select {
                 input.vs__search {
@@ -296,6 +293,20 @@ import { MyFlags,MyDict,MyConst } from './../../services/global';
                 .vs__dropdown-toggle {
                     height: calc(2.25rem + -1px);
                 }
+            }
+            .vue-daterange-picker {
+                max-height: 35px;
+                height: calc(2.25rem + -1px);
+                .reportrange-text{
+                    height: calc(2.25rem + -1px);
+                    margin-top: 0px;
+                    font-size: inherit;
+                    font-weight: bold;
+                }
+                .daterangepicker.show-calendar .ranges {
+                    padding: 0px !important;
+                }
+
             }
 
         }

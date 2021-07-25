@@ -1,7 +1,9 @@
 <template>
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon
-        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate" ></page-title>
+        :actions=actions
+        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate" 
+        @action="onAction" ></page-title>
 
         <div class="card mb-3">
             <div class="no-gutters row">
@@ -224,7 +226,7 @@
 
 <script>
 
-    import PageTitle from "../../Layout/Components/PageTitleDateRange.vue";
+    import PageTitle from "..//Components/PageTitle.vue";
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
     //import chart1 from './Analytics/chart1';
@@ -318,6 +320,9 @@
                     endDate : null,
                 }
             },
+            actions : [{
+              name : "REFRESH", type : "apply", icon : "fa fa-sync"
+            }],
             summary : {
                 "contactType": null,
                 "filter": null,
@@ -359,12 +364,15 @@
           this.dateRangeOnUpdate();
         },
         methods: {
+          getTime : function (date) {
+              return date ? date.getTime(): date;
+          },
           async loadAnalytics (){
             var resp = await this.$store.dispatch('LoadAnalytics',{
               "agent": "TEAM",
               "contactType": {},
-              "dateRange1": this.input.daterange.startDate,
-              "dateReange2": this.input.daterange.endDate
+              "dateRange1": this.getTime(this.input.daterange.startDate),
+              "dateReange2": this.getTime(this.input.daterange.endDate)
             });
             this.summary = (resp.data || {});
             this.summaries = (resp.results || []);
@@ -377,13 +385,19 @@
             this.$forceUpdate();
           },
           dateRangeOnUpdate : function (r) {
-            console.log("dateRangeOnUpdate",r);
-            if(this.input.daterange.startDate)
-                this.input.daterange.startDate = this.input.daterange.startDate.getTime();
-            if(this.input.daterange.endDate)
-               this.input.daterange.endDate = this.input.daterange.endDate.getTime();
             this.loadAnalytics();
-          }
+          },
+          onAction : function (argument) {
+            console.log("onAction",argument)
+            switch(argument.type){
+              case "apply" :
+                this.loadAnalytics();
+                break;
+              default: {
+                console.log("NoMapping",argument) 
+              }
+            }
+          },
         },
 
     }

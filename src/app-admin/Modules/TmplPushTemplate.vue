@@ -180,7 +180,7 @@
 
 <script>
 
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
     import TemplatePreview from "./../../Layout/Components/TemplatePreview.vue";
     import ModalSelector from "./../../Layout/Components/ModalSelector.vue";
     

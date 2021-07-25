@@ -89,7 +89,7 @@
 
 <script>
 
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {

@@ -99,7 +99,7 @@
 
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import formatters from './../../services/formatters';
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
     import mustache from 'mustache';
 
     import {library} from '@fortawesome/fontawesome-svg-core'

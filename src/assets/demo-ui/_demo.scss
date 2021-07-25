@@ -431,9 +431,30 @@
     text-align: center;
 }
 
-/***  ========================= Admin Panel ==========================================*/
-.app-page-title .daterangepicker.show-calendar .ranges {
-    padding: 0px !important;
+.vue-daterange-picker {
+  .btn.btn-success {
+    background-color : $success;
+  }
+  .btn.btn-secondary {
+    background-color : $secondary;
+  }
+  .daterangepicker td.active, .daterangepicker td.active:hover {
+    background-color: darken($success,15%);
+    border-color: transparent;
+    color: #fff;
+  }
+  .daterangepicker .ranges li.active {
+    background-color: darken($success,15%);
+  }
+  .reportrange-text{
+      background-color: #56CC9D;
+      border-color : #56CC9D;
+      color: #484848 !important;
+  }
 }
+
+
+
+/***  ========================= Admin Panel ==========================================*/
 
 

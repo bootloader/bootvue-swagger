@@ -161,7 +161,7 @@
 
 <script>
 
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
 
     import {library} from '@fortawesome/fontawesome-svg-core'

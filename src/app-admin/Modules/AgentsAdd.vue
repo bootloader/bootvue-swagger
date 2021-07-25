@@ -153,7 +153,7 @@
 
 <script>
 
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
 
     function newAgent() {
       return {

@@ -75,7 +75,7 @@
 
 <script>
 
-    import PageTitle from "../Layout/PageTitleAction.vue";
+    import PageTitle from "../Components/PageTitle.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import AgentChat from './AgentChat';
 
