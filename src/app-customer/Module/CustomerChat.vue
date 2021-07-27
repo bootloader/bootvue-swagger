@@ -22,8 +22,9 @@
       @edit="editMessage">
 
       <template v-slot:header>
-        <img v-if="header.titleImageUrl" class="sc-header--img" :src="header.titleImageUrl" alt="" />
-        <div class="sc-header--title">{{ header.title }}</div>
+        <img v-if="config.header.icon.url" class="sc-header--img" :src="config.header.icon.url" alt="" 
+          style="width:34px;height:34px ;" />
+        <div class="sc-header--title">{{ config.header.title.text }}</div>
       </template>
 
 
@@ -101,10 +102,17 @@
               imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
             }
           ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
-          header : {
-            titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-            title : "Support"
+          config : {
+            header : {
+              icon : {
+                url: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png'
+              },
+              title : {
+                text : "Support"
+              }
+            },
           },
+
           messageList: [
               // { type: 'text', author: `me`, data: { text: `Say yes!` } },
               // { type: 'text', author: `user1`, data: { text: `No.` } }
@@ -297,11 +305,17 @@
         SET_OPTIONS : function (myChatEvent) {
             console.log("SET_OPTIONS",myChatEvent);
             var config = myChatEvent.options.config || {};
+            var thisConfig = this.config;
             for(var key in config){
-              if(key.endsWith('.color')){
-                var keys = key.split(".");
+              var keys = key.split(".");
+              if(keys[keys.length-1] == 'color'){
                 this.colors[keys[0]][keys[1]] = config[key] || this.colors[keys[0]][keys[1]];
-                console.log(`${keys[0]}.${keys[1]}`,this.colors[keys[0]][keys[1]])
+                console.log(`${keys[0]}.${keys[1]} == `,this.colors[keys[0]][keys[1]])
+              } else if(thisConfig[keys[0]] && thisConfig[keys[0]][keys[1]] ){
+                console.log(`${keys[0]}.${keys[1]}.${keys[2]} =`,thisConfig[keys[0]][keys[1]][keys[2]])
+                thisConfig[keys[0]][keys[1]][keys[2]] =  config[key];
+              } else {
+                console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]][keys[1]])
               }
               this.isConfigSet = true;
             }
