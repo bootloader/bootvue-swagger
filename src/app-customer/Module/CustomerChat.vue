@@ -1,6 +1,7 @@
 <template>
   <div>
     <beautiful-chat
+      v-if="isConfigSet"
       :participants="participants"
       :onMessageWasSent="onMessageWasSent"
       :messageList="messageList"
@@ -139,6 +140,9 @@
           messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown),
           csid : null,
           form_input :  null,
+
+          //Flag to Determin if Plugin is SetOptions
+          isConfigSet : false
         }
       },
       methods: {
@@ -252,6 +256,8 @@
                 THAT.init();
               }
           },1000);
+
+
         },
 
 
@@ -279,15 +285,28 @@
               } else {
                 this.openChat();
               }
-          }
+          } else if(typeof this[myChatEvent.event] == 'function'){
+            this[myChatEvent.event](myChatEvent);
+          } 
         },
         sendPostMessage : function (obj) {
             var msg = JSON.stringify({myChatEvent : obj});
             //console.log("CHILD:sendPostMessage",msg)
             window.parent.postMessage(msg, '*');
         },
+        SET_OPTIONS : function (myChatEvent) {
+            console.log("SET_OPTIONS",myChatEvent);
+            var config = myChatEvent.options.config || {};
+            for(var key in config){
+              if(key.endsWith('.color')){
+                var keys = key.split(".");
+                this.colors[keys[0]][keys[1]] = config[key] || this.colors[keys[0]][keys[1]];
+                console.log(`${keys[0]}.${keys[1]}`,this.colors[keys[0]][keys[1]])
+              }
+              this.isConfigSet = true;
+            }
 
-
+        }
 
       },
       //Component Events
@@ -298,6 +317,9 @@
         } else if (element.attachEvent) {
             window.attachEvent('onmessage', this.onPostMessage);
         }
+        this.sendPostMessage({
+          event : "ON_CHAT_LOAD"
+        });
         this.init();
       },
       beforeDestroy () {

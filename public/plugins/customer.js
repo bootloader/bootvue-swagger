@@ -5,17 +5,19 @@
     var maxWidth = 400;
     var minWidth = 70;
     var UNIQUEID = '3ix5ju9kqbtr2W';
+    var OPTIONS = {};
 
     var myChat = {
         init : function (options) {
             options = Object.assign({
                 entity : "api", // After which chat is expired
             },options);
+            OPTIONS = options;
 
             options.path = ["https://",options.entity,".mehery.com/postman/plugin/customer/app/chat/"].join("");
             //options.path = ["http://local-kwt.amxremit.com:8082/postman/plugin/customer/app/chat/"].join("");
             //local-kwt.amxremit.com:8083/agent/app/home
-            //options.query = ["CDN_URL=http://127.0.0.1:8080"]
+            //options.query = ["CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true"]
             console.log("init",options);
             var div = document.createElement("div");
             document.getElementsByTagName('body')[0].appendChild(div);
@@ -90,6 +92,9 @@
 
 
         },
+        ON_CHAT_LOAD : function () {
+           this.postMessage({event : "SET_OPTIONS", options : OPTIONS });
+        },
         chatOnClose : function (argument) {
             this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivOpen",'myChatDivClose');
         },
@@ -122,6 +127,8 @@
         var myChatEvent = data.myChatEvent;
         if(myChatEvent.event == "ON_CHAT_TOGGLE"){
             if(myChatEvent.isChatOpen) myChat.chatOnOpen(); else myChat.chatOnClose();
+        } else if(typeof myChat[myChatEvent.event] == 'function'){
+            myChat[myChatEvent.event](myChatEvent);
         }
     });
 
