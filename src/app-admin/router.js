@@ -115,6 +115,12 @@ export default AppRouter.route({
             name: 'SetUpAgentPanel',
             component: () => import('./Modules/SetUpAgentPanel.vue'),    
         },
+        {
+            path : "/app/setup/client-api-keys",
+            name: 'SetUpAgentPanel',
+            component: () => import('./Modules/SetUpApiKeys.vue'),    
+        },
+
 
         {
             path: 'app/admins/components/modals',

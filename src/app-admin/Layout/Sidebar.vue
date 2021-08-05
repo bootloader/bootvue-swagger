@@ -194,6 +194,12 @@
                         title: 'Agent Panel',
                         icon: 'pe-7s-network fa fa-tools' ,
                     },
+                    {
+                        enabled : false,
+                        href: '/app/setup/client-api-keys',
+                        title: 'API Keys',
+                        icon: 'pe-7s-key fa fa-key' ,
+                    },
 
                     {
                         title: 'Dashboards',

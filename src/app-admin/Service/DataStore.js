@@ -302,7 +302,7 @@ const actions = {
     return response.data;
   },
   async SetConfigs({ commit }, config) {
-    let response = await axios.post("/api/config/set", config);
+    let response = await axios.post("/api/config", config);
     //commit("setTaxonomy", response.data.results);
     return response.data;
   },
