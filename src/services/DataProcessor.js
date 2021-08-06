@@ -1,6 +1,15 @@
  
- import formatters from './formatters';
+import formatters from './formatters';
 import {MyConst} from './global';
+
+function textScore(str1,str2){
+	if(!str1 || !str1) return 0; 
+	str1 = str1.replace(/([_-])/g," ");
+	str2 = str2.replace(/([_-])/g," ");
+	var score = str1.score(str2) + str2.score(str1);
+	console.log("str1=str2",str1,str2,"====>",score);
+	return score;
+}
 
  export default {
  	session (session){
@@ -30,5 +39,23 @@ import {MyConst} from './global';
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp));
 
 		 return session;
- 	}
+ 	},
+	quickReply(quickReply,tags){
+		var text = tags.text;
+		var categories = tags.categories;
+		quickReply.title = quickReply.title || "";
+		quickReply.title_len = (quickReply.title).length || 1;
+
+		quickReply.template = quickReply.template || "";
+		
+		quickReply.matchIndex = text ? quickReply.title.toLowerCase().indexOf(text) : -1;
+
+		quickReply.match = (categories.indexOf(quickReply.category)>-1);
+		var catScore = (quickReply.match ? 0.5:0) + textScore(categories.join(" "),quickReply.category)/2;
+
+		quickReply.matchScore = 
+		  (quickReply.matchIndex==0 ? 1 : 0) +  (quickReply.matchIndex > 0 ? quickReply.matchIndex/quickReply.title_len : 0)
+		  + catScore + textScore(text,quickReply.title)
+		  + textScore(text,quickReply.template);
+	}
  }

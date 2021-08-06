@@ -83,7 +83,7 @@
                                 LastIn : {{chat.lastInComingStamp | formatStamp}}
                             </p>
 
-                            <b-popover triggers="hover focus" :target="'time-details'+ chat.contactId" >
+                            <b-popover triggers="hover focus" :target="'x-time-details'+ chat.contactId" >
                               <template #title><small> 
                                 <div class="text-align-left"> @ {{chat._gracestamp | formatStamp}}</div>
                                 <div v-if="chat.lastResponseStamp" class="text-align-left"> LastOut : {{chat.lastResponseStamp | formatStamp}}</div>

@@ -189,7 +189,7 @@
                                 <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
                                     <span v-for="(quickReply, index) in quickReplies" v-if="(index < countQuickReplies)"
                                     @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                                    class="msg_cotainer_smart">  {{quickReply.title}}</span>    
+                                    class="msg_cotainer_smart">  {{quickReply.title}} {{quickReply.matchScore}}</span>    
                                 </span>
       
                             </div>
@@ -197,8 +197,9 @@
 
                         <slide-up-down :active="showQuickReplies && !!quickReplies" :duration="200" class="quick-replies-more"> 
                                 <span v-for="(quickReply, index) in quickReplies"  v-if="(index >= countQuickReplies)"
+                                    v-bind:key="index"
                                 @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                                class="msg_cotainer_smart">  {{quickReply.title}}</span>
+                                class="msg_cotainer_smart">  {{quickReply.title}} {{quickReply.matchScore}}</span>
                              <hr/>
                         </slide-up-down>
                     </div>
@@ -739,6 +740,7 @@
                     quickReply._message = quickReply._message;
                     return quickReply
                 });
+                console.log("this.quickReplies",this.quickReplies);
                 this.scrollToBottom(true);
             },
             async loadChats(){

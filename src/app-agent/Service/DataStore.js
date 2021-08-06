@@ -75,22 +75,11 @@ const cache = {
   })(),
   _MatchQuickReplies : pebounce(function (tags) {
     tags = (tags || {categories : [], text : ""})
-    var categories = tags.categories;
+    tags.categories = tags.categories;
     var _categories = [];
-    var text = (tags.text || "").toLowerCase() ;
+    tags.text = (tags.text || "").toLowerCase() ;
     var resps = state.quickReplies.map(function (quickReply) {
-          quickReply.title = quickReply.title || "";
-          quickReply.title_len = (quickReply.title).length || 1;
-
-          quickReply.template = quickReply.template || "";
-          quickReply.matchIndex = quickReply.title.toLowerCase().indexOf(text);
-
-          quickReply.match = (categories.indexOf(quickReply.category)>-1)
-          quickReply.matchScore = 
-            (quickReply.matchIndex==0 ? 1 : 0) +  (quickReply.matchIndex > 0 ? quickReply.matchIndex/quickReply.title_len : 0)
-            + (quickReply.match?0.5:0) + text.score(quickReply.title) + text.score(quickReply.template)
-            + quickReply.title.score(text) + quickReply.template.score(text);
-          //console.log("_MatchQuickReplies score",quickReply.matchScore)
+          DataProcessor.quickReply(quickReply,tags);
           return quickReply;
     });
     return resps.sort(function(a,b) {
