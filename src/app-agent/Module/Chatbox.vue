@@ -189,7 +189,7 @@
                                 <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
                                     <span v-for="(quickReply, index) in quickReplies" v-if="(index < countQuickReplies)"
                                     @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                                    class="msg_cotainer_smart">  {{quickReply.title}} {{quickReply.matchScore}}</span>    
+                                    class="msg_cotainer_smart">  {{quickReply.title}}</span>    
                                 </span>
       
                             </div>
@@ -199,7 +199,7 @@
                                 <span v-for="(quickReply, index) in quickReplies"  v-if="(index >= countQuickReplies)"
                                     v-bind:key="index"
                                 @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
-                                class="msg_cotainer_smart">  {{quickReply.title}} {{quickReply.matchScore}}</span>
+                                class="msg_cotainer_smart">  {{quickReply.title}}</span>
                              <hr/>
                         </slide-up-down>
                     </div>
