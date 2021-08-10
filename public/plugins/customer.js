@@ -15,7 +15,11 @@
             OPTIONS = options;
 
             options.path = ["https://",options.entity,".mehery.com/postman/plugin/customer/app/chat/"].join("");
-            //options.path = ["http://local-kwt.amxremit.com:8082/postman/plugin/customer/app/chat/"].join("");
+
+            if(options.local){
+                options.path = [options.local, "/plugin/customer/app/chat/"].join("");
+            }
+
             //local-kwt.amxremit.com:8083/agent/app/home
             //options.query = ["CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true"]
             console.log("init",options);
