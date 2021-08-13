@@ -309,7 +309,7 @@
                     labels : this.newLabels || this.labels
                     //contactType : this.activeChat.contactType
                 });
-                this.activeChat.contact = resp.data;
+                this.activeChat.contact.labelId = resp.data.labelId;
             },
             onLabelChange : function (newLabels) {
                 this.newLabels = newLabels; 
