@@ -6,7 +6,7 @@ module.exports = {
     filenameHashing: false,
   	configureWebpack: {
   		output: {
-  	   		filename: 'app.js'
+  	   		filename: 'app-[name].js'
   		}
   	},
 	 devServer: {
@@ -15,7 +15,7 @@ module.exports = {
         host : '0.0.0.0',
         disableHostCheck: true,
         allowedHosts: [
-          'app.mehery.com','api.mehery.com',
+          'app.cherrybase.com','api.cherrybase.com',
           'api.lalittanwar.com',
           'subdomain.host.com',
           'subdomain2.host.com',
@@ -63,7 +63,11 @@ module.exports = {
       'dev' : {
         entry: './src/main.js',
         template: 'public/index-dev.html',
-      }
+      },
+      'index' : {
+        entry: './src/main.js',
+        template: 'public/index.html',
+      },
     },
 
 
