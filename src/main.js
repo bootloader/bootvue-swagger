@@ -41,28 +41,20 @@ VTooltip.options.defaultTemplate =
   '<div class="foo" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
 Vue.use(VueToast);
 
- import AppWrapper from './AppWrapper'
-// import AppAdmin from './AppAdmin'
-// import AppAgent from './AppAgent'
-// import AppCustomer from './AppCustomer'
-// import AppDev from './AppDev'
+import AppWrapper from './AppWrapper';
 
-;(function mapper(condition,onmatch){ //Funtion
-	//console.log(condition,onmatch)
-	var result = (typeof condition == "function") ? condition() : condition;
-	return function (option,execute) {
-		if(option == result){
-			onmatch(result,execute(result));
-		}
-		return mapper(result,onmatch);
+;(function(configs,app){
+	var config = configs[app] || configs.dev
+	console.log("ALWAYS",app,config);
+
+	if(typeof config.beforeLoad == 'function'){
+		config.beforeLoad();
 	}
-})(function () { //Condition
-	return window.CONST.APP
-},function(result,config){
-	console.log("ALWAYS",result,config);
-	 import(`./app-${result}/router`).then(function (argument) {
 
-    new Vue({
+	Vue.component(`app-${app}`, config.component);
+	
+	import(`./app-${app}/router`).then(function (argument) {
+    	new Vue({
 		  el: '#app',
 		  store,service,
 		  router : mainrouter.router(),
@@ -70,19 +62,30 @@ Vue.use(VueToast);
 		  components: { AppWrapper }
 		});
 
+	 })
 
-	 });
-
-
-})("admin",function (admin) { //Admin App
-	 return { path : './AppAdmin.vue', name : 'AppAdmin'};
-})("agent", function(agent){ //Agent App
-   return { path : './AppAgent', name : 'AppAgent'};
-})("customer", function(customer){ //Customer App
-   return { path : './AppCustomer.vue', name : 'AppCustomer'};
-})("dev", function(agent){ //Agent App
-	return { path : './AppDev.vue', name : 'AppDev'};
-});
+})({
+	"admin" : {
+		component : () => import('./AppAdmin.vue')	
+	},
+	"agent" : { 
+		component : () => import('./AppAgent.vue')
+	},
+	"customer" : { //Customer App
+		component : () => import('./AppCustomer.vue')
+	},
+	"account" : { //Account App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-account/AppAccount.vue')
+	},
+	"front" : { //Account App
+		component : () => import('./app-front/AppFront.vue')
+	},
+	"dev" : { 
+		component : () => import('./AppDev.vue')
+	}
+},window.CONST.APP);
 
 
 

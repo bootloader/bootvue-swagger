@@ -16,7 +16,7 @@ export default {
     return new Router({
         mode: 'history',
         base : this.options.base,
-        scrollBehavior() {
+        scrollBehavior : this.options.scrollBehavior || function() {
             return window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         routes: this.options.routes

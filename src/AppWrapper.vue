@@ -7,13 +7,7 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-
-
-  Vue.component('app-admin', () => import('./AppAdmin.vue'));
-  Vue.component('app-agent', () => import('./AppAgent.vue'));
-  Vue.component('app-customer', () => import('./AppCustomer.vue'));
-  Vue.component('app-dev', () => import('./AppDev.vue'));
+import Vue from 'vue';
 
   export default {
     name : "AppWrapper",
@@ -22,7 +16,7 @@
         return 'app-'+window.CONST.APP;
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss">

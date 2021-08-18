@@ -25,7 +25,8 @@ module.exports = {
         // historyApiFallback: {
         //   rewrites: [
         //     { from: /\/admin/, to: '/admin-index.html' },
-        //     { from: /\/agent/, to: '/agent-index.html' }
+        //     { from: /\/agent/, to: '/agent-index.html' },
+        //     { from: /\/account/, to: '/index-account.html' }
         //   ]
         // },
         // writeToDisk: true,
@@ -37,6 +38,34 @@ module.exports = {
         //   });
         // },
     },
+
+    pages : {
+      'front' : {
+        entry: './src/main.js',
+        template: 'public/index-front.html',
+      },
+      'account' : {
+        entry: './src/main.js',
+        template: 'public/index-account.html',
+      },
+      'admin' : {
+        entry: './src/main.js',
+        template: 'public/index-admin.html',
+      },
+      'agent' : {
+        entry: './src/main.js',
+        template: 'public/index-agent.html',
+      },
+      'customer' : {
+        entry: './src/main.js',
+        template: 'public/index-customer.html',
+      },
+      'dev' : {
+        entry: './src/main.js',
+        template: 'public/index-dev.html',
+      }
+    },
+
 
     // pages: {
     //   'admin': {
