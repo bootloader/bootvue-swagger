@@ -43,4 +43,4 @@ jobs:
           repository-name: cherrybase/cherrybase.github.io # The repo the action should deploy to.
           commit-message: "$GITHUB_REF"
           folder: dist # The folder the action should deploy.
-          target-folder : web
+          #target-folder : /
