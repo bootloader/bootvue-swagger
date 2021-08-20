@@ -42,31 +42,52 @@ module.exports = {
     pages : {
       'front' : {
         entry: './src/main.js',
-        template: 'public/index-front.html',
+        template: 'public/app-front.html',
+        filename: 'app-front.html',
+        title: 'Front Page',
+        chunks: ['chunk-vendors', 'chunk-common', 'front']
       },
       'account' : {
         entry: './src/main.js',
-        template: 'public/index-account.html',
+        template: 'public/app-account.html',
+        filename: 'app-account.html',
+        title: 'Account Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'account']
       },
       'admin' : {
         entry: './src/main.js',
-        template: 'public/index-admin.html',
+        template: 'public/app-admin.html',
+        filename: 'app-admin.html',
+        title: 'Account Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'admin']
       },
       'agent' : {
         entry: './src/main.js',
-        template: 'public/index-agent.html',
+        template: 'public/app-agent.html',
+        filename: 'app-agent.html',
+        title: 'agent Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'agent']
       },
       'customer' : {
         entry: './src/main.js',
-        template: 'public/index-customer.html',
+        template: 'public/app-customer.html',
+        filename: 'app-account.html',
+        title: 'Account Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'customer']
       },
       'dev' : {
         entry: './src/main.js',
-        template: 'public/index-dev.html',
+        template: 'public/app-dev.html',
+        filename: 'app-dev.html',
+        title: 'Account Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'dev']
       },
       'index' : {
         entry: './src/main.js',
         template: 'public/index.html',
+        filename: 'index.html',
+        title: 'Account Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'index']
       },
     },
 

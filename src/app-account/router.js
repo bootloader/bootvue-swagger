@@ -71,12 +71,17 @@ export default AppRouter.route({
             {
               path: '/login',
               name: 'login',
-              component: () => import(/* webpackChunkName: "demo" */ './views/Pages/Login.vue')
+              component: () => import(/* webpackChunkName: "register" */ './views/Pages/Login.vue')
             },
             {
               path: '/register',
               name: 'register',
-              component: () => import(/* webpackChunkName: "demo" */ './views/Pages/Register.vue')
+              component: () => import(/* webpackChunkName: "register" */ './views/Pages/Register.vue')
+            },
+            {
+              path: '/register-done',
+              name: 'register-done',
+              component: () => import(/* webpackChunkName: "register" */ './views/Pages/RegisterDone.vue')
             },
             { 
                 path: '*', 

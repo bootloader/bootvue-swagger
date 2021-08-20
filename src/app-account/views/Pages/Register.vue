@@ -5,21 +5,29 @@
       <!-- Table -->
       <b-row class="justify-content-center">
         <b-col lg="6" md="8" >
-          <b-card no-body class="bg-secondary border-0">
-            <b-card-header class="bg-transparent pb-5 d-none">
-              <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
-              <div class="text-center">
-                <a href="#" class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="/argon/img//icons/common/github.svg"></span>
-                  <span class="btn-inner--text">Github</span>
-                </a>
-                <a href="#" class="btn btn-neutral btn-icon">
-                  <span class="btn-inner--icon"><img src="/argon/img//icons/common/google.svg"></span>
-                  <span class="btn-inner--text">Google</span>
-                </a>
-              </div>
+          <b-card no-body class="bg-secondary border-0 " >
+            <b-card-header class="px-lg-5 bg-transparent pb-2 d-none">
+               <h2> Get started free </h2>
+                <small> No credit card required</small>
             </b-card-header>
-            <b-card-body class="px-lg-5 py-lg-5">
+            <b-card-body class="px-lg-5 py-lg-4">
+              <div class="text-muted mb-4">
+               <h2> Get started free </h2>
+                <small> No credit card required</small>
+              </div>
+              <div class="d-none">
+                <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
+                <div class="text-center">
+                  <a href="#" class="btn btn-neutral btn-icon mr-4">
+                    <span class="btn-inner--icon"><img src="/argon/img//icons/common/github.svg"></span>
+                    <span class="btn-inner--text">Github</span>
+                  </a>
+                  <a href="#" class="btn btn-neutral btn-icon">
+                    <span class="btn-inner--icon"><img src="/argon/img//icons/common/google.svg"></span>
+                    <span class="btn-inner--text">Google</span>
+                  </a>
+                </div>
+              </div>
               <div class="text-center text-muted mb-4 d-none">
                 <small>Or sign up with credentials</small>
               </div>
@@ -37,7 +45,7 @@
                   <base-input alternative question feedback
                               class="mb-3"
                               placeholder="Email" label="Email" 
-                              name="MyEmail"
+                              name="Email"
                               :rules="{required: true, email: true}" required
                               :valid="true"
                               v-model="model.email">
@@ -49,7 +57,7 @@
                               placeholder="Company Name" label="Company Name"
                               name="Company Name"
                               :rules="{required: true}"  required
-                              v-model="model.name">
+                              v-model="model.company">
                   </base-input>
 
                 <base-select alternative
@@ -57,7 +65,7 @@
                               placeholder="Role"
                               name="Role"
                               :rules="{required: true}"  required
-                              v-model="model.name">
+                              v-model="model.role">
                   <option value="" disabled selected hidden>Role</option>
                   <option value="agency_partner_developer">Agency / Partner Developer</option>
                   <option value="professional_developer">Professional Developer</option>
@@ -70,7 +78,7 @@
                               placeholder="Country"
                               name="Country"
                               :rules="{required: true}"  required
-                              v-model="model.name">
+                              v-model="model.country">
               <option value="" disabled selected hidden >Country</option>
               <option data-newsletter-checkbox="hidden" value="United States">United States</option>
               <option data-newsletter-checkbox="hidden" value="Afghanistan">Afghanistan</option>
@@ -339,7 +347,10 @@
         model: {
           name: '',
           email: '',
+          company: '',
           password: '',
+          role: '',
+          country: '',
           agree: false
         }
       }
@@ -347,6 +358,7 @@
     methods: {
       onSubmit() {
         // this will be called only after form is valid. You can do an api call here to register users
+        this.$router.push("/register-done")
       }
     }
 
