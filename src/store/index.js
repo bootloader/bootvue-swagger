@@ -10,5 +10,5 @@ export default new Vuex.Store({
   modules: {
     apiStore
   },
-  plugins: [createPersistedState()]
+  //plugins: [createPersistedState()]
 });
