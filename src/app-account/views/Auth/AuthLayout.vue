@@ -140,23 +140,20 @@
             <b-nav
               class="nav-footer justify-content-center justify-content-xl-end"
             >
-              <b-nav-item href="https://www.creative-tim.com" target="_blank">
-                Creative Tim
-              </b-nav-item>
               <b-nav-item
-                href="https://www.creative-tim.com/presentation"
+                href="https://www.mehery.com/#aboutus"
                 target="_blank"
               >
                 About Us
               </b-nav-item>
-              <b-nav-item href="http://blog.creative-tim.com" target="_blank">
-                Blog
+              <b-nav-item href="https://www.mehery.com/privacy-policy/#page-content" target="_blank">
+                Privacy Policy
               </b-nav-item>
               <b-nav-item
-                href="https://www.creative-tim.com/license"
+                href="https://www.mehery.com/terms-conditions/#page-content"
                 target="_blank"
               >
-                License
+                Terms of Service
               </b-nav-item>
             </b-nav>
           </b-col>
@@ -269,5 +266,8 @@ $scaleSize: 0.8;
 
 .main-content .zoomOut {
   animation-name: zoomOut8;
+}
+#footer-main {
+  border-top: 1px #e2e2e2 solid;
 }
 </style>

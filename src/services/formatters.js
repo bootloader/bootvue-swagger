@@ -95,7 +95,7 @@ var CONTACT_LABELS_DICT = {};
   }
 
 var formatter = {
-  validators : ["phone","phoneML"],
+  validators : ["phone","phoneML","email"],
 	instance : function (argument) {
 	},
   addContactLabels : function (labels) {
@@ -198,6 +198,10 @@ var formatter = {
   },
 
   //Validators
+  email : function emailValidator (value) {
+    if(/^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}/.test(value))
+    return 'Enter valid email address eg you@company.com';
+  },
   phone : function phoneValidator (value) {
     if(phoneFormatted(value)){
       return true

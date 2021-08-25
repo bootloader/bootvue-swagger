@@ -66,22 +66,22 @@ export default AppRouter.route({
         {
           path: '/',
           redirect: 'login',
-          component: () => import('./views/Pages/AuthLayout.vue'),
+          component: () => import('./views/Auth/AuthLayout.vue'),
           children: [
             {
-              path: '/login',
+              path: '/auth/login',
               name: 'login',
-              component: () => import(/* webpackChunkName: "register" */ './views/Pages/Login.vue')
+              component: () => import(/* webpackChunkName: "register" */ './views/Auth/Login.vue')
             },
             {
-              path: '/register',
+              path: '/auth/register',
               name: 'register',
-              component: () => import(/* webpackChunkName: "register" */ './views/Pages/Register.vue')
+              component: () => import(/* webpackChunkName: "register" */ './views/Auth/Register.vue')
             },
             {
-              path: '/register-done',
+              path: '/auth/register-done',
               name: 'register-done',
-              component: () => import(/* webpackChunkName: "register" */ './views/Pages/RegisterDone.vue')
+              component: () => import(/* webpackChunkName: "register" */ './views/Auth/RegisterDone.vue')
             },
             { 
                 path: '*', 

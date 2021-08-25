@@ -58,35 +58,35 @@ module.exports = {
         entry: './src/main.js',
         template: 'public/app-admin.html',
         filename: 'app-admin.html',
-        title: 'Account Aapp',
+        title: 'Admin Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'admin']
       },
       'agent' : {
         entry: './src/main.js',
         template: 'public/app-agent.html',
         filename: 'app-agent.html',
-        title: 'agent Aapp',
+        title: 'Agent Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'agent']
       },
       'customer' : {
         entry: './src/main.js',
         template: 'public/app-customer.html',
-        filename: 'app-account.html',
-        title: 'Account Aapp',
+        filename: 'app-customer.html',
+        title: 'Customer Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'customer']
       },
       'dev' : {
         entry: './src/main.js',
         template: 'public/app-dev.html',
         filename: 'app-dev.html',
-        title: 'Account Aapp',
+        title: 'Dev Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'dev']
       },
       'index' : {
         entry: './src/main.js',
         template: 'public/index.html',
         filename: 'index.html',
-        title: 'Account Aapp',
+        title: 'Index Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'index']
       },
     },

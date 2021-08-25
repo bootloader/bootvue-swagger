@@ -51,6 +51,14 @@
                               v-model="model.email">
                   </base-input>
 
+                  <base-input alternative question feedback
+                              class="mb-3"
+                              placeholder="Phone" label="Phone" 
+                              name="Phone"
+                              rules="required|phone" required
+                              :valid="true"
+                              v-model="model.phone">
+                  </base-input>
 
                   <base-input alternative question feedback
                               class="mb-3"
@@ -346,10 +354,9 @@
       return {
         model: {
           name: '',
-          email: '',
-          company: '',
+          email: '', phone : '',
+          company: '', role: '',
           password: '',
-          role: '',
           country: '',
           agree: false
         }
