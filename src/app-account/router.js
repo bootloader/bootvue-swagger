@@ -83,6 +83,16 @@ export default AppRouter.route({
               name: 'register-done',
               component: () => import(/* webpackChunkName: "register" */ './views/Auth/RegisterDone.vue')
             },
+            {
+              path: '/auth/forgot-pass',
+              name: 'forgot-pass',
+              component: () => import(/* webpackChunkName: "register" */ './views/Auth/ForgotPassword.vue')
+            },
+            {
+              path: '/auth/reset-pass',
+              name: 'reset-pass',
+              component: () => import(/* webpackChunkName: "register" */ './views/Auth/ResetPassword.vue')
+            },
             { 
                 path: '*', 
                 component: () => import('./views/NotFoundPage.vue'),

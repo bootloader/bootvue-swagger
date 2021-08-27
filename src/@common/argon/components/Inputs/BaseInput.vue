@@ -37,8 +37,8 @@
             :value="value"
             :type="type"
             v-on="listeners"
-            v-bind="$attrs"
-            :valid="valid"
+            v-bind="$attrs" 
+            :valid="valid" 
             :placeholder="question ? '' : $attrs.placeholder"
             :required="required"
             class="form-control"
@@ -61,6 +61,7 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
+      <password-meter v-show="strengthBar" :password="value" @score="listeners.score" />
       <slot name="success">
         <div class="valid-feedback" v-if="valid && validated && successMessage">
           {{successMessage}}
@@ -76,9 +77,12 @@
 </template>
 <script>
  
+ import passwordMeter from "vue-simple-password-meter";
+
  var ID_COUNTER = 0;
 
   export default {
+    components: { passwordMeter },
     inheritAttrs: false,
     name: "base-input",
     props: {
@@ -95,6 +99,11 @@
         type: Boolean,
         default: false,
         description: "Whether to show feedback icon"
+      },
+      strengthBar : {
+        type: Boolean,
+        default: false,
+        description: "Whether to show Password Strength Bar"
       },
       group: {
         type: Boolean,
@@ -170,7 +179,8 @@
           ...this.$listeners,
           input: this.updateValue,
           focus: this.onFocus,
-          blur: this.onBlur
+          blur: this.onBlur,
+          score : this.onScore
         };
       },
       slotData() {
@@ -204,6 +214,9 @@
       onBlur(evt) {
         this.focused = false;
         this.$emit("blur", evt);
+      },
+      onScore(evt) {
+        this.$emit("score", evt);
       }
     }
   };

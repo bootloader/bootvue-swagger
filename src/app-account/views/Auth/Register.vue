@@ -332,6 +332,17 @@
 </base-select>
 
 
+
+                  <b-row class=" my-4">
+                    <b-col cols="12">
+                      <base-input :rules="{ required: { allowFalse: false } }" name=Privacy Policy>
+                        <b-form-checkbox v-model="model.agree">
+                          <span class="text-muted">I agree with the <a target="_blank" href="https://www.mehery.com/privacy-policy/#page-content">Privacy Policy</a></span>
+                        </b-form-checkbox>
+                      </base-input>
+                    </b-col>
+                  </b-row>
+
                   <div class="text-center">
                     <b-button type="submit" variant="primary" class="mt-4">Create account</b-button>
                   </div>
