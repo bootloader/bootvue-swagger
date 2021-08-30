@@ -112,9 +112,11 @@ export default {
   },
   methods: {
     toggleMenu() {
+      console.log(".toggleMenu")
       this.$emit('change', !this.show);
     },
     closeMenu() {
+      console.log(".closeMenu")
       this.$emit('change', false);
     }
   }

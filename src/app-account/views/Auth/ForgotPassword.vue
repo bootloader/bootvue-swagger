@@ -19,54 +19,26 @@
                 </a>
               </div>
             </b-card-header>
-            <b-card-body class="px-lg-5 py-lg-5">
+            <b-card-body class="px-lg-5 py-lg-2">
+              <div class="text-muted mb-4">
+                <h2> Forgot your password? </h2>
+                <small> No worry, we will send password reset link on your registered email.</small>
+              </div>
               <div class="text-center text-muted mb-4 d-none">
                 <small>Or sign up with credentials</small>
               </div>
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
-                  <base-input alternative
-                              class="mb-3"
-                              placeholder="Name"
-                              name="Name"
-                              :rules="{required: true}"  required
-                              v-model="model.name">
-                  </base-input>
-
-                  <base-input alternative
-                              class="mb-3"
-                              placeholder="Email"
+                  <base-input alternative question feedback
+                              class="mb-3" 
+                              placeholder="Email" label="Email"
                               name="Email"
                               :rules="{required: true, email: true}" required
                               v-model="model.email">
-                  </base-input>
-
-                  <base-input alternative
-                              class="mb-3"
-                              placeholder="password"
-                              type="password"
-                              name="Password"
-                              :rules="{required: true, min: 6}" required
-                              v-model="model.password">
-                  </base-input>
-                  
-                  <div class="text-muted font-italic"><small>password strength: <span
-                    class="text-success font-weight-700">strong</span></small></div>
-                  
-                  
-                  <b-row class=" my-4">
-                    <b-col cols="12">
-                      <base-input :rules="{ required: { allowFalse: false } }" name=Privacy Policy>
-                        <b-form-checkbox v-model="model.agree">
-                          <span class="text-muted">I agree with the <a href="#!">Privacy Policy</a></span>
-                        </b-form-checkbox>
-                      </base-input>
-                    </b-col>
-                  </b-row>
-
+                  </base-input>                  
                   
                   <div class="text-center">
-                    <b-button type="submit" variant="primary" class="mt-4">Create account</b-button>
+                    <b-button type="submit" variant="primary" class="mt-4">Send Reset Link</b-button>
                   </div>
                 </b-form>
               </validation-observer>

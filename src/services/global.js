@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const myVar = 'This is my variable'
 
 window.CONST.dev =  window.CONST.dev != 'false';
@@ -82,3 +84,5 @@ export const MyFunc  = {
 		return ["O","Oi"].indexOf(mType) > -1
 	}
 }
+
+Vue.prototype.$config = MyConst.config;

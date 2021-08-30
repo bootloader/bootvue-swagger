@@ -1,16 +1,52 @@
 <template>
   <div class="main-content bg-default">
-    <base-nav
-      v-model="showMenu"
+
+  <b-navbar v-if="defaultBar" fixed 
+   toggleable="md" type="transparent" variant="faded"
+   class="navbar-horizontal navbar-main navbar-top navbar-dark">
+
+      <b-row class="w-100">
+        
+        <b-col cols=12 md="4" class="navbar-wrapper text-md-center">
+          <b-navbar-brand to="/" class="pl-3">
+            <img :src="$config.PROP_LOGO_BG_X_LOGO_W" />
+          </b-navbar-brand>
+          <b-navbar-toggle target="nav-text-collapse" class="float-right"></b-navbar-toggle>
+        </b-col>
+
+        <b-col cols="12" md="8">
+          <b-collapse id="nav-text-collapse" is-nav>
+            <b-navbar-nav class="align-items-lg-center ml-md-auto">
+
+                <b-nav-item to="/auth/forgot-pass" v-if="$route.name !== 'forgot-pass'">
+                  <i class="fa fa-unlock-alt text-primary"></i>
+                  <span class="nav-link-inner--text text-primary">Forgot password</span>
+                </b-nav-item>
+                <b-nav-item to="/auth/register" v-if="$route.name !== 'register'">
+                  <i class="fa fa-user  text-primary"></i>
+                  <span class="nav-link-inner--text  text-primary">Register</span>
+                </b-nav-item>
+                <b-nav-item to="/auth/login" v-if="$route.name !== 'login'">
+                  <i class="fa fa-key  text-primary"></i>
+                  <span class="nav-link-inner--text  text-primary">Login</span>
+                </b-nav-item>
+
+            </b-navbar-nav>
+          </b-collapse>
+        </b-col>
+      </b-row>
+
+  </b-navbar>
+
+
+    <base-nav v-if="!defaultBar"
       :transparent="true"
       menu-classes="justify-content-end"
       class="navbar-horizontal navbar-main navbar-top navbar-dark"
       expand="lg"
-    >
+      @change="onToggleNavbar" >
+
       <div slot="brand" class="navbar-wrapper">
-        <b-navbar-brand to="/">
-          <img src="/logo/logo-long-o.png" />
-        </b-navbar-brand>
       </div>
 
       <template>
@@ -18,15 +54,13 @@
           <b-row>
             <b-col cols="6" class="collapse-brand">
               <router-link to="/">
-                <img src="/argon/img/brand/green.png" />
+                <img :src="$config.PROP_LOGO_BG_X_ICON" />
               </router-link>
             </b-col>
             <b-col cols="6" class="collapse-close">
               <button
                 type="button"
-                class="navbar-toggler"
-                @click="showMenu = false"
-              >
+                class="navbar-toggler" @click="closeMenu">
                 <span></span>
                 <span></span>
               </button>
@@ -34,79 +68,43 @@
           </b-row>
         </div>
         <b-navbar-nav class="align-items-lg-center ml-lg-auto">
-          <b-nav-item to="/register">
-            <i class="ni ni-circle-08"></i>
-            <span class="nav-link-inner--text">Register</span>
+          <b-nav-item to="/auth/forgot-pass" v-if="$route.name !== 'forgot-pass'">
+            <i class="fa fa-unlock-alt text-primary"></i>
+            <span class="nav-link-inner--text text-primary">Forgot password</span>
           </b-nav-item>
-          <b-nav-item to="/login">
-            <i class="ni ni-key-25"></i>
-            <span class="nav-link-inner--text">Login</span>
+          <b-nav-item to="/auth/register" v-if="$route.name !== 'register'">
+            <i class="fa fa-user  text-primary"></i>
+            <span class="nav-link-inner--text  text-primary">Register</span>
+          </b-nav-item>
+          <b-nav-item to="/auth/login" v-if="$route.name !== 'login'">
+            <i class="fa fa-key  text-primary"></i>
+            <span class="nav-link-inner--text  text-primary">Login</span>
           </b-nav-item>
         </b-navbar-nav>
       </template>
     </base-nav>
 
-    <b-row class="min-vh-100 w-100 m-0 p-0">
+    <b-row class="main-content  min-vh-100 w-100 m-0 p-0">
       <b-col md="4">
-        <div class="main-content min-vh-100 w-75 m-auto pt-7 pb-3">
+        <div class="min-md-vh-100 w-75 m-auto pt-6 pb-3">
 
 
-<ul class="list-unstyled bg-transparent text-white">
-  <li class="media bg-transparent mt-4">
-    <span class="icon mr-3 ">
-      <i class="far fa-user-circle"></i>
+<ul class="list-unstyled bg-transparent text-white row">
+  <li v-for="b in bulletin" class="media bg-transparent mt-4 col-12 col-md-12" :key="b.title">
+    <span class="icon mr-3 text-center small">
+      <i :class="b.icon" class=""></i>
     </span> 
-    <div class="clearfix" />
-    <div class="media-body">  
-      <h2 class="info-title text-white">Free account</h2>    
-      <p class="description"> 
-          Create free account and add multiple channles for free
+    <small class="clearfix text-white d-inline d-md-none">{{b.title}}</small> 
+    <div class="clearfix"/>
+    <div class="media-body d-none d-md-inline">  
+      <h2 class="info-title text-white">{{b.title}}</h2>    
+      <p class="description d-none d-lg-inline"> 
+          {{b.caption}}
       </p>
     </div>
-  </li>
-  <li class="media bg-transparent mt-4">
-    <span class="icon mr-3">
-      <i class="far fa-comments"></i>
-    </span> 
-    <div class="clearfix" />
-    <div class="media-body">  
-      <h2 class="info-title text-white">Multi channel</h2>    
-      <p class="description"> 
-        Connect with your custmers on popular social channles from single screen. 
-        Focus on communication not the mode.
-      </p>
-    </div>
-  </li>
-  <li class="media bg-transparent mt-4">
-    <span class="icon mr-3">
-      <i class="fa fa-user-astronaut"></i>
-    </span> 
-    <div class="clearfix" />
-    <div class="media-body">  
-       <h2 class="info-title text-white">Smart communication</h2>    
-      <p class="description"> 
-        Define message formats, reply suggestions, manage your customer support action from agent panel
-      </p>
-    </div>
-  </li>
-  <li class="media bg-transparent mt-4">
-    <span class="icon mr-3">
-      <i class="fa fa-bolt"></i>
-    </span> 
-    <div class="clearfix" />
-    <div class="media-body">  
-       <h2 class="info-title text-white">Quick response</h2>    
-      <p class="description"> 
-        Quick replies, automated responses.
-      </p>
-    </div>
+    <div class="clearfix"/>
   </li>
 </ul>
-
-
-
-
-
 
         </div>
       </b-col>
@@ -180,10 +178,17 @@ export default {
   data() {
     return {
       showMenu: false,
+      defaultBar : true,
       menuTransitionDuration: 250,
       pageTransitionDuration: 200,
       year: new Date().getFullYear(),
       pageClass: "login-page",
+      bulletin : [
+        {icon : "far fa-user-circle",title : "Free account", caption : "Create free account and add multiple channles for free"},
+        {icon: "far fa-comments", title : "Multi channel", caption : "Connect with your custmers on popular social channles from single screen. Focus on communication not the mode."},
+        {icon : "fa fa-user-astronaut", title : "Smart communication", caption : "Define message formats, reply suggestions, manage your customer support action from agent panel."},
+        {icon : "fa fa-bolt", title : "Quick response", caption : "Quick replies, automated responses."},
+      ]
     };
   },
   computed: {
@@ -192,13 +197,25 @@ export default {
     },
   },
   methods: {
+    onToggleNavbar(showMenu) {
+      console.log("onToggleNavbar",showMenu);
+      this.showMenu = showMenu;
+      if(this.showMenu){
+          //document.body.classList.add("nav-open");
+      } else {
+          //document.body.classList.remove("nav-open");
+      }
+    },
     toggleNavbar() {
       document.body.classList.toggle("nav-open");
       this.showMenu = !this.showMenu;
+      console.log("toggleNavbar",this.showMenu )
     },
     closeMenu() {
+      console.log("closeMenu")
       document.body.classList.remove("nav-open");
       this.showMenu = false;
+      console.log("toggleNavbar",this.showMenu )
     },
     setBackgroundColor() {
       document.body.classList.add("bg-default");
@@ -218,6 +235,7 @@ export default {
     this.removeBackgroundColor();
   },
   beforeRouteUpdate(to, from, next) {
+    console.log("beforeRouteUpdate")
     // Close the mobile menu first then transition to next page
     if (this.showMenu) {
       this.closeMenu();

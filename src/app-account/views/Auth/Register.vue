@@ -10,7 +10,7 @@
                <h2> Get started free </h2>
                 <small> No credit card required</small>
             </b-card-header>
-            <b-card-body class="px-lg-5 py-lg-4">
+            <b-card-body class="px-lg-5 py-lg-2">
               <div class="text-muted mb-4">
                <h2> Get started free </h2>
                 <small> No credit card required</small>
@@ -35,7 +35,6 @@
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input alternative question feedback
                               class="mb-3" 
-                              ho="ho"
                               label="Name"
                               name="Name"
                               :rules="{required: true}"  required
