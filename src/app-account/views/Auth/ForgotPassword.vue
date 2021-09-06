@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Page content -->
-    <b-container class="x-position-absolute">
+    <b-container v-if="viewResetForm" class="x-position-absolute">
       <!-- Table -->
       <b-row class="justify-content-center">
         <b-col lg="6" md="8" >
@@ -46,6 +46,31 @@
           </b-card>
         </b-col>
       </b-row>
+
+      <!-- Reset Done -->
+      <b-row v-if="viewMailSent" class="justify-content-center">
+        <b-col lg="6" md="8" >
+          <b-card no-body class="bg-secondary border-0" >
+            <b-card-header class="px-lg-5 bg-transparent pb-2 text-center ">
+                <h2> Email sent … </h2>
+                <small> Please check your email to reset your password.</small>
+            </b-card-header>
+            <b-card-body class="px-lg-5 py-lg-4">
+              
+              <div class="text-center text-muted mb-4">
+                <small>If {{model.email}} is not your email address, please go back and enter the correct one.</small>
+              </div>
+              
+              <div class="text-center text-muted mb-4">
+                <small>If you haven't received our email in 15 minutes, please check your spam folder.</small>
+              </div>
+
+
+            </b-card-body>
+          </b-card>
+        </b-col>
+      </b-row>
+
     </b-container>
   </div>
 </template>
@@ -60,12 +85,34 @@
           email: '',
           password: '',
           agree: false
+        },
+        view : {
+          screen : null // NULL, MAILSENT
         }
       }
     },
+    computed : {
+      viewMailSent : function (params) {
+          return this.view.screen == 'MAILSENT';
+      },
+      viewResetForm : function (params) {
+          return !this.view.screen;
+      }
+    },
     methods: {
-      onSubmit() {
+      async onSubmit() {
         // this will be called only after form is valid. You can do an api call here to register users
+        try {
+          //this.model.email = "sds"
+          let resp = await this.$service.submit("/account/pub/forgot/pass",{
+            email : this.model.email
+          });
+          console.log("resp",resp);
+          this.view.MAILSENT = 'MAILSENT';
+        } catch(e){
+            console.log("error",e.response.data);
+            this.$refs.signupContact.setErrors(e.response.data.veeErrors)
+        }
       }
     }
 

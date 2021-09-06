@@ -95,7 +95,7 @@ var CONTACT_LABELS_DICT = {};
   }
 
 var formatter = {
-  validators : ["phone","phoneML","email"],
+  validators : ["phone","phoneML","emailz"],
 	instance : function (argument) {
 	},
   addContactLabels : function (labels) {
@@ -198,9 +198,11 @@ var formatter = {
   },
 
   //Validators
-  email : function emailValidator (value) {
-    if(/^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}/.test(value))
-    return 'Enter valid email address eg you@company.com';
+  emailz : function emailValidator (value) {
+    if(/^[\w!#$%&'*+/=?`{|}~^-]+(?:\.[\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}/.test(value))
+      return true
+    return 'errors.ValidEmail';
+    //return true;
   },
   phone : function phoneValidator (value) {
     if(phoneFormatted(value)){
@@ -209,13 +211,14 @@ var formatter = {
     if(phoneFormatted(value.replace(/[\ \+]/g,""))){
       return true
     } 
-    return 'Enter valid mobile number eg +91 XXXXX XXXXX';
+    return "errors.ValidPhone";
+    //'Enter valid mobile number eg +91 XXXXX XXXXX';
   },
   phoneML : function phoneValidator (lineString) {
     var lines = lineString.match(/[^\r\n\,]+/g);
     for(var i in lines){
       if(lines[i] && !phoneFormatted(lines[i]) && !phoneFormatted(lines[i].replace(/[\ \+]/g,"")))
-          return 'Enter valid mobile number eg 91XXXXXXXXXX per line';
+          return 'errors.ValidPhonesPerLine';
     }
     return true;
   },

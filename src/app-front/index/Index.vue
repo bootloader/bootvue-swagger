@@ -8,36 +8,25 @@
         <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
           <div class="pt-32 sm:pt-0">
             <h2 class="font-semibold text-4xl text-blueGray-600">
-              Vue Notus - A beautiful extension for Tailwind CSS.
+              A Simple And Smart Tool That Will Help Grow Your Business
             </h2>
             <p class="mt-4 text-lg leading-relaxed text-blueGray-500">
-              Vue Notus is Free and Open Source. It does not change any of the
-              CSS from
-              <a
-                href="https://tailwindcss.com/?ref=creativetim"
-                class="text-blueGray-600"
-                target="_blank"
-              >
-                Tailwind CSS.
-              </a>
-              It features multiple HTML elements and it comes with dynamic
-              components for ReactJS, Vue and Angular.
+               {{$config.PROP_SERVICE_NAME}}'s social media messaging engine provides an all new way of keeping up to your customer acquisition and customer commitments. Powered by intelligent virtual assistants, enterprise data and Machine Learning, enhance your customer delight and Digital ROI's.
             </p>
             <div class="mt-12">
               <a
-                href="https://www.creative-tim.com/learning-lab/tailwind/vue/overview/notus?ref=vn-index"
-                target="_blank"
+                href="/account/auth/register"
                 class="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-emerald-500 active:bg-emerald-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
               >
                 Get started
               </a>
-              <a
-                href="https://github.com/creativetimofficial/vue-notus?ref=vn-index"
+              <router-link
+                tag="a"
+                to="/landing"
                 class="github-star ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
-                target="_blank"
               >
-                Github Star
-              </a>
+                Read more
+              </router-link>
             </div>
           </div>
         </div>
@@ -96,12 +85,12 @@
                   ></polygon>
                 </svg>
                 <h4 class="text-xl font-bold text-white">
-                  Great for your awesome project
+                  All The Tools You Need In One Workspace
                 </h4>
                 <p class="text-md font-light mt-2 text-white">
-                  Putting together a page has never been easier than matching
-                  together pre-made components. From landing pages presentation
-                  to login areas, you can easily customise and built your pages.
+                  Yes, you've come to the right place if you're looking out to drive higher customer conversation ratios and handling your enquiries and business flexibly.
+
+There's more we got to offer you
                 </p>
               </blockquote>
             </div>
@@ -118,11 +107,10 @@
                       <i class="fas fa-sitemap"></i>
                     </div>
                     <h6 class="text-xl mb-1 font-semibold">
-                      CSS Components
+                      Messaging API's
                     </h6>
                     <p class="mb-4 text-blueGray-500">
-                      Vue Notus comes with a huge number of Fully Coded CSS
-                      components.
+                       {{$config.PROP_SERVICE_NAME}}’s integrated messaging API, connects you to multiple social media messaging platforms.
                     </p>
                   </div>
                 </div>
@@ -134,11 +122,10 @@
                       <i class="fas fa-drafting-compass"></i>
                     </div>
                     <h6 class="text-xl mb-1 font-semibold">
-                      JavaScript Components
+                      Smart Conversations
                     </h6>
                     <p class="mb-4 text-blueGray-500">
-                      We also feature many dynamic components for React, NextJS,
-                      Vue and Angular.
+                      {{$config.PROP_SERVICE_NAME}}’s Messaging Channel, Enterprise integrated BOT and Agent Communicator							
                     </p>
                   </div>
                 </div>
@@ -151,10 +138,9 @@
                     >
                       <i class="fas fa-newspaper"></i>
                     </div>
-                    <h6 class="text-xl mb-1 font-semibold">Pages</h6>
+                    <h6 class="text-xl mb-1 font-semibold">Intelligent Conversations</h6>
                     <p class="mb-4 text-blueGray-500">
-                      This extension also comes with 3 sample pages. They are
-                      fully coded so you can start working instantly.
+                       {{$config.PROP_SERVICE_NAME}}’s Smart Conversations powered by Machine Learning
                     </p>
                   </div>
                 </div>
@@ -169,8 +155,8 @@
                       Documentation
                     </h6>
                     <p class="mb-4 text-blueGray-500">
-                      Built by developers for developers. You will love how easy
-                      is to to work with Vue Notus.
+                      You will love how easy
+                      is to to work with {{$config.PROP_SERVICE_NAME}}.
                     </p>
                   </div>
                 </div>
@@ -189,14 +175,12 @@
               <i class="fas fa-sitemap text-xl"></i>
             </div>
             <h3 class="text-3xl mb-2 font-semibold leading-normal">
-              CSS Components
+              Smart Conversations
             </h3>
             <p
               class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600"
             >
-              Every element that you need in a product comes built in as a
-              component. All components fit perfectly with each other and can
-              have different colours.
+              {{$config.PROP_SERVICE_NAME}}’s Messaging Channel, Enterprise integrated BOT and Agent Communicator driven responses give your organization an incredible edge – in getting intelligent and educated data to customers via a BOT or by means of an Agent driving customer satisfaction and enhancing Customer Acquisition and Customer Engagement team’s productivity. 
             </p>
             <div class="block pb-6">
               <span
@@ -207,40 +191,40 @@
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Inputs
+                Menu
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Labels
+                Customer Labels
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Menus
+                Chat Tags
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Navbars
+                Sticky Notes
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Pagination
+                Quick Replies
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Progressbars
+                Quick Media
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Typography
+                Quick Actions
               </span>
             </div>
-            <a
+            <a hidden
               href="https://www.creative-tim.com/learning-lab/tailwind/vue/alerts/notus?ref=vn-index"
               target="_blank"
               class="font-bold text-blueGray-700 hover:text-blueGray-500 ease-linear transition-all duration-150"
@@ -297,13 +281,13 @@
                   target="_blank"
                 >
                   <div class="bg-red-600 shadow-lg rounded-lg text-center p-8">
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white fab fa-chrome h-16 text-red-500 text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/svelte.jpg"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      Svelte
+                      Web
                     </p>
                   </div>
                 </a>
@@ -314,13 +298,13 @@
                   <div
                     class="bg-lightBlue-500 shadow-lg rounded-lg text-center p-8 mt-8"
                   >
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white fab fa-twitter h-16 text-lightBlue-400 text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/react.jpg"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      ReactJS
+                      twitter
                     </p>
                   </div>
                 </a>
@@ -331,13 +315,13 @@
                   <div
                     class="bg-blueGray-700 shadow-lg rounded-lg text-center p-8 mt-8"
                   >
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white fab fa-telegram-plane h-16 text-lightBlue-400 text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/nextjs.jpg"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      NextJS
+                      telegram
                     </p>
                   </div>
                 </a>
@@ -350,13 +334,13 @@
                   <div
                     class="bg-yellow-500 shadow-lg rounded-lg text-center p-8"
                   >
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white fab fa-facebook-f h-16 text-facebook text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/js.png"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      JavaScript
+                      facebook
                     </p>
                   </div>
                 </a>
@@ -365,15 +349,15 @@
                   target="_blank"
                 >
                   <div
-                    class="bg-red-700 shadow-lg rounded-lg text-center p-8 mt-8"
+                    class="bg-instagram-r shadow-lg rounded-lg text-center p-8 mt-8"
                   >
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white fab fa-instagram h-16 text-instagram text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/angular.jpg"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      Angular
+                      Instagram
                     </p>
                   </div>
                 </a>
@@ -384,13 +368,13 @@
                   <div
                     class="bg-emerald-500 shadow-lg rounded-lg text-center p-8 mt-8"
                   >
-                    <img
+                    <span
                       alt="..."
-                      class="shadow-md rounded-full max-w-full w-16 mx-auto p-2 bg-white"
+                      class="shadow-md rounded-full max-w-full w-16 h-16 mx-auto p-2 bg-white fab fa-whatsapp text-emerald-500 text-5xl"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/vue.jpg"
                     />
                     <p class="text-lg text-white mt-4 font-semibold">
-                      Vue.js
+                      WhatsApp
                     </p>
                   </div>
                 </a>
@@ -405,56 +389,57 @@
               <i class="fas fa-drafting-compass text-xl"></i>
             </div>
             <h3 class="text-3xl mb-2 font-semibold leading-normal">
-              Javascript Components
+              Multi-Channel Platform
             </h3>
             <p
               class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600"
             >
-              In order to create a great User Experience some components require
-              JavaScript. In this way you can manipulate the elements on the
-              page and give more options to your users.
+              {{$config.PROP_SERVICE_NAME}}’s integrated messaging API, associates you to multiple social media messaging platforms, 
+              which eliminates the requirement for your organization to stay up to date with the latest progressions 
+              happening in the social media platform API's. 
             </p>
-            <p
-              class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600"
-            >
-              We created a set of Components that are dynamic and come to help
-              you.
+            
+            <p class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600"> 
+              We provide out of the box solution for you to connect with WhatsApp, Telegram, Facebook Messenger, Twitter DM and a native Web Chat. 
+            </p>
+            <p class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
+             You need to connect only once, to the {{$config.PROP_SERVICE_NAME}} API and leave the rest to us.
             </p>
             <div class="block pb-6">
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Alerts
+                twitter DM
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Dropdowns
+                facebook page
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Menus
+                telegram bot
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Modals
+                instagram dm
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Navbars
+                webchat plugin
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Popovers
+                whastapp business
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
               >
-                Tabs
+                bulk push
               </span>
               <span
                 class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2"
@@ -462,7 +447,7 @@
                 Tooltips
               </span>
             </div>
-            <a
+            <a hidden
               href="https://www.creative-tim.com/learning-lab/tailwind/vue/alerts/notus?ref=vn-index"
               target="_blank"
               class="font-bold text-blueGray-700 hover:text-blueGray-500 ease-linear transition-all duration-150"
@@ -484,13 +469,11 @@
                 <i class="fas fa-file-alt text-xl"></i>
               </div>
               <h3 class="text-3xl font-semibold">
-                Complex Documentation
+                Plug-n-play API's
               </h3>
               <p class="mt-4 text-lg leading-relaxed text-blueGray-500">
-                This extension comes a lot of fully coded examples that help you
-                get started faster. You can adjust the colors and also the
-                programming language. You can change the text and images and
-                you're good to go.
+                This is valuable for CRM solution providers, Enterprises with existing CRM solutions who need a plug-n-play API 
+                for integrating social media messengers and Enterprises with a strong in-house technology & innovation team, which is managing internal omni-channel communication platforms.
               </p>
               <ul class="list-none mt-6">
                 <li class="py-2">
@@ -504,7 +487,7 @@
                     </div>
                     <div>
                       <h4 class="text-blueGray-500">
-                        Built by Developers for Developers
+                        Common end-points for all channels
                       </h4>
                     </div>
                   </div>
@@ -520,7 +503,7 @@
                     </div>
                     <div>
                       <h4 class="text-blueGray-500">
-                        Carefully crafted code for Components
+                        Re-usable multi-channel templates
                       </h4>
                     </div>
                   </div>
@@ -536,7 +519,7 @@
                     </div>
                     <div>
                       <h4 class="text-blueGray-500">
-                        Dynamic Javascript Components
+                        Dynamic language resolution
                       </h4>
                     </div>
                   </div>
@@ -748,20 +731,21 @@
   </div>
 </template>
 <script>
-import IndexNavbar from "@/@common/notus/components/Navbars/IndexNavbar.vue";
+import IndexNavbar from "./IndexNavbar.vue";
 import FooterComponent from "@/@common/notus/components/Footers/Footer.vue";
+import "@/assets/utils/_social.scss"
 
-import patternVue from "@/assets/notus/img/pattern_vue.png";
-import componentBtn from "@/assets/notus/img/component-btn.png";
-import componentProfileCard from "@/assets/notus/img/component-profile-card.png";
-import componentInfoCard from "@/assets/notus/img/component-info-card.png";
-import componentInfo2 from "@/assets/notus/img/component-info-2.png";
-import componentMenu from "@/assets/notus/img/component-menu.png";
-import componentBtnPink from "@/assets/notus/img/component-btn-pink.png";
-import documentation from "@/assets/notus/img/documentation.png";
-import login from "@/assets/notus/img/login.jpg";
-import profile from "@/assets/notus/img/profile.jpg";
-import landing from "@/assets/notus/img/landing.jpg";
+import patternVue from "@/assets/vendor/notus/img/pattern_vue.png";
+import componentBtn from "@/assets/vendor/notus/img/component-btn.png";
+import componentProfileCard from "@/assets/vendor/notus/img/component-profile-card.png";
+import componentInfoCard from "@/assets/vendor/notus/img/component-info-card.png";
+import componentInfo2 from "@/assets/vendor/notus/img/component-info-2.png";
+import componentMenu from "@/assets/vendor/notus/img/component-menu.png";
+import componentBtnPink from "@/assets/vendor/notus/img/component-btn-pink.png";
+import documentation from "@/assets/vendor/notus/img/documentation.png";
+import login from "@/assets/vendor/notus/img/login.jpg";
+import profile from "@/assets/vendor/notus/img/profile.jpg";
+import landing from "@/assets/vendor/notus/img/landing.jpg";
 
 export default {
   data() {

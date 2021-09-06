@@ -1,12 +1,14 @@
 <template>
   <div class="wrapper">
     <notifications></notifications>
-    <side-bar>
+    <side-bar
+      :logo="$config.PROP_LOGO_BG_X_LOGO_B"
+    >
       <template slot="links">
         <sidebar-item
           :link="{
             name: 'Dashboard',
-            path: '/dashboard',
+            path: '/app/dashboard',
             icon: 'ni ni-tv-2 text-primary',
           }"
         >
@@ -15,7 +17,7 @@
         <sidebar-item
             :link="{
               name: 'Icons',
-              path: '/icons',
+              path: '/app/icons',
               icon: 'ni ni-planet text-blue'
               }"
             >
@@ -24,7 +26,7 @@
         <sidebar-item
               :link="{
                 name: 'Maps',
-                path: '/maps',
+                path: '/app/maps',
                 icon: 'ni ni-pin-3 text-orange'
               }">
         </sidebar-item>
@@ -32,7 +34,7 @@
         <sidebar-item
               :link="{
                 name: 'User Profile',
-                path: '/profile',
+                path: '/app/profile',
                 icon: 'ni ni-single-02 text-yellow'
                 }">
         </sidebar-item>
@@ -40,7 +42,7 @@
         <sidebar-item
                 :link="{
                   name: 'Tables',
-                  path: '/tables',
+                  path: '/app/tables',
                   icon: 'ni ni-bullet-list-67 text-red'
                 }">
         </sidebar-item>
@@ -48,14 +50,14 @@
         <sidebar-item
                   :link="{
                     name: 'Login',
-                    path: '/login',
+                    path: '/app/login',
                     icon: 'ni ni-key-25 text-info'
                   }">
         </sidebar-item>
         <sidebar-item
                   :link="{
                     name: 'Register',
-                    path: '/register',
+                    path: '/app/register',
                     icon: 'ni ni-circle-08 text-pink'
                   }">
         </sidebar-item>

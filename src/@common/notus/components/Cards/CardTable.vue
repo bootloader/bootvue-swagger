@@ -476,16 +476,16 @@
 <script>
 import TableDropdown from "@/@common/notus/components/Dropdowns/TableDropdown.vue";
 
-import bootstrap from "@/assets/notus/img/bootstrap.jpg";
-import angular from "@/assets/notus/img/angular.jpg";
-import sketch from "@/assets/notus/img/sketch.jpg";
-import react from "@/assets/notus/img/react.jpg";
-import vue from "@/assets/notus/img/react.jpg";
+import bootstrap from "@/assets/vendor/notus/img/bootstrap.jpg";
+import angular from "@/assets/vendor/notus/img/angular.jpg";
+import sketch from "@/assets/vendor/notus/img/sketch.jpg";
+import react from "@/assets/vendor/notus/img/react.jpg";
+import vue from "@/assets/vendor/notus/img/react.jpg";
 
-import team1 from "@/assets/notus/img/team-1-800x800.jpg";
-import team2 from "@/assets/notus/img/team-2-800x800.jpg";
-import team3 from "@/assets/notus/img/team-3-800x800.jpg";
-import team4 from "@/assets/notus/img/team-4-470x470.png";
+import team1 from "@/assets/vendor/notus/img/team-1-800x800.jpg";
+import team2 from "@/assets/vendor/notus/img/team-2-800x800.jpg";
+import team3 from "@/assets/vendor/notus/img/team-3-800x800.jpg";
+import team4 from "@/assets/vendor/notus/img/team-4-470x470.png";
 
 export default {
   data() {

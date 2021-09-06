@@ -82,7 +82,7 @@
   </div>
 </template>
 <script>
-import team2 from "@/assets/notus/img/team-2-800x800.jpg";
+import team2 from "@/assets/vendor/notus/img/team-2-800x800.jpg";
 
 export default {
   data() {

@@ -13,7 +13,7 @@ export default {
   },
   router : function (){
     console.log(2,this.options,window.CONST.APP);
-    return new Router({
+    let router =  new Router({
         mode: 'history',
         base : this.options.base,
         scrollBehavior : this.options.scrollBehavior || function() {
@@ -21,5 +21,27 @@ export default {
         },
         routes: this.options.routes
     });
+
+    var options = this.options;
+    options.beforeEach = options.beforeEach || function(to, from, next){
+      next();
+    };
+
+    router.beforeEach((to, from, next) => {
+      if(to.matched.some(function (record) {
+        if(!record.meta) return true;
+        if(record.meta.role && record.meta.role.indexOf(window.CONST.APP_USER_ROLE) < 0){
+          return false
+        }
+        return true;
+      })){
+        options.beforeEach(to, from, next);
+      } else {
+        next(false);
+      }
+      
+    });
+
+    return router;
   }  
 } 

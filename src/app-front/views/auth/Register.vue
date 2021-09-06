@@ -108,8 +108,8 @@
   </div>
 </template>
 <script>
-import github from "@/assets/notus/img/github.svg";
-import google from "@/assets/notus/img/google.svg";
+import github from "@/assets/vendor/notus/img/github.svg";
+import google from "@/assets/vendor/notus/img/google.svg";
 
 export default {
   data() {

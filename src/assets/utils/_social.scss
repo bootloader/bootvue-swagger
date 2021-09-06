@@ -1,0 +1,57 @@
+$color-facebook              : #4267B2;
+$color-twitter              : #1DA1F2;
+$color-telegram              : #0088cc;
+$color-whatsapp              : #25D366;
+$color-instagram-y              : #fdf497;
+$color-instagram-r              : #fd5949;
+$color-instagram-p              : #d6249f;
+$color-instagram-b              : #285AEB;
+
+
+.bg-facebook {
+    background-color: $color-facebook;
+}
+.bg-twitter {
+    background-color: $color-twitter;
+}
+.bg-telegram {
+    background-color: $color-telegram;
+}
+.bg-whatsapp {
+    background-color: $color-whatsapp;
+}
+.bg-instagram {
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+}
+.bg-instagram-y {
+    background-color: $color-instagram-y;
+}
+.bg-instagram-r {
+    background-color: $color-instagram-r;
+}
+.bg-instagram-p {
+    background-color: $color-instagram-p;
+}
+.bg-instagram-b {
+    background-color: $color-instagram-b;
+}
+
+.text-facebook {
+    color: $color-facebook;
+}
+.text-twitter {
+    color: $color-twitter;
+}
+.text-telegram {
+    color: $color-telegram;
+}
+.text-whatsapp {
+    color: $color-whatsapp;
+}
+.fa-instagram.text-instagram::before {
+    //background: -webkit-linear-gradient(#eee, #333);
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

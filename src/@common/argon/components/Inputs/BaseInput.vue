@@ -5,7 +5,7 @@
         {'is-question': question }
       ]">
       <slot name="label">
-        <label v-if="label" 
+        <label v-if="label || name" 
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -14,14 +14,14 @@
           {'has-value': value != ''},
           labelClasses
         ]">
-          {{label}}
+          {{label || name}}
         </label>
       </slot>
       <div :class="[
        {'input-group': hasIcon || (feedback)},
        {'focused': focused},
        {'input-group-alternative': alternative},
-       {'has-label': label || $slots.label},
+       {'has-label': (label || name) || $slots.label},
        inputGroupClasses
        ]">
         <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">

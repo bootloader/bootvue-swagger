@@ -47,7 +47,7 @@
                   
                   <password-meter :password="model.newpass" @score="onScore" />
                   <div class="text-muted font-italic"><small>password strength: <span
-                    class="text-success font-weight-700">{{strength}}</span></small></div>
+                    class="text-success font-weight-700">{{model.strength}}</span></small></div>
                   
                   
                   <div class="text-center">
@@ -82,17 +82,18 @@
       }
     },
     methods: {
-      onSubmit() {
-        this.$service.post('/pub/verify',{
+      async onSubmit() {
+        this.$service.submit('/account/pub/set/pass',{
           account : this.model.account,
           code : this.model.code,
           newpass : this.model.newpass,
           confirmpass : this.model.confirmpass,
           agree : this.model.agree
         });
+        window.location.href = "/account/app/"
       },
       onScore(evt) {
-        this.strength = evt.strength
+        this.model.strength = evt.strength
       }
     }
 

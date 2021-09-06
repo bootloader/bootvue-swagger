@@ -161,7 +161,7 @@
     }
 </script>
 <style type="text/css" scoped >
-    .logo-src{
+    .logo-src {
         height: 45px;
         width: 165px;
 

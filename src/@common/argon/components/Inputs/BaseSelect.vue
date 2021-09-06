@@ -5,7 +5,7 @@
         {'is-question': question }
       ]">
       <slot name="label">
-        <label v-if="label" 
+        <label v-if="label || name" 
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -14,7 +14,7 @@
           {'has-value': value != ''},
           labelClasses
         ]">
-          {{label}}
+          {{label || name}}
         </label>
       </slot>
       <div :class="[
@@ -40,7 +40,13 @@
             :valid="valid"
             :required="required"
             class="form-control"
-            :class="[{'is-valid': valid && validated && successMessage}, {'is-invalid': invalid && validated}, inputClasses]">
+            :class="[
+              {'is-valid': valid && validated && successMessage}, 
+              {'is-invalid': invalid && validated}, 
+              {'none-value': !value},
+              inputClasses]">
+              <option v-if="!question && ($attrs.placeholder || label || name)" 
+              value="" disabled selected hidden >{{$attrs.placeholder || label || name}}</option>
               <slot name="default">
                 <option value="other">Other</option>
               </slot>

@@ -17,7 +17,6 @@
         <b-col cols="12" md="8">
           <b-collapse id="nav-text-collapse" is-nav>
             <b-navbar-nav class="align-items-lg-center ml-md-auto">
-
                 <b-nav-item to="/auth/forgot-pass" v-if="$route.name !== 'forgot-pass'">
                   <i class="fa fa-unlock-alt text-primary"></i>
                   <span class="nav-link-inner--text text-primary">Forgot password</span>
@@ -30,7 +29,6 @@
                   <i class="fa fa-key  text-primary"></i>
                   <span class="nav-link-inner--text  text-primary">Login</span>
                 </b-nav-item>
-
             </b-navbar-nav>
           </b-collapse>
         </b-col>
@@ -127,10 +125,10 @@
             <div class="copyright text-center text-xl-left text-muted">
               © {{ year }}
               <a
-                href="https://www.mehery.com"
+                :href="$config.PROP_SERVICE_WEBSITE_LINK"
                 class="font-weight-bold ml-1"
                 target="_blank"
-                >MeherY</a
+                >{{$config.PROP_SERVICE_NAME}}</a
               >
             </div>
           </b-col>
@@ -139,16 +137,20 @@
               class="nav-footer justify-content-center justify-content-xl-end"
             >
               <b-nav-item
-                href="https://www.mehery.com/#aboutus"
+                v-if="$config.PROP_SERVICE_ABOUTUS_LINK" 
+                :href="$config.PROP_SERVICE_ABOUTUS_LINK"
                 target="_blank"
               >
                 About Us
               </b-nav-item>
-              <b-nav-item href="https://www.mehery.com/privacy-policy/#page-content" target="_blank">
+              <b-nav-item 
+                v-if="$config.PROP_SERVICE_PRIVACY_LINK" 
+                :href="$config.PROP_SERVICE_PRIVACY_LINK" target="_blank">
                 Privacy Policy
               </b-nav-item>
               <b-nav-item
-                href="https://www.mehery.com/terms-conditions/#page-content"
+                v-if="$config.PROP_SERVICE_TOS_LINK" 
+                :href="$config.PROP_SERVICE_TOS_LINK"
                 target="_blank"
               >
                 Terms of Service

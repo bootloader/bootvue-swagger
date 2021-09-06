@@ -17,6 +17,9 @@ import VTooltip from 'v-tooltip'
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 
+import { i18n } from "./services/i18n";
+import "./services/vee-validate"; 
+
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = (function() {
@@ -56,7 +59,7 @@ import AppWrapper from './AppWrapper';
 	import(`./app-${app}/router`).then(function (argument) {
     	new Vue({
 		  el: '#app',
-		  store,service,
+		  store,service,i18n,
 		  router : mainrouter.router(),
 		  template: '<AppWrapper/>',
 		  components: { AppWrapper }

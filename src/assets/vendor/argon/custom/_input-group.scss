@@ -29,11 +29,12 @@
       margin-bottom: 0px;
       margin: 5px 0px;
       padding: 0px 7px;
-      background-color: #fff;
+      background-color: #ffffff5e;
       font-weight: 400;
     }
   
     .input-group {
+      border-radius: 0px;
       &.focused {
         border-bottom: 1px solid #b8b2b2;
         border-radius: 0px;
@@ -52,6 +53,12 @@
       &:focus {
         box-shadow: 0 0px 0 0 #e5e5e5;
       }
+
+      &.none-value {
+        color: #999;
+        font-weight: 100;
+      }
+
     }
     .input-group-alternative input{
       border-radius: 0px;

@@ -5,7 +5,7 @@
 </template>
 <script>
   import "@fortawesome/fontawesome-free/css/all.min.css";
-  import "@/assets/notus/styles/tailwind.css";
+  import "@/assets/vendor/notus/styles/tailwind.css";
 
   console.log("Account App is loaded")
   export default {

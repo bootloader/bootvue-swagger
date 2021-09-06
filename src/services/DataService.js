@@ -5,6 +5,7 @@ import store from './../store';
 import axios from "axios";
 
 import DataProcessor from "./DataProcessor";
+import { i18n } from "./i18n";
 
 
 let myRespInterceptor = axios.interceptors.response.use(
@@ -34,7 +35,41 @@ let myRespInterceptor = axios.interceptors.response.use(
       if(Vue.$toast && Vue.$toast.error)
         Vue.$toast.error(response.data.message)
     }
+    if(error.response.data.errors){
+      error.response.data.veeErrors = error.response.data.errors.reduce(function(previousValue, currentValue){
+        let path = [];
+        if(currentValue.obzect) path.push(currentValue.obzect);
+        if(currentValue.field) path.push(currentValue.field);
+        let _path = path.join(".");
+        let _field_key = "fields."+_path;
+        let _field_ = i18n.t("fields."+_path);
+        _field_ = (_field_ == _field_key) ? i18n.t("fields." + currentValue.field) : _field_;
 
+        let _keys = [
+          "errors." + currentValue.codeKey, 
+          "errors." + currentValue.code, 
+          "errors." + currentValue.description,
+          currentValue.codeKey,
+          currentValue.code,
+          currentValue.description];
+        
+        let _message;
+        for(var i in _keys){
+          if(_keys[i]){
+            _message = i18n.t(_keys[i],{
+              ...currentValue,
+              _field_ : _field_
+            });
+            //console.log("_message",_message)
+            if(_message!= _keys[i]){
+              break;
+            }
+          }
+        }
+        previousValue[_path] = _message;
+        return previousValue;
+      },{});
+    }
     return Promise.reject(error);
   }
 );

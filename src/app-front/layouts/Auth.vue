@@ -17,7 +17,7 @@
 import Navbar from "@/@common/notus/components/Navbars/AuthNavbar.vue";
 import FooterSmall from "@/@common/notus/components/Footers/FooterSmall.vue";
 
-import registerBg2 from "@/assets/notus/img/register_bg_2.png";
+import registerBg2 from "@/assets/vendor/notus/img/register_bg_2.png";
 
 export default {
   data() {

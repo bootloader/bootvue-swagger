@@ -52,7 +52,7 @@ export default AppRouter.route({
         },
         {
           path: "/",
-          component: () => import('./views/Index.vue'),
+          component: () => import('./index/Index.vue'),
         },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]
