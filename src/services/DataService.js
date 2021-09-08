@@ -7,20 +7,18 @@ import axios from "axios";
 import DataProcessor from "./DataProcessor";
 import { i18n } from "./i18n";
 
-
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
+    let config = response.config;
   	if(response.request.responseURL.endsWith("/auth/login")){
   	  //https://app.mehery.com/admin/auth/login
-  	  console.log("===>",response.request.responseURL)
       var nextURL = new URL(response.request.responseURL);
       nextURL.searchParams.append("referer",encodeURIComponent(window.location.href))
   	  window.location.href = nextURL.toString();
   	}
 
-    if(response.data && response.data.message){
+    if(config.toast!==false && response.data && response.data.message){
       //Vue.toaster.success(response.data.message);
-      console.log("===>",response.data.message)
       if(Vue.$toast && Vue.$toast.success)
         Vue.$toast.success(response.data.message)
     }
@@ -30,8 +28,8 @@ let myRespInterceptor = axios.interceptors.response.use(
   function(error,s) {
     //console.log("myRespInterceptor:error",error.response,s);
     let response  = error.response;
-    if(response.data && response.data.message){
-      console.log("===>",response.data.message)
+    let config = error.config;
+    if(config.toast!==false  && response.data && response.data.message){
       if(Vue.$toast && Vue.$toast.error)
         Vue.$toast.error(response.data.message)
     }
@@ -113,27 +111,36 @@ const DataService = {
     return responseData;
   },
 
-  async get(url,query) {
-    let response = await axios.get(url,{ params : query });
+  async get(url,query,config) {
+    let _config = config || {};
+    _config.params = query;
+    let response = await axios.get(url,_config);
     return processor(query,response.data);
   },
-  async post(url,params) {
-    let response = await axios.post(url, params);
+  async post(url,params,config) {
+    let response = await axios.post(url, params,config);
     return processor(params,response.data);
   },
-  async submit(url,params) {
+  async submit(url,params,config) {
     let SubmitForm = new FormData();
     for (var key in params) {
        SubmitForm.append(key, params[key]);
     }
-    let response = await axios.post(url, SubmitForm);
-    return processor(params,response.data);
+    try{
+      let response = await axios.post(url, SubmitForm,config);
+      return processor(params,response.data);
+    } catch(e){
+        if(config && config.ref && typeof config.ref.setErrors == 'function'){
+          config.ref.setErrors(e.response.data.veeErrors);
+        }
+        return Promise.reject(e);
+    }
   },
   async delete(url,query) {
-    let response = await axios.delete(url,{
-      params : query,
-      data : query
-    });
+    let _config = config || {};
+    _config.params = query;
+    _config.data = query;
+    let response = await axios.delete(url,_config);
     return processor(query,response.data);
   },
   config (argument) {

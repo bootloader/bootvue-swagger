@@ -597,7 +597,7 @@
 </template>
 <script>
 import Navbar from "@/@common/notus/components/Navbars/AuthNavbar.vue";
-import FooterComponent from "@/@common/notus/components/Footers/Footer.vue";
+import FooterComponent from "./Footer.vue";
 
 import team1 from "@/assets/vendor/notus/img/team-1-800x800.jpg";
 import team2 from "@/assets/vendor/notus/img/team-2-800x800.jpg";

@@ -65,7 +65,7 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://www.creative-tim.com/presentation?ref=vn-footer"
+                    :href="$config.PROP_SERVICE_ABOUTUS_LINK"
                   >
                     About Us
                   </a>
@@ -73,7 +73,7 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://blog.creative-tim.com?ref=vn-footer"
+                    :href="$config.PROP_SERVICE_BLOG_LINK"
                   >
                     Blog
                   </a>
@@ -81,17 +81,9 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://www.github.com/creativetimofficial?ref=vn-footer"
+                      :href="$config.PROP_SOCIAL_GIIHUB"
                   >
                     Github
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://www.creative-tim.com/bootstrap-themes/free?ref=vn-footer"
-                  >
-                    Free Products
                   </a>
                 </li>
               </ul>
@@ -114,7 +106,7 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://creative-tim.com/terms?ref=vn-footer"
+                    :href="$config.PROP_SERVICE_TOS_LINK"
                   >
                     Terms & Conditions
                   </a>
@@ -122,7 +114,7 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://creative-tim.com/privacy?ref=vn-footer"
+                    :href="$config.PROP_SERVICE_PRIVACY_LINK"
                   >
                     Privacy Policy
                   </a>
@@ -130,7 +122,7 @@
                 <li>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                    href="https://creative-tim.com/contact-us?ref=vn-footer"
+                      :href="$config.PROP_SERVICE_PRIVACY_LINK"
                   >
                     Contact Us
                   </a>
@@ -146,12 +138,12 @@
       >
         <div class="w-full md:w-4/12 px-4 mx-auto text-center">
           <div class="text-sm text-blueGray-500 font-semibold py-1">
-            Copyright © {{ date }} Vue Notus by
+            Copyright © {{ date }}
             <a
-              href="https://www.creative-tim.com?ref=vn-footer"
+              :href="$config.PROP_SERVICE_WEBSITE_LINK"
               class="text-blueGray-500 hover:text-blueGray-800"
             >
-              Creative Tim
+              {{$config.PROP_SERVICE_NAME}}
             </a>
             .
           </div>

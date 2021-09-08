@@ -34,7 +34,7 @@
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input alternative feedback question
-                              class="mb-3"
+                              class="mb-3" vid="login.email"
                               name="Email" label="Email"
                               :rules="{required: true, email: true}"
                               placeholder="Email"
@@ -42,7 +42,7 @@
                   </base-input>
 
                   <base-input alternative feedback question
-                              class="mb-3"
+                              class="mb-3" vid="login.password"
                               name="Password" label="Password"
                               :rules="{required: true, min: 6}"
                               type="password"
@@ -76,12 +76,19 @@
     },
     methods: {
       async onSubmit() {
-        this.$service.submit('/account/pub/login',{
-          email : this.model.email,
-          password : this.model.password,
-          newpass : this.model.password
-        });
-        window.location.href = "/account/app/"
+        try {
+          await this.$service.submit('/account/pub/login',{
+            email : this.model.email,
+            password : this.model.password,
+            newpass : this.model.password
+          },{
+            ref : this.$refs.formValidator,
+            toast : false
+          });
+          window.location.href = "/account/app/"
+        } catch(e){
+          //console.log(e.response);
+        }
       },
     }
   };

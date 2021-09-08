@@ -17,17 +17,25 @@ export default AppRouter.route({
     routes:  [
         {
           path: '/app',
-          redirect: '/app/dashboard',
+          redirect: '/app/home',
           name : "app"
         },
         {
           path: '/',
-          redirect: '/app/dashboard',
+          redirect: '/app/home',
           component: () => import('./views/Layout/DashboardLayout.vue'),
           meta : {
-            role : ["ACCOUNT_ADMIN"]
+            role : ["DOMAIN_ADMIN"]
           },
           children: [
+            {
+              path: '/app/home',
+              name: 'domains',
+              component: () => import(/* webpackChunkName: "demo" */ './views/Pages/UserHome.vue'),
+              meta : {
+                role : ["DOMAIN_ADMIN"]
+              }
+            },
             {
               path: '/app/dashboard',
               name: 'dashboard',
@@ -36,7 +44,7 @@ export default AppRouter.route({
               // which is lazy-loaded when the route is visited.
               component: () => import(/* webpackChunkName: "demo" */ './views/Dashboard.vue'),
               meta : {
-                role : ["ACCOUNT_ADMIN"]
+                role : ["DOMAIN_ADMIN"]
               }
             },
             {
@@ -44,7 +52,7 @@ export default AppRouter.route({
               name: 'icons',
               component: () => import(/* webpackChunkName: "demo" */ './views/Icons.vue'),
               meta : {
-                role : ["ACCOUNT_ADMIN"]
+                role : ["DOMAIN_ADMIN"]
               }
             },
             {
@@ -52,7 +60,7 @@ export default AppRouter.route({
               name: 'profile',
               component: () => import(/* webpackChunkName: "demo" */ './views/Pages/UserProfile.vue'),
               meta : {
-                role : ["ACCOUNT_ADMIN"]
+                role : ["DOMAIN_ADMIN"]
               }
             },
             {
@@ -60,7 +68,7 @@ export default AppRouter.route({
               name: 'maps',
               component: () => import(/* webpackChunkName: "demo" */ './views/GoogleMaps.vue'),
               meta : {
-                role : ["ACCOUNT_ADMIN"]
+                role : ["DOMAIN_ADMIN"]
               }
             },
             {
@@ -68,7 +76,7 @@ export default AppRouter.route({
               name: 'tables',
               component: () => import(/* webpackChunkName: "demo" */ './views/RegularTables.vue'),
               meta : {
-                role : ["ACCOUNT_ADMIN"]
+                role : ["DOMAIN_ADMIN"]
               }
             }
           ]
@@ -140,14 +148,16 @@ export default AppRouter.route({
         }
       ],
       beforeEach : function (to, from, next) {
-        console.log("beforeEach",to.path, from)
+        console.log("beforeEach",to.path, from);
         if(window.CONST.APP_USER && to.path.indexOf("/app")==-1){
+            console.log("ToApp")
             next({
               path : "/app"
             });
         } else if(!window.CONST.APP_USER && to.path.indexOf("/auth")==-1){
+          console.log("ToAuth")
           next({
-            path : "/auth"
+            path : "/auth/"
           });
         } else next();
       }

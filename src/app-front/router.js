@@ -3,7 +3,7 @@ import AppRouter from './../services/router';
 console.log("front ROUTER")
 export default AppRouter.route({
     app: 'front',
-    base : "/front/",
+    base : "/",
     routes:  [
         {
           path: "/admin",
@@ -44,11 +44,11 @@ export default AppRouter.route({
         },
         {
           path: "/landing",
-          component: () => import('./views/Landing.vue'),
+          component: () => import('./index/Landing.vue'),
         },
         {
-          path: "/profile",
-          component: () => import('./views/Profile.vue'),
+          path: "/:domain",
+          component: () => import('./index/Profile.vue'),
         },
         {
           path: "/",

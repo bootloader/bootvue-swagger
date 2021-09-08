@@ -5,7 +5,16 @@
       :logo="$config.PROP_LOGO_BG_X_LOGO_B"
     >
       <template slot="links">
+
         <sidebar-item
+                  :link="{
+                    name: 'Domains',
+                    path: '/app/home',
+                    icon: 'ni ni-planet text-blue'
+                  }">
+        </sidebar-item>
+
+        <sidebar-item hidden
           :link="{
             name: 'Dashboard',
             path: '/app/dashboard',
@@ -14,7 +23,7 @@
         >
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item hidden
             :link="{
               name: 'Icons',
               path: '/app/icons',
@@ -23,7 +32,7 @@
             >
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item hidden
               :link="{
                 name: 'Maps',
                 path: '/app/maps',
@@ -31,7 +40,7 @@
               }">
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item hidden
               :link="{
                 name: 'User Profile',
                 path: '/app/profile',
@@ -39,7 +48,7 @@
                 }">
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item hidden
                 :link="{
                   name: 'Tables',
                   path: '/app/tables',
@@ -47,14 +56,14 @@
                 }">
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item hidden
                   :link="{
                     name: 'Login',
                     path: '/app/login',
                     icon: 'ni ni-key-25 text-info'
                   }">
         </sidebar-item>
-        <sidebar-item
+        <sidebar-item hidden
                   :link="{
                     name: 'Register',
                     path: '/app/register',
