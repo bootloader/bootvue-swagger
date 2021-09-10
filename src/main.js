@@ -82,6 +82,11 @@ import AppWrapper from './AppWrapper';
 		},
 		component : () => import('./app-account/AppAccount.vue')
 	},
+	"partner" : { //Partner App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-partner/AppPartner.vue')
+	},
 	"front" : { //Account App
 		component : () => import('./app-front/AppFront.vue')
 	},

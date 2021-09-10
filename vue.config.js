@@ -54,6 +54,13 @@ module.exports = {
         title: 'Account Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'account']
       },
+      'partner' : {
+        entry: './src/main.js',
+        template: 'public/app-partner.html',
+        filename: 'app-partner.html',
+        title: 'Partner Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'partner']
+      },
       'admin' : {
         entry: './src/main.js',
         template: 'public/app-admin.html',

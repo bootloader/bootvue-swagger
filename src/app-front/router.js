@@ -6,6 +6,11 @@ export default AppRouter.route({
     base : "/",
     routes:  [
         {
+          path: '/front',
+          redirect: '/front/auth',
+          name : "app"
+        },
+        {
           path: "/admin",
           redirect: "/admin/dashboard",
           component: () => import('./layouts/Admin.vue'),
@@ -28,31 +33,31 @@ export default AppRouter.route({
           ],
         },
         {
-          path: "/auth",
-          redirect: "/auth/login",
-          component: () => import('./layouts/Auth.vue'),
+          path: "/front/auth",
+          redirect: "/front/auth/login",
+          component: () => import('./Auth/AuthLayout.vue'),
           children: [
             {
-              path: "/auth/login",
-              component: () => import('./views/auth/Login.vue'),
+              path: "/front/auth/login",
+              component: () => import('./Auth/Login.vue'),
             },
             {
-              path: "/auth/register",
+              path: "/front/auth/register",
               component: () => import('./views/auth/Register.vue'),
             },
           ],
         },
         {
-          path: "/landing",
-          component: () => import('./index/Landing.vue'),
+          path: "/front/landing",
+          component: () => import('./Index/Landing.vue'),
         },
         {
           path: "/:domain",
-          component: () => import('./index/Profile.vue'),
+          component: () => import('./Index/Profile.vue'),
         },
         {
           path: "/",
-          component: () => import('./index/Index.vue'),
+          component: () => import('./Index/Index.vue'),
         },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]

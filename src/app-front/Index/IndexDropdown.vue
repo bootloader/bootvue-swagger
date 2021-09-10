@@ -52,13 +52,13 @@
         Auth Layout
       </span>
       <router-link
-        to="/auth/login"
+        to="/front/auth/login"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Login
       </router-link>
       <router-link
-        to="/auth/register"
+        to="/front/auth/register"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Register
@@ -70,7 +70,7 @@
         No Layout
       </span>
       <router-link
-        to="/landing"
+        to="/front/landing"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Landing

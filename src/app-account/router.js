@@ -14,7 +14,8 @@ export default AppRouter.route({
         }
         return { x: 0, y: 0 };
     },
-    routes:  [
+    routes : [],
+    noroutes:  [
         {
           path: '/app',
           redirect: '/app/home',
@@ -23,19 +24,11 @@ export default AppRouter.route({
         {
           path: '/',
           redirect: '/app/home',
-          component: () => import('./views/Layout/DashboardLayout.vue'),
+          //component: () => import('./Partner/PartnerHub.vue'),
           meta : {
             role : ["DOMAIN_ADMIN"]
           },
           children: [
-            {
-              path: '/app/home',
-              name: 'domains',
-              component: () => import(/* webpackChunkName: "demo" */ './views/Pages/UserHome.vue'),
-              meta : {
-                role : ["DOMAIN_ADMIN"]
-              }
-            },
             {
               path: '/app/dashboard',
               name: 'dashboard',
@@ -93,58 +86,6 @@ export default AppRouter.route({
                 //components: { default: () => import('./views/Starter/SamplePage.vue') }
               }
             ]
-        },
-        {
-          path: '/auth',
-          name : "auth",
-          redirect: 'login',
-          component: () => import('./views/Auth/AuthLayout.vue'),
-          children: [
-            {
-              path: '/auth/login',
-              name: 'login',
-              component: () => import(/* webpackChunkName: "register" */ './views/Auth/Login.vue'),
-              meta : {
-                role : ["GUEST"]
-              }
-            },
-            {
-              path: '/auth/register',
-              name: 'register',
-              component: () => import(/* webpackChunkName: "register" */ './views/Auth/Register.vue'),
-              meta : {
-                role : ["GUEST"]
-              }
-            },
-            {
-              path: '/auth/forgot-pass',
-              name: 'forgot-pass',
-              component: () => import(/* webpackChunkName: "register" */ './views/Auth/ForgotPassword.vue'),
-              meta : {
-                role : ["GUEST"]
-              }
-            },
-            {
-              path: '/auth/reset-pass',
-              name: 'reset-pass',
-              component: () => import(/* webpackChunkName: "register" */ './views/Auth/ResetPassword.vue'),
-              meta : {
-                role : ["GUEST"]
-              }
-            },
-            {
-              path: '/auth/verify-link',
-              name: 'verify-link',
-              component: () => import(/* webpackChunkName: "register" */ './views/Auth/ResetPassword.vue'),
-              meta : {
-                role : ["GUEST"]
-              }
-            },
-            { 
-                path: '*', 
-                component: () => import('./views/NotFoundPage.vue'),
-             }
-          ]
         }
       ],
       beforeEach : function (to, from, next) {

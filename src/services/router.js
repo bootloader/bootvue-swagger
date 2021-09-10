@@ -27,6 +27,10 @@ export default {
       next();
     };
 
+    options.beforeEachFail = options.beforeEachFail || function(to, from, next){
+      next(false);
+    };
+
     router.beforeEach((to, from, next) => {
       if(to.matched.some(function (record) {
         if(!record.meta) return true;
@@ -35,9 +39,11 @@ export default {
         }
         return true;
       })){
+        console.log("NextDone")
         options.beforeEach(to, from, next);
       } else {
-        next(false);
+        console.log("NextFailed")
+        options.beforeEachFail(to, from, next);
       }
       
     });

@@ -77,7 +77,7 @@
     methods: {
       async onSubmit() {
         try {
-          await this.$service.submit('/account/pub/login',{
+          await this.$service.submit('/partner/pub/login',{
             email : this.model.email,
             password : this.model.password,
             newpass : this.model.password
@@ -85,7 +85,7 @@
             ref : this.$refs.formValidator,
             toast : false
           });
-          window.location.href = "/account/app/"
+          window.location.href = "/partner/app/"
         } catch(e){
           //console.log(e.response);
         }

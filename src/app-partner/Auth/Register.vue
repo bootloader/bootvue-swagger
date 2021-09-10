@@ -412,7 +412,7 @@
         // this will be called only after form is valid. You can do an api call here to register users
         try {
           //this.model.email = "sds"
-          let resp = await this.$service.post("/account/pub/register",this.model);
+          let resp = await this.$service.post("/partner/pub/register",this.model);
           console.log("resp",resp)
           this.view.screen = 'MAILSENT';
           // this.$router.push({ 

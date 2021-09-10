@@ -57,13 +57,13 @@
   </div>
 </template>
 <script>
-import EditProfileForm from "./UserProfile/EditProfileForm.vue";
-import UserCard from "./UserProfile/UserCard.vue";
+import AddDomain from "./AddDomain.vue";
+//import UserCard from "../../app-account/views/Pages/UserProfile/UserCard.vue";
 
 export default {
   components: {
-    EditProfileForm,
-    UserCard,
+    AddDomain,
+    //UserCard,
   },
 };
 </script>

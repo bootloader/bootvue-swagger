@@ -14,8 +14,9 @@
   </div>
 </template>
 <script>
-import Navbar from "@/@common/notus/components/Navbars/AuthNavbar.vue";
-import FooterSmall from "@/@common/notus/components/Footers/FooterSmall.vue";
+import Navbar from "./AuthNavbar.vue";
+//import Navbar from "../Index/IndexNavbar.vue";
+import FooterSmall from "./FooterSmall.vue";
 
 import registerBg2 from "@/assets/vendor/notus/img/register_bg_2.png";
 

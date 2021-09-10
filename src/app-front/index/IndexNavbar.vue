@@ -1,6 +1,9 @@
 <template>
   <nav
-    class="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow"
+    class="top-0 z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg"
+    :class="[position,'bg-'+bgColor,{
+      'shadow' : shadow
+    }]"
   >
     <div
       class="container px-4 mx-auto flex flex-wrap items-center justify-between"
@@ -11,6 +14,7 @@
         <router-link to="/">
           <a
             class="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
+            :class="['text-'+textColor]"
             href="#pablo"
           >
             {{$config.PROP_SERVICE_NAME}}
@@ -92,12 +96,13 @@
           </li>
 
           <li class="flex items-center">
-            <button
+            <a
               class="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
               type="button"
-            >Login
+              href="/partner/auth"
+            > Partner Login
               <i class="fa fa-sign-in"></i> 
-            </button>
+            </a>
           </li>
         </ul>
       </div>
@@ -106,9 +111,31 @@
 </template>
 
 <script>
-import IndexDropdown from "@/@common/notus/components/Dropdowns/IndexDropdown.vue";
+import IndexDropdown from "./IndexDropdown.vue";
 
 export default {
+  props : {
+    position : {
+      type: String,
+      default: 'fixed',
+    },
+    bgColor : {
+      type: String,
+      default: 'transparent',
+    },
+    shadow : {
+      type: Boolean,
+      default: false,
+    },
+    textColor : {
+      type: String,
+      default: 'blueGray-700',
+    },
+    textColor : {
+      type: String,
+      default: 'blueGray-700',
+    }
+  },
   data() {
     return {
       navbarOpen: false,

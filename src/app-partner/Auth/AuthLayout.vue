@@ -166,6 +166,8 @@
 import { BaseNav } from "@/@common/argon/components";
 import { ZoomCenterTransition } from "vue2-transitions";
 
+console.log("This is AppPartnerAuth")
+
 export default {
   components: {
     BaseNav,

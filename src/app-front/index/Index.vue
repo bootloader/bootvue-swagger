@@ -1,6 +1,10 @@
 <template>
   <div>
-    <index-navbar />
+    <index-navbar
+      position="fixed"
+      bgColor="white"
+      shadow
+     />
     <section
       class="header relative pt-16 items-center flex h-screen max-h-860-px"
     >
@@ -19,7 +23,7 @@
             </p>
             <div class="mt-12">
               <a
-                href="/account/auth/register"
+                href="/partner/auth/register"
                 class="
                   get-started
                   text-white

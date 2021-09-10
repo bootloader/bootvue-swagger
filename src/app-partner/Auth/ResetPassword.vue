@@ -83,14 +83,14 @@
     },
     methods: {
       async onSubmit() {
-        this.$service.submit('/account/pub/set/pass',{
+        this.$service.submit('/partner/pub/set/pass',{
           account : this.model.account,
           code : this.model.code,
           newpass : this.model.newpass,
           confirmpass : this.model.confirmpass,
           agree : this.model.agree
         });
-        window.location.href = "/account/app/"
+        window.location.href = "/partner/app/"
       },
       onScore(evt) {
         this.model.strength = evt.strength

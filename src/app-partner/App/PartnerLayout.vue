@@ -112,6 +112,8 @@
   import PerfectScrollbar from 'perfect-scrollbar';
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
+console.log("This is AppPartnerAuth")
+
   function hasElement(className) {
     return document.getElementsByClassName(className).length > 0;
   }
@@ -127,16 +129,16 @@
     }
   }
 
-  import DashboardNavbar from './DashboardNavbar.vue';
-  import ContentFooter from './ContentFooter.vue';
-  import DashboardContent from './Content.vue';
+  import DashboardNavbar from './PartnerNavbar.vue';
+  import ContentFooter from './PartnerFooter.vue';
+  //import DashboardContent from '../Layout/Content.vue';
   import { FadeTransition } from 'vue2-transitions';
 
   export default {
     components: {
       DashboardNavbar,
       ContentFooter,
-      DashboardContent,
+      //DashboardContent,
       FadeTransition
     },
     methods: {

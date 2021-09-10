@@ -79,31 +79,35 @@
                     <slot name="links">
                     </slot>
                 </ul>
-                <!--Divider-->
-                <hr class="my-3">
-                <!--Heading-->
-                <h6 class="navbar-heading text-muted">Documentation</h6>
-                <!--Navigation-->
-                <ul class="navbar-nav mb-md-3">
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
-                            <i class="ni ni-spaceship"></i> Getting started
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="https://www.creative-tim.com/learning-lab/bootstrap-vue/colors/argon-dashboard">
-                            <i class="ni ni-palette"></i> Foundation
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
-                            <i class="ni ni-ui-04"></i> Components
-                        </a>
-                    </li>
-                </ul>
+                <slot name="links-after">
+                    <!--Divider-->
+                    <hr class="my-3">
+                    <!--Heading-->
+                    <h6 class="navbar-heading text-muted">Documentation</h6>
+                    
+                    <!--Navigation-->
+                    <ul class="navbar-nav mb-md-3">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                              href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
+                                <i class="ni ni-spaceship"></i> Getting started
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                              href="https://www.creative-tim.com/learning-lab/bootstrap-vue/colors/argon-dashboard">
+                                <i class="ni ni-palette"></i> Foundation
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                              href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
+                                <i class="ni ni-ui-04"></i> Components
+                            </a>
+                        </li>
+                    </ul>
+                </slot>
+
             </div>
             </div>
     </nav>
