@@ -28,10 +28,10 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: Extract ref
+      - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_ref
+        id: extract_branch
 
       # Runs a single command using the runners shell
       - name: Install Packages
