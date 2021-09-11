@@ -18,7 +18,7 @@
         <b-form class="navbar-search form-inline mr-sm-3"
             :class="{'navbar-search-dark': type === 'default', 'navbar-search-light': type === 'light'}"
             id="navbar-search-main">
-        <b-form-group class="mb-0">
+        <b-form-group class="mb-0" hidden>
           <b-input-group class="input-group-alternative input-group-merge">
             <b-form-input placeholder="Search" type="text"> </b-form-input>
 
@@ -36,10 +36,10 @@
         <a href="#" class="nav-link pr-0" @click.prevent slot="title-container">
           <b-media no-body class="align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" src="/argon/img/theme/team-4.jpg">
+                    <img alt="Image placeholder" :src="profileImage">
                   </span>
             <b-media-body class="ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+              
             </b-media-body>
           </b-media>
         </a>
@@ -47,26 +47,29 @@
         <template>
 
           <b-dropdown-header class="noti-title">
-            <h6 class="text-overflow m-0">Welcome!</h6>
+            <h6 class="text-overflow m-0">
+              Welcome!
+            </h6>
+            <span class="mb-0 text-sm font-weight-bold text-dark">{{$global.MyConst.userName}}</span>
           </b-dropdown-header>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item href="#!" hidden>
             <i class="ni ni-single-02"></i>
             <span>My profile</span>
           </b-dropdown-item>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item href="#!" hidden>
             <i class="ni ni-settings-gear-65"></i>
             <span>Settings</span>
           </b-dropdown-item>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item href="#!" hidden>
             <i class="ni ni-calendar-grid-58"></i>
             <span>Activity</span>
           </b-dropdown-item>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item href="#!" hidden>
             <i class="ni ni-support-16"></i>
             <span>Support</span>
           </b-dropdown-item>
           <div class="dropdown-divider"></div>
-          <b-dropdown-item href="/account/auth/logout">
+          <b-dropdown-item href="/front/auth/logout">
             <i class="ni ni-user-run"></i>
             <span>Logout</span>
           </b-dropdown-item>
@@ -79,6 +82,7 @@
 <script>
 import { CollapseTransition } from 'vue2-transitions';
 import { BaseNav, Modal } from '@/@common/argon/components';
+import profileImage from "@/assets/images/avatars//profile.png";
 
 export default {
   components: {
@@ -101,6 +105,7 @@ export default {
   },
   data() {
     return {
+      profileImage,
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,

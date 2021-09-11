@@ -1,5 +1,6 @@
 import BaseInput from '@/@common/argon/components/Inputs/BaseInput.vue';
 import BaseSelect from '@/@common/argon/components/Inputs/BaseSelect.vue';
+import BaseTextArea from '@/@common/argon/components/Inputs/BaseTextArea.vue';
 import BaseDropdown from '@/@common/argon/components/BaseDropdown.vue';
 import Card from '@/@common/argon/components/Cards/Card.vue';
 import Modal from '@/@common/argon/components/Modal.vue';
@@ -28,6 +29,7 @@ const GlobalComponents = {
     Vue.component(BaseHeader.name, BaseHeader);
     Vue.component(BaseInput.name, BaseInput);
     Vue.component(BaseSelect.name, BaseSelect);
+    Vue.component(BaseTextArea.name, BaseTextArea);
     Vue.component(BaseDropdown.name, BaseDropdown);
     Vue.component(BaseNav.name, BaseNav);
     Vue.component(BasePagination.name, BasePagination);

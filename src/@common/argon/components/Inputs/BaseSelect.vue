@@ -47,8 +47,11 @@
               inputClasses]">
               <option v-if="!question && ($attrs.placeholder || label || name)" 
               value="" disabled selected hidden >{{$attrs.placeholder || label || name}}</option>
-              <slot name="default">
-                <option value="other">Other</option>
+              <slot name="default"> 
+                <option v-for="option in selectOptions" :value="option.id" v-bind:key="option.id">
+                    {{option.name}}
+                </option>
+                <option v-if="!selectOptions" value="other">Other</option>
               </slot>
             </select>
         </slot>
@@ -164,12 +167,18 @@
         type: String,
         description: 'Input name (used for validation)',
         default: ''
+      },
+      options:{
+        type: String,
+        description: 'Input name options',
+        default: ''
       }
     },
     data() {
       return {
         focused: false,
         inputId : ++ID_COUNTER,
+        selectOptions : null
       };
     },
     computed: {
@@ -199,6 +208,9 @@
         );
       }
     },
+    created(){
+      this.loadOptions();
+    },
     methods: {
       updateValue(evt) {
         let value = evt.target.value;
@@ -211,6 +223,23 @@
       onBlur(evt) {
         this.focused = false;
         this.$emit("blur", evt);
+      },
+      async loadOptions(){
+        if(this.options && (typeof this.options == 'string') && this.options.indexOf('data:') == 0){
+          let json = await import("@/@data/" + this.options.replace("data:","") + ".json");
+          this.selectOptions = json.options.map(function(option){
+            if(typeof option == 'string' || typeof option == 'number'){
+              return {
+                id : option, name : option
+              }
+            } else {
+              return {
+                id : option.id || option.key || option.code || option.label || option.name, 
+                name : option.name || option.label || option.code || option.key || option.id
+              }
+            }
+          });
+        }
       }
     }
   };

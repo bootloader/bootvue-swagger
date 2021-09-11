@@ -37,7 +37,6 @@
                               class="mb-3" vid="login.email"
                               name="Email" label="Email"
                               :rules="{required: true, email: true}"
-                              placeholder="Email"
                               v-model="model.email">
                   </base-input>
 
@@ -46,7 +45,6 @@
                               name="Password" label="Password"
                               :rules="{required: true, min: 6}"
                               type="password"
-                              placeholder="Password"
                               v-model="model.password">
                   </base-input>
 

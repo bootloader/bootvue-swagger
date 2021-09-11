@@ -95,7 +95,6 @@ var CONTACT_LABELS_DICT = {};
   }
 
 var formatter = {
-  validators : ["phone","phoneML","emailz"],
 	instance : function (argument) {
 	},
   addContactLabels : function (labels) {
@@ -198,6 +197,13 @@ var formatter = {
   },
 
   //Validators
+  validators : ["phone","phoneML","emailz","alphanum"],
+  alphanum : function alphanumValidator (value) {
+    if(/^[a-zA-Z0-9]*$/.test(value))
+      return true
+    return 'errors.ValidAlphaNum';
+    //return true;
+  },
   emailz : function emailValidator (value) {
     if(/^[\w!#$%&'*+/=?`{|}~^-]+(?:\.[\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}/.test(value))
       return true

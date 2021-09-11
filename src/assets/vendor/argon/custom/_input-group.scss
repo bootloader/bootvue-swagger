@@ -60,7 +60,8 @@
       }
 
     }
-    .input-group-alternative input{
+    .input-group-alternative input,
+    .input-group-alternative textarea{
       border-radius: 0px;
     }
   
@@ -68,4 +69,13 @@
       box-shadow: 0 2px 0 0 lightgreen;
     }
   
+  }
+
+  .form-group-input {
+    .help-feedback {
+      display: inline-block;
+      color: #999;
+      font-size: 70%;
+      padding-left: 5px;;
+    }
   }

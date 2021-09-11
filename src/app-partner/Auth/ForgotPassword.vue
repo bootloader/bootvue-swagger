@@ -31,7 +31,7 @@
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input alternative question feedback
                               class="mb-3" 
-                              placeholder="Email" label="Email"
+                              label="Email"
                               name="Email"
                               :rules="{required: true, email: true}" required
                               v-model="model.email">

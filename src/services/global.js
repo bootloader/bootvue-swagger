@@ -11,6 +11,7 @@ export const MyConst = {
 	appPrefix : "/" + window.CONST.APP,
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
+	userName : window.CONST.APP_USER_NAME,
 	agent : window.CONST.APP_USER,
 	agent : window.CONST.APP_USER,
 	config : Object.assign({
@@ -86,3 +87,6 @@ export const MyFunc  = {
 }
 
 Vue.prototype.$config = MyConst.config;
+Vue.prototype.$global = {
+	MyConst,MyFlags,MyDict,MyFunc
+};

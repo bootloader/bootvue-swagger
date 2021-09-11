@@ -32,17 +32,18 @@
         </span>
         </div>
         <slot v-bind="slotData">
-          <input
+          <textarea
             :id="'fmg-' + inputId"
             :value="value"
             :type="type"
             v-on="listeners"
             v-bind="$attrs" 
             :valid="valid" 
-            :placeholder="question ? '' : $attrs.placeholder"
+            :placeholder="$attrs.placeholder"
             :required="required"
             class="form-control"
             :class="[{'is-valid': valid && validated && successMessage}, {'is-invalid': invalid && validated}, inputClasses]">
+          </textarea>
         </slot>
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
@@ -89,7 +90,7 @@
   export default {
     components: { passwordMeter },
     inheritAttrs: false,
-    name: "base-input",
+    name: "base-text-area",
     props: {
       required: {
         type: Boolean,
@@ -211,7 +212,7 @@
         );
       },
       showHelpMessage(){
-        if((this.question && this.$attrs.placeholder)  || this.helpMessage){
+        if(this.helpMessage){
           return true;
         }
       }
