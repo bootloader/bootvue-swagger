@@ -56,6 +56,7 @@
     "vue-moment": "^4.1.0",
     "vue-multi-select": "^4.6.0",
     "vue-perfect-scrollbar": "^0.1.0",
+    "vue-read-more": "^1.1.1",
     "vue-router": "^3.0.5",
     "vue-select": "^3.11.2",
     "vue-sidebar-menu": "^3.7.0",

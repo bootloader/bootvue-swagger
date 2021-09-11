@@ -21,12 +21,10 @@
             <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div class="pr-12">
                 <h1 class="text-white font-semibold text-5xl">
-                  Your story starts with us.
+                  Services
                 </h1>
                 <p class="mt-4 text-lg text-blueGray-200">
-                  This is a simple example of a Landing Page you can build using
-                  Vue Notus. It features multiple CSS components based on the
-                  Tailwind CSS design system.
+                  Yes, you've come to the right place if you're looking out to drive higher customer conversation ratios and handling your enquiries and business flexibly.
                 </p>
               </div>
             </div>
@@ -64,12 +62,11 @@
                   <div
                     class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400"
                   >
-                    <i class="fas fa-award"></i>
+                    <i class="fa fa-layer-group"></i>
                   </div>
-                  <h6 class="text-xl font-semibold">Awarded Agency</h6>
+                  <h6 class="text-xl font-semibold">Messaging API's</h6>
                   <p class="mt-2 mb-4 text-blueGray-500">
-                    Divide details about your product or agency work into parts.
-                    A paragraph describing a feature will be enough.
+                  <read-more :text="text.product1" more-str="Read More" link="#" less-str="Read Less" :max-chars="product1Length"></read-more>
                   </p>
                 </div>
               </div>
@@ -83,12 +80,11 @@
                   <div
                     class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400"
                   >
-                    <i class="fas fa-retweet"></i>
+                    <i class="fas fa-bell"></i>
                   </div>
-                  <h6 class="text-xl font-semibold">Free Revisions</h6>
+                  <h6 class="text-xl font-semibold">Smart Conversations</h6>
                   <p class="mt-2 mb-4 text-blueGray-500">
-                    Keep you user engaged by providing meaningful information.
-                    Remember that by this time, the user is curious.
+                    <read-more :text="text.product2" more-str="Read More" link="#" less-str="Read Less" :max-chars="product2Length"></read-more>
                   </p>
                 </div>
               </div>
@@ -102,12 +98,11 @@
                   <div
                     class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400"
                   >
-                    <i class="fas fa-fingerprint"></i>
+                    <i class="fas fa-envelope"></i>
                   </div>
-                  <h6 class="text-xl font-semibold">Verified Company</h6>
+                  <h6 class="text-xl font-semibold">Intelligent Conversations</h6>
                   <p class="mt-2 mb-4 text-blueGray-500">
-                    Write a few lines about each one. A paragraph describing a
-                    feature will be enough. Keep you user engaged!
+                     <read-more :text="text.product3" more-str="Read More" link="#" less-str="Read Less" :max-chars="product3Length"></read-more>
                   </p>
                 </div>
               </div>
@@ -122,25 +117,18 @@
                 <i class="fas fa-user-friends text-xl"></i>
               </div>
               <h3 class="text-3xl mb-2 font-semibold leading-normal">
-                Working with us is a pleasure
+                The {{$config.PROP_SERVICE_NAME}} Advantage. Industry Stories.
               </h3>
               <p
-                class="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600"
+                class="text-sm font-light leading-relaxed mt-4 mb-4 text-blueGray-600"
               >
-                Don't let your uses guess by attaching tooltips and popoves to
-                any element. Just make sure you enable them first via
-                JavaScript.
+                You know the Top 20 reasons why your customer reaches out to you – by either calling you, visiting your branch or writing to you. Let’s make your customer’s life easier!. Let’s allow him to reach you over a social media messenger, or a webchat. Isn't that awesome?
               </p>
               <p
-                class="text-lg font-light leading-relaxed mt-0 mb-4 text-blueGray-600"
+                class="text-sm font-light leading-relaxed mt-0 mb-4 text-blueGray-600"
               >
-                The kit comes with three pre-built pages to help you get started
-                faster. You can change the text and images and you're good to
-                go. Just make sure you enable them first via JavaScript.
+                Together, we will build the bridges to connect to your enterprise systems and define rules for fetching the data that your customer is seeking. Then using a combination of menus, conversational AI using Machine Learning and / or agent communication, we’ll ensure that your customer is given the information they seek as quickly as possible. Your customer will save a ton of time and your brand image shall soar.
               </p>
-              <router-link to="/" class="font-bold text-blueGray-700 mt-8">
-                Check Vue Notus!
-              </router-link>
             </div>
 
             <div class="w-full md:w-4/12 px-4 mr-auto ml-auto">
@@ -165,12 +153,10 @@
                     ></polygon>
                   </svg>
                   <h4 class="text-xl font-bold text-white">
-                    Top Notch Services
+                    Customer Engagement
                   </h4>
                   <p class="text-md font-light mt-2 text-white">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
+                    You'll love to see this work
                   </p>
                 </blockquote>
               </div>
@@ -216,13 +202,23 @@
                 >
                   <i class="fas fa-rocket text-xl"></i>
                 </div>
-                <h3 class="text-3xl font-semibold">A growing company</h3>
+                <h3 class="text-3xl font-semibold">Customer Acquisition</h3>
                 <p class="mt-4 text-lg leading-relaxed text-blueGray-500">
-                  The extension comes with three pre-built pages to help you get
-                  started faster. You can change the text and images and you're
-                  good to go.
+                  The {{$config.PROP_SERVICE_NAME}} Advantage. Converse And Convert.
                 </p>
-                <ul class="list-none mt-6">
+                <p class="mt-4 text-sm leading-relaxed text-blueGray-500">
+                  Still following form filling and agent calling prospects? It's time to upgrade!. We offer you an extraordinary method for engaging an customers to enhance your conversion rates, increasing ROIs of Digital spends.
+                </p>
+                <p class="mt-4 text-sm leading-relaxed text-blueGray-500">
+                  Our Solution blends social media messaging flawlessly with your digital ads, so when someone taps on your digital ad, we capture basic information and start a conversation with the person, with the integrated intelligence of our tool, We conversationally capture additional data points as required by your business or / and hand it over to a customer acquisition specialist(whenever needed), to onboard the client and capture the interest.
+                </p>
+                <p class="mt-4 text-sm leading-relaxed text-blueGray-500">
+                  Combined with analytics, it gives you a real time picture of your digital campaigns and their effectiveness, allowing you to modify campaigns in real-time.
+                </p>
+                <p class="mt-4 text-sm leading-relaxed text-blueGray-500">
+                  Each image is linked with a different social media messenger, to exhibit the power available to you. Magically, in the background, they all communicate the same {{$config.PROP_SERVICE_NAME}} smart messaging or intelligent messaging solutions, leveraging your assets to optimally manage the customer acquisition cycle.
+                </p>
+                <ul class="list-none mt-6" hidden>
                   <li class="py-2">
                     <div class="flex items-center">
                       <div>
@@ -276,7 +272,7 @@
         </div>
       </section>
 
-      <section class="pt-20 pb-48">
+      <section class="pt-20 pb-48" hidden>
         <div class="container mx-auto px-4">
           <div class="flex flex-wrap justify-center text-center mb-24">
             <div class="w-full lg:w-6/12 px-4">
@@ -466,12 +462,9 @@
           <div class="flex flex-wrap text-center justify-center">
             <div class="w-full lg:w-6/12 px-4">
               <h2 class="text-4xl font-semibold text-white">
-                Build something
+                All The Tools You Need In One Workspace
               </h2>
               <p class="text-lg leading-relaxed mt-4 mb-4 text-blueGray-400">
-                Put the potentially record low maximum sea ice extent tihs year
-                down to low ice. According to the National Oceanic and
-                Atmospheric Administration, Ted, Scambos.
               </p>
             </div>
           </div>
@@ -486,8 +479,7 @@
                 Excelent Services
               </h6>
               <p class="mt-2 mb-4 text-blueGray-400">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+                 Listen to your customers. Respond promptly. Ask for feedback.
               </p>
             </div>
             <div class="w-full lg:w-3/12 px-4 text-center">
@@ -500,8 +492,7 @@
                 Grow your market
               </h5>
               <p class="mt-2 mb-4 text-blueGray-400">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+                The aim of this strategy is to increase sales of existing products or services on existing markets.
               </p>
             </div>
             <div class="w-full lg:w-3/12 px-4 text-center">
@@ -513,9 +504,8 @@
               <h5 class="text-xl mt-5 font-semibold text-white">
                 Launch time
               </h5>
-              <p class="mt-2 mb-4 text-blueGray-400">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+              <p class="mt-2 mb-4 text-blueGray-400" >
+                Release a product as soon as it's working
               </p>
             </div>
           </div>
@@ -530,12 +520,12 @@
               >
                 <div class="flex-auto p-5 lg:p-10">
                   <h4 class="text-2xl font-semibold">
-                    Want to work with us?
+                    Migrate Your Whatsapp Business API Account
                   </h4>
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
-                    Complete this form and we will get back to you in 24 hours.
+                    Click the button below to proceed.
                   </p>
-                  <div class="relative w-full mb-3 mt-8">
+                  <div class="relative w-full mb-3 mt-8" hidden>
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="full-name"
@@ -549,7 +539,7 @@
                     />
                   </div>
 
-                  <div class="relative w-full mb-3">
+                  <div class="relative w-full mb-3" hidden>
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="email"
@@ -563,7 +553,7 @@
                     />
                   </div>
 
-                  <div class="relative w-full mb-3">
+                  <div class="relative w-full mb-3" hidden>
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="message"
@@ -578,12 +568,13 @@
                     />
                   </div>
                   <div class="text-center mt-6">
-                    <button
+                    <a
+                      :href="`https://wa.me/${$config.PROP_SOCIAL_WHATSAPP}/?text=Hello,%20I%20would%20like%20to%20migrate%20to%20Mehery%20WhatsApp%20Business%20Robot`"
                       class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="button"
                     >
-                      Send Message
-                    </button>
+                      Click here
+                    </a>
                   </div>
                 </div>
               </div>
@@ -607,11 +598,30 @@ import team4 from "@/assets/vendor/notus/img/team-4-470x470.png";
 export default {
   data() {
     return {
+      text : {
+        product1 : `${this.$config.PROP_SERVICE_NAME}'s integrated messaging API, associates you to multiple social media messaging platforms, which eliminates the requirement for your organization to stay up to date with the latest progressions happening in the social media platform API's. 
+        We provide out of the box solution for you to connect with WhatsApp, Telegram, Facebook Messenger, Twitter DM and a native Web Chat. 
+        <more/> You need to connect only once, to the ${this.$config.PROP_SERVICE_NAME} API and leave the rest to us.
+        This is valuable for CRM solution providers, Enterprises with existing CRM solutions who need a plug-n-play API for integrating social media messengers and Enterprises with a strong in-house technology & innovation team, which is managing internal omni-channel communication platforms.`, 
+        product2 : `${this.$config.PROP_SERVICE_NAME}’s Messaging Channel, Enterprise integrated BOT and Agent Communicator driven responses give your organization an incredible edge – in getting intelligent and educated data to customers via a BOT or by means of an Agent driving customer satisfaction and enhancing Customer Acquisition and Customer Engagement team’s productivity. 
+        <more/>This solution is useful for all Enterprises engaged in Business to Customer communication – be it commercial enquiries, servicing existing customers and using the communication opportunities to enhance and advance your brand, its products and services.`, 
+        product3 : `${this.$config.PROP_SERVICE_NAME}’s Smart Conversations powered by Machine Learning gives you Intelligent Conversations. Intelligent Conversations, brings to the BOT and Agents, powerful suggested conversational responses, curated using Machine Learning, driving successful Customer Acquisitions or Customer Engagements. 
+        <more/> This is a journey, we, at ${this.$config.PROP_SERVICE_NAME} take together with you in training the models – in multiple teach, test, review cycles to ensure that the model is finetuned and delivering a high level of true positives. This solution is useful for all Enterprises engaged in Business to Customer communication – be it commercial enquiries, servicing existing customers and using the communication opportunities to promote your brand, its products and services.`,
+      },
       team1,
       team2,
       team3,
       team4,
     };
+  },
+  computed : {
+    product1Length (){
+      return this.text.product1.split("<more/>")[0].length
+    }, product2Length (){
+      return this.text.product2.split("<more/>")[0].length
+    }, product3Length (){
+      return this.text.product3.split("<more/>")[0].length
+    }
   },
   components: {
     Navbar,
@@ -619,3 +629,9 @@ export default {
   },
 };
 </script>
+<style>
+  #readmore {
+    font-size: 16px;
+    color: rgb(20, 123, 172);
+  }
+</style>

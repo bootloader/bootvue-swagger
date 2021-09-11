@@ -50,7 +50,7 @@
               </a>
               <router-link
                 tag="a"
-                to="/front/landing"
+                to="/front/more"
                 class="
                   github-star
                   ml-1

@@ -48,8 +48,8 @@ export default AppRouter.route({
           ],
         },
         {
-          path: "/front/landing",
-          component: () => import('./Index/Landing.vue'),
+          path: "/front/more",
+          component: () => import('./Index/IndexMore.vue'),
         },
         {
           path: "/:domain",

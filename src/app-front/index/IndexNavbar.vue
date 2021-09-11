@@ -37,7 +37,7 @@
           <li class="flex items-center">
             <a
               class="hover:text-blueGray-500 text-blueGray-700 px-3 py-2 flex items-center text-xs uppercase font-bold"
-              :href="$config.PROP_SERVICE_NAME"
+              :href="$config.PROP_SERVICE_DOCS_API_LINK"
             >
               <i
                 class="text-blueGray-400 far fa-file-alt text-lg leading-lg mr-2"
@@ -47,7 +47,7 @@
           </li>
         </ul>
         <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
-          <li class="flex items-center">
+          <li class="flex items-center hidden" hidden>
             <index-dropdown />
           </li>
           <li class="flex items-center" v-if="$config.PROP_SOCIAL_FACEBOOK">

@@ -31,25 +31,19 @@
               class="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
-              <i class="fab fa-twitter"></i>
+              <a target="_blank"  :href="`https://twitter.com/${$config.PROP_SOCIAL_TWITTER}`" class="fab fa-twitter"></a>
             </button>
             <button
               class="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
-              <i class="fab fa-facebook-square"></i>
+              <a target="_blank"  :href="`https://facebook.com/${$config.PROP_SOCIAL_FACEBOOK}`"  class="fab fa-facebook-square"></a>
             </button>
             <button
               class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
-              <i class="fab fa-dribbble"></i>
-            </button>
-            <button
-              class="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-              type="button"
-            >
-              <i class="fab fa-github"></i>
+              <a target="_blank"  :href="`https://instagram.com/${$config.PROP_SOCIAL_INSTAGRAM}`"  class="fab fa-instagram"></a>
             </button>
           </div>
         </div>
