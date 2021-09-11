@@ -1188,8 +1188,7 @@
         <div class="w-full md:w-6/12 px-12 md:px-4">
           <h2 class="font-semibold text-4xl">Sample Demos</h2>
           <p class="text-lg leading-relaxed mt-4 mb-4 text-blueGray-500">
-            We have created simple flow examples, just to show you how easy it
-            would be for your customers.
+            You'll love how it works, click on the images
           </p>
         </div>
       </div>
@@ -1202,9 +1201,9 @@
             <div class="flex flex-wrap">
               <div class="w-full lg:w-4/12 px-4">
                 <h5 class="text-xl font-semibold pb-4 text-center">
-                  Login Page
+                  New Account Open
                 </h5>
-                <router-link to="/auth/login">
+                <a :href="`https://api.whatsapp.com/send/?phone=${$config.PROP_SOCIAL_WHATSAPP}&text=/newaccountopen`">
                   <div
                     class="
                       hover:-mt-4
@@ -1231,17 +1230,18 @@
                         h-auto
                         rounded-lg
                       "
-                      :src="login"
+                      style="height:230px"
+                      :src="openNewAccount"
                     />
                   </div>
-                </router-link>
+                </a>
               </div>
 
               <div class="w-full lg:w-4/12 px-4">
                 <h5 class="text-xl font-semibold pb-4 text-center">
-                  Profile Page
+                  Real Estate
                 </h5>
-                <router-link to="/profile">
+                <a :href="`https://api.whatsapp.com/send/?phone=${$config.PROP_SOCIAL_WHATSAPP}&text=/propertybkcmumbai`">
                   <div
                     class="
                       hover:-mt-4
@@ -1268,17 +1268,18 @@
                         h-auto
                         rounded-lg
                       "
-                      :src="profile"
+                      style="height:230px"
+                      :src="realEstate"
                     />
                   </div>
-                </router-link>
+                </a>
               </div>
 
               <div class="w-full lg:w-4/12 px-4">
                 <h5 class="text-xl font-semibold pb-4 text-center">
-                  Landing Page
+                  Talk To Agent
                 </h5>
-                <router-link to="/landing">
+                <a :href="`https://api.whatsapp.com/send/?phone=${$config.PROP_SOCIAL_WHATSAPP}&text=TALKTOAGENT`">
                   <div
                     class="
                       hover:-mt-4
@@ -1304,11 +1305,13 @@
                         max-w-full
                         h-auto
                         rounded-lg
+                        h-220
                       "
-                      :src="landing"
+                      style="height:230px"
+                      :src="TalkToAgent"
                     />
                   </div>
-                </router-link>
+                </a>
               </div>
             </div>
           </div>
@@ -1558,9 +1561,9 @@ import componentInfo2 from "@/assets/vendor/notus/img/component-info-2.png";
 import componentMenu from "@/assets/vendor/notus/img/component-menu.png";
 import componentBtnPink from "@/assets/vendor/notus/img/component-btn-pink.png";
 import documentation from "@/assets/vendor/notus/img/documentation.png";
-import login from "@/assets/vendor/notus/img/login.jpg";
-import profile from "@/assets/vendor/notus/img/profile.jpg";
-import landing from "@/assets/vendor/notus/img/landing.jpg";
+import openNewAccount from "@/assets/vendor/notus/img/openNewAccount.png";
+import realEstate from "@/assets/vendor/notus/img/realEstate.jpg";
+import TalkToAgent from "@/assets/vendor/notus/img/TalkToAgent.jpg";
 
 export default {
   data() {
@@ -1573,9 +1576,9 @@ export default {
       componentMenu,
       componentBtnPink,
       documentation,
-      login,
-      profile,
-      landing,
+      openNewAccount,
+      realEstate,
+      TalkToAgent,
     };
   },
   components: {
