@@ -4,9 +4,9 @@
 
     <b-row  v-if="isDomainSet && !isEditDetail" align-v="center" slot="header" >
       <b-col cols="6">
-      <stats-card  title="@demo"
+      <stats-card :title="'@'+model.domain"
           types="gradient-red"
-          sub-title="Demo Instance"
+          :sub-title="model.company.businessName"
           icon="fa fa-arrow-right"
           class="mb-4"
           footer-classes="mt--1">
