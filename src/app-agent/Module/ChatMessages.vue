@@ -13,9 +13,12 @@
                     <div v-if="m.attachments"> 
                         <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                         <div class="input-group my-attachments">
-                            <span v-for="atch in m.attachments" v-viewer="viewerOptions">
+                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaId">
                                 <img v-if="atch.mediaType == 'IMAGE'"  
                                     v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
+                                  <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
+                                        :file="atch.mediaURL"
+                                    ></audio-player>    
                                 <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
                                 <br/>
                                 <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
@@ -112,6 +115,7 @@
     import tunnel from './../../services/tunnel';
     import mustache from 'mustache';
     import SlideUpDown from 'vue-slide-up-down'
+    import AudioPlayer from '@/@common/custom/components/AudioPlayer';
 
     import debounce from 'debounce';
     import throttle from 'throttleit';
@@ -125,7 +129,8 @@
     export default {
         name : "ChatMessages",
         components: {
-            Loading: Loading,SlideUpDown, vSelect :vSelect
+            Loading: Loading,SlideUpDown, vSelect :vSelect,
+            AudioPlayer
         },
         computed : {
 

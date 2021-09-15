@@ -713,7 +713,7 @@
                //this.calcQuickReplies();
                 var categories = [];
                 var ilastmsg = activeChat.ilastmsg;
-                if(ilastmsg){
+                if(ilastmsg && ilastmsg.tags){
                     categories = ilastmsg.tags.categories;
                 } else if(!force){
                     return;
