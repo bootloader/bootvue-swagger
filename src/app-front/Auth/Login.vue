@@ -160,7 +160,10 @@ export default {
     }
   },
   mounted () {
-    const that = this
+    const that = this;
+    if(this.$global.MyConst.appDomain){
+
+    }
     that.$nextTick(function () {
       that.getDomainWidth()
     });

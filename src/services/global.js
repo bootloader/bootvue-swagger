@@ -9,10 +9,10 @@ export const MyConst = {
 	app : window.CONST.APP,
 	cdn : window.CONST.CDN_URL,
 	appPrefix : "/" + window.CONST.APP,
+	appDomain : window.CONST.APP_DOMAIN,
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	userName : window.CONST.APP_USER_NAME,
-	agent : window.CONST.APP_USER,
 	agent : window.CONST.APP_USER,
 	config : Object.assign({
 		chatSessionTimeout : 86400000, // After which chat is expired

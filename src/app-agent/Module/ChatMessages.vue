@@ -13,7 +13,7 @@
                     <div v-if="m.attachments"> 
                         <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                         <div class="input-group my-attachments">
-                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaId">
+                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
                                 <img v-if="atch.mediaType == 'IMAGE'"  
                                     v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
                                   <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
@@ -35,7 +35,7 @@
                     <div v-if="m.attachments"> 
                         <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
                         <div class="input-group my-attachments">
-                            <span v-for="atch in m.attachments" v-viewer="viewerOptions">
+                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
                                 <img v-if="atch.mediaType == 'IMAGE'" 
                                     v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
                                 <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
