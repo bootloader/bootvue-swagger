@@ -23,7 +23,7 @@
                 </b-nav-item>
                 <b-nav-item to="/auth/register" v-if="$route.name !== 'register'">
                   <i class="fa fa-user  text-primary"></i>
-                  <span class="nav-link-inner--text  text-primary">Register</span>
+                  <span class="nav-link-inner--text  text-primary">Register Business</span>
                 </b-nav-item>
                 <b-nav-item to="/auth/login" v-if="$route.name !== 'login'">
                   <i class="fa fa-key  text-primary"></i>

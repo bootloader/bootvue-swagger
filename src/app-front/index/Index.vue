@@ -139,17 +139,16 @@
                 flex flex-col
                 min-w-0
                 break-words
-                bg-white
                 w-full
                 mb-6
                 shadow-lg
                 rounded-lg
-                bg-emerald-500
+                bg-purple-darkdirty
               "
             >
               <img
                 alt="..."
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
+                :src="all_tools_in_one_place"
                 class="w-full align-middle rounded-t-lg"
               />
               <blockquote class="relative p-8 mb-4">
@@ -161,7 +160,7 @@
                 >
                   <polygon
                     points="-30,95 583,95 583,65"
-                    class="text-emerald-500 fill-current"
+                    class="text-purple-darkdirty fill-current"
                   ></polygon>
                 </svg>
                 <h4 class="text-xl font-bold text-white">
@@ -1186,7 +1185,7 @@
 
       <div class="justify-center text-center flex flex-wrap mt-24">
         <div class="w-full md:w-6/12 px-12 md:px-4">
-          <h2 class="font-semibold text-4xl">Sample Demos</h2>
+          <h2 class="font-semibold text-4xl">Quick Demos</h2>
           <p class="text-lg leading-relaxed mt-4 mb-4 text-blueGray-500">
             You'll love how it works, click on the images
           </p>
@@ -1552,18 +1551,22 @@
 import IndexNavbar from "./IndexNavbar.vue";
 import FooterComponent from "./Footer.vue";
 import "@/assets/utils/_social.scss";
+import "@/assets/utils/_popular.scss";
 
 import patternVue from "@/assets/vendor/notus/img/pattern_vue.png";
-import componentBtn from "@/assets/vendor/notus/img/component-btn.png";
-import componentProfileCard from "@/assets/vendor/notus/img/component-profile-card.png";
-import componentInfoCard from "@/assets/vendor/notus/img/component-info-card.png";
-import componentInfo2 from "@/assets/vendor/notus/img/component-info-2.png";
+import componentBtn from "@/assets/vendor/notus/img/img-emails.png";
+
+import componentInfoCard from "@/assets/vendor/notus/img/img-mobile.png";
+import componentInfo2 from "@/assets/vendor/notus/img/img-innovation.png";
 import componentMenu from "@/assets/vendor/notus/img/component-menu.png";
-import componentBtnPink from "@/assets/vendor/notus/img/component-btn-pink.png";
-import documentation from "@/assets/vendor/notus/img/documentation.png";
-import openNewAccount from "@/assets/vendor/notus/img/openNewAccount.png";
-import realEstate from "@/assets/vendor/notus/img/realEstate.jpg";
+import componentBtnPink from "@/assets/vendor/notus/img/img-easy.png";
+import documentation from "@/assets/vendor/notus/img/img-lowcode.png";
+import openNewAccount from "@/assets/vendor/notus/img/img-bank2.jpg";
+import realEstate from "@/assets/vendor/notus/img/img-realstate.png";
 import TalkToAgent from "@/assets/vendor/notus/img/TalkToAgent.jpg";
+
+import all_tools_in_one_place from "@/assets/vendor/notus/img/all_tools_in_one_place.jpg";
+import componentProfileCard from "@/assets/vendor/notus/img/img-capabilities.png";
 
 export default {
   data() {
@@ -1579,6 +1582,7 @@ export default {
       openNewAccount,
       realEstate,
       TalkToAgent,
+      all_tools_in_one_place
     };
   },
   components: {

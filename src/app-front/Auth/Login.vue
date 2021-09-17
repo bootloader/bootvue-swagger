@@ -27,6 +27,13 @@
                 Google
               </button>
             </div>
+             <div v-if="domain" class="btn-wrapper text-center">
+                <h6 class="text-blueGray-500 text-sm">
+                  <span class="text-emerald-600">https://</span>
+                  <span class="text-blueGray-600  font-bold">{{domain}}</span>
+                  <span class="text-blueGray-500  font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</span>
+                </h6>
+             </div>
             <hr class="mt-6 border-b-1 border-blueGray-300" />
           </div>
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
@@ -34,7 +41,7 @@
               <small>Or sign in with credentials</small>
             </div>
 
-            <form v-if="!domain">
+            <form v-if="!domain" ref="domainForm">
               <div class="relative w-full mb-3">
                 <label
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -43,8 +50,9 @@
                   Enter your domain URL
                 </label>
                 <div class="domain-box border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                  <input name="app" type="hidden" v-model="app" />
                   <input id="domain"
-                    type="text" v-model="domainInput" autocomplete="off"
+                    type="text" v-model="domainInput" autocomplete="off" name="domain"
                     class="domain-input" :style="{
                       'width' : domainSize + 'px'
                     }"
@@ -61,8 +69,9 @@
                 <button
                   class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                   type="button"
+                  @click="domainSubmit"
                 >
-                  Continue
+                  {{domainPreFilled ? 'Continue' : 'Submit'  }}
                 </button>
               </div>
             </form>
@@ -79,6 +88,7 @@
                   type="email"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   placeholder="Email"
+                  v-model="model.email"
                 />
               </div>
 
@@ -93,10 +103,11 @@
                   type="password"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   placeholder="Password"
+                  v-model="model.password"
                 />
               </div>
               <div>
-                <label class="inline-flex items-center cursor-pointer">
+                <label class="inline-flex items-center cursor-pointer hidden">
                   <input
                     id="customCheckLogin"
                     type="checkbox"
@@ -112,22 +123,31 @@
                 <button
                   class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                   type="button"
+                  @click="loginSubmit"
                 >
                   Sign In
                 </button>
               </div>
             </form>
+            <div>
+              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_DOMAIN + '/' + model.app" method="POST" ref="loginForm">
+                <input name="domainName" :value="model.domainName" type="hidden"/>
+                 <input name="domainId" :value="model.domainId" type="hidden"/>
+                 <input name="domainToken" :value="model.domainToken" type="hidden"/>
+                  <input name="domainUser" :value="model.domainUser" type="hidden"/>
+              </form>
+            </div>
           </div>
         </div>
-        <div class="flex flex-wrap mt-6 relative" v-if="domain">
-          <div class="w-1/2">
-            <a href="javascript:void(0)" class="text-blueGray-200">
-              <small>Forgot password?</small>
+        <div class="flex flex-wrap mt-6 relative justify-center" v-if="domain">
+          <div class="w-1/2 text-center">
+            <a href="javascript:void(0)" class="text-blueGray-200" @click="domain=''">
+              <small>Switch domain?</small>
             </a>
           </div>
-          <div class="w-1/2 text-right">
-            <router-link to="/auth/register" class="text-blueGray-200">
-              <small>Create new account</small>
+          <div class="w-1/2 text-right hidden" hidden>
+            <router-link to="/auth/register" class="text-blueGray-200" hidden>
+              <small>Forgot password?</small>
             </router-link>
           </div>
         </div>
@@ -147,9 +167,17 @@ export default {
       github,
       google,
       domain,
+      app : "agent",
       domainInput : "",
       domainPlaceholder : "yourdomain",
-      domainWidth : 0
+      domainWidth : 0,
+      model : {
+        email : null, password : null,
+        domainName : null, 
+        domainId : null, 
+        domainToken : null, 
+        domainUser :  null
+      }
     };
   },
   computed : {
@@ -157,10 +185,22 @@ export default {
         //return this.this.domainWidth;
         //return this.$refs.domainWidth.clientWidth;
         return Math.max(this.domainWidth || this.domainInput.length || this.domainPlaceholder.length,22) +1;
+    },
+    domainPreFilled :  function(){
+      return (this.$global.MyConst.appDomainId && (this.$global.MyConst.appDomain == this.domainInput));
     }
   },
+  watch : {
+      '$route.query.app': function (app) {
+        this.updateTarget();
+      },
+      '$route.query.domain': function (domain) {
+        this.updateTarget();
+      },
+  },
   mounted () {
-    const that = this
+    const that = this;
+    this.updateTarget();
     that.$nextTick(function () {
       that.getDomainWidth()
     });
@@ -172,6 +212,51 @@ export default {
     });
   },
   methods : {
+    updateTarget(){
+      if(this.$global.MyConst.appDomainId){
+        this.domainInput = this.$global.MyConst.appDomain;
+      }
+      if(this.$route.query.app){
+        this.app = this.$route.query.app;
+      }
+      if(this.$route.query.domain){
+        this.domainSubmit();
+      }
+    },
+    domainSubmit(){
+      if(this.domainPreFilled){
+        this.domain = this.domainInput;
+      } else if(this.domainInput) {
+        this.$refs.domainForm.submit();
+      }
+    },
+    async loginSubmit(){
+        try {
+          var resp = await this.$service.submit('/user/pub/login?tnt='+this.domain,{
+            username : this.model.email,
+            password : this.model.password,
+            app : this.app, 
+            domainId : this.$global.MyConst.appDomainId,
+          },{
+            ref : this.$refs.formValidator,
+            toast : false
+          });
+          this.model.app = resp.data.app;
+          this.model.domainName = resp.data.domainName;
+          this.model.domainId = resp.data.domainId;
+          this.model.domainToken = resp.data.domainToken;
+          this.model.domainUser = resp.data.domainUser;
+          var THAT = this;
+          if(this.model.domainToken){
+            setTimeout(function(){
+               THAT.$refs.loginForm.submit();
+            },100)
+          }
+          //window.location.href = "/partner/app/"
+        } catch(e){
+          //console.log(e.response);
+        }
+    },
     getDomainWidth() {
       this.domainWidth = this.$refs.domainWidth ? this.$refs.domainWidth.clientWidth : 0;
     }
