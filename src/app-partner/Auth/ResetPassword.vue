@@ -90,7 +90,9 @@
           confirmpass : this.model.confirmpass,
           agree : this.model.agree
         });
-        window.location.href = "/partner/app/"
+        setTimeout(function (params) {
+          window.location.href = "/partner/app/"
+        }, 100);
       },
       onScore(evt) {
         this.model.strength = evt.strength

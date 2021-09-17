@@ -96,13 +96,9 @@
           </li>
 
           <li class="flex items-center">
-            <a
-              class="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-              type="button"
-              href="/partner/auth"
-            > Partner Login
-              <i class="fa fa-sign-in"></i> 
-            </a>
+            <LoginDropdown
+              btnClass="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150">
+            </LoginDropdown>
           </li>
         </ul>
       </div>
@@ -112,6 +108,7 @@
 
 <script>
 import IndexDropdown from "./IndexDropdown.vue";
+import LoginDropdown from "./LoginDropdown.vue";
 
 export default {
   props : {
@@ -147,7 +144,7 @@ export default {
     },
   },
   components: {
-    IndexDropdown,
+    IndexDropdown,LoginDropdown
   },
 };
 </script>

@@ -9,7 +9,7 @@ export const MyConst = {
 	app : window.CONST.APP,
 	cdn : window.CONST.CDN_URL,
 	appPrefix : "/" + window.CONST.APP,
-	appDomain : window.CONST.APP_DOMAIN,
+	appDomain : window.CONST.APP_DOMAIN,appDomainId : window.CONST.APP_DOMAIN_ID,
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	userName : window.CONST.APP_USER_NAME,
