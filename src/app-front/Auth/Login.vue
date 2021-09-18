@@ -40,7 +40,7 @@
             <div class="text-blueGray-400 text-center mb-3 font-bold hidden">
               <small>Or sign in with credentials</small>
             </div>
-
+            <validation-observer ref="formValidator">
             <form v-if="!domain" ref="domainForm">
               <div class="relative w-full mb-3">
                 <label
@@ -78,6 +78,8 @@
 
             <form v-else-if="domain">
               <div class="relative w-full mb-3">
+                 <validation-provider rules="required|emailz" 
+                 vid="login.username" v-slot="{errors}"> 
                 <label
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                   htmlFor="grid-password"
@@ -85,26 +87,36 @@
                   Email
                 </label>
                 <input
-                  type="email"
+                  type="email" name="email"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   placeholder="Email"
                   v-model="model.email"
                 />
+                  <span v-if="errors[0]" class="text-red-500 text-sm">
+                        {{ errors[0] }}
+                  </span>
+                </validation-provider>
               </div>
 
               <div class="relative w-full mb-3">
-                <label
-                  class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  htmlFor="grid-password"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  placeholder="Password"
-                  v-model="model.password"
-                />
+                <validation-provider rules="required" name="Password" 
+                vid="login.password"  v-slot="{errors}"> 
+                  <label
+                    class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                    htmlFor="grid-password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password" name="password"
+                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                    placeholder="Password"
+                    v-model="model.password"
+                  />
+                  <span v-if="errors[0]" class="text-red-500 text-sm">
+                        {{ errors[0] }}
+                  </span>
+                </validation-provider>
               </div>
               <div>
                 <label class="inline-flex items-center cursor-pointer hidden">
@@ -129,6 +141,7 @@
                 </button>
               </div>
             </form>
+            </validation-observer>
             <div>
               <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_DOMAIN + '/' + model.app + '/auth/direct'" method="POST" ref="loginForm">
                 <input name="domainName" :value="model.domainName" type="hidden"/>
