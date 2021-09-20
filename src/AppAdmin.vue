@@ -15,14 +15,20 @@
   import { ValidationProvider, ValidationObserver } from 'vee-validate';
   import { extend } from 'vee-validate';
   import { required, email,regex } from 'vee-validate/dist/rules';
-  import formatters from './services/formatters';  
+  import formatters from './services/formatters'; 
+  
+  import VueClipboard from 'vue-clipboard2';
 
   Vue.component('admin-default-layout', () => import('./app-admin/Layout/baseLayout.vue'));
   Vue.component('admin-userpages-layout', () => import('./app-admin/Layout/pagesLayout.vue'));
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
 
+  VueClipboard.config.autoSetContainer = true // add this line
+  Vue.use(VueClipboard)
+
   const default_layout = "default";
+
 
 
   // No message specified.

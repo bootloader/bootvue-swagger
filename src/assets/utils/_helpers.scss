@@ -90,12 +90,20 @@
   font-size: 1.3rem !important;
 }
 
-.font-size-md {
+.font-size-lg,.text-lg {
+  font-size: 1.1rem !important;
+}
+
+.font-size-md,.text-md {
   font-size: .9rem !important;
 }
 
-.font-size-lg {
-  font-size: 1.1rem !important;
+.font-size-sm,.text-sm {
+  font-size: .7rem !important;
+}
+
+.font-size-xs,.text-xs  {
+  font-size: .6rem !important;
 }
 
 // No Shadow
@@ -223,6 +231,20 @@
 
 .w-100 {
   width: 100%;
+}
+
+.w-100px {
+  width: 100px;
+}
+.w-120px {
+  width: 120px;
+}
+
+.mw-100px {
+  max-width: 100px;
+}
+.mw-120px {
+  max-width: 120px;
 }
 
 .mb--2 {

@@ -19,7 +19,7 @@
                   <span>{{row.item.config.value}}</span>
                 </template>
                 <template #cell(actions)="row">
-                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
+                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
                      v-tooltip="row.item.message" variant="outline-primary">
                      <i class="fas fa-edit"></i>
                   </b-button>

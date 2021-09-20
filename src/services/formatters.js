@@ -261,6 +261,10 @@ var formatter = {
     });
 
     Vue.filter('display', function (value,options,key) {
+      if(typeof options == "string"){
+        var map = formatter.map_from_string(options);
+        return map[value];
+      }
       var option = ((options||[]).filter((option)=> (option.value == value))[0])||{};
       if(option && option.label !== undefined && option.label !== null){
         return option.label;

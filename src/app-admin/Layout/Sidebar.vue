@@ -200,6 +200,12 @@
                         title: 'API Keys',
                         icon: 'pe-7s-key fa fa-key' ,
                     },
+                    {
+                        enabled : true,
+                        href: '/app/setup/channels',
+                        title: 'Channels',
+                        icon: 'pe-7s-key fa fa-plug' ,
+                    },
 
                     {
                         title: 'Dashboards',

@@ -196,7 +196,7 @@
         },
         methods : {
           async loadLanes (){
-            let resp = await this.$service.get('/api/options/lanes');
+            let resp = await this.$service.get('/api/options/channels');
             this.input.lane.values = resp.results.filter(function (lane) {
                 return lane.contactType == "WHATSAPP";
             });

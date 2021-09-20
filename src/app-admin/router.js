@@ -120,7 +120,11 @@ export default AppRouter.route({
             name: 'SetUpAgentPanel',
             component: () => import('./Modules/SetUpApiKeys.vue'),    
         },
-
+        {
+            path : "/app/setup/channels",
+            name: 'SetUpChannels',
+            component: () => import('./Modules/SetUpChannels.vue'),    
+        },
 
         {
             path: 'app/admins/components/modals',

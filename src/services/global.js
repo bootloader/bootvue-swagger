@@ -46,7 +46,8 @@ export const MyFlags = {
 
 export const MyDict = {
 	social : {
-	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "fa-chrome", "TELEGRAM" : "fab fa-telegram-plane",  "TWITTER" : "fa-twitter","WHATSAPP" : "fa-whatsapp",
+	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "f fa-chrome", "TELEGRAM" : "fab fa-telegram-plane",  
+	 "TWITTER" : "f fa-twitter","WHATSAPP" : "f fa-whatsapp",
 	},
 	chatStatus : {
 		"UNASSIGNED"	: {label : "UNASSIGNED" }, 
@@ -58,7 +59,16 @@ export const MyDict = {
 	  	"RESOLVED" 	: {label : "RESOLVED",editable : true}, 
 	  	"CLOSED" 	: {label :"CLOSED"}
 	},
-	socialPrefix : function (argument) {
+	socialPrefix : function(argument,prefix){
+		var clz = this._socialPrefix(argument);
+		if(prefix){
+			return clz.replace(/^fa |^f /,'fab ');
+		} else {
+			return clz.replace(/^f /,'');
+		}
+		return clz;
+	},
+	_socialPrefix : function (argument) {
 		argument = argument || "";
 		if(this.social[argument]){
 			return this.social[argument];

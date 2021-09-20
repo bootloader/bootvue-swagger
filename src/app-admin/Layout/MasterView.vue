@@ -1,7 +1,7 @@
 <template>
     <div>
         <page-title :heading=header.heading :icon=header.icon
-        :actions=actions :subheading=header.subheading @action="onAction" 
+        :actions=actions :subheading=header.subheading @action="onActionINT" 
         ref="pageTitle">
           <template #subheading>
               <slot name="header-subheading">
@@ -30,7 +30,7 @@
 
         </b-table>
 
-        <b-pagination
+        <b-pagination  v-if="table"
               v-model="table.currentPage"
               :total-rows="table.rows"
               :per-page="table.perPage"
@@ -48,7 +48,30 @@
 
     export default {
         components: {
-            PageTitle,
+          PageTitle,
+        },
+        props: {
+          header: {
+            type : Object
+          },
+          actions : {
+            type : Array,
+              default: function () {
+                  return [];
+              }
+          },
+          daterange : {
+              type: Object
+          },
+          table : {
+              type: Object
+          },
+          actionShow : {
+              type: Object,
+              default: function () {
+                  return { message: 'hello' }
+              }
+          }
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -73,21 +96,26 @@
               var name = this.actions[i].param || this.actions[i].type;
               params[name] = this.getInput(name);//?.lane;
             }
-            var resp = await this.$service.get(this.table.api,params);
-            this.table.items = resp.results;
-            this.table.rows = this.table.items.length;
-            this.session = resp.meta;
-            console.log("sessions",resp,this.table )
+            if(this.table && this.table.api){
+              var resp = await this.$service.get(this.table.api,params);
+              this.table.items = resp.results;
+              this.table.rows = this.table.items.length;
+              this.session = resp.meta;
+              console.log("sessions",resp,this.table )
+            }
           },
 
-          onAction : function (argument) {
+          onActionINT : function (argument) {
             console.log("onAction",argument)
             switch(argument.type){
               case "apply" :
                 this.getItems();
                 break;
               default: {
-                console.log("NoMapping",argument) 
+                if(this.onAction)
+                  this.$emit('action',argument);
+                else    
+                  console.log("NoMapping",argument) 
               }
             }
           },
@@ -96,32 +124,9 @@
             return this.$refs.pageTitle.getInput(type);
           }
 
-
         },
 
-        props: {
-            header: {
-              type : Object
-            },
-            actions : {
-              type : Array,
-                default: function () {
-                    return [];
-                }
-            },
-            daterange : {
-                type: Object
-            },
-            table : {
-                type: Object
-            },
-            actionShow : {
-                type: Object,
-                default: function () {
-                    return { message: 'hello' }
-                }
-            }
-        },
+
 
     }
 

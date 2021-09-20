@@ -6,7 +6,6 @@
         :table=table
       >
 
-    
       <template #cell(contact)="row">
           <i  class="fab" v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
             {{row.item.name || row.item.csid}}
