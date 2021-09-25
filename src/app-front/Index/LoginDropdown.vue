@@ -71,7 +71,7 @@ export default {
       } else {
         this.dropdownPopoverShow = true;
         createPopper(this.$refs.btnDropdownRef, this.$refs.popoverDropdownRef, {
-          placement: "bottom-start",
+          placement: "bottom",
         });
       }
     },

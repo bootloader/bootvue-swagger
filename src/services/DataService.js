@@ -90,6 +90,10 @@ function processor(params,responseData) {
   return responseData;
 }
 
+function slashUrl(url){
+  return url.replace(/\/\/+/g, '/');
+}
+
 
 const DataService = {
   async dispatch (a,b,c) {
@@ -97,6 +101,7 @@ const DataService = {
   },
 
   async getX(url,query) {
+    url = slashUrl(url);
     var pathKey = path2key(url);
     if(store.getters.StateApi[pathKey]){
       return store.getters.StateApi[pathKey];
@@ -112,16 +117,19 @@ const DataService = {
   },
 
   async get(url,query,config) {
+    url = slashUrl(url);
     let _config = config || {};
     _config.params = query;
     let response = await axios.get(url,_config);
     return processor(query,response.data);
   },
   async post(url,params,config) {
+    url = slashUrl(url);
     let response = await axios.post(url, params,config);
     return processor(params,response.data);
   },
   async submit(url,params,config) {
+    url = slashUrl(url);
     let SubmitForm = new FormData();
     for (var key in params) {
        SubmitForm.append(key, params[key]);
@@ -137,6 +145,7 @@ const DataService = {
     }
   },
   async delete(url,query) {
+    url = slashUrl(url);
     let _config = config || {};
     _config.params = query;
     _config.data = query;

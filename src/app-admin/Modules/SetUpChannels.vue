@@ -161,7 +161,7 @@
             this.table.items = resp.results;
           },
           async saveItem () {
-              let resp = await this.$service.post('api/config/'+this.oneItem.channelType, this.oneItem );
+              let resp = await this.$service.post('api/config/channel/'+this.oneItem.channelType, this.oneItem );
               await this.onAction({name : "CANCEL"});
               this.viewItem(resp.results[0]);
               this.loadItems();
@@ -180,12 +180,12 @@
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
           async viewItem(item) {
-            let resp = await this.$service.get('api/config/'+item.channelId);
+            let resp = await this.$service.get('api/config/channel/'+item.channelId);
             this.oneItemView = resp.results[0];
             this.$bvModal.show(this.modelName + "_VIEW")
           },
           async deleteItem(item) {
-            await this.$service.post('api/config/'+item.channelType + "?disabled="+ !item.disabled, item );
+            await this.$service.post('api/config/channel/'+item.channelType + "?disabled="+ !item.disabled, item );
             this.loadItems();
           },
           async onAction (argument) {
@@ -215,12 +215,14 @@
               let resp = await this.$service.get('api/meta/channel_configs/'+item.channelType);
               console.log("oldHash",this.oldHash)
               this.modalInputs = resp.results.map(function (meta) {
-                //console.log("meta.key",meta.key,JSONPath({ path : '$.'+meta.key,json : item}))
+                var key = (meta.path || meta.key)
+                console.log("meta.key",key,JSONPath({ path : '$.'+key,json : item}))
                 return {
                   meta : meta,
                   config : { 
                     key : meta.key,
-                    value : JSONPath({ path : '$.'+meta.key,json : item})[0] || meta.defaultValue
+                    path : meta.path,
+                    value : JSONPath({ path : '$.'+key,json : item})[0] || meta.defaultValue
                   }
                 }
               });

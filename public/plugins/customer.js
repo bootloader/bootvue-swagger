@@ -14,7 +14,8 @@
             },options);
             OPTIONS = options;
 
-            options.path = ["https://",options.entity,".mehery.com/postman/plugin/customer/app/chat/"].join("");
+            options.domain =  options.domain || [options.entity,".mehery.com"].join("");
+            options.path = ["https://", options.domain ,"/postman/plugin/customer/app/chat/"].join("");
 
             if(options.local){
                 options.path = [options.local, "/plugin/customer/app/chat/"].join("");

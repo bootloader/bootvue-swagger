@@ -8,7 +8,7 @@ export const MyConst = {
  	some: 'Settings',
 	app : window.CONST.APP,
 	cdn : window.CONST.CDN_URL,
-	appPrefix : "/" + window.CONST.APP,
+	appPrefix : "/" + window.CONST.APP, tenant : window.CONST.TENANT,
 	appDomain : window.CONST.APP_DOMAIN,appDomainId : window.CONST.APP_DOMAIN_ID,
 	context : window.CONST.CONTEXT,
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,

@@ -24,26 +24,32 @@
         <div class="w-full lg:w-6/12 px-4">
           <h4 class="text-3xl font-semibold">Let's keep in touch!</h4>
           <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
-            Find us on any of these platforms, we respond 1-2 business days.
+            Find us on any of these platforms, we respond within 1-2 business days.
           </h5>
           <div class="mt-6 lg:mb-0 mb-6">
-            <button
+            <button v-if="$config.PROP_SOCIAL_TWITTER"
               class="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
               <a target="_blank"  :href="`https://twitter.com/${$config.PROP_SOCIAL_TWITTER}`" class="fab fa-twitter"></a>
             </button>
-            <button
+            <button v-if="$config.PROP_SOCIAL_FACEBOOK"
               class="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
               <a target="_blank"  :href="`https://facebook.com/${$config.PROP_SOCIAL_FACEBOOK}`"  class="fab fa-facebook-square"></a>
             </button>
-            <button
+            <button v-if="$config.PROP_SOCIAL_INSTAGRAM"
               class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
               type="button"
             >
               <a target="_blank"  :href="`https://instagram.com/${$config.PROP_SOCIAL_INSTAGRAM}`"  class="fab fa-instagram"></a>
+            </button>
+            <button v-if="$config.PROP_SOCIAL_TELEGRAM"
+              class="bg-white text-telegram shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+              type="button"
+            >
+              <a target="_blank"  :href="`https://t.me/${$config.PROP_SOCIAL_TELEGRAM}?start=/start`"  class="fab fa-telegram-plane "></a>
             </button>
           </div>
         </div>
@@ -56,7 +62,7 @@
                 Useful Links
               </span>
               <ul class="list-unstyled">
-                <li>
+                <li v-if="$config.PROP_SERVICE_ABOUTUS_LINK">
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                     :href="$config.PROP_SERVICE_ABOUTUS_LINK"
@@ -64,7 +70,7 @@
                     About Us
                   </a>
                 </li>
-                <li>
+                <li v-if="$config.PROP_SERVICE_BLOG_LINK">
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                     :href="$config.PROP_SERVICE_BLOG_LINK"
@@ -72,7 +78,7 @@
                     Blog
                   </a>
                 </li>
-                <li>
+                <li v-if="$config.PROP_SOCIAL_GIIHUB">
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                       :href="$config.PROP_SOCIAL_GIIHUB"
@@ -89,7 +95,7 @@
                 Other Resources
               </span>
               <ul class="list-unstyled">
-                <li>
+                <li hidden>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                     href="https://github.com/creativetimofficial/vue-notus/blob/main/LICENSE.md?ref=vn-footer"
@@ -113,7 +119,7 @@
                     Privacy Policy
                   </a>
                 </li>
-                <li>
+                <li hidden>
                   <a
                     class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                       :href="$config.PROP_SERVICE_PRIVACY_LINK"

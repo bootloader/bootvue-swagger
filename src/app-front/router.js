@@ -53,7 +53,7 @@ export default AppRouter.route({
         },
         {
           path: "/:domain",
-          component: () => import('./Index/Profile.vue'),
+          component: () => import('./Index/Index.vue'),
         },
         {
           path: "/",

@@ -41,7 +41,7 @@
               <small>Or sign in with credentials</small>
             </div>
             <validation-observer ref="formValidator">
-            <form v-if="!domain" ref="domainForm">
+            <form v-if="!domain" ref="domainForm" :action="`https://app.${$config.PROP_SERVICE_DOMAIN}/front/auth/login`">
               <div class="relative w-full mb-3">
                 <label
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -232,7 +232,11 @@ export default {
       if(this.$route.query.app){
         this.app = this.$route.query.app;
       }
-      if(this.$route.query.domain){
+      if(this.$route.query.domain || 
+        ( 
+          this.$global.MyConst.tenant == this.$global.MyConst.appDomain
+          && this.$global.MyConst.tenant != 'app'
+        )){
         this.domainSubmit();
       }
     },
