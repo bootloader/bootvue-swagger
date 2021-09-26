@@ -4,12 +4,9 @@
     <main class="profile-page">
       <section class="relative block h-500-px">
         <div
-          class="absolute top-0 w-full h-full bg-center bg-cover"
-          style="
-            background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80');
-          "
+          class="absolute top-0 w-full h-full bg-center bg-cover bg-blueGray-700"
         >
-          <span
+          <span hidden
             id="blackOverlay"
             class="w-full h-full absolute opacity-50 bg-black"
           ></span>
@@ -55,7 +52,7 @@
                 <div
                   class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"
                 >
-                  <div class="py-6 px-3 mt-32 sm:mt-0">
+                  <div class="py-6 px-3 mt-32 sm:mt-0" hidden>
                     <button
                       class="bg-emerald-500 active:bg-emerald-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                       type="button"
@@ -66,7 +63,7 @@
                 </div>
                 <div class="w-full lg:w-4/12 px-4 lg:order-1">
                   <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                    <div class="mr-4 p-3 text-center">
+                    <div class="mr-4 p-3 text-center" hidden>
                       <span
                         class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
                       >
@@ -74,7 +71,7 @@
                       </span>
                       <span class="text-sm text-blueGray-400">Friends</span>
                     </div>
-                    <div class="mr-4 p-3 text-center">
+                    <div class="mr-4 p-3 text-center" hidden>
                       <span
                         class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
                       >
@@ -82,7 +79,7 @@
                       </span>
                       <span class="text-sm text-blueGray-400">Photos</span>
                     </div>
-                    <div class="lg:mr-4 p-3 text-center">
+                    <div class="lg:mr-4 p-3 text-center" hidden>
                       <span
                         class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
                       >
@@ -97,7 +94,7 @@
                 <h3
                   class="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
                 >
-                  Jenna Stones
+                  {{domainProfile.company.businessName}}
                 </h3>
                 <div
                   class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
@@ -105,32 +102,32 @@
                   <i
                     class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"
                   ></i>
-                  Los Angeles, California
+                  <span>
+                    <span class="text-comma">{{domainProfile.company.conactAddress}}</span>
+                    <span class="text-comma">{{domainProfile.company.conactCity}}</span>
+                     <span class="text-comma">{{domainProfile.company.conactCountry}}</span>
+                  </span> 
                 </div>
                 <div class="mb-2 text-blueGray-600 mt-10">
                   <i
                     class="fas fa-briefcase mr-2 text-lg text-blueGray-400"
                   ></i>
-                  Solution Manager - Creative Tim Officer
+                  {{domainProfile.company.businessType}}
                 </div>
                 <div class="mb-2 text-blueGray-600">
                   <i
-                    class="fas fa-university mr-2 text-lg text-blueGray-400"
+                    class="fas fa-globe-americas mr-2 text-lg text-blueGray-400"
                   ></i>
-                  University of Computer Science
+                  <a :href="domainProfile.company.websiteUrl">{{domainProfile.company.websiteUrl | stripslash}}</a>
                 </div>
               </div>
               <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4">
                     <p class="mb-4 text-lg leading-relaxed text-blueGray-700">
-                      An artist of considerable range, Jenna the name taken by
-                      Melbourne-raised, Brooklyn-based Nick Murphy writes,
-                      performs and records all of his own music, giving it a
-                      warm, intimate feel with a solid groove structure. An
-                      artist of considerable range.
+                      {{domainProfile.company.businessAbout}}
                     </p>
-                    <a
+                    <a hidden
                       href="javascript:void(0)"
                       class="font-normal text-emerald-500"
                     >
@@ -157,7 +154,7 @@ export default {
   data() {
     return {
       team2,
-      domain : {
+      domainProfile : {
         domain : null,
         company : {
           businessAbout: "",
@@ -167,7 +164,8 @@ export default {
           conactCity: null,
           conactCountry: "",
           conactEmail: "",
-          conactPostalCode: null
+          conactPostalCode: null,
+          websiteUrl : null
         }
       }
     };
@@ -180,12 +178,12 @@ export default {
           "channelId" : "MeheryProfile",
           "channelToken" : "<channelToken>",
           "config" : {
-                "header.bg.color" : "#000",
+                "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",
                 "header.icon.url" : "https://cdn.jsdelivr.net/gh/mehery-soccom/mehery-web-dist@834bfa2c3b8060cac2ebcd7778758d6021be2dca/dist/logo/logo-tiny-o.png",
                 "header.title.text" : "Support",
 
-                "launcher.bg.color" : "#000",
+                "launcher.bg.color" : "#1e293b",
 
                 "messageList.bg.color" : "#ffffff",
 
@@ -210,6 +208,7 @@ export default {
         domain : this.$global.MyConst.tenant,
         tnt : "app"
       });
+      this.domainProfile = resp.results[0];
     }
   },
   components: {
@@ -218,3 +217,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+.bg-cover {
+  background-image: url('~@/assets/vendor/notus/img/social-bg-to-center.png');
+}
+
+</style>

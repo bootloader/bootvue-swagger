@@ -20,3 +20,7 @@ $color-instagram-b              : #285AEB;
 .text-purple-darkdirty {
     color: $color-purple-darkdirty;
 }
+
+.text-comma:not(:empty)+.text-comma:not(:empty)::before {
+    content: ',';
+}

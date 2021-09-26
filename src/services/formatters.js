@@ -248,6 +248,9 @@ var formatter = {
       var text = div.textContent || div.innerText || "";
       return text;
     });
+    Vue.filter('stripslash', function (value) {
+      return value.replace(/\/+$/g,'').replace(/^\/+/,'');
+    });
     Vue.filter('https', function (mediaUrl) {
         return THAT.https(mediaUrl);
     });

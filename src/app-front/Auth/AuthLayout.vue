@@ -4,8 +4,12 @@
     <main>
       <section class="relative w-full h-full py-40 min-h-screen">
         <div
-          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full"
-          :style="`background-image: url('${registerBg2}');`"
+          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-lg sm:hidden xs:hidden"
+          :style="`background-image: url('${bgCoverDesktop}');`"
+        ></div>
+        <div
+          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-sm md:hidden lg:hidden xl:hidden"
+          :style="`background-image: url('${bgCoverMobile}');`"
         ></div>
         <router-view />
         <footer-small absolute />
@@ -18,12 +22,15 @@ import Navbar from "./AuthNavbar.vue";
 //import Navbar from "../Index/IndexNavbar.vue";
 import FooterSmall from "./FooterSmall.vue";
 
-import registerBg2 from "@/assets/vendor/notus/img/register_bg_2.png";
+import socialBgBottomRight from "@/assets/vendor/notus/img/social-bg-bottom-right.png";
+import socialBgBottom from "@/assets/vendor/notus/img/social-bg-bottom.png";
+import socialBgToCenter from "@/assets/vendor/notus/img/social-bg-to-center.png";
 
 export default {
   data() {
     return {
-      registerBg2,
+      bgCoverDesktop : [socialBgToCenter,socialBgBottomRight][Math.round(Math.random()*1)],
+      bgCoverMobile : socialBgBottom
     };
   },
   components: {
@@ -32,3 +39,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.bg-cover-lg {
+  background-position: bottom center;
+  height: calc( 100% - 75px);
+}
+.bg-cover-sm {
+  background-position: bottom center;
+  height: calc( 100% - 100px);
+}
+</style>
