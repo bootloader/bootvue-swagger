@@ -144,7 +144,7 @@ const DataService = {
         return Promise.reject(e);
     }
   },
-  async delete(url,query) {
+  async delete(url,query,config) {
     url = slashUrl(url);
     let _config = config || {};
     _config.params = query;

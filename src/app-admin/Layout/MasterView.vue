@@ -112,10 +112,7 @@
                 this.getItems();
                 break;
               default: {
-                if(this.onAction)
-                  this.$emit('action',argument);
-                else    
-                  console.log("NoMapping",argument) 
+                this.$emit('action',argument);
               }
             }
           },

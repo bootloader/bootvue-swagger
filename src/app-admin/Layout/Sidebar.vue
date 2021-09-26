@@ -195,7 +195,7 @@
                         icon: 'pe-7s-network fa fa-tools' ,
                     },
                     {
-                        enabled : false,
+                        enabled : true,
                         href: '/app/setup/client-api-keys',
                         title: 'API Keys',
                         icon: 'pe-7s-key fa fa-key' ,

@@ -109,7 +109,7 @@ export default AppRouter.route({
           });
         } else next();
       },
-      beforeEachFail : function (to, from, next) {
+      accessDenied : function (to, from, next) {
         if(!window.CONST.APP_USER && to.path.indexOf("/auth")==-1){
           console.log("ToAuth")
           next({

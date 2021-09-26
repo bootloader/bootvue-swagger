@@ -27,23 +27,33 @@ export default {
       next();
     };
 
-    options.beforeEachFail = options.beforeEachFail || function(to, from, next){
+    options.accessDenied = options.accessDenied || function(to, from, next){
       next(false);
     };
 
+    options.matchNotFound = options.matchNotFound || function(to, from, next){
+      next();
+    };
+
+
     router.beforeEach((to, from, next) => {
-      if(to.matched.some(function (record) {
-        if(!record.meta) return true;
+      console.log(to, "-->" ,from,to.matched);
+      if(!to.matched || to.matched.length == 0){
+        console.log("matchNotFound")
+        options.matchNotFound(to, from, next)
+      } else if(!to.matched.some(function (record) {
+        if(!record.meta || !window.CONST.APP_USER_ROLE) return true;
+        console.log(record.meta.role , window.CONST.APP_USER_ROLE)
         if(record.meta.role && record.meta.role.indexOf(window.CONST.APP_USER_ROLE) < 0){
           return false
         }
         return true;
       })){
+        console.log("NextFailed")
+        options.accessDenied(to, from, next);
+      } else {
         console.log("NextDone")
         options.beforeEach(to, from, next);
-      } else {
-        console.log("NextFailed")
-        options.beforeEachFail(to, from, next);
       }
       
     });

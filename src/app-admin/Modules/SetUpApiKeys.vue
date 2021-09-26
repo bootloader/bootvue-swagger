@@ -1,35 +1,24 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-        @action="onAction"></page-title>
 
-          <b-card title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="table.items"
-                     :fields="table.fields">
-
-                <template #cell(value)="row">
-                  <span>{{row.item.config.value}}</span>
-                </template>
-                <template #cell(actions)="row">
-                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
-                     v-tooltip="row.item.message" variant="outline-primary">
-                     <i class="fas fa-edit"></i>
-                  </b-button>
-                </template>
-
-
-            </b-table>
-        </b-card>
+      <master-view 
+          :header="{
+            heading : heading,
+            subheading : subheading,
+            icon : icon,
+          }"
+          :table=table
+          :actions=actions
+          @action="onAction"      
+       >
+          <template #cell(actions)="row">
+            <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)"   
+                v-tooltip="row.item.message" variant="outline-primary">
+                <i class="fas fa-trash"></i>
+            </b-button>
+          </template>
+      </master-view>
           
-
         <div class="row">
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
@@ -40,40 +29,72 @@
         </div>
 
 
-        <b-modal v-if="oneItem" :id="modelName" :title="'Update Property '" size="md"
+        <b-modal v-if="oneItem" :id="modelName" :title="'Add Key '" size="md"
         @hidden="cancelItem">
-
                 <div class="form-row">
                       <input name="agent_name" id="examplePassword"
-                       placeholder="John Doe" type="text"
-                        class="form-control" v-model="oneItem.meta.title" readonly>
+                       placeholder="My API Key 1" type="text"
+                        class="form-control" v-model="oneItem.keyName">
                 </div>
                 <br/>
-
-                <div class="form-row">
-                  <input name="email"
-                          placeholder="A,1232, https://soem.url etc"
-                          type="text"
-                          class="form-control" v-model="oneItem.config.value">
-                </div>
- 
                   <template #modal-footer>
                       <div class="position-relative form-group">
                         <button @click="saveItem"
-                          name="password" id="examplePassword" :disabled="!(isChanged)"
+                          name="save" id="examplePassword" :disabled="!(isChanged)"
                           class="form-control btn btn-primary">Save</button>
                         </div>
                   </template>
+        </b-modal>
+        <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Key : ${lastItem.keyName}`" size="md">
+
+            <b-input-group class="mt-3">
+              <b-input-group-prepend>
+                  <b-button variant="outline-dark"  class="text-sm w-120px">
+                    Key Name</b-button>
+              </b-input-group-prepend>
+              <b-form-input readonly
+                :value="lastItem.keyName"
+              ></b-form-input>
+            </b-input-group>
+
+            <b-input-group class="mt-3">
+              <b-input-group-prepend>
+                  <b-button variant="outline-dark"  class="text-sm w-120px">
+                    API Id</b-button>
+              </b-input-group-prepend>
+              <b-form-input readonly
+                :value="lastItem.id"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button
+                  v-clipboard:copy="lastItem.id" 
+                  variant="outline-success">Copy</b-button>
+              </b-input-group-append>
+            </b-input-group>
+
+            <b-input-group class="mt-3">
+              <b-input-group-prepend>
+                  <b-button variant="outline-dark"  class="text-sm w-120px">
+                    API Key</b-button>
+              </b-input-group-prepend>
+              <b-form-input readonly
+                :value="lastItem.key"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button
+                  v-clipboard:copy="lastItem.key" 
+                  variant="outline-success">Copy</b-button>
+              </b-input-group-append>
+            </b-input-group>
 
         </b-modal>
-
 
     </div>
 </template>
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
+    import MasterView from "../Layout/MasterView.vue";
     import { MyFlags,MyDict,MyConst } from '../../services/global';
 
     import VSwatches from 'vue-swatches'
@@ -83,34 +104,35 @@
 
     function newItem() {
       return {
-              "config" : {},
-              "meta": {}
-            };
+              "keyName" : null
+      };
     }
     export default {
         components: {
-            PageTitle,VSwatches
+            MasterView,VSwatches
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-            heading: 'Agent Panel Setup',
-            subheading: 'Control Agent Panel setting',
-            icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-tools',
-            actions : [],
+            heading: 'API Keys',
+            subheading: 'Create Keys to use APIs',
+            icon: 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-key',
+            actions : [{
+              label : "Add Keys", icon : "fa fa-plus", name : "ADD_ITEM", action : "ADD_ITEM"
+            }],
             table : {
               fields: [ 
-                { key : 'meta.title', label : "Property" },
-                { key : 'value', label : "Value" },
-                //{ key : 'config.value', label : "Value" },
-                { key : 'config.description', label : "Desc" },
-                { key : 'actions', label : "Action" }],
+                { key : 'keyName', label : "Name" },
+                { key : 'id', label : "Id" },
+                { key : 'actions', label : "Actions" },
+              ],
               items : [],
               perPage: 25,
               currentPage: 1,
               rows : 0
             },
             oneItem : newItem(),
-            modelName :  "MODAL_ADD_USERS",
+            lastItem : {},
+            modelName :  "MODAL_ADD_ITEM",
         }),
         computed : {
             items : function (argument) {
@@ -132,17 +154,23 @@
             this.table.items = resp.results;
           },
           async saveItem () {
-              await this.$store.dispatch('SetConfigs', {
-                key : this.oneItem.meta.key,value : this.oneItem.config.value,
+              var resp = await this.$service.post('api/config/clientapikey', {
+                keyName : this.oneItem.keyName
               });
+              this.lastItem = resp.data;
               this.oneItem = newItem();
               this.onAction({name : "CANCEL"});
               this.loadItems();
+               this.$bvModal.show(this.modelName + "_VIEW");
           },
           async cancelItem(item) {
              this.oneItem = newItem();
              this.onAction({name : "CANCEL"});
           }, 
+          async deleteItem(item) {
+            await this.$service.delete('api/config/clientapikey/',item);
+            this.loadItems();
+          },
           async editItem(item) {
               this.oneItem = newItem();
               for(var i in item){
@@ -155,7 +183,7 @@
             switch(argument.name){
               case "ADD_ITEM" :
                 this.oldHash = JSON.stringify(this.oneItem);
-                this.$bvModal.show(this.modelName)
+                this.$bvModal.show(this.modelName);
                 console.log("ADD_ITEM",argument);
                 break;
               case "EDIT_ITEM" :
