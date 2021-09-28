@@ -148,7 +148,7 @@
 import Navbar from "../Auth/AuthNavbar.vue";
 import FooterComponent from "./Footer.vue";
 
-import team2 from "@/assets/vendor/notus/img/team-2-800x800.jpg";
+import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
 
 export default {
   data() {

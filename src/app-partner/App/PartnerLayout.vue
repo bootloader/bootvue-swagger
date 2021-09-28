@@ -83,27 +83,27 @@
               <i class="ni ni-paper-diploma"></i>
               <b-nav-text class="p-0">Documentation</b-nav-text>
           </b-nav-item>
-          <b-nav-item href="/agent" target="_blank">
+          <b-nav-item :href="'/front/auth/login?app=agent'" target="_blank">
               <i class="ni ni-chat-round"></i>
               <b-nav-text class="p-0">Agent Panel</b-nav-text>
           </b-nav-item>
-          <b-nav-item href="/admin" target="_blank">
+          <b-nav-item :href="'/front/auth/login?app=admin'" target="_blank">
               <i class="ni ni-chart-bar-32"></i>
               <b-nav-text class="p-0">Admin Panel</b-nav-text>
           </b-nav-item>
         </b-nav>
       </template>
     </side-bar>
-    <div class="main-content">
+    <div class="main-content min-vh-100">
       <dashboard-navbar :type="$route.meta.navbarType"></dashboard-navbar>
 
-      <div @click="$sidebar.displaySidebar(false)">
+      <div @click="$sidebar.displaySidebar(false)" class="min-vh-100">
         <fade-transition :duration="200" origin="center top" mode="out-in">
           <!-- your content here -->
           <router-view></router-view>
         </fade-transition>
       </div>
-      <content-footer v-if="!$route.meta.hideFooter"></content-footer>
+      <content-footer v-if="!$route.meta.hideFooter" class="content-footer"></content-footer>
     </div>
   </div>
 </template>
@@ -155,4 +155,15 @@ console.log("This is AppPartnerAuth")
   };
 </script>
 <style lang="scss">
+.content-footer.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+  background: transparent!important;
+  .nav .nav-item .nav-link, .footer .footer-link{
+    color: #fff!important;
+  }
+}
 </style>

@@ -590,10 +590,10 @@
 import Navbar from "../Auth/AuthNavbar.vue";
 import FooterComponent from "./Footer.vue";
 
-import team1 from "@/assets/vendor/notus/img/team-1-800x800.jpg";
-import team2 from "@/assets/vendor/notus/img/team-2-800x800.jpg";
-import team3 from "@/assets/vendor/notus/img/team-3-800x800.jpg";
-import team4 from "@/assets/vendor/notus/img/team-4-470x470.png";
+import team1 from "@/assets/vendor/notus/img/company-profile-1.png";
+import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
+import team3 from "@/assets/vendor/notus/img/company-profile-3.png";
+import team4 from "@/assets/vendor/notus/img/company-profile-4.png";
 
 export default {
   data() {
