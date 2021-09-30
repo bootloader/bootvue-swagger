@@ -171,6 +171,62 @@
             </b-row>
           </div>
 
+     <hr class="my-4">
+          <!-- Address -->
+          <h6 class="heading-small text-muted mb-4">Social information</h6>
+
+          <div class="pl-lg-4">
+            <b-row>
+              <b-col md="12">
+                <base-input alternative question feedback
+                  type="text"
+                  label="Facebook Business Manager ID"
+                  v-model="model.social.facebookBMId"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="4">
+                <base-input alternative question feedback
+                  type="text"
+                  label="Facebook Page Id"
+                  v-model="model.social.facebookPageId"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+              <b-col lg="4">
+               <base-input alternative question feedback
+                  type="text"
+                  label="Facebook Page"
+                  v-model="model.social.facebookPage"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+              <b-col lg="4">
+               <base-input alternative question feedback
+                  type="text"
+                  label="Twitter Handler"
+                  v-model="model.social.twitterHandler"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+               <b-col lg="4">
+               <base-input alternative question feedback
+                  type="text"
+                  label="Instagram Handler"
+                  v-model="model.social.instagramHandler"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+            </b-row>
+          </div>
+
           <hr class="my-4">
           <!-- Description -->
           <h6 class="heading-small text-muted mb-4">About Company</h6>
@@ -183,10 +239,7 @@
               <b-col class="text-center">
                 <b-button type="submit" variant="primary" class="mt-4">Save</b-button>
               </b-col>
-            
             </b-row>  
-            
-
           </div>
 
         </b-form>
@@ -210,7 +263,14 @@ export default {
           conactCity  : "", 
           onactCountry  : "", 
           conactPostalCode  : "", 
-        } 
+        },
+        social : {
+          facebookBMId:  null,
+          facebookPageId : null,
+          facebookPage: null,
+          twitterHandler: null,
+          instagramHandler: null
+        }
       },
       isDomainSet : false,
       isEditDetail : false,
@@ -246,6 +306,7 @@ export default {
     async loadDetails(){
       let resp = await this.$service.get("/partner/api/domain");
       this.model.company = resp.results[0].company;
+      this.model.social = resp.results[0].social || {};
       this.model.domain = resp.results[0].domain;
       this.isDomainSet = !!this.model.domain;
     },
