@@ -44,7 +44,7 @@
                   <div class="relative">
                     <img
                       alt="..."
-                      :src="team2"
+                      :src="domainProfile.social.logo"
                       class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
                     />
                   </div>
@@ -153,7 +153,6 @@ import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
 export default {
   data() {
     return {
-      team2,
       domainProfile : {
         domain : null,
         company : {
@@ -166,6 +165,9 @@ export default {
           conactEmail: "",
           conactPostalCode: null,
           websiteUrl : null
+        },
+        social : {
+          logo : team2
         }
       }
     };
@@ -205,7 +207,7 @@ export default {
   methods : {
     async loadDomainProfile (){
       var resp = await this.$service.get('/partner/pub/domain',{
-        domain : this.$global.MyConst.tenant,
+        domain : this.$route.params.domain || this.$global.MyConst.tenant,
         tnt : "app"
       });
       this.domainProfile = resp.results[0];

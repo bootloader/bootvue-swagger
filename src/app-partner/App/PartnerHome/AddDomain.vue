@@ -79,13 +79,34 @@
               </b-col>
               <b-col lg="6">
                 <base-input alternative question feedback
+                  type="mobile"
+                  name="Facebook BM ID"
+                  v-model="model.company.facebookBMId"
+                >
+                </base-input>
+              </b-col>
+
+              <b-col lg="6">
+                <base-input alternative question feedback
                   type="email"
                   name="Contact Email"
                   rules="required|email" required
                   v-model="model.company.conactEmail"
+                  helpMessage="For business communications"
                 >
                 </base-input>
               </b-col>
+              <b-col lg="6">
+                <base-input alternative question feedback
+                  type="mobile"
+                  name="Contact Number"
+                  rules="phone"
+                  v-model="model.company.conactPhone"
+                  helpMessage="For business communications"
+                >
+                </base-input>
+              </b-col>
+ 
             </b-row>
           </div>
           <hr v-if="isDomainSet"  class="my-4">
@@ -113,7 +134,7 @@
                     Your internal users will use this to login</small>
                   </validation-provider>
                </b-col>
-               <b-col v-if="isDomainSet" lg="12" class="text-center">
+               <b-col v-if="isDomainSet" lg="6" class="text-center justify-content-center align-items-center d-flex">
                   <div class="domain-box d-inline-block input-group-alternative">
                     <a target="_blank" 
                       :href="'https://' + model.domain + '.' + $config.PROP_SERVICE_DOMAIN" 
@@ -122,11 +143,30 @@
                     </a>
                   </div>
                </b-col>
+               <b-col v-if="isDomainSet" lg="6" class="text-center ">
+                  <div class="position-relative form-group col-md-12">
+                        <vue-dropzone ref="myVueDropzone" class="myVueDropzone justify-content-center align-items-end d-flex"
+                          :useCustomSlot="true"
+                          id="dropzone" :options="dropzoneOptions"
+                          v-on:vdropzone-sending="sendingEvent"
+                          v-on:vdropzone-file-added="fileAdded" 
+                          v-on:vdropzone-success="fileUploaded"
+                          :data-logo="model.social.logo"
+                          :style="{
+                            'background-image' : 'url(\'' + model.social.logo + '\')'
+                          }"
+                          >
+                            <div class="dropzone-custom-content">
+                              <h3 class="dropzone-custom-title">Select new Logo</h3>
+                            </div>
+                          </vue-dropzone>
+                    </div>
+               </b-col>
             </b-row>
           </div>
           <hr class="my-4">
           <!-- Address -->
-          <h6 class="heading-small text-muted mb-4">Contact information</h6>
+          <h6 class="heading-small text-muted mb-4">Address</h6>
 
           <div class="pl-lg-4">
             <b-row>
@@ -173,21 +213,28 @@
 
      <hr class="my-4">
           <!-- Address -->
-          <h6 class="heading-small text-muted mb-4">Social information</h6>
+          <h6 class="heading-small text-muted mb-4"> Customer Contact</h6>
 
           <div class="pl-lg-4">
             <b-row>
-              <b-col md="12">
+              <b-col md="4">
                 <base-input alternative question feedback
                   type="text"
-                  label="Facebook Business Manager ID"
-                  v-model="model.social.facebookBMId"
+                  label="Customer Support Number"
+                  v-model="model.social.customerSupportPhone"
                   placeholder=""
                 >
                 </base-input>
               </b-col>
-            </b-row>
-            <b-row>
+              <b-col md="4">
+                <base-input alternative question feedback
+                  type="text"
+                  label="Customer Support Email"
+                  v-model="model.social.customerSupportEmail"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
               <b-col lg="4">
                 <base-input alternative question feedback
                   type="text"
@@ -224,6 +271,24 @@
                 >
                 </base-input>
               </b-col>
+              <b-col lg="4">
+               <base-input alternative question feedback
+                  type="text"
+                  label="WhatsApp Number"
+                  v-model="model.social.whatsApp"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
+              <b-col lg="4">
+               <base-input alternative question feedback
+                  type="text"
+                  label="Telegram"
+                  v-model="model.social.telegram"
+                  placeholder=""
+                >
+                </base-input>
+              </b-col>
             </b-row>
           </div>
 
@@ -249,6 +314,10 @@
   </div>  
 </template>
 <script>
+import vue2Dropzone from 'vue2-dropzone';
+import 'vue2-dropzone/dist/vue2Dropzone.min.css';
+import formatters from '@/services/formatters';
+
 export default {
   data() {
     return {
@@ -260,23 +329,39 @@ export default {
           websiteUrl  : "", 
           conactEmail  : "", 
           conactAddress  : "", 
+          conactPhone : "",
           conactCity  : "", 
           onactCountry  : "", 
           conactPostalCode  : "", 
         },
         social : {
+          logo : null,
           facebookBMId:  null,
           facebookPageId : null,
           facebookPage: null,
           twitterHandler: null,
-          instagramHandler: null
+          instagramHandler: null,
+          customerSupportEmail : null,
+          customerSupportPhone : null
         }
       },
       isDomainSet : false,
       isEditDetail : false,
 
       domainPlaceholder : "yourdomain",
-      domainWidth : 0
+      domainWidth : 0,
+
+      dropzoneOptions: {
+        url: formatters.clean_url(this.$global.MyConst.context + '/partner/api/domain/logo'),
+        thumbnailWidth: 150,
+        thumbnailHeight : 150,
+        maxFilesize: 5,
+        autoProcessQueue: true,
+        disablePreviews :true,
+        //clickable : ".change_image",
+        addRemoveLinks : false
+      },
+
     };
   },
   computed : {
@@ -319,9 +404,23 @@ export default {
     domainClean(){
       this.model.domain = (this.model.domain || "").replace(/[^0-9a-zA-Z]/g,"").toLowerCase();
     },
+    fileAdded(){
+      console.log("fileAdded")
+    },
+    sendingEvent(file, xhr, formData){
+      formData.append('tnt', this.model.domain);
+    },
+    async fileUploaded (file, response) {
+      this.model.social.logo = response.results[0];
+      this.$refs.myVueDropzone.removeFile(file);
+      console.log("fileUploaded",response)
+    },
     getDomainWidth() {
       this.domainWidth = this.$refs.domainWidth ? this.$refs.domainWidth.clientWidth : 0;
     }
+  },
+  components : {
+    vueDropzone : vue2Dropzone
   }
 };
 </script>
@@ -362,4 +461,25 @@ export default {
     padding: 5px 20px;
     background-color:white;
   }
+  .myVueDropzone {
+    height: 180px;
+    width: 180px;
+    background-color: rgb(235, 235, 235);
+    margin: 0px;
+    padding: 0px;
+    background-image: url("~@/assets/vendor/notus/img/company-profile-1.png");
+    background-size: 100% 100%;
+    background-position: center;
+  }
+  .dropzone-custom-title {
+    color: #717171;
+    background-color: rgba(209, 209, 209, 0.616);
+    border-radius: 5%;
+    padding: 3px;
+    cursor: pointer;
+    opacity: 0;
+  }
+   .myVueDropzone:hover .dropzone-custom-title {
+     opacity: 1;
+   }
 </style>

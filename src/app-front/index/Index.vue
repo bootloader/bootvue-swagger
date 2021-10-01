@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProfileApp v-if="$global.MyConst.tenant == 'app'">
+    <ProfileApp v-if="isDefaultDomain">
     </ProfileApp>
     <ProfileDomain v-else>
     </ProfileDomain>
@@ -16,6 +16,11 @@ export default {
     return {
       navbarOpen: false,
     };
+  },
+  computed : {
+    isDefaultDomain(){
+      return this.$route.params.domain ? false : (this.$global.MyConst.tenant == 'app');
+    }
   },
   methods: {
     setNavbarOpen: function () {

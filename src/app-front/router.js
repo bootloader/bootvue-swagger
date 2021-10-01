@@ -52,7 +52,7 @@ export default AppRouter.route({
           component: () => import('./Index/IndexMore.vue'),
         },
         {
-          path: "/:domain",
+          path: "/@:domain",
           component: () => import('./Index/Index.vue'),
         },
         {

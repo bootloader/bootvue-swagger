@@ -145,6 +145,12 @@ var formatter = {
   https_thumburl : function (mediaUrl) {
     return this.thumburl(this.https(mediaUrl));
   },
+  stripslash : function (url) {
+    return (url||"").replace(/\/+$/g,'').replace(/^\/+/,'');
+  },
+  clean_url : function(url){
+    return url.replace(/(\/)\/+/g, "$1").replace(/^https?:/,'https:/');
+  },
 
   keys : function keys(map,prefix){
       prefix = prefix || "" ;
@@ -249,7 +255,7 @@ var formatter = {
       return text;
     });
     Vue.filter('stripslash', function (value) {
-      return value.replace(/\/+$/g,'').replace(/^\/+/,'');
+      return THAT.stripslash(value);
     });
     Vue.filter('https', function (mediaUrl) {
         return THAT.https(mediaUrl);
