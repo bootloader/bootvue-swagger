@@ -34,6 +34,45 @@
                       </template>
                   </b-popover> 
                   &nbsp;
+                 <b-button size="sm" cursor-pointer  :id="'template-info-'+ row.item.id " variant="outline-primary">
+                    <span class="fa fa-info-circle" title="View" /> 
+                  </b-button> 
+                  <b-popover triggers="hover focus" :target="'template-info-'+ row.item.id"
+                      custom-class="message-preview">
+                      <template #default class="message-preview"> 
+                         <b-input-group class="mt-3">
+                          <b-input-group-prepend>
+                              <b-button variant="outline-dark" size="sm" class="text-sm w-25px">
+                               Code</b-button>
+                          </b-input-group-prepend>
+                          <b-form-input readonly size="sm"
+                            :value="row.item.code"
+                          ></b-form-input>
+                          <b-input-group-append>
+                            <b-button size="sm"
+                              v-clipboard:copy="row.item.code" class="far fa-copy"
+                              variant="outline-success"></b-button>
+                          </b-input-group-append>
+                        </b-input-group>
+
+                        <b-input-group class="mt-3">
+                          <b-input-group-prepend>
+                              <b-button variant="outline-dark" size="sm" class="text-sm w-25px">
+                               ID</b-button>
+                          </b-input-group-prepend>
+                          <b-form-input readonly size="sm"
+                            :value="row.item.id"
+                          ></b-form-input>
+                          <b-input-group-append>
+                            <b-button size="sm"
+                              v-clipboard:copy="row.item.id" class="far fa-copy"
+                              variant="outline-success"></b-button>
+                          </b-input-group-append>
+                        </b-input-group>
+
+                      </template>
+                  </b-popover> 
+                  &nbsp;
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
                     <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
                          <span class="fa fa-edit" title="Edit"/>
@@ -204,7 +243,7 @@
     function newItem() {
       return {
               "category": "",
-              "title": "",
+              "desc": "",
               "name" : undefined, 
               "template" : "" ,
               "code" : "" ,"contactType" : "", lang : 'en_US',
@@ -247,7 +286,7 @@
             table : {
               fields: [ 
                         { key : 'category', label : "Category" }, 
-                        { key : 'title', label : "Title" }, 
+                        { key : 'desc', label : "Description" }, 
                         { key: 'actions', label: 'Actions' }    ],
               items : [],
               perPage: 25,
