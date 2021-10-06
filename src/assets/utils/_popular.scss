@@ -1,12 +1,8 @@
+// Helpers imports
+@import "social";
 $color-purple-dirty             : #9f6bb4; //159 107 180
 $color-purple-darkdirty         : #8648a1;
-$color-twitter                  : #1DA1F2;
-$color-telegram                 : #0088cc;
-$color-whatsapp                 : #25D366;
-$color-instagram-y              : #fdf497;
-$color-instagram-r              : #fd5949;
-$color-instagram-p              : #d6249f;
-$color-instagram-b              : #285AEB;
+$color-grey                     : #8b8b8b;
 
 .bg-purple-dirty {
     background-color: $color-purple-dirty;
@@ -20,7 +16,9 @@ $color-instagram-b              : #285AEB;
 .text-purple-darkdirty {
     color: $color-purple-darkdirty;
 }
-
 .text-comma:not(:empty)+.text-comma:not(:empty)::before {
     content: ',';
+}
+.text-grey {
+  color: $color-grey ;
 }

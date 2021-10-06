@@ -101,5 +101,6 @@
 
 <style lang="scss">
     @import "./assets/base.scss";
+    @import '@/assets/utils/_popular.scss';
     @import "./assets/demo-ui/_agent-panel.scss";
 </style>

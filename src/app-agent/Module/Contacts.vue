@@ -72,8 +72,25 @@
                                     </span>
                                 </div>
                             </div>
-                            <span v-else-if="chat.ilastmsg" class="font-preview">{{chat.ilastmsg.text}}</span>
+                            <span v-else-if="chat.lastmsg" class="font-preview"
+                                :class="{
+                                    'text-danger' : $global.MyFunc.isInbound(chat.lastmsg.type),
+                                    'text-grey' : $global.MyFunc.isOutbound(chat.lastmsg.type)
+                                }"
+                            >
+                                <span v-if="chat.lastmsg.type=='O'" class="fa fa-reply fa-rotate-45s"></span>&nbsp;
+                                <span v-if="chat.lastmsg.attachments && chat.lastmsg.attachments[0]" class="fw-normal text-capitalize">
+                                    <span  :class="[{
+                                            'fa fa-camera' : chat.lastmsg.attachments[0].mediaType == 'IMAGE',
+                                            'fa fa-video' : chat.lastmsg.attachments[0].mediaType == 'VIDEO',
+                                            'fa fa-microphone' : chat.lastmsg.attachments[0].mediaType == 'AUDIO',
+                                            'fa fa-file-alt' : chat.lastmsg.attachments[0].mediaType == 'DOCUMENT',
+                                        }]"></span>
+                                    {{chat.lastmsg.attachments[0].mediaType | lowercase}}
+                                </span>
 
+                                <span v-else>{{chat.lastmsg.text}}</span>
+                            </span>
                             
                         </div>
                         <div class="contact-flags">
