@@ -112,10 +112,9 @@ const DataService = {
     if(url.indexOf('/api/') == 0){
       console.log("getX",response.data)
       store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : responseData.results })
-    }   
+    }
     return responseData;
   },
-
   async get(url,query,config) {
     url = slashUrl(url);
     let _config = config || {};

@@ -262,7 +262,6 @@
         created () {
             // fetch the data when the view is created and the data is
             // already being observed
-            this.loadQuickLabels();
         },
         updated (){
         },
@@ -278,9 +277,6 @@
             }
         },
         methods: {
-            async loadQuickLabels(){
-                return await this.$store.dispatch('LoadQuickLabels');
-            },
             loadSessions : debounce(async function(){
                 if(!this.$route.params.profileId){
                     this.sessions.items = [];

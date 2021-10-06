@@ -4,10 +4,16 @@ module.exports = {
     runtimeCompiler: true,
     productionSourceMap: false,
     filenameHashing: false,
-  	configureWebpack: {
-  		output: {
-  	   		filename: 'app-[name].js'
-  		}
+    // chainWebpack: config => {
+    //   config.plugin('define').tap(args => {
+    //     args[0].__BUILDSTAMP__ = new Date().toDateString();
+    //     return args
+    //   })
+    //   config.output.filename =  'app-[name].js';
+    // },
+  	configureWebpack : config => {
+      //config.output.buildstamp = new Date().toDateString(),
+  		config.output.filename =  'app-[name].js';
   	},
 	 devServer: {
         proxy: 'http://127.0.0.1:8080/',

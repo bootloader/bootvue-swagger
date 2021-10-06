@@ -19,7 +19,7 @@
                       
                     <Contacts v-on:loaded="closeLoading"/>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6  chat""
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6  chat"
                     v-bind:class="{
                         'col-lg-6' : (MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'col-lg-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
@@ -123,6 +123,9 @@
                 return `${r} ${g} ${b}`;
             }
         },
+        created(){
+            this.$store.dispatch('LoadQuickLabels');
+        }
     }
 </script>
 

@@ -234,7 +234,6 @@ var formatter = {
     }
     return true;
   },
-
   init : function () {
     var THAT = this;
 
