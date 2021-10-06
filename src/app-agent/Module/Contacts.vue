@@ -74,8 +74,7 @@
                             </div>
                             <span v-else-if="chat.lastmsg" class="font-preview"
                                 :class="{
-                                    'text-danger' : $global.MyFunc.isInbound(chat.lastmsg.type),
-                                    'text-grey' : $global.MyFunc.isOutbound(chat.lastmsg.type)
+                                    'text-blue' : $global.MyFunc.isOutbound(chat.lastmsg.type)
                                 }"
                             >
                                 <span v-if="chat.lastmsg.type=='O'" class="fa fa-reply fa-rotate-45s"></span>&nbsp;

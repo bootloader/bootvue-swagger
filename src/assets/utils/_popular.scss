@@ -3,6 +3,7 @@
 $color-purple-dirty             : #9f6bb4; //159 107 180
 $color-purple-darkdirty         : #8648a1;
 $color-grey                     : #8b8b8b;
+$color-blue                     : #153f9b;
 
 .bg-purple-dirty {
     background-color: $color-purple-dirty;
@@ -22,3 +23,6 @@ $color-grey                     : #8b8b8b;
 .text-grey {
   color: $color-grey ;
 }
+.text-blue {
+    color: $color-blue ;
+  }
