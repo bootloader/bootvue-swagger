@@ -458,11 +458,6 @@
     font-weight: bold;
 }
 
-ul.contacts li.data_unassigned {
-  color : #000 !important;
-  opacity: 0.4;
-}
-
 .msg_card_body{
   overflow-y: auto;
   background-color: #f2f3f8 !important;

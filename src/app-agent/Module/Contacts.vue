@@ -126,7 +126,9 @@
                                     ></b-icon>
                                 </span>
                                 <span>
-                                    <b-icon v-if="chat._attention && false" icon="alarm-fill" class="very_old"></b-icon>
+                                    <span v-if="chat.assignedToAgent" class="fa fa-user-secret text-success assigned_to_agent"
+                                        v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}`"
+                                    ></span>
                                 </span>
                             </div>  
                         </div>
@@ -505,11 +507,13 @@
     .contacts li.router-link-exact-active .new_message {
         display: none;
     }
-    .contacts li .very_old {
+    .contacts li .assigned_to_agent {
         font-size: 17px;
-        color: #ffa214;
         text-align: right;
         float: right;
     }
-
+    ul.contacts li.data_unassigned {
+        color : #000 !important;
+        opacity: 0.8;
+    }
 </style>
