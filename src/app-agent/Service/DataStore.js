@@ -70,7 +70,7 @@ const cache = {
     let x = null; 
     return async function () {
       x =  x || (axios.get("/api/sessions/assigned.json",{
-        params : {withMessage : false}
+        //params : {withMessage : false}
       }));
       return x;
     };
