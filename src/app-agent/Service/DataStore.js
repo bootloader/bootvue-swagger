@@ -462,7 +462,10 @@ const mutations = {
           }
           chats[c].messages[i].stamps = chats[c].messages[i].stamps || { }
         }
-      } 
+      } else if(chats[c].msg){
+        chats[c].ilastmsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
+        chats[c].lastmsg = chats[c].msg.lastMsg || chats[c].lastmsg;
+      }
       setChatFlags(chats[c])
     }
     state.chatsSize = chats.length;

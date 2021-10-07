@@ -42,7 +42,7 @@ function textScore(str1,str2){
  	},
 	quickReply(quickReply,tags){
 		var text = tags.text;
-		var categories = tags.categories;
+		var categories = tags.categories || [];
 		quickReply.title = quickReply.title || "";
 		quickReply.title_len = (quickReply.title).length || 1;
 
