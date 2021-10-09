@@ -31,7 +31,7 @@
 
             <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
                 <div class="msg_cotainer_send">
-                    <span v-if="m.text" >{{m.text | striphtml | newlines}}</span>
+                    <span v-if="m.text" v-linkify >{{m.text | striphtml | newlines}}</span>
                     <div v-if="m.attachments"> 
                         <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
                         <div class="input-group my-attachments">
@@ -126,11 +126,17 @@
     import { Textcomplete } from "@textcomplete/core";
     import { TextareaEditor } from "@textcomplete/textarea";
 
+    import { vLinkify as linkify } from  "vue-linkifier";
+    Vue.use(linkify)
+
     export default {
         name : "ChatMessages",
         components: {
             Loading: Loading,SlideUpDown, vSelect :vSelect,
             AudioPlayer
+        },
+        directives: {
+            linkify
         },
         computed : {
 

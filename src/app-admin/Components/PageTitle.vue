@@ -194,8 +194,8 @@
                 return daterange;
             },
             async loadLanes (){
-                let resp = await this.$service.getX('/api/options/lanes');
-                this.input.lane.options = this.$store.getters.StateApi.OptionsLanes;
+                let resp = await this.$service.getX('/api/options/channels');
+                this.input.lane.options = this.$store.getters.StateApi.OptionsChannels;
             },
             onDateRangeSelect : function (r) {
                 console.log("select",r);
