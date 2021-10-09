@@ -71,7 +71,15 @@ const cache = {
     return async function () {
       x =  x || (axios.get("/api/sessions/assigned.json",{
         //params : {withMessage : false}
-      }));
+      })).then(function (response) {
+        console.log("_GetChats:success");
+        return response;
+      }).catch(function (error) {
+        console.log("_GetChats:error");
+      }).then(function (response) {
+        console.log("_GetChats:always");
+        return response;
+      });;
       return x;
     };
   })(),
