@@ -40,6 +40,10 @@ function setChatFlags(chat) {
   return DataProcessor.session(chat);
   console.log("setChatFlags");
 }
+var UPDATE_TIME = 0;
+var updateTimer = function(){
+  UPDATE_TIME = new Date().getTime();
+}
 
 const state = {
   user: null,agents : [],
@@ -71,13 +75,23 @@ const cache = {
     return async function () {
       x =  x || (axios.get("/api/sessions/assigned.json",{
         //params : {withMessage : false}
+      }));
+      return x;
+    };
+  })(),
+  _RefeshSession : (function () {
+    let x = null; 
+    return async function () {
+      x =  x || (axios.get("/api/sessions/assignments.json",{
+        //params : {withMessage : false}
       })).then(function (response) {
-        console.log("_GetChats:success");
+        console.log("_UpdateChats:success");
         return response;
       }).catch(function (error) {
-        console.log("_GetChats:error");
+        console.log("_UpdateChats:error");
       }).then(function (response) {
-        console.log("_GetChats:always");
+        console.log("_UpdateChats:always");
+        x = null;
         return response;
       });;
       return x;
@@ -100,12 +114,11 @@ const cache = {
 }
 
 const actions = {
-  async Register({dispatch}, form) {
-    await axios.post('register', form)
-    let UserForm = new FormData()
-    UserForm.append('username', form.username)
-    UserForm.append('password', form.password)
-    await dispatch('LogIn', UserForm)
+
+  async RefeshSession({dispatch}){
+    let response = await cache._RefeshSession();
+
+
   },
 
   async LogIn({commit}, user) {
@@ -438,9 +451,6 @@ const actions = {
     return response.data;
   },
 
-
-
-
   async GetRequest({commit,dispatch},{ url,params }) {
     let response = await axios.get(url,{ params : params });
     validateResponse(response);
@@ -479,6 +489,7 @@ const mutations = {
     state.chatsSize = chats.length;
     state.chats = chats;
     state.chatsVersion++;
+    updateTimer();
   },
   setChatHistory(state, chatHistory) {
     state.chatHistory = chatHistory;
@@ -501,6 +512,7 @@ const mutations = {
   },
   setAgents(state, agents) {
     state.agents = agents;
+    updateTimer();
   },
   setUser(state, username) {
     state.user = username;
