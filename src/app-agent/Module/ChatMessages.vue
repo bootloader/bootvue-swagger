@@ -9,7 +9,7 @@
                     <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
                 </div>
                 <div class="msg_cotainer">
-                    <span v-if="m.text">{{m.text | striphtml | newlines}}</span>
+                    <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
                     <div v-if="m.attachments"> 
                         <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
                         <div class="input-group my-attachments">
@@ -31,7 +31,7 @@
 
             <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
                 <div class="msg_cotainer_send">
-                    <span v-if="m.text" v-linkify >{{m.text | striphtml | newlines}}</span>
+                    <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
                     <div v-if="m.attachments"> 
                         <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
                         <div class="input-group my-attachments">
@@ -305,8 +305,17 @@
         font-size: smaller;
         color: #00000085;
     }
-
 </style>
 <style type="text/css">
  
+     .my-clickable-link {
+        display: inline-block;
+        max-width: 250px;
+        overflow: hidden;
+        word-wrap: normal;
+        text-overflow: ellipsis;
+        clear: none;
+        white-space: nowrap
+    }
+
 </style>
