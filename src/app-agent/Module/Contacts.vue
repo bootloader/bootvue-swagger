@@ -516,5 +516,16 @@
     ul.contacts li.data_unassigned {
         color : #000 !important;
         opacity: 0.8;
+        /* background: #000; */
+
+    }
+    ul.contacts li.data_assigned {
+        /* background: #ffffff75; */
+    }
+    ul.contacts li.data_assigned .user_img{
+        border: 1px solid #495d734d;
+    }
+    ul.contacts li.data_unassigned .user_img{
+        border: 1px dashed #495d734d;
     }
 </style>
