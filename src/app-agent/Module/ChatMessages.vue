@@ -1,7 +1,7 @@
 <template>
     <div v-if="activeChat">
-        <div v-for="m in activeChat.messages" ><!-- LOOP Start -->
-        <span v-if="m">
+        <div v-for="(m,mindex) in activeChat.messages"  v-bind:key="mindex" ><!-- LOOP Start --><span v-if="m">
+            
             <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="img_cont_msg">
@@ -68,7 +68,7 @@
                                 variant="dark" class="msg_status_send"></b-icon>
                              <b-icon v-else-if="m.stamps.SENT" icon="check" 
                                 variant="muted" class="msg_status_send muted"></b-icon>
-                             <b-icon v-else="" icon="check" 
+                             <b-icon v-else icon="check" 
                                 variant="light" class="msg_status_send"></b-icon>
                         </span>
                     </span>
@@ -78,29 +78,13 @@
                 </div>
             </div>
 
-            <div v-else-if="m.type=='A' || m.type=='L' || m.type=='N'" 
-                class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
-                <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
-                
-                <!-- Sticky Note  -->
-                <div v-if="m.type=='N'" class="msg_cotainer_note">
-                    <div class="text">{{m.text | striphtml | newlines}}</div>
+            <ChatMessageLog v-else-if="m.type=='A' || m.type=='L' || m.type=='N'"
+                class="chat-bubble chat-bubble-note"
+                :message="m">
+            </ChatMessageLog> 
 
-                    <span class="msg_user" v-bind:class="{'float-right' : m.sender == MyConst.agent}">{{m.name ||'---'}}</span>
-                    <span v-bind:class="{'float-right' : m.name == MyConst.agent}">
-                        {{m.timestamp|formatDate}}&nbsp;&nbsp;
-                    </span>
-                </div>
-
-                <div v-else class="msg_cotainer_action">
-                    {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
-                    <i v-if="m.logs" v-for="log in m.logs" class="prepend-comma">
-                        &nbsp;{{log | log_option(m.action)| striphtml | newlines}}</i>
-                </div>
-            </div> 
-
-        </span>
-        </div> <!-- LOOP ENDS -->
+        </span><!-- LOOP ENDS --></div>
+        
     </div>
 
 </template>
@@ -111,13 +95,9 @@
     import { MyFlags,MyDict,MyConst,MyFunc } from './../../services/global';
     import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
-    import tunnel from './../../services/tunnel';
-    import mustache from 'mustache';
     import SlideUpDown from 'vue-slide-up-down'
     import AudioPlayer from '@/@common/custom/components/AudioPlayer';
-
-    import debounce from 'debounce';
-    import throttle from 'throttleit';
+    import ChatMessageLog from './ChatMessageLog';
 
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
@@ -132,7 +112,7 @@
         name : "ChatMessages",
         components: {
             Loading: Loading,SlideUpDown, vSelect :vSelect,
-            AudioPlayer
+            AudioPlayer,ChatMessageLog
         },
         directives: {
             linkify
@@ -175,10 +155,6 @@
 
 </script>
 <style type="text/css" scoped>
-
-    .prepend-comma+.prepend-comma:before {
-        content: ",";
-    }
 
   .msg_cotainer{
     margin-top: auto;
@@ -265,34 +241,9 @@
   }  
 
     .chat-bubble .sending { 
-    height: 15px;
-    width: 15px;
-    margin: 8px;
-  }
-
-    .msg_cotainer_action, .msg_cotainer_note {
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-right: 10px;
-        border-radius: 7px;
-        background-color: #e2e2e2f2;
-        padding: 4px;
-        position: relative;
-        font-size: 10px;
-    }
-    .msg_cotainer_note {
-        background-color: #fff9caf2;
-        font-size: 10px;
-        box-shadow: 0 1.5px 1.5px #00000052;
-        min-width: 250px;
-        max-width: 85%;
-    }
-    .msg_cotainer_note .text {
-        border-bottom: 1px dashed #00000017;
-        font-size: 13px;
-        color: #481e00;
-        box-shadow: 0px 16px 1px #ffffff29
-        /*font-family: 'Reenie Beanie';*/
+        height: 15px;
+        width: 15px;
+        margin: 8px;
     }
 
     .chat-bubble{

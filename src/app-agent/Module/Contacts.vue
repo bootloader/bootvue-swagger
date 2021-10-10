@@ -259,7 +259,6 @@
             // already being observed
             this.loadChats();
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
-            this.pingOnline();
         },
         beforeUnmount (){
             //this.tunnel.off();
@@ -287,12 +286,6 @@
             },
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', !this.isOnline);
-            },
-            async pingOnline(){ 
-                clearInterval(this.intervalid1);        
-                this.intervalid1 = setInterval(function(){
-                    this.$store.dispatch('OnlineStatus', this.isOnline);
-                }.bind(this), MyConst.config.agentSessionTimeout);
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){
@@ -326,7 +319,7 @@
             },
         },
         beforeUnmount : function (argument) {
-          clearInterval(this.intervalid1);  
+          //clearInterval(this.intervalid1);  
         }
     }
 </script>

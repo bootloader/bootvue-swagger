@@ -46,18 +46,17 @@ function setChatFlags(chat) {
   return DataProcessor.session(chat);
   console.log("setChatFlags");
 }
-var UPDATE_TIME = 0;
+var UPDATE_TIME = 0, REFRESH_TIMER = 0;
 var updateTimer = function(){
   UPDATE_TIME = new Date().getTime();
 }
 
 const state = {
   user: null,agents : [],
-  posts: null,
   contacts : null,
-  chats : [],chatsVersion : 0, chatsSize : null,
-  chatsCounter : 1,
-  meta : null,
+  chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
+  chatsCounter : 1, 
+  meta : { isOnline : true },
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   chatHistory : { sessions : []}
@@ -87,9 +86,12 @@ const cache = {
   })(),
   _RefeshSession : (function () {
     let x = null; 
-    return async function () {
-      x =  x || (axios.get("/api/sessions/assignments.json",{
-        //params : {withMessage : false}
+    return async function ({isOnline,isUpdate}) {
+      x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments.json",{
+        params : {
+          status : isOnline,
+        //  withMessage : false
+        }
       })).then(function (response) {
         console.log("_UpdateChats:success");
         return response;
@@ -97,7 +99,7 @@ const cache = {
         console.log("_UpdateChats:error");
       }).then(function (response) {
         console.log("_UpdateChats:always");
-        x = null;
+        setTimeout(()=> x = null,MyConst.config.chatRefreshInterval);
         return response;
       });;
       return x;
@@ -121,12 +123,31 @@ const cache = {
 
 const actions = {
 
-  async RefeshSession({dispatch}){
-    let response = await cache._RefeshSession();
-
+  async RefeshSession({ commit,dispatch },isUpdate) {
+      let then = Date.now() - MyConst.config.chatRefreshInterval;
+      if(!isUpdate && UPDATE_TIME<then){
+        return;
+      }
+      let response = await cache._RefeshSession({
+        isOnline : state.meta.isOnline,isUpdate});
+      validateResponse(response);
+      if(response.data && response.data.details){
+          dispatch("SetAgentOptionsStatus", response.data.details);
+      }
+      if(response.data && response.data.results){
+          dispatch("updateChats", response.data.results);
+      }
+      commit("setMeta", state.meta);
+      clearTimeout(REFRESH_TIMER);
+      REFRESH_TIMER = setTimeout(function(){
+        dispatch('RefeshSession');
+      },MyConst.config.agentSessionTimeout);
+      updateTimer();
 
   },
-
+  async RefeshTimer({ commit,dispatch }) {
+    updateTimer();
+  },
   async LogIn({commit}, user) {
     await axios.post("/auth/login/submit", user)
     	.then(response => {
@@ -137,16 +158,6 @@ const actions = {
     await commit("setUser", user.get("username"));
   },
 
-  async CreatePost({ dispatch }, post) {
-    await axios.post("post", post);
-    return await dispatch("GetPosts");
-  },
-
-  async GetPosts({ commit }) {
-    let response = await axios.get("posts");
-    commit("setPosts", response.data);
-  },
-
   async LogOut({ commit }) {
   	axios.get("/auth/logout");
     let user = null;
@@ -154,6 +165,8 @@ const actions = {
   },
 
   async LoadChats({ commit,dispatch }) {
+    dispatch("RefeshSession",true);
+    return;
     let response = await cache._GetChats();
     validateResponse(response);
     dispatch("updateChats", response.data.results);
@@ -283,7 +296,11 @@ const actions = {
     dispatch("updateChats", state.chats);
   },
 
+  //@Deperecated
   async OnlineStatus({ commit,dispatch },newStatus) {
+    state.meta.isOnline = newStatus;
+    dispatch("RefeshSession",true);
+    return;
     let StatusForm = new FormData();
     if(newStatus !== undefined){
           StatusForm.append('status', newStatus)
@@ -339,18 +356,12 @@ const actions = {
   },
 
   async LoadAgentOptions({ commit,dispatch }) {
-    let p1 = axios.get("/api/options/agents");
-    let p2 = dispatch("OnlineStatus");
-
-    let r1 = await p1;
+    let r1 = await axios.get("/api/options/agents");
     validateResponse(r1);
     if(r1.data && r1.data.results){
        commit("setAgents", r1.data.results);
     }
-    let r2 = await p2;
-      if(r2.data && r2.data.results){
-         dispatch("SetAgentOptionsStatus", r2.data.results);
-      }
+    dispatch("RefeshSession");
   },
 
   async LoadMediaOptions({ commit }) {
@@ -480,12 +491,13 @@ const mutations = {
         chats[c].ilastmsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
         chats[c].lastmsg = chats[c].msg.lastMsg || chats[c].lastmsg;
       }
+      state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
+      chats[c].messages = state.chatsMessages[chats[c].sessionId];
       setChatFlags(chats[c])
     }
     state.chatsSize = chats.length;
     state.chats = chats;
     state.chatsVersion++;
-    updateTimer();
   },
   setChatHistory(state, chatHistory) {
     state.chatHistory = chatHistory;
@@ -512,9 +524,6 @@ const mutations = {
   },
   setUser(state, username) {
     state.user = username;
-  },
-  setPosts(state, posts) {
-    state.posts = posts;
   },
   logout(state, user) {
     state.user = user;

@@ -14,7 +14,11 @@ export const MyConst = {
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	userName : window.CONST.APP_USER_NAME,
 	agent : window.CONST.APP_USER,
-	config : Object.assign({
+	config : (function(config){
+		//Derived Constants
+		config.chatRefreshInterval = config.chatIdleTimeout/5; //Chats/sessions should be refreshed after this interval
+		return config;
+	})(Object.assign({
 		chatSessionTimeout : 86400000, // After which chat is expired
 		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
@@ -23,7 +27,7 @@ export const MyConst = {
 	}, window.CONST.CONFIG || window.CONST.CONFG,window.CONST.dev ? {
 		CHAT_TAG_ENABLED : false,
 		AGENT_CHAT_INIT : true,
-	}: {}),
+	}: {})),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",
 		full_inverse : window.CONST.CDN_URL + "/logo/logo-long-o.png",

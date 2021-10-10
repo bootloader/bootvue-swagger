@@ -259,6 +259,9 @@ var formatter = {
       var text = div.textContent || div.innerText || "";
       return text;
     });
+    Vue.filter('blank3dash', function (value) {
+      return value || '---'
+    });
     Vue.filter('stripslash', function (value) {
       return THAT.stripslash(value);
     });

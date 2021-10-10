@@ -67,9 +67,7 @@ function eq(a,b) {
 			break;
 		  }
 		}
-
 		m.name = m.name || session.name;
-
 		if(chat.messages){
 			if(index < 0) {
 			  chat.messages.push(m);
@@ -86,14 +84,10 @@ function eq(a,b) {
 		var categories = tags.categories || [];
 		quickReply.title = quickReply.title || "";
 		quickReply.title_len = (quickReply.title).length || 1;
-
 		quickReply.template = quickReply.template || "";
-		
 		quickReply.matchIndex = text ? quickReply.title.toLowerCase().indexOf(text) : -1;
-
 		quickReply.match = (categories.indexOf(quickReply.category)>-1);
 		var catScore = (quickReply.match ? 0.5:0) + textScore(categories.join(" "),quickReply.category)/2;
-
 		quickReply.matchScore = 
 		  (quickReply.matchIndex==0 ? 1 : 0) +  (quickReply.matchIndex > 0 ? quickReply.matchIndex/quickReply.title_len : 0)
 		  + catScore + textScore(text,quickReply.title)
