@@ -79,8 +79,10 @@
             console.log("/message/receive/new:msg===",msg);
             THAT.$store.dispatch('ReadChatMessage', msg);
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
+            console.log("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
             THAT.$store.dispatch('AddChat', testresponse);
         }).on("/dept/onassign-__DEPT__", function(testresponse){
+            console.log("/dept/onassign-__DEPT__",testresponse);
             THAT.$store.dispatch('AddChat', testresponse);
         }).on("/message/update/status", function(status){
             console.log("/message/update/status===",status)

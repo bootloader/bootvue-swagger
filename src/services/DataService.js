@@ -157,6 +157,9 @@ const DataService = {
         axios.interceptors.response.eject(myRespInterceptor);
         break;
     };
+  },
+  async store( namespace,key,item){
+    store.dispatch('UpdateLocalStore',{ namespace : namespace, key : key, data : item })
   }
 };
 

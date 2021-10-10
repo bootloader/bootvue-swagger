@@ -20,6 +20,12 @@ function eq(a,b) {
   return a === b;
 }
 
+function chatSize(chat){
+  if(!chat) return "NoChat";
+  if(!chat.messages) return "NoChatMessages";
+  return chat.messages.length;
+}
+
   function validateResponse(response){
     if(response.request.responseURL.endsWith("/auth/login")){
       //https://app.mehery.com/admin/auth/login
@@ -147,16 +153,16 @@ const actions = {
     commit("logout", user);
   },
 
-  async LoadChats({ commit }) {
+  async LoadChats({ commit,dispatch }) {
     let response = await cache._GetChats();
     validateResponse(response);
-    commit("setChats", response.data.results);
+    dispatch("updateChats", response.data.results);
     commit("setMeta", response.data.meta);
     return response;
   },
 
-  async RefreshChats({ commit }) {
-    commit("setChats", state.chats);
+  async RefreshChats({ commit,dispatch }) {
+    dispatch("updateChats", state.chats);
   },
 
   async GetChats({ commit,dispatch }) {
@@ -172,21 +178,29 @@ const actions = {
     });
   },
 
-  async AddChat({ commit },chat) {
+  async AddChat({ commit,dispatch},chat) {
+    let _chat = Object.assign({},chat);
     for(var c in state.chats){
       if(state.chats[c].contactId == chat.contactId){
         state.chats[c].active = !!chat.active;
         state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
         state.chats[c].resolved = chat.resolved;
+        //Append new messages to existing session
+        for(var m in chat.messages){
+          DataProcessor.appendMessage(state.chats[c],chat.messages[m]);
+        }
+        _chat.messages =  state.chats[c].messages || _chat.messages;
+
         setChatFlags(state.chats[c])
         state.chats.splice(c,1);
         //commit("setChats", state.chats);
         //return;
       }
     }
-    if(chat.active)
-      state.chats.push(chat);
-    commit("setChats", state.chats);
+    if(_chat && _chat.active)
+      state.chats.push(_chat);
+    //dispatch("ReadChatMessages",chat.messages);
+    dispatch("updateChats", state.chats);
   },
 
   async AddHistoryChat({ commit },chat) {
@@ -223,7 +237,7 @@ const actions = {
     return response.data;
   },
 
-  async UpdateChatMessageStatus({ commit },msgStatus) {
+  async UpdateChatMessageStatus({ commit,dispatch },msgStatus) {
     for(var c in state.chats){
       var chat = state.chats[c];
       if(chat.messages){
@@ -235,56 +249,28 @@ const actions = {
               msg.stamps = msg.stamps || {};
               msg.stamps[msgStatus.status] = msgStatus.timestamp;
               console.log("msg.stamps",msg.stamps)
-              commit("setChats", state.chats);
+              dispatch("updateChats", state.chats);
               return;
           }
         }
       }
     }
   },
-
-  async ReadChatMessage({ commit },m) {
-    if(!m) return;
-    m.messageIdRef = m.messageIdRef || guid();
-    for(var c in state.chats){
-      var chat = state.chats[c];
-      if(m.sessionId == chat.sessionId){
-        var index  = -1
-        for(var j in chat.messages){
-          var msg = chat.messages[j];
-          if(eq(msg.messageIdRef, m.messageIdRef)){
-            msg.messageId = m.messageId;
-            msg.version = 1;
-          }
-          if(eq(msg.messageId,m.messageId) || eq(msg, m) 
-                || eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
-            index = j;
-            if(m.version < msg.version){
-              m=msg;
-            }            
+  
+  async ReadChatMessage({ commit,dispatch },m) {
+      if(!m) return;
+      m.messageIdRef = m.messageIdRef || guid();
+      for(var c in state.chats){
+        var chat = state.chats[c];
+        if(m.sessionId == chat.sessionId){
+            DataProcessor.appendMessage(chat,m);
             break;
-          }
         }
-
-        m.name = m.name || state.chats[c].name;
-
-        if(chat.messages){
-            if(index < 0) {
-              chat.messages.push(m);
-            } else {
-              chat.messages.splice(index, 1, m);
-            }
-        }
-        chat.lastmsg = m;
-        //state.chats[c].newmsg = true;
-        break;
       }
-    }
-
-    commit("setChats", state.chats);
+      dispatch("updateChats", state.chats);
   },
 
-  async ReadSession({ commit },chatSessions) {
+  async ReadSession({ dispatch },chatSessions) {
     for(var s in chatSessions){
       var chatSession = chatSessions[s];
       for(var i in state.chats){
@@ -294,7 +280,7 @@ const actions = {
         }
       }
     }
-    commit("setChats", state.chats);
+    dispatch("updateChats", state.chats);
   },
 
   async OnlineStatus({ commit,dispatch },newStatus) {
@@ -462,6 +448,16 @@ const actions = {
     validateResponse(response);
     return response.data;
   },
+
+  async updateChats({commit,dispatch,rootGetters},chats){
+    for(var c in chats){
+        chats[c].lastReadStamp = Math.max(
+          rootGetters.local.readStamp[chats[c].sessionId] || 0,
+          chats[c].lastReadStamp || 0
+        );
+    }
+    commit("setChats",chats);
+  }
 
 };
 

@@ -1,8 +1,7 @@
 <template>
     <div v-if="activeChat">
-        <div v-for="m in activeChat.messages"><!-- LOOP Start -->
-        
-
+        <div v-for="m in activeChat.messages" ><!-- LOOP Start -->
+        <span v-if="m">
             <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="img_cont_msg">
@@ -100,7 +99,7 @@
                 </div>
             </div> 
 
-
+        </span>
         </div> <!-- LOOP ENDS -->
     </div>
 

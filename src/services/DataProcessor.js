@@ -11,6 +11,12 @@ function textScore(str1,str2){
 	return score;
 }
 
+function eq(a,b) {
+	if(!a || !b) return false;
+	if(a=="null" || b=="null") return false;
+	return a === b;
+}
+
  export default {
  	session (session){
 		  session._stamp = new Date().getTime();
@@ -35,11 +41,46 @@ function textScore(str1,str2){
 		  session._waiting = (session.lastResponseStamp < session.lastInComingStamp);
 		  session._waitingstamp_en= formatters.timespan((session._stamp - session._waitingSinceStamp)/1000);
 		  session._attention = session._waiting && (session.lastResponseStamp < session._gracestamp);
-		  session._new = session._waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
-		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp));
+		  session._new = (session.lastReadStamp < session.lastInComingStamp) 
+		  				|| (session._waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
+		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
+		   session._searchText = [session.contact.name, session.contact.email, session.contact.phone, session.contact.csid].join(" ")
 		 return session;
  	},
+	appendMessage(session,m){
+		if(!m || m.length) return;
+		let chat = session;
+		var index  = -1
+		for(var j in chat.messages){
+		  var msg = chat.messages[j];
+		  if(eq(msg.messageIdRef, m.messageIdRef)){
+			msg.messageId = m.messageId;
+			msg.version = 1;
+		  }
+		  if(eq(msg.messageId,m.messageId) || eq(msg, m) 
+				|| eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
+			index = j;
+			if(m.version < msg.version){
+			  m=msg;
+			}            
+			break;
+		  }
+		}
+
+		m.name = m.name || session.name;
+
+		if(chat.messages){
+			if(index < 0) {
+			  chat.messages.push(m);
+			} else {
+			  chat.messages.splice(index, 1, m);
+			}
+		}
+		chat.lastmsg = m;
+		//state.chats[c].newmsg = true;
+		return chat;
+	},
 	quickReply(quickReply,tags){
 		var text = tags.text;
 		var categories = tags.categories || [];

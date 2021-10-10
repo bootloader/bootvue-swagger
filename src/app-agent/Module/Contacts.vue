@@ -207,7 +207,7 @@
                     }
                 });
                 var tab = MyFlags.agent.contactsTab;
-
+                //console.log("searchTags",searchTags)
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
                     return chat._tab == tab;
                     if(tab == 'ME'){
@@ -222,7 +222,7 @@
                             return ((chat.contactType || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
                         } else {
                             console.log(chat.name,searchTag.text)
-                            return ((chat.name || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
+                            return ((chat._searchText || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
                         }
                     });
                     return (_searchTags.length == searchTags.length) && chat.active;
@@ -273,6 +273,7 @@
                     if((sessionId == chat.sessionId) 
                         || (sessionIdFrom == chat.sessionId)){
                         chat._lastReadStamp = chat.lastInComingStamp;
+                        this.$service.store('readStamp',chat.sessionId,Date.now());
                         this.$store.dispatch('RefreshChats');
                         //this.$forceUpdate();
                     }
