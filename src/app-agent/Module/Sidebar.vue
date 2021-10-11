@@ -149,7 +149,6 @@
             },
             switchBeta(){
                 let beta = this.$cookies.get('postman.ui.beta') === 'true';
-                console.log("======",beta);
                 this.$cookies.set('postman.ui.beta', ''+ !beta + '');
                 setTimeout(()=>window.location.reload(),1000);
             }
