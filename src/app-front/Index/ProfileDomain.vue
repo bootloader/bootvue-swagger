@@ -136,12 +136,66 @@
                   </div>
                 </div>
               </div>
+              <div class="py-5 text-center">
+                <div class="flex flex-wrap justify-center">
+                  <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
+                    <div v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"
+                      class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white"
+                    >
+                      <a v-if="c.contactType == 'TWITTER'" class="bg-twitter rounded px-4 py-2  uppercase font-bold"
+                        :href="`https://twitter.com/${c.twitter.handler}`">
+                        <i class="fab fa-twitter"/>&nbsp;{{c.twitter.handler}}
+                      </a>
+                      <a v-if="c.contactType == 'FACEBOOK'" class="bg-facebook rounded px-4 py-2  uppercase font-bold"
+                        :href="`https://facebook.com/${c.facebook.pageId}`">
+                        <i class="fab fa-facebook"/>&nbsp;{{c.facebook.page || c.facebook.handler || c.lane}}
+                      </a>
+                      <a v-if="c.contactType == 'INSTAGRAM'" class="bg-instagram rounded px-4 py-2  uppercase font-bold"
+                        :href="`https://instagram.com/${c.instagram.handler}`">
+                        <i class="fab fa-instagram"/>&nbsp;{{c.instagram.handler || c.name}}
+                      </a>
+                      <a v-if="c.contactType == 'TELEGRAM'" 
+                        class="bg-telegram rounded px-4 py-2  uppercase font-bold"
+                        :href="`https://telegram.com/${c.telegram.lane}`">
+                        <i class="fab fa-telegram-plane"/>&nbsp;{{c.telegram.handler || c.lane || c.name}}
+                      </a>
+                      <a v-if="c.contactType == 'WHATSAPP'" 
+                        class="bg-whatsapp-dull rounded px-4 py-2  uppercase font-bold"
+                         :href="`https://api.whatsapp.com/send/?phone=${c.lane}`">
+                          <i class="fab fa-whatsapp"/>&nbsp;{{c.lane}}
+                      </a>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
-    <footer-component />
+      <footer class="relative bg-blueGray-200 pt-1 pb-6">
+          <div class="container mx-auto px-4">
+            <hr class="my-6 border-blueGray-300" />
+            <div
+              class="flex flex-wrap items-center md:justify-between justify-center"
+            >
+              <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                  Copyright © {{ date }}
+                  <a
+                    :href="$config.PROP_SERVICE_WEBSITE_LINK"
+                    class="text-blueGray-500 hover:text-blueGray-800"
+                  >
+                    {{$config.PROP_SERVICE_NAME}}
+                  </a>
+                  .
+                </div>
+              </div>
+            </div>
+
+          </div>
+      </footer>
   </div>
 </template>
 <script>
@@ -169,7 +223,9 @@ export default {
         social : {
           logo : team2
         }
-      }
+      },
+      channels :[],
+      date: new Date().getFullYear(),
     };
   },
   mounted : function () {
@@ -203,6 +259,7 @@ export default {
   },
   created (){
     this.loadDomainProfile();
+    this.loadChannels();
   },
   methods : {
     async loadDomainProfile (){
@@ -211,6 +268,12 @@ export default {
         tnt : "app"
       });
       this.domainProfile = resp.results[0];
+    },
+    async loadChannels(){
+      var resp = await this.$service.get('/api/options/channels',{
+        tnt : this.$route.params.domain || this.$global.MyConst.tenant,
+      });
+      this.channels = resp.results || [];
     }
   },
   components: {
