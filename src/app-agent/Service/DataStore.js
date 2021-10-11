@@ -455,11 +455,13 @@ const actions = {
   },
 
   async updateChats({commit,dispatch,rootGetters},chats){
-    for(var c in chats){
-        chats[c].lastReadStamp = Math.max(
-          rootGetters.local.readStamp[chats[c].sessionId] || 0,
-          chats[c].lastReadStamp || 0
-        );
+    if(rootGetters.local.readStamp){
+      for(var c in chats){
+          chats[c].lastReadStamp = Math.max(
+            rootGetters.local.readStamp[chats[c].sessionId] || 0,
+            chats[c].lastReadStamp || 0
+          );
+      }
     }
     commit("setChats",chats);
   }
