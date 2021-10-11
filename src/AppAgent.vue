@@ -62,7 +62,7 @@
         let THIS = this;
         this.refreshTimer = window.setTimeout(function () {
           THIS.refresh();
-        },5000);
+        },10000);
       }
     },
     created (){
