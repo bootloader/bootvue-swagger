@@ -9,8 +9,6 @@ import {MyConst} from '../../services/global';
 import DataProcessor from '../../services/DataProcessor';
 
 import pebounce from 'pebounce';
-import string_score from 'string_score';
-
 
 var guid = formatters.guid
 
@@ -18,12 +16,6 @@ function eq(a,b) {
   if(!a || !b) return false;
   if(a=="null" || b=="null") return false;
   return a === b;
-}
-
-function chatSize(chat){
-  if(!chat) return "NoChat";
-  if(!chat.messages) return "NoChatMessages";
-  return chat.messages.length;
 }
 
   function validateResponse(response){
@@ -44,11 +36,10 @@ function chatSize(chat){
 
 function setChatFlags(chat) {
   return DataProcessor.session(chat);
-  console.log("setChatFlags");
 }
 var UPDATE_TIME = 0, REFRESH_TIMER = 0;
 var updateTimer = function(){
-  UPDATE_TIME = new Date().getTime();
+  UPDATE_TIME = Date.now();
 }
 
 const state = {
@@ -85,11 +76,15 @@ const cache = {
     };
   })(),
   _RefeshSession : (function () {
-    let x = null; 
+    let x = null,lastTime=0; 
     return async function ({isOnline,isUpdate}) {
+      let then = Date.now()-500; 
+      isUpdate = isUpdate && (lastTime < then);
+      if(isUpdate) lastTime = Date.now();
       x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments.json",{
         params : {
           status : isOnline,
+          isUpdate : isUpdate,
         //  withMessage : false
         }
       })).then(function (response) {
@@ -143,7 +138,6 @@ const actions = {
         dispatch('RefeshSession');
       },MyConst.config.agentSessionTimeout);
       updateTimer();
-
   },
   async RefeshTimer({ commit,dispatch }) {
     updateTimer();

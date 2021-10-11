@@ -1,13 +1,14 @@
  
 import formatters from './formatters';
 import {MyConst} from './global';
+import string_score from 'string_score'; //DO NOT REMOVE THIS, its string extension
 
 function textScore(str1,str2){
 	if(!str1 || !str1) return 0; 
 	str1 = str1.replace(/([_-])/g," ");
 	str2 = str2.replace(/([_-])/g," ");
 	var score = str1.score(str2) + str2.score(str1);
-	console.log("str1=str2",str1,str2,"====>",score);
+	//console.log("str1=str2",str1,str2,"====>",score);
 	return score;
 }
 

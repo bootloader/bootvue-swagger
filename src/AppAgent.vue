@@ -19,6 +19,7 @@
   import { MyFlags,MyDict,MyConst } from './services/global';
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
+  import visibility from 'vue-visibility-change';
 
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'
@@ -50,9 +51,19 @@
       }
     },
     data: () => ({
+      refreshTimer :0 
     }),
     methods : {
-
+      async refresh(){
+        window.clearTimeout(this.refreshTimer);
+        if(!visibility.isSupported() || !visibility.hidden()){
+          await this.$store.dispatch("RefeshSession");
+        }
+        let THIS = this;
+        this.refreshTimer = window.setTimeout(function () {
+          THIS.refresh();
+        },5000);
+      }
     },
     created (){
       this.$store.registerModule("DataStore",DataStore);
@@ -102,9 +113,11 @@
             THAT.$store.dispatch('ReadSession', [chatSession]);
              THAT.$store.dispatch('RefeshTimer');
         });
+      this.refresh();
     },
     beforeUnmount (){
         this.tunnel.off();
+        window.clearTimeout(this.refreshTimer);
     },
   }
 </script>
