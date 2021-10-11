@@ -20,6 +20,8 @@
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
   import visibility from 'vue-visibility-change';
+  import VueCookies from 'vue-cookies'
+  Vue.use(VueCookies)
 
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'

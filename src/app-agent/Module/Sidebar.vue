@@ -34,6 +34,9 @@
                     <b-nav-item :href="'/admin'">
                         <i class="fas fa-columns">&nbsp;&nbsp;</i>Go to Admin Panel
                     </b-nav-item>
+                    <b-nav-item @click="switchBeta">
+                        <i class="fas fa-magic">&nbsp;&nbsp;</i>Switch to <b-badge >Beta</b-badge>
+                    </b-nav-item>
                 </b-nav>
             </nav>
 
@@ -144,6 +147,12 @@
                     el.classList.remove('closed-sidebar', 'closed-sidebar-md');
                 }
             },
+            switchBeta(){
+                let beta = this.$cookies.get('postman.ui.beta') === 'true';
+                console.log("======",beta);
+                this.$cookies.set('postman.ui.beta', ''+ !beta + '');
+                setTimeout(()=>window.location.reload(),1000);
+            }
         },
         mounted() {
             var THAT =  this;
