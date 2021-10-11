@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="">
         <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
         @action="onAction"></page-title>
 
@@ -26,8 +26,33 @@
                         popover-x="left"
                         disabled
                         swatch-size="10"
-
-                        :trigger-style="{ width: '25px', height: '25px', 'border-radius' : '8px' }"
+                        :trigger-style="swatch.style"
+                      ></v-swatches>
+                  </span>
+                  <span v-else-if="row.item.meta.inputType=='COLOR_PALLETE'">
+                     <v-swatches
+                        :value="row.item.config.value.primary"
+                        show-fallback
+                        popover-x="left"
+                        disabled
+                        swatch-size="10"
+                        :trigger-style="swatch.style"
+                      ></v-swatches>
+                     <v-swatches
+                        :value="row.item.config.value.secondary"
+                        show-fallback
+                        popover-x="left"
+                        disabled
+                        swatch-size="10"
+                        :trigger-style="swatch.style"
+                      ></v-swatches>
+                      <v-swatches
+                        :value="row.item.config.value.accent"
+                        show-fallback
+                        popover-x="left"
+                        disabled
+                        swatch-size="10"
+                        :trigger-style="swatch.style"
                       ></v-swatches>
                   </span>
                   <span v-else>{{row.item.config.value}}</span>
@@ -90,20 +115,59 @@
                       <v-swatches class="d-flex justify-content-center"
                         v-model="oneItem.config.value"
                         show-fallback
+                          fallback-input-type="color"
                         fallback-input-class="swatches-fallback-input-class"
                         inline
-                        :swatches="[
-                          '#1FBC9C','#1CA085','#2ECC70','#27AF60', '#3398DB', '#2980B9', '#A463BF', '#8E43AD',
-                          '#3D556E','#222F3D','#F2C511','#F39C19', '#E84B3C', '#C0382B', '#DDE6E8', '#BDC3C8',
-                          '#4b56c0','#ffc976', '#40a6db', '#f1a948' ,'#db3a70', '#25d366', '#00BFFF', '#4267b2',
-                        ]"
-                        :swatch-style="{ margin: '5px'}"
+                        :swatches="swatch.colors"
+                        :swatch-style="swatch.style"
                         :wrapper-style="{
                               margin: 'auto',
                               width: '90%'
                         }"
                       ></v-swatches>
                 </div>
+                <div  v-else-if="oneItem.meta.inputType=='COLOR_PALLETE'" class="form-row"> 
+                      <v-swatches class="d-flex justify-content-center"
+                        v-model="oneItem.config.value.primary"
+                        show-fallback
+                        fallback-input-type="color"
+                        fallback-input-class="swatches-fallback-input-class"
+                        inline
+                        :swatches="swatch.colors"
+                        :swatch-style="swatch.style"
+                        :wrapper-style="{
+                              margin: 'auto',
+                              width: '90%'
+                        }"
+                      ></v-swatches>
+                      <v-swatches class="d-flex justify-content-center"
+                        v-model="oneItem.config.value.secondary"
+                        show-fallback
+                          fallback-input-type="color"
+                        fallback-input-class="swatches-fallback-input-class"
+                        inline
+                        :swatches="swatch.colors"
+                        :swatch-style="swatch.style"
+                        :wrapper-style="{
+                              margin: 'auto',
+                              width: '90%'
+                        }"
+                      ></v-swatches>
+                      <v-swatches class="d-flex justify-content-center"
+                        v-model="oneItem.config.value.accent"
+                        show-fallback
+                          fallback-input-type="color"
+                        fallback-input-class="swatches-fallback-input-class"
+                        inline
+                        :swatches="swatch.colors"
+                        :swatch-style="swatch.style"
+                        :wrapper-style="{
+                              margin: 'auto',
+                              width: '90%'
+                        }"
+                      ></v-swatches>
+                </div>
+
                 <div  v-else class="form-row">
                   <input name="email"
                           placeholder="A,1232, https://soem.url etc"
@@ -163,6 +227,14 @@
               currentPage: 1,
               rows : 0
             },
+            swatch : {
+              style : { margin: '5px', width : '25px',height : '25px','border-radius' : '8px'},
+              colors : [
+                              '#1FBC9C','#1CA085','#2ECC70','#27AF60', '#3398DB', '#2980B9', '#A463BF', '#8E43AD',
+                              '#3D556E','#222F3D','#F2C511','#F39C19', '#E84B3C', '#C0382B', '#DDE6E8', '#BDC3C8',
+                              '#4b56c0','#ffc976', '#40a6db', '#f1a948' ,'#db3a70', '#25d366', '#00BFFF', '#4267b2',
+                ],
+            },
             oneItem : newItem(),
             modelName :  "MODAL_ADD_USERS",
         }),
@@ -202,6 +274,9 @@
               for(var i in item){
                 this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
               }
+              if(this.oneItem[i].value  === null || this.oneItem[i].value  === undefined){
+                  this.oneItem[i].value  = this.oneItem.meta.defaultValue;
+              }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
@@ -236,5 +311,10 @@
   .swatches-fallback-input-class {
     text-align: center;
     width: 450px;
+    font-size: 20px;
+    line-height: 30px;
+    padding: 1px !important;
+    background: rgba(255, 255, 255, 0);
+    border: none;
   }
 </style>
