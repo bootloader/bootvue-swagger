@@ -48,6 +48,6 @@ jobs:
           token: ${{secrets.PUSH_TOKEN3}} # Token 
           branch: app # The branch the action should deploy to.
           repository-name: cherrybase/cherrybase.github.io # The repo the action should deploy to.
-          commit-message: ${{ steps.extract_branch.outputs.branch }} - ${{ steps.extract_branch.outputs.sha_short }}
+          commit-message: ${{ steps.extract_branch.outputs.branch }}.${{ steps.extract_branch.outputs.sha_short }}
           folder: dist # The folder the action should deploy.
           #target-folder : /
