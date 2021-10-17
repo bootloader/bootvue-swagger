@@ -69,7 +69,7 @@ const cache = {
   _GetChats : (function () {
     let x = null; 
     return async function () {
-      x =  x || (axios.get("/api/sessions/assigned.json",{
+      x =  x || (axios.get("/api/sessions/assigned",{
         //params : {withMessage : false}
       }));
       return x;
@@ -81,7 +81,7 @@ const cache = {
       let then = Date.now()-500; 
       isUpdate = isUpdate && (lastTime < then);
       if(isUpdate) lastTime = Date.now();
-      x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments.json",{
+      x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments",{
         params : {
           status : isOnline,
           isUpdate : isUpdate,
@@ -397,7 +397,7 @@ const actions = {
 
   async LoadQuickReplies({ commit }, tags) {
     if(!state.quickReplies || state.quickReplies.length == 0){
-        let response = await axios.get("/category/map/smart_reply.json");
+        let response = await axios.get("/category/map/smart_reply");
         validateResponse(response);
         for (var i in response.data) {
           response.data[i].template = formatters.nullify(response.data[i].template);
