@@ -110,5 +110,8 @@
     }
   };
 </script>
-<style>
+<style scoped>
+  input.form-control {
+    padding-left: 5px!important;
+  }
 </style>
