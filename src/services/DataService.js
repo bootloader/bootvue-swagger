@@ -6,6 +6,7 @@ import axios from "axios";
 
 import DataProcessor from "./DataProcessor";
 import { i18n } from "./i18n";
+import formatter from "./formatters";
 
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
@@ -91,6 +92,7 @@ function processor(params,responseData) {
 }
 
 function slashUrl(url){
+  return formatter.clean_url(url);
   return url.replace(/\/\/+/g, '/');
 }
 
