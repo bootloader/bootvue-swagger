@@ -28,14 +28,14 @@
     </span>
 </div>
                     </b-nav-item>
-                    <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
-                        <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout
-                    </b-nav-item>
-                    <b-nav-item :href="'/admin'">
+                    <b-nav-item :href="'/admin'" target="_blank">
                         <i class="fas fa-columns">&nbsp;&nbsp;</i>Go to Admin Panel
                     </b-nav-item>
                     <b-nav-item @click="switchBeta">
                         <i class="fas fa-magic">&nbsp;&nbsp;</i>Switch to <b-badge >Beta</b-badge>
+                    </b-nav-item>
+                    <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
+                        <i class="fas fa-power-off">&nbsp;&nbsp;</i>Logout
                     </b-nav-item>
                 </b-nav>
             </nav>
