@@ -2,7 +2,7 @@
     <div>
 
         <div v-if="isStrip" class="social-links text-center">
-            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"
+            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId" v-if="!c.disabled"
                 class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white social-link"
             >
                 <a v-if="c.contactType == 'TWITTER'" :href="`https://twitter.com/${c.twitter.handler}`">
@@ -24,7 +24,7 @@
         </div>
 
         <div v-else class="social-btns">
-            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId">
+            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"  v-if="!c.disabled"> 
                 <a  v-if="c.contactType == 'FACEBOOK'" :href="`https://m.me/${c.facebook.handler}`" 
                     class="btn facebook bg-facebook:before">
                 <i class="icon fab fa-facebook-f text-facebook"></i></a>
