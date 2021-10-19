@@ -704,7 +704,7 @@
                 }
             },2000),
             async refreshQuickReplies(force){
-                this.refreshActiveChats();
+                this.refreshActiveChat();
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
@@ -750,7 +750,7 @@
             },
             onSessionChange : debounce(async function(){
                 console.log("onSessionChange : Session On Change")
-                this.activeChat = this.loadActiveChat();
+                this.activeChat = this.selectActiveChat();
 
                 if(this.activeChat == null && this.$route.params.contactId){
                     let resp = await this.$service.get('/api/sessions/contact/active', {
@@ -765,7 +765,7 @@
                 this.loadArchiveMessages();
 
             },200),
-            loadActiveChat () {
+            selectActiveChat () {
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.sessionId == chat.sessionId){
@@ -783,15 +783,15 @@
                 }
                 return null;
             },
-            refreshActiveChats(force){
+            refreshActiveChat(force){
                 if(this.chatsVersionLocal != this.chatsVersionGlobal || force){
-                    this.activeChat = this.loadActiveChat();
+                    this.activeChat = this.selectActiveChat();
                     this.chatsVersionLocal = this.$store.getters.StateChatsVersion;
                 }
                 return this.activeChat
             },
-            async loadArchiveMessages(){
-                this.refreshActiveChats(true);
+            async loadArchiveMessages(forceLoad){
+                this.refreshActiveChat(true);
                 var activeChat = this.activeChat;
                 if(!activeChat){
                      MyFlags.agent.showProfileAllowed = false;
@@ -808,7 +808,7 @@
                     return t.code == activeChat.assignedToAgent;
                 })[0] || {};
 
-                if(!activeChat.messages){
+                if(!activeChat.messages || forceLoad){
                     this.isLoading = true;
                     var resp = await this.$store.dispatch('GetSessionChats',{
                         contactId : this.activeChat.contactId,
@@ -827,7 +827,7 @@
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id
                 });
-                this.refreshActiveChats();
+                this.loadArchiveMessages(true);
             },
 
             //DOMS
