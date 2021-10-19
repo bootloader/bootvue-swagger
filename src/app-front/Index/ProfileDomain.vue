@@ -15,6 +15,7 @@
           class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
           style="transform: translateZ(0);"
         >
+          
           <svg
             class="absolute bottom-0 overflow-hidden"
             xmlns="http://www.w3.org/2000/svg"
@@ -139,39 +140,16 @@
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-                    <div v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"
-                      class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white"
-                    >
-                      <a v-if="c.contactType == 'TWITTER'" class="bg-twitter rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://twitter.com/${c.twitter.handler}`">
-                        <i class="fab fa-twitter"/>&nbsp;{{c.twitter.handler}}
-                      </a>
-                      <a v-if="c.contactType == 'FACEBOOK'" class="bg-facebook rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://m.me/${c.facebook.handler}`">
-                        <i class="fab fa-facebook"/>&nbsp;{{c.facebook.page || c.facebook.handler || c.lane}}
-                      </a>
-                      <a v-if="c.contactType == 'INSTAGRAM'" class="bg-instagram rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://instagram.com/${c.instagram.handler}`">
-                        <i class="fab fa-instagram"/>&nbsp;{{c.instagram.handler || c.name}}
-                      </a>
-                      <a v-if="c.contactType == 'TELEGRAM'" 
-                        class="bg-telegram rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://telegram.me/${c.telegram.lane}`">
-                        <i class="fab fa-telegram-plane"/>&nbsp;{{c.telegram.handler || c.lane || c.name}}
-                      </a>
-                      <a v-if="c.contactType == 'WHATSAPP'" 
-                        class="bg-whatsapp-dull rounded px-4 py-2  uppercase font-bold"
-                         :href="`https://api.whatsapp.com/send/?phone=${c.lane}`">
-                          <i class="fab fa-whatsapp"/>&nbsp;{{c.lane}}
-                      </a>
 
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
+
       </section>
     </main>
       <footer class="relative bg-blueGray-200 pt-1 pb-6">
@@ -201,6 +179,7 @@
 <script>
 import Navbar from "../Auth/AuthNavbar.vue";
 import FooterComponent from "./Footer.vue";
+import SocialBoxes from "./SocialBoxes.vue";
 
 import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
 
@@ -277,16 +256,25 @@ export default {
     }
   },
   components: {
-    Navbar,
+    Navbar,SocialBoxes,
     FooterComponent,
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 
 .bg-cover-x {
   background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
   background-position: bottom;
 }
+
+
+.type-1 {
+  min-width: 300px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+}
+
+
 
 </style>
