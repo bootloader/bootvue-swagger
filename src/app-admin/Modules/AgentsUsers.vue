@@ -35,9 +35,16 @@
                     <span v-if="!row.item.defaultValue" class="far fa-star" />
                     <span v-if="row.item.defaultValue" class="fas fa-star" />
                   </button>&nbsp;
-                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
+                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
                      v-tooltip="row.item.message" variant="outline-primary">
                      <font-awesome-icon icon="eye" title="View"/>
+                  </b-button>&nbsp;
+                  <b-button size="sm" @click="sendReset(row.item, row.index, $event.target)"  
+                     v-tooltip="'Send Reset Password Email'" variant="outline-primary"  class="fa-stack fa-1x">
+                     <span style="font-size: .5rem;">
+                        <i class="fa fa-sync fa-stack-1x fa-2x"></i>
+                        <i class="fas fa-lock fa-stack-1x fa-sm fa-inverse text-secondary"></i>
+                     </span>
                   </b-button>
                 </template>
 
@@ -246,6 +253,9 @@
           async setItemDefault(item) {
              await this.$store.dispatch('SetAgentDefault', item);
           },
+          async sendReset(item) {
+             await this.$service.submit('/api/admins/agent/reset',{ agent_id : item.id });
+          },
           async cancelItem(item) {
              this.newItem = newItem();
              this.onAction({name : "CANCEL"});
@@ -279,8 +289,6 @@
                 console.log("NoMapping",argument) 
             }
           },
-
-
           //Customer function
           selectAllChannel : function (argument) {
             this.newItem.channels = (!this.isSelectAllChannel) ? [] : this.channels.map(function(ch) {
