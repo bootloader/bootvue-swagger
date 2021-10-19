@@ -284,8 +284,9 @@ export default {
 </script>
 <style scoped>
 
-.bg-cover {
-  background-image: url('~@/assets/vendor/notus/img/social-bg-to-center.png');
+.bg-cover-x {
+  background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
+  background-position: bottom;
 }
 
 </style>
