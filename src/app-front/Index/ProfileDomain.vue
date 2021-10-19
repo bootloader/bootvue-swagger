@@ -147,7 +147,7 @@
                         <i class="fab fa-twitter"/>&nbsp;{{c.twitter.handler}}
                       </a>
                       <a v-if="c.contactType == 'FACEBOOK'" class="bg-facebook rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://facebook.com/${c.facebook.pageId}`">
+                        :href="`https://m.me/${c.facebook.handler}`">
                         <i class="fab fa-facebook"/>&nbsp;{{c.facebook.page || c.facebook.handler || c.lane}}
                       </a>
                       <a v-if="c.contactType == 'INSTAGRAM'" class="bg-instagram rounded px-4 py-2  uppercase font-bold"
@@ -156,7 +156,7 @@
                       </a>
                       <a v-if="c.contactType == 'TELEGRAM'" 
                         class="bg-telegram rounded px-4 py-2  uppercase font-bold"
-                        :href="`https://telegram.com/${c.telegram.lane}`">
+                        :href="`https://telegram.me/${c.telegram.lane}`">
                         <i class="fab fa-telegram-plane"/>&nbsp;{{c.telegram.handler || c.lane || c.name}}
                       </a>
                       <a v-if="c.contactType == 'WHATSAPP'" 
