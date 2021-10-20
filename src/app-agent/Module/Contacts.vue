@@ -33,7 +33,8 @@
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
-              <li class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
+              <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY"
+                    class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'HISTORY')}" @click="MyFlags.agent.contactsTab = 'HISTORY'">
                     <span class="fa fa-stopwatch"/> History</span>
               </li>
