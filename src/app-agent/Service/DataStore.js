@@ -204,7 +204,9 @@ const actions = {
         //return;
       }
     }
-    if(_chat && _chat.active)
+    if(_chat 
+      && _chat.active
+      )
       state.chats.push(_chat);
     //dispatch("ReadChatMessages",chat.messages);
     dispatch("updateChats", state.chats);

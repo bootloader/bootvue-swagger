@@ -33,6 +33,10 @@
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
+              <li class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'HISTORY')}" @click="MyFlags.agent.contactsTab = 'HISTORY'">
+                    <span class="fa fa-stopwatch"/> History</span>
+              </li>
             </ul>
         </div>
         <div class="card-body contacts_body">
@@ -214,7 +218,7 @@
                         return (chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent;
                      }  else if(tab == 'TEAM'){
                         return !((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent);
-                     } 
+                     }
                     return false;
                 }).filter(function(chat){
                     var _searchTags = searchTags.filter(function (searchTag) {
@@ -225,7 +229,7 @@
                             return ((chat._searchText || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
                         }
                     });
-                    return (_searchTags.length == searchTags.length) && chat.active;
+                    return (_searchTags.length == searchTags.length);// && chat.active;
                 }).sort(function(a, b){
                     if(a._assignedToMe && !b._assignedToMe){
                         return -1;
