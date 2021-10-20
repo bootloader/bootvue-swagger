@@ -16,7 +16,9 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <span class="action-wrapper" v-for="action in actions" v-if="!action.hidden && actionShow[action.name]!==false" >
+                <span class="action-wrapper" v-for="(action, index) in actions"  v-bind:key="index"
+                    v-if="!action.hidden && actionShow[action.name]!==false" 
+                    >
                     <router-link v-if="action.link" tag="button" :to="action.link"
                         type="button" class="btn-shadow d-inline-flex align-items-center btn"
                         v-bind:class="{

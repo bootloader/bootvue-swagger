@@ -169,7 +169,6 @@
         default: ''
       },
       options:{
-        type: String,
         description: 'Input name options',
         default: ''
       }
@@ -224,21 +223,26 @@
         this.focused = false;
         this.$emit("blur", evt);
       },
-      async loadOptions(){
-        if(this.options && (typeof this.options == 'string') && this.options.indexOf('data:') == 0){
-          let json = await import("@/@data/" + this.options.replace("data:","") + ".json");
-          this.selectOptions = json.options.map(function(option){
+      fromOptions(options){
+          this.selectOptions = options.map(function(option){
             if(typeof option == 'string' || typeof option == 'number'){
               return {
                 id : option, name : option
               }
             } else {
               return {
-                id : option.id || option.key || option.code || option.label || option.name, 
-                name : option.name || option.label || option.code || option.key || option.id
+                id : option.id || option.key || option.code || option.value || option.label || option.name, 
+                name : option.name || option.label || option.value || option.code || option.key || option.id
               }
             }
           });
+      },
+      async loadOptions(){
+        if(this.options && (typeof this.options == 'string') && this.options.indexOf('data:') == 0){
+          let json = await import("@/@data/" + this.options.replace("data:","") + ".json");
+          this.fromOptions(json.options);
+        } else if(this.options){
+          this.fromOptions(this.options);
         }
       }
     }

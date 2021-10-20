@@ -91,7 +91,7 @@ import AppWrapper from './AppWrapper';
 		component : () => import('./app-front/AppFront.vue')
 	},
 	"dev" : { 
-		component : () => import('./AppDev.vue')
+		component : () => import('./app-dev/AppDev.vue')
 	}
 },window.CONST.APP);
 

@@ -1,58 +1,37 @@
-$color-facebook              : #4267B2;
-$color-twitter              : #1DA1F2;
-$color-telegram              : #0088cc;
-$color-whatsapp              : #25D366;
-$color-whatsapp-dull              : #10b981;
 $color-instagram-y              : #fdf497;
 $color-instagram-r              : #fd5949;
 $color-instagram-p              : #d6249f;
 $color-instagram-b              : #285AEB;
 
-.bg-facebook {
-    background-color: $color-facebook;
-}
-.bg-twitter {
-    background-color: $color-twitter;
-}
-.bg-telegram {
-    background-color: $color-telegram;
-}
-.bg-whatsapp {
-    background-color: $color-whatsapp;
-}
-.bg-whatsapp-dull {
-    background-color: $color-whatsapp-dull;
-}
-.bg-instagram {
-    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
-}
-.bg-instagram-y {
-    background-color: $color-instagram-y;
-}
-.bg-instagram-r {
-    background-color: $color-instagram-r;
-}
-.bg-instagram-p {
-    background-color: $color-instagram-p;
-}
-.bg-instagram-b {
-    background-color: $color-instagram-b;
-}
+$social-list:(
+    facebook: #4267B2,
+    twitter:  #1DA1F2,
+    telegram:  #0088cc,
+    whatsapp: #25D366,
+    whatsapp-dull: #10b981,
+    google: #dc4a38,
+    dribbble: #f26798,
+    skype : #00aff0,
+    instagram-y : #fdf497,
+    instagram-r : #fd5949,
+    instagram-p : #d6249f,
+    instagram-b : #285AEB,
+);
 
-.text-facebook {
-    color: $color-facebook;
-}
-.text-twitter {
-    color: $color-twitter;
-}
-.text-telegram {
-    color: $color-telegram;
-}
-.text-whatsapp {
-    color: $color-whatsapp;
-}
-.text-whatsapp-dull {
-    color: $color-whatsapp-dull;
+@each $key,$val in $social-list{
+    .speech-bubble--#{$key} {
+      background-color: #{$val};
+    }
+    .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
+        background-color: #{$val};
+    }
+    .text-#{$key} {
+        color: #{$val};
+    }
+  }
+
+.bg-instagram,.bg-instagram\:before::before,.bg-instagram\:after::after  {
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
 }
 .fa-instagram.text-instagram::before {
     //background: -webkit-linear-gradient(#eee, #333);

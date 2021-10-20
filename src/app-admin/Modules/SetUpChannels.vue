@@ -63,11 +63,11 @@
                          Webhook URL</b-button>
                   </b-input-group-prepend>
                   <b-form-input readonly
-                    :value="oneItemView.webhookUrl + oneItemView.callbackPath"
+                    :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath"
                   ></b-form-input>
                   <b-input-group-append>
                     <b-button class="w-20"
-                      v-clipboard:copy="oneItemView.webhookUrl + oneItemView.callbackPath" 
+                      v-clipboard:copy="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
                       variant="outline-success">Copy</b-button>
                   </b-input-group-append>
                 </b-input-group>
@@ -103,7 +103,7 @@
     import MasterView from "../Layout/MasterView.vue";
     import XSimpleForm from "@/@common/custom/components/XSimpleForm.vue";
     import { MyFlags,MyDict,MyConst } from '../../services/global';
-    import {JSONPath} from 'jsonpath-plus'
+    import JsonXPath from '@/@common/utils/JsonXPath'
 
     import VSwatches from 'vue-swatches'
 
@@ -216,28 +216,25 @@
               console.log("oldHash",this.oldHash)
               this.modalInputs = resp.results.map(function (meta) {
                 var key = (meta.path || meta.key)
-                console.log("meta.key",key,JSONPath({ path : '$.'+key,json : item}))
+                console.log("meta.key",key,JsonXPath({ path : '$.'+key,json : item}))
                 return {
                   meta : meta,
                   config : { 
                     key : meta.key,
                     path : meta.path,
-                    value : JSONPath({ path : '$.'+key,json : item})[0] || meta.defaultValue
+                    value : JsonXPath({ path : '$.'+key,json : item})[0] || meta.defaultValue || ""
                   }
                 }
               });
               this.$bvModal.show(this.modelName)
           },
           async onConfigChange({ meta,config }){
-              let callback = (payload, type, obj) => {
-                obj.parent[obj.parentProperty] = config.value;
-                return payload;
-              };
-              const rs = JSONPath({
-                path : '$.' + config.key,
+              var key = (meta.path || meta.key);
+              const rs = JsonXPath({
+                path : '$.' +key,
                 json: this.oneItem,
                 resultType: "all",
-                callback :callback
+                value : config.value
               });
               this.oneItem.__ob__.dep.notify()
           }

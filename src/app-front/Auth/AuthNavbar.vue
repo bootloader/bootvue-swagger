@@ -12,7 +12,7 @@
           class="text-white text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
           to="/"
         >
-          {{$config.PROP_SERVICE_NAME}}
+          <img :src="$config.PROP_LOGO_BG_X_LOGO_W" :alt="$config.PROP_SERVICE_NAME" style="max-height:50px"/>
         </router-link>
         <button
           class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"

@@ -30,6 +30,10 @@ function eq(a,b) {
 		  } else if(!((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent)){
 		     session._tab = "TEAM";
 		  }
+		  
+		  if(!session.active){
+			session._tab = "HISTORY";
+		  }
 		  if(session.lastmsg){
 		      if(session.lastmsg.type == "I"){
 		        session.lastInComingStamp = Math.max(session.lastInComingStamp,session.lastmsg.timestamp);

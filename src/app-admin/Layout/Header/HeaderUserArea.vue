@@ -7,20 +7,24 @@
                      <div class="widget-content-left">
                         <b-dropdown toggle-class="p-0 mr-2" menu-class="dropdown-menu-lg" variant="link" right>
 
-                        <div class="widget-content-left  ml-3 header-user-info">
-                            <div class="widget-heading" v-if="!!MyConst.user" >{{MyConst.user}}</div>
-                            <div class="widget-subheading">System Admin</div>
-                        </div>
-
                             <span slot="button-content">
                                 <div class="icon-wrapper icon-wrapper-alt rounded-circle">
                                     <img width="42" class="rounded-circle" src="@/assets/images/avatars/profile.png" alt="">
                                 </div>
                             </span>
+                            <div class="widget-content-left  ml-3 header-user-info">
+                                <div class="widget-heading" v-if="!!MyConst.user" ><i class="fas fa-user text-muted"/>&nbsp;&nbsp;{{MyConst.user}}</div>
+                                <div class="widget-subheading">System Admin</div>
+                            </div>
+                            <div tabindex="-1" class="dropdown-divider"></div>
+                            <span v-if="!!MyConst.user">
+                                <a  href='/agent' target="_blank"
+                                    type="button" tabindex="0" class="dropdown-item"><i class="fas fa-columns text-muted"/>&nbsp;&nbsp;Agent Panel </a>
+                            </span>
                             <div tabindex="-1" class="dropdown-divider"></div>
                             <span v-if="!!MyConst.user">
                                 <a  :href="MyConst.appPrefix + '/auth/logout'"
-                                    type="button" tabindex="0" class="dropdown-item">Logout</a>
+                                    type="button" tabindex="0" class="dropdown-item"><i class="fas fa-power-off text-muted"/>&nbsp;&nbsp;Logout</a>
                             </span>
                             <span v-else>
                                 <a :href="MyConst.appPrefix + '/auth/logout'" class="dropdown-item" >Login</a>

@@ -64,7 +64,7 @@
         let THIS = this;
         this.refreshTimer = window.setTimeout(function () {
           THIS.refresh();
-        },10000);
+        }, tunnel.connected ? 10000 : 1000);
       }
     },
     created (){
@@ -115,6 +115,7 @@
             THAT.$store.dispatch('ReadSession', [chatSession]);
              THAT.$store.dispatch('RefeshTimer');
         });
+
       this.refresh();
     },
     beforeUnmount (){

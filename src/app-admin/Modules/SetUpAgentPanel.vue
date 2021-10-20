@@ -255,7 +255,12 @@
         methods : {
           async loadItems (){
             let resp = await this.$store.dispatch('GetConfigs');
-            this.table.items = resp.results;
+            this.table.items = resp.results.map(function(item){
+              if(item.config.value  === null || item.config.value  === undefined){
+                  item.config.value  = item.meta.defaultValue;
+              }
+              return item;
+            });
           },
           async saveItem () {
               await this.$store.dispatch('SetConfigs', {
@@ -273,9 +278,6 @@
               this.oneItem = newItem();
               for(var i in item){
                 this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
-              }
-              if(this.oneItem[i].value  === null || this.oneItem[i].value  === undefined){
-                  this.oneItem[i].value  = this.oneItem.meta.defaultValue;
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
