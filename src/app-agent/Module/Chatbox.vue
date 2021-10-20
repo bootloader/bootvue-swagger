@@ -762,7 +762,7 @@
                         this.activeChat = resp.results[0];
                     }
                 }
-                this.loadArchiveMessages();
+                this.loadArchiveMessages(true);
 
             },200),
             selectActiveChat () {
@@ -827,7 +827,7 @@
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id
                 });
-                this.loadArchiveMessages(true);
+                this.onSessionChange();
             },
 
             //DOMS
