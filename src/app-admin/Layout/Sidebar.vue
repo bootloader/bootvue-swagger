@@ -166,6 +166,11 @@
                             },
                             {   
                                 enabled : true,
+                                href: '/app/admins/tmpl/quicktags',
+                                title: 'Quick Tags',
+                            },
+                            {   
+                                enabled : true,
                                 href: '/app/admins/tmpl/quickmedia',
                                 title: 'Quick Media',
                             },

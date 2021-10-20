@@ -99,6 +99,11 @@ export default AppRouter.route({
             component: () => import('./Modules/TmplQuickLabels.vue'),    
         },
         {
+            path : "/app/admins/tmpl/quicktags",
+            name: 'quicktags',
+            component: () => import('./Modules/TmplQuickTags.vue'),    
+        },
+        {
             path : "/app/admins/tmpl/quickmedia",
             name: 'quickmedia',
             component: () => import('./Modules/TmplQuickMedia.vue'),    

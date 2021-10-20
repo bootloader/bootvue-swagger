@@ -26,7 +26,7 @@
                         <i v-if="action.icon" class="mr-2" :class="action.icon" />
                         {{action.label}} 
                     </router-link>
-
+                    
                     <div v-else-if="action.type == 'lane'" class="d-inline-flex align-items-center" style="min-width: 220px;">
                         <v-select  :options="input.lane.options"  class="w-100"
                               v-model="input.lane.value"
@@ -53,10 +53,20 @@
                     </div>
 
                     <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
-                        <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
+                        
+                            <div class="d-inline-flex align-items-center" style="min-width: 180px;">
+                                <v-select :options="input.agents.options"  class="w-100 agent-select"
+                                    v-model="input.agents.value"
+                                    :searchable="false" :clearable="false"
+                                    placeholder="Select Account"
+                                    @input="onAgentSelect"> 
+                                </v-select>
+                            </div>
+                            &nbsp;
+                            <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
                             <i v-if="action.icon" class="" :class="action.icon"/>{{action.label}}</button>
                     </div>
-
+                    
                     <div v-else class="d-inline-flex" >
                         <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn"
                             v-bind:class="{
@@ -125,14 +135,14 @@
                 dateranegeinput : (() => { 
                     if(!this.daterange) return null;
 
-                    var startDate = this.daterange.startDate || hour0(moment()).toDate(),
-                    endDate = this.daterange.endDate || hour24(moment()).toDate();
+                    var startDate = this.daterange.startDate || hour0(moment()).subtract(7,'days').toDate(),
+                    endDate = this.daterange.endDate || hour0(moment()).toDate();
 
                     return {
                         range: {startDate : startDate, endDate : endDate},
                         ranges : {
                             'Today': [ hour0(moment()).toDate(), hour24(moment()).toDate()],
-
+                            'Last 7 Days': [ hour0(moment()).subtract(7,'days').toDate(), hour0(moment()).toDate()],
                             'Yesterday': [hour0(moment().subtract(1,"day")).toDate(),
                                              hour24(moment().subtract(1,"day")).toDate()],
 
@@ -158,7 +168,11 @@
                     search : {
                       value : null,
                     },
-                    contacts : ""
+                    contacts : "",
+                    agents:{
+                      options : [],
+                      value : "TEAMS"
+                    }
                 },
 
 
@@ -184,6 +198,7 @@
                 this.sanitizeDateRange(this.daterange);
             }
             this.loadLanes();
+            this.loadAgentList();
         },
         methods : {
             sanitizeDateRange : function (daterange) {
@@ -197,11 +212,22 @@
                 let resp = await this.$service.getX('/api/options/channels');
                 this.input.lane.options = this.$store.getters.StateApi.OptionsChannels;
             },
+            async loadAgentList(){
+              var resp = await this.$store.dispatch('LoadAgentList');
+                  resp = resp.filter(v=> v !== null)
+              console.log("LoadAgentList",resp);
+              this.input.agents.options = resp;
+            },
             onDateRangeSelect : function (r) {
                 console.log("select",r);
                 var range = this.sanitizeDateRange(r);
                 this.dateranegeinput.range.startDate = range.startDate;
                 this.dateranegeinput.range.endDate = range.endDate;
+            },
+            onAgentSelect : function (r) {
+                this.agents.value = r;
+                this.input.agents.value = r;
+                this.$emit('agentSelect', r);
             },
             onDateRangeUpdate : function (r) {
                 console.log("c_update",r);
@@ -233,6 +259,12 @@
             subheading: String,
             actions : Array,
             daterange : {
+                type: Object,
+                default: function () {
+                    return null;
+                }
+            },
+            agents : {
                 type: Object,
                 default: function () {
                     return null;
@@ -303,6 +335,18 @@
                     padding: 0px !important;
                 }
 
+            }
+            .agent-select{
+                .vs__dropdown-toggle{
+                    background-color: #31a476;
+                    color: #fff;
+                }
+                
+                .vs__selected, .vs__open-indicator{
+                    fill: #fff;
+                    color: #fff;
+                    font-weight: bold;
+                }
             }
 
         }

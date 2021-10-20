@@ -41,7 +41,7 @@ const state = {
   chatsCounter : 1,
   meta : null,
   quickReplies : [],
-  qreps : null,qaxns : null,qlabels : null,qmeds : null
+  qreps : null,qaxns : null,qlabels : null, qtags : null,qmeds : null
 };
 
 const getters = {
@@ -51,6 +51,7 @@ const getters = {
   StateQMeds: (state) => state.qmeds,
   StateQAxns: (state) => state.qaxns,
   StateQLabels: (state) => state.qlabels,
+  StateQTags: (state) => state.qtags,
   StateTeams: (state) => state.teams,
   StateAgents: (state) => state.agents,
   StateMeta: (state) => state.meta
@@ -147,6 +148,12 @@ const actions = {
     return response.data;
   },
 
+  async LoadAgentList() {
+    let response = await axios.get("/admin/fetch-agent-chat-session-list");
+    validateResponse(response);
+    return response.data;
+  },
+
   async CreatQuickReps({ commit },qReps) {
     let UserForm = new FormData()
     UserForm.append('id', qReps.id);
@@ -198,7 +205,7 @@ const actions = {
   },
 
 
-// Quick Tags
+// Quick Labels
   async CreatQuickLabels({ commit },qReps) {
     let UserForm = new FormData()
     UserForm.append('id', qReps.id);
@@ -221,6 +228,32 @@ const actions = {
      });
     validateResponse(response);
     commit("setQLabels", response.data.results);
+  },
+
+
+  // Quick Tags
+  async CreatQuickTags({ commit },qReps) {
+    let UserForm = new FormData()
+    UserForm.append('id', qReps.id);
+    UserForm.append('category', qReps.category);
+    UserForm.append('title', qReps.title);
+    UserForm.append('code', qReps.code);
+    let response = await axios.post("/api/tmpl/quicktags",UserForm);
+    validateResponse(response);
+    commit("setQTags", response.data.results);
+  },
+
+  async LoadQuickTags({ commit }) {
+    let response = await axios.get("/api/tmpl/quicktags");
+    commit("setQTags", response.data.results);
+  },
+
+  async DeleteQuickTags({ commit },qReps) {
+    let response = await axios.delete("/api/tmpl/quicktags?id=" + qReps.id,{
+      data : {id : qReps.id}
+     });
+    validateResponse(response);
+    commit("setQTags", response.data.results);
   },
 
 // Media
@@ -327,6 +360,10 @@ const mutations = {
   setQLabels(state, qlabels) {
     state.qlabels = qlabels;
     formatters.addContactLabels(qlabels);
+  },
+  setQTags(state, qtags) {
+    state.qtags = qtags;
+    formatters.addContactLabels(qtags);
   },
   setQAxns(state, qaxns) {
     state.qaxns = qaxns;

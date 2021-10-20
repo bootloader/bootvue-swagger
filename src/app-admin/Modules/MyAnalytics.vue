@@ -2,7 +2,9 @@
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon
         :actions=actions
-        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate" 
+        :agents=input.agents
+        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate"
+        v-on:agentSelect="agentSelect" 
         @action="onAction" ></page-title>
 
         <div class="card mb-3">
@@ -67,7 +69,7 @@
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
-                                            <div class="widget-heading">Peak Load</div>
+                                            <div class="widget-heading">Peak Time</div>
                                             <div class="widget-subheading"
                                                 v-if="summary.peakLoad && summary.peakLoad.timestamp">
                                                 {{summary.peakLoad.timestamp}}
@@ -152,11 +154,11 @@
                                     <div class="widget-chart-flex">
                                         <div class="fsize-4">
                                             <small class="opacity-5"></small>
-                                            <span>-</span></div>
+                                            <span>{{summary.resolvedConversation | number}}</span></div>
                                     </div>
                                 </div>
                             </div>
-                            <h6 class="widget-subheading mb-0 opacity-5">Abandoned</h6>
+                            <h6 class="widget-subheading mb-0 opacity-5">Resolved Conversation</h6>
                         </div>
                     </div>
                 </div>
@@ -317,8 +319,13 @@
             input : {
                 daterange : {
                     startDate : null,
-                    endDate : null,
+                    endDate : null
+                },
+                agents:{
+                    options : [],
+                    value : "TEAMS"
                 }
+
             },
             actions : [{
               name : "REFRESH", type : "apply", icon : "fa fa-sync"
@@ -332,6 +339,7 @@
                 "totalMsgExchanged": 0,
                 "uniqueConversation": 0,
                 "openConversation": 0,
+                "resolvedConversation": 0,
                 "converDuration": 0,
                 "startLag": 0,
                 "peakLoad": {},
@@ -346,6 +354,7 @@
                     "percentage": 0
                 }
             },
+            agentList : [],
             summaries : [],
             chart : {
                 updated : new Date().getTime(),
@@ -369,7 +378,7 @@
           },
           async loadAnalytics (){
             var resp = await this.$store.dispatch('LoadAnalytics',{
-              "agent": "TEAM",
+              "agent": this.input.agents.value,
               "contactType": {},
               "dateRange1": this.getTime(this.input.daterange.startDate),
               "dateReange2": this.getTime(this.input.daterange.endDate)
@@ -384,7 +393,14 @@
             console.log("this.summariesChart",this.chart)
             this.$forceUpdate();
           },
+          async loadTeams(){
+              var resp = await this.$store.dispatch('LoadAgentList');
+              console.log("LoadAgentList",resp)
+          },
           dateRangeOnUpdate : function (r) {
+            this.loadAnalytics();
+          },
+          agentSelect : function (r) {
             this.loadAnalytics();
           },
           onAction : function (argument) {
