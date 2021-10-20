@@ -429,7 +429,7 @@
     .contact-tabs .nav-link {
         background-color: #00000021;
         border-radius: 0px !important;
-        color: #fff;
+        color: rgba(255, 255, 255, 0.822);
         font-size: 13px;
         cursor: pointer;
     }
@@ -437,6 +437,7 @@
         background-color: #0000006b;
         border-radius: 0px !important;
         color: #fff;
+        font-weight: 500;
     }
     .online-toggle {
         float: right;
