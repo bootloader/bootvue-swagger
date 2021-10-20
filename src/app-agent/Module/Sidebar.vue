@@ -31,7 +31,7 @@
                     <b-nav-item :href="'/admin'" target="_blank">
                         <i class="fas fa-columns">&nbsp;&nbsp;</i>Go to Admin Panel
                     </b-nav-item>
-                    <b-nav-item @click="switchBeta">
+                    <b-nav-item v-if="$config.SETUP.POSTMAN_UI_BETA" @click="switchBeta">
                         <i class="fas fa-magic">&nbsp;&nbsp;</i>Switch to <b-badge >Beta</b-badge>
                     </b-nav-item>
                     <b-nav-item :href="MyConst.appPrefix + '/auth/logout'">
