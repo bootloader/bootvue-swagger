@@ -98,20 +98,6 @@
                             
                         </div>
                         <div class="contact-flags">
-                            <p hidden>
-                                Calc : {{chat._gracestamp | formatStamp}}
-                                LastOut : {{chat.lastResponseStamp | formatStamp}}
-                                LastIn : {{chat.lastInComingStamp | formatStamp}}
-                            </p>
-
-                            <b-popover triggers="hover focus" :target="'x-time-details'+ chat.contactId" >
-                              <template #title><small> 
-                                <div class="text-align-left"> @ {{chat._gracestamp | formatStamp}}</div>
-                                <div v-if="chat.lastResponseStamp" class="text-align-left"> LastOut : {{chat.lastResponseStamp | formatStamp}}</div>
-                                <div v-if="chat.lastInComingStamp" class="text-align-left"> LastIn : {{chat.lastInComingStamp | formatStamp}}</div></small>
-                              </template>
-                            </b-popover>
-
                             <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
                                 :id="'time-details'+ chat.contactId" >{{chat.lastInComingStamp | formatDate}} </span>
 
@@ -468,10 +454,10 @@
 
     @keyframes blinking {
       0% {
-        background-color: #ffffffd1;
+        background-color: #ffffff8e;
       }
       50% {
-        background-color: #ffffff75;
+        background-color: #ffffff27;
       }
       100% {
         background-color: #00000017;
