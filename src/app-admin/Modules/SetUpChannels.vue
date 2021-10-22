@@ -105,8 +105,6 @@
     import { MyFlags,MyDict,MyConst } from '../../services/global';
     import JsonXPath from '@/@common/utils/JsonXPath'
 
-    import VSwatches from 'vue-swatches'
-
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
 
@@ -118,7 +116,7 @@
     }
     export default {
         components: {
-            MasterView,VSwatches,XSimpleForm
+            MasterView,XSimpleForm
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -245,8 +243,5 @@
     }
 </script>
 <style type="text/css">
-  .swatches-fallback-input-class {
-    text-align: center;
-    width: 450px;
-  }
+
 </style>

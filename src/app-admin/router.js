@@ -113,7 +113,11 @@ export default AppRouter.route({
             name: 'pushtemplate',
             component: () => import('./Modules/TmplPushTemplate.vue'),    
         },
-
+        {
+            path : "/app/admins/tmpl/wabatemplate/:mode/:itemId",
+            name: 'pushtemplate',
+            component: () => import('./Modules/TmplHSMwaba.vue'),    
+        },
 
         {
             path : "/app/setup/agent-panel",

@@ -1,8 +1,11 @@
 <template>
     <div>
         <page-title :heading=header.heading :icon=header.icon
-        :actions=actions :subheading=header.subheading @action="onActionINT" 
+        :actions=actions :filters=filters :subheading=header.subheading @action="onActionINT" 
         ref="pageTitle">
+            <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="{apply,...slotScope}"></slot>
+            </template>
           <template #subheading>
               <slot name="header-subheading">
                   {{header.subheading}}      
@@ -36,7 +39,8 @@
               :per-page="table.perPage"
               aria-controls="agent-session-list">        
         </b-pagination>
-        
+      
+
     </div>
 
 </template>
@@ -60,11 +64,21 @@
                   return [];
               }
           },
+          filters : {
+            type : Array,
+              default: function () {
+                  return [];
+              }
+          },
           daterange : {
               type: Object
           },
           table : {
               type: Object
+          },
+          autoApply : {
+              type: Boolean,
+              default : true
           },
           actionShow : {
               type: Object,
@@ -86,7 +100,8 @@
         }),
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
-          this.getItems();
+          if(this.autoApply)
+            this.getItems();
         },
         methods: {
           async getItems (){
@@ -96,6 +111,10 @@
               var name = this.actions[i].param || this.actions[i].type;
               params[name] = this.getInput(name);//?.lane;
             }
+            for(var i in this.filters){
+              var name = this.filters[i].name || this.filters[i].param || this.filters[i].type;
+              params[name] = this.filters[i].value;
+            }
             if(this.table && this.table.api){
               var resp = await this.$service.get(this.table.api,params);
               this.table.items = resp.results;
@@ -104,7 +123,9 @@
               console.log("sessions",resp,this.table )
             }
           },
-
+          async apply(){
+            this.getItems();
+          },
           onActionINT : function (argument) {
             console.log("onAction",argument)
             switch(argument.type){
@@ -116,15 +137,10 @@
               }
             }
           },
-
           getInput : function (type) {
             return this.$refs.pageTitle.getInput(type);
           }
-
         },
-
-
-
     }
 
 

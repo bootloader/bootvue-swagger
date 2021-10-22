@@ -102,20 +102,28 @@ const DataService = {
   	return store.dispatch(a,b,c);
   },
 
+  _GET_X : {},
   async getX(url,query) {
     url = slashUrl(url);
     var pathKey = path2key(url);
     if(store.getters.StateApi[pathKey]){
       return store.getters.StateApi[pathKey];
     }
-    let response = await axios.get(url,{ params : query });
-    
+
+    if(this._GET_X[pathKey]){
+      await this._GET_X[pathKey];
+    }
+
+    let proms = axios.get(url,{ params : query });
+    this._GET_X[pathKey] = proms;
+    let response = await proms;
+    delete this._GET_X[pathKey];
     let responseData = processor(query,response.data);
     if(url.indexOf('/api/') == 0){
       console.log("getX",response.data)
-      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : responseData.results })
+      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : responseData.results });
     }
-    return responseData;
+    return responseData.results;
   },
   async get(url,query,config) {
     url = slashUrl(url);
