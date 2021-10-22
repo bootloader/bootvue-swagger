@@ -3,6 +3,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 
 var CONTACT_LABELS_DICT = {};
+var CONTACT_TAGS_DICT = {};
 
   const isToday = (someDate) => {
     const today = new Date()
@@ -102,12 +103,20 @@ var formatter = {
       CONTACT_LABELS_DICT[labels[i].id] = labels[i];
     }
   },
+  addContactTags : function (tags) {
+    for(var i in tags){
+      CONTACT_TAGS_DICT[tags[i].id] = tags[i];
+    }
+  },
   timespan : timespan,
   hexacode : function (str) {
     return intToRGB(hashCode(str));
   },
   contactLabels : function (id) {
     return (CONTACT_LABELS_DICT[id] || { id : id, title : id});
+  },
+  contactTags : function (id) {
+    return (CONTACT_TAGS_DICT[id] || { id : id, title : id});
   },
   isEmpty : function (argument) {
     return argument === null ||argument === undefined || argument === "" || argument === "null";
@@ -277,6 +286,10 @@ var formatter = {
         return THAT.contactLabels(id).title;
     });
 
+    Vue.filter('contact_tag', function (id) {
+        return THAT.contactTags(id).title;
+    });
+
     Vue.filter('display', function (value,options,key) {
       if(typeof options == "string"){
         var map = formatter.map_from_string(options);
@@ -294,6 +307,9 @@ var formatter = {
           case 'LABEL_ADDED':
           case 'LABEL_REMOVED':
             return THAT.contactLabels(id).title;
+          case 'TAG_ADDED':
+          case 'TAG_REMOVED':
+            return THAT.contactTags(id).title;
           default:
             return id;
         }

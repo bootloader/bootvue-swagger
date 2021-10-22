@@ -110,14 +110,26 @@
                                 body-class="card-body"
                                 dialog-class="card-dialog modal-dialog-sm"
                                 button-size="sm"
+                                @ok="updateStatus"
                                 >  
-
+                            <span class="cat-title">Chat Status</span><br/>
                             <span v-for="(status,s) in MyDict.chatStatus" v-if="status.editable"
-                                class="tag-chat-status-lg" @click="updateStatus(s)"
-                                :class="'tag-chat-status-'+ s + ( s== activeChat.status ? ' tag-chat-status-active' : '')">
+                                class="tag-chat-status-lg" @click="selectStatus(s)"
+                                :class="'tag-chat-status-'+ s + ( s== selectedStatus ? ' tag-chat-status-active' : '')">
                                 {{status.label}}
                             </span>
-
+                            <div v-for="(category, categoryName) in quickTags">
+                                <hr />
+                                <span class="cat-title">{{categoryName}}</span><br/>
+                                <span v-for="tag in quickTags[categoryName]" 
+                                    @click="selectTag(tag)"
+                                    :class="'tag-chat-status-lg tag ' + 
+                                    (tag.selected  ? ' tag-chat-status-active' : '')"
+                                    v-bind:style="{'border-color': '#' + tag.color, 'color': '#' + tag.color}">
+                                    {{tag.title}}
+                                </span>
+                                
+                            </div>
                             </b-modal>
 
                         </div> 
@@ -418,6 +430,9 @@
                 return MyFlags.agent.profileView =='info' && MyFlags.agent.showProfile
             }, profileViewHistory : function (argument) {
                 return MyFlags.agent.profileView =='history' && MyFlags.agent.showProfile
+            },
+            quickTags  : function () {
+                return this.$store.getters.StateQuickTagsSorted;
             }
         },
         data: () => ({
@@ -493,7 +508,9 @@
               replace(value) {
                 return '' + value + ''
               },
-            }]
+            }],
+            selectedTag : {},
+            selectedStatus : null
 
         }),
         created () {
@@ -608,11 +625,26 @@
                 this.sendText(null, media.name, null);
             },
             updateStatus : function (status) {
+                let tags = [];
+                for(var category in this.quickTags){
+                    this.quickTags[category].map(v=>{
+                        v.selected ? tags.push(v) : ""
+                    }) 
+                }
                 this.$store.dispatch('UpdateSessionTags', {
-                    status : status, 
+                    status : this.selectedStatus,
+                    tags,
                     sessionId : this.activeChat.sessionId
                 });
                 this.$refs.chattags.hide();
+            },
+            selectTag : function (tag) {
+                this.quickTags[tag.category].map((v,i)=>{
+                     this.quickTags[tag.category][i].selected = (v.id == tag.id)
+                })
+            },
+            selectStatus : function (status) {
+                this.selectedStatus = status;
             },
             addStickNote :  function (argument) {
                 this.sendText(this.sticky_note,null,"/add_stick_note");
@@ -763,7 +795,7 @@
                     }
                 }
                 this.loadArchiveMessages(true);
-
+                this.defaultSelectedStatusTag();
             },200),
             selectActiveChat () {
                 for(var i in this.$store.getters.StateChats){
@@ -821,7 +853,17 @@
                 }
                 this.scrollToBottom(true);
             },
-
+            defaultSelectedStatusTag(){
+                if(this.activeChat){
+                    this.selectStatus(this.activeChat.status);
+                    for(var category in this.quickTags){
+                    this.quickTags[category].map((v,i)=>{
+                        this.quickTags[v.category][i].selected = (this.activeChat.tagId.indexOf(v.id)!== -1);
+                    })
+                }
+                }
+                
+            },
             async onAssignedToAgent (argument) {
                 var resp = await this.$store.dispatch('AssingToAgent',{
                     sessionId : this.activeChat.sessionId,
@@ -914,7 +956,6 @@
             async fileUploadedAll(e){
                 this.toggleView("CHAT_BOX");
             }
-
         },
 
     }
@@ -1155,7 +1196,13 @@
         outline: 1px #000 !important;
         border-radius: 14px;
     }
-
+    .cat-title{
+        font-size: 10px;
+    }
+    #chattags hr{
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
 </style>
 <style type="text/css">
   .m-chatbox .quick_options span.quick_option_icon {
@@ -1233,5 +1280,9 @@
   .user_assignment .vs__dropdown-option .fa-times-circle {
     color: #929292;
     font-size: smaller;
+  }
+  .tag{
+      background-color: #fff;
+      text-transform: uppercase;
   }
 </style>

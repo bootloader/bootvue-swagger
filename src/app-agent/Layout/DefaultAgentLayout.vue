@@ -125,6 +125,7 @@
         },
         created(){
             this.$store.dispatch('LoadQuickLabels');
+            this.$store.dispatch('LoadQuickTags')
         }
     }
 </script>

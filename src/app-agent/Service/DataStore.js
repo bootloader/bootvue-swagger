@@ -50,9 +50,20 @@ const state = {
   meta : { isOnline : true },
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
+  quickTags:[],
   chatHistory : { sessions : []}
 };
-
+var tagFormat = function (argument) {
+    return {
+        id : argument.id,
+        category : argument.category,
+        title : argument.title,
+        text : argument.title,
+        code : argument.code,
+        color : formatters.hexacode(argument.category),
+        selected:false
+    };
+}
 const getters = {
     //Contacts
   StateChats: (state) => state.chats,
@@ -61,6 +72,15 @@ const getters = {
   StateMediaOptions: (state) => state.mediaOptions,
   StateQuickActions: (state) => state.quickActions,
   StateQuickLabels: (state) => state.quickLabels,
+  StateQuickTags: (state) => state.quickTags,
+  StateQuickTagsSorted: function(state){
+    let sortedObj = {};
+    let tags = state.quickTags;
+    tags.map(v=>{
+        sortedObj[v.category] = sortedObj[v.category] ? [...sortedObj[v.category], v] : [v] 
+    })
+    return sortedObj;
+  },
   StateAgentOptions: (state) => state.agents,
   StateChatHistory: (state) => state.chatHistory.sessions
 };
@@ -286,6 +306,7 @@ const actions = {
         var chat = state.chats[i];
         if(chat.sessionId == chatSession.sessionId){
           chat.status = chatSession.status;
+          chat.tagId = chatSession.tagId;
         }
       }
     }
@@ -378,6 +399,12 @@ const actions = {
     commit("setQuickLabels", response.data);
   },
 
+  async LoadQuickTags({ commit }) {
+    let response = await axios.get("/gallery/map/quick_tags");
+    validateResponse(response);
+    commit("setQuickTags", response.data);
+  },
+
   async AttachQuickLabels({ commit },{ sessionId,labels }) {
     let response = await axios.post("/api/contact/label?sessionId="+sessionId,{
       values : labels
@@ -386,12 +413,20 @@ const actions = {
     //commit("setQuickTags", response.data);
     return response.data;
   },
-
-  async UpdateSessionTags({ commit,dispatch },{ sessionId,status }) {
-    let StatusForm = new FormData();
-    StatusForm.append('status', status)
-    StatusForm.append('sessionId', sessionId)
-    let response = await axios.post("/api/session/status",StatusForm);
+  async AttachQuickTags({ commit },{ sessionId,tags }) {
+    let response = await axios.post("/api/contact/tag?sessionId="+sessionId,{
+      values : tags
+    });
+    validateResponse(response);
+    //commit("setQuickTags", response.data);
+    return response.data;
+  },
+  async UpdateSessionTags({ commit,dispatch },{ sessionId,status,tags }) {
+    let response = await axios.post("/api/session/tag",{
+        sessionId,
+        status,
+        tags
+    });
     validateResponse(response);
     dispatch("ReadSession", response.data.results);
     return response.data;
@@ -512,6 +547,11 @@ const mutations = {
   setQuickLabels(state, quickLabels) {
     formatters.addContactLabels(quickLabels);
     state.quickLabels = quickLabels;
+  },
+  setQuickTags(state, quickTags) {
+    let tags = quickTags.map(v=>tagFormat(v));
+    formatters.addContactTags(tags);
+    state.quickTags = tags;
   },
   setMediaOptions(state, mediaOptions) {
     state.mediaOptions = mediaOptions;
