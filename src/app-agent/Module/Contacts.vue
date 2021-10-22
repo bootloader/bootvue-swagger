@@ -34,7 +34,7 @@
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
               <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY"
-                    class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
+                    class="nav-item" >
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'HISTORY')}" @click="MyFlags.agent.contactsTab = 'HISTORY'">
                     <span class="fa fa-stopwatch"/> History</span>
               </li>
@@ -98,20 +98,6 @@
                             
                         </div>
                         <div class="contact-flags">
-                            <p hidden>
-                                Calc : {{chat._gracestamp | formatStamp}}
-                                LastOut : {{chat.lastResponseStamp | formatStamp}}
-                                LastIn : {{chat.lastInComingStamp | formatStamp}}
-                            </p>
-
-                            <b-popover triggers="hover focus" :target="'x-time-details'+ chat.contactId" >
-                              <template #title><small> 
-                                <div class="text-align-left"> @ {{chat._gracestamp | formatStamp}}</div>
-                                <div v-if="chat.lastResponseStamp" class="text-align-left"> LastOut : {{chat.lastResponseStamp | formatStamp}}</div>
-                                <div v-if="chat.lastInComingStamp" class="text-align-left"> LastIn : {{chat.lastInComingStamp | formatStamp}}</div></small>
-                              </template>
-                            </b-popover>
-
                             <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
                                 :id="'time-details'+ chat.contactId" >{{chat.lastInComingStamp | formatDate}} </span>
 
@@ -443,7 +429,7 @@
     .contact-tabs .nav-link {
         background-color: #00000021;
         border-radius: 0px !important;
-        color: #fff;
+        color: rgba(255, 255, 255, 0.822);
         font-size: 13px;
         cursor: pointer;
     }
@@ -451,6 +437,7 @@
         background-color: #0000006b;
         border-radius: 0px !important;
         color: #fff;
+        font-weight: 500;
     }
     .online-toggle {
         float: right;
@@ -468,10 +455,10 @@
 
     @keyframes blinking {
       0% {
-        background-color: #ffffffd1;
+        background-color: #ffffff8e;
       }
       50% {
-        background-color: #ffffff75;
+        background-color: #ffffff27;
       }
       100% {
         background-color: #00000017;
