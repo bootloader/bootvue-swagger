@@ -856,9 +856,10 @@
             defaultSelectedStatusTag(){
                 if(this.activeChat){
                     this.selectStatus(this.activeChat.status);
+                    let tagId = this.activeChat.tagId || [];
                     for(var category in this.quickTags){
                     this.quickTags[category].map((v,i)=>{
-                        this.quickTags[v.category][i].selected = (this.activeChat.tagId.indexOf(v.id)!== -1);
+                        this.quickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
                     })
                 }
                 }
