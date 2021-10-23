@@ -19,9 +19,6 @@ $social-list:(
 );
 
 @each $key,$val in $social-list{
-    .speech-bubble--#{$key} {
-      background-color: #{$val};
-    }
     .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
         background-color: #{$val};
     }

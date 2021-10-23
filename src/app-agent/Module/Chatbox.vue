@@ -165,10 +165,19 @@
         <hr/>
     </div>  
 
-    <ChatMessages
+    <div v-if="is_SEND_NEW" class="text-center">
+        <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
+        <br/>
+        <span v-for="(quickReply, index) in quickReplies"
+            v-bind:key="index" @click="sendQuickReply(quickReply._message)"
+            v-tooltip="quickReply._message"
+            class="msg_cotainer_smart">  {{quickReply.title}}</span>
+    </div> 
+    <ChatMessages v-else
         :activeChat="activeChat"
         v-show="is_CHAT_BOX"
-    />
+    /> 
+   
 
 </div>
                     </div>
@@ -267,10 +276,15 @@
 
                      <div v-if="activeChat && activeChat.active" class="control-panel">
                         <!--   Contorl Box-->
+
                      </div>  
-
-
-                    <div class="input-group my-input-section" 
+                     <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW" class="control-panel text-center">
+                            <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
+                            @click="sendNewMessage(true)"> 
+                                Send Message
+                            </b-button>
+                     </div>  
+                    <div class="input-group my-input-section"  v-if="activeChat && activeChat.active"
                         v-bind:class="{ invisible : !isActionable}"
                         >
                         <div class="input-group-prepend">
@@ -301,6 +315,7 @@
                             class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
                         </div>
                     </div>
+
                 </div>
 
 
@@ -423,6 +438,10 @@
             is_UPLOAD_MEDIA : function (argument) {
                 return this.winMode == "UPLOAD_MEDIA"
             },
+            is_SEND_NEW : function (argument) {
+                return (this.activeChat.contact.sessionId == this.$route.params.sessionId)
+                    && this.isSendNewMessage && !this.activeChat.active;
+            },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
             },
@@ -451,6 +470,7 @@
             assignedToAgent : null,
             activeChat : null,
             chatsVersionLocal : 0,
+            isSendNewMessage : false,
 
             winMode : null,
 
@@ -558,6 +578,7 @@
                 //this.loadChat();
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
+                this.sendNewMessage();
             }
         },
         methods: {
@@ -655,6 +676,23 @@
                 this.sendText("/exit_chat");
                 this.$router.push("/app/chat")
             },
+            sendNewMessage(init){
+                this.isSendNewMessage = false;
+                console.log("sendNewMessage",init,this.$route.params.sendNewMessage);
+                if(init || this.$route.params.sendNewMessage){
+                    if(this.activeChat.contact.sessionId != this.$route.params.sessionId){
+                        this.$router.push({
+                            name: 'defAgentView', 
+                                params: { 
+                                    sessionId : this.activeChat.contact.sessionId,
+                                    sendNewMessage : true
+                                } 
+                        });
+                    } else {
+                        this.isSendNewMessage = !this.activeChat.active;
+                    }
+                }
+            },
             showContactProfile : function (type, type2) {
                 if(typeof type !='string'){
                     type = "info";
@@ -668,7 +706,6 @@
                         } 
                     }) 
                 }
-
                 if(false  && MyFlags.agent.profileView == type ){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                     if(!MyFlags.agent.showProfile){
@@ -858,7 +895,7 @@
                     this.selectStatus(this.activeChat.status);
                     for(var category in this.quickTags){
                     this.quickTags[category].map((v,i)=>{
-                        this.quickTags[v.category][i].selected = (this.activeChat.tagId.indexOf(v.id)!== -1);
+                        this.quickTags[v.category][i].selected = (this.activeChat.tagId && this.activeChat.tagId.indexOf(v.id)!== -1);
                     })
                 }
                 }
