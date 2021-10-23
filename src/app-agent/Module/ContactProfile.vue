@@ -110,7 +110,7 @@
 
             <div v-if="activeChat" id="listGroups">
                 <div v-if="activeChat && activeChat.contact" class="contact_labels" >
-                    <span v-for="label in labels" class="badge badge-light" >
+                    <span v-for="label in labels" class="badge badge-light" v-bind:key="label.id" >
                         <span v-bind:style="{ 'background-color' : '#'+label.color }">&nbsp;</span>
                         {{label.title}}
                     </span>  
