@@ -276,7 +276,6 @@
 
                      <div v-if="activeChat && activeChat.active" class="control-panel">
                         <!--   Contorl Box-->
-
                      </div>  
                      <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW" class="control-panel text-center">
                             <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
@@ -315,7 +314,6 @@
                             class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
                         </div>
                     </div>
-
                 </div>
 
 
@@ -706,6 +704,7 @@
                         } 
                     }) 
                 }
+
                 if(false  && MyFlags.agent.profileView == type ){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                     if(!MyFlags.agent.showProfile){
