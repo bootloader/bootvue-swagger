@@ -2,10 +2,13 @@
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon
         :actions=actions
-        :agents=input.agents
+        :filters=filters
         :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate"
-        v-on:agentSelect="agentSelect" 
-        @action="onAction" ></page-title>
+        @action="onAction" >
+            <template #filter(agent)="{filter}">
+                <MyAgentSelect v-model="filter.value" @change="agentSelect"> </MyAgentSelect>
+            </template>
+        </page-title>
 
         <div class="card mb-3">
             <div class="no-gutters row">
@@ -227,7 +230,8 @@
 </template>
 
 <script>
-
+    import vSelect from 'vue-select'
+    import 'vue-select/dist/vue-select.css';
     import PageTitle from "..//Components/PageTitle.vue";
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
@@ -247,6 +251,7 @@
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import lineeg from './../Charts/MyLine'
     import {newChartData,updateChartData} from './../Charts/MyLine'
+import MyAgentSelect from '../../@common/custom/components/MyAgentSelect.vue';
 
     library.add(
         faTrashAlt,
@@ -293,6 +298,8 @@
             'font-awesome-icon': FontAwesomeIcon,
            // chart1,chart2,chart3,
             lineeg,
+            vSelect,
+                MyAgentSelect
         },
         data: () => ({
             heading: 'Analytics Dashboard',
@@ -320,16 +327,18 @@
                 daterange : {
                     startDate : null,
                     endDate : null
-                },
-                agents:{
-                    options : [],
-                    value : "TEAMS"
                 }
-
             },
             actions : [{
               name : "REFRESH", type : "apply", icon : "fa fa-sync"
             }],
+            filters : [
+                {
+                    name : "agent", 
+                    type : "agentSelect", 
+                    options:[], 
+                    value: ""
+                }],
             summary : {
                 "contactType": null,
                 "filter": null,
@@ -360,7 +369,10 @@
                 updated : new Date().getTime(),
                 summary : newChartData("summary0"),
                 summaries : newChartData("summaries0")
-            } 
+            },
+            model: {
+                agent: '',
+            },
         }),
         computed :  {
             // summaryChart : function (argument) {
@@ -378,7 +390,7 @@
           },
           async loadAnalytics (){
             var resp = await this.$store.dispatch('LoadAnalytics',{
-              "agent": this.input.agents.value,
+              "agent": this.filters[0].value ? this.filters[0].value : "TEAM",
               "contactType": {},
               "dateRange1": this.getTime(this.input.daterange.startDate),
               "dateReange2": this.getTime(this.input.daterange.endDate)
@@ -393,14 +405,11 @@
             console.log("this.summariesChart",this.chart)
             this.$forceUpdate();
           },
-          async loadTeams(){
-              var resp = await this.$store.dispatch('LoadAgentList');
-              console.log("LoadAgentList",resp)
-          },
           dateRangeOnUpdate : function (r) {
             this.loadAnalytics();
           },
-          agentSelect : function (r) {
+          agentSelect : function (v) {
+            this.filters[0].value = v;
             this.loadAnalytics();
           },
           onAction : function (argument) {
@@ -413,8 +422,9 @@
                 console.log("NoMapping",argument) 
               }
             }
-          },
+          }
         },
+        
 
     }
 

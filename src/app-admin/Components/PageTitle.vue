@@ -141,14 +141,15 @@
                 dateranegeinput : (() => { 
                     if(!this.daterange) return null;
 
-                    var startDate = this.daterange.startDate || hour0(moment()).subtract(7,'days').toDate(),
-                    endDate = this.daterange.endDate || hour0(moment()).toDate();
+                    var startDate = this.daterange.startDate || hour0(moment().subtract(7,"day")).toDate(),
+                    endDate = this.daterange.endDate || hour24(moment()).toDate();
 
                     return {
                         range: {startDate : startDate, endDate : endDate},
                         ranges : {
                             'Today': [ hour0(moment()).toDate(), hour24(moment()).toDate()],
-                            'Last 7 Days': [ hour0(moment()).subtract(7,'days').toDate(), hour0(moment()).toDate()],
+                            'Last 7 Days': [hour0(moment().subtract(7,"day")).toDate(), 
+                                                hour24(moment()).toDate()],
                             'Yesterday': [hour0(moment().subtract(1,"day")).toDate(),
                                              hour24(moment().subtract(1,"day")).toDate()],
 
@@ -175,10 +176,6 @@
                       value : null,
                     },
                     contacts : "",
-                    agents:{
-                      options : [],
-                      value : "TEAMS"
-                    }
                 },
 
 
@@ -204,7 +201,6 @@
                 this.sanitizeDateRange(this.daterange);
             }
             this.loadLanes();
-            this.loadAgentList();
         },
         methods : {
             sanitizeDateRange : function (daterange) {
@@ -218,22 +214,11 @@
                 let resp = await this.$service.getX('/api/options/channels');
                 this.input.lane.options = this.$store.getters.StateApi.OptionsChannels;
             },
-            async loadAgentList(){
-              var resp = await this.$store.dispatch('LoadAgentList');
-                  resp = resp.filter(v=> v !== null)
-              console.log("LoadAgentList",resp);
-              this.input.agents.options = resp;
-            },
             onDateRangeSelect : function (r) {
                 console.log("select",r);
                 var range = this.sanitizeDateRange(r);
                 this.dateranegeinput.range.startDate = range.startDate;
                 this.dateranegeinput.range.endDate = range.endDate;
-            },
-            onAgentSelect : function (r) {
-                this.agents.value = r;
-                this.input.agents.value = r;
-                this.$emit('agentSelect', r);
             },
             onDateRangeUpdate : function (r) {
                 console.log("c_update",r);
@@ -271,12 +256,7 @@
                     return null;
                 }
             },
-            agents : {
-                type: Object,
-                default: function () {
-                    return null;
-                }
-            },
+
             actionShow : {
                 type: Object,
                 default: function () {
@@ -343,19 +323,10 @@
                 }
 
             }
-            .agent-select{
-                .vs__dropdown-toggle{
-                    background-color: #31a476;
-                    color: #fff;
-                }
-                
-                .vs__selected, .vs__open-indicator{
-                    fill: #fff;
-                    color: #fff;
-                    font-weight: bold;
-                }
-            }
-
+            
+        }
+        .filter-wrapper{
+            float: left;
         }
     }
 </style>
