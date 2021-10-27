@@ -168,12 +168,12 @@
                             {
                                 enabled: true,
                                 href: '/app/admins/tmpl/quicklabels',
-                                title: 'Quick Labels',
+                                title: 'Customer Labels',
                             },
                             {   
                                 enabled : true,
                                 href: '/app/admins/tmpl/quicktags',
-                                title: 'Quick Tags',
+                                title: 'Session Tags',
                             },
                             {   
                                 enabled : true,

@@ -220,12 +220,11 @@
                 var THAT = this;
                 if(this.$route.params.contactId && this.activeChat)
                     return (THAT.activeChat.contact.labelId || []).map(function (labelId) {
-                        return tagFormat(THAT.$store.getters.StateQuickLabels.filter(t => {
+                        let label = THAT.$store.getters.StateQuickLabels.filter(t => {
                             return t.id == labelId;
-                        })[0] || {
-                            id : labelId
-                        });
-                    });
+                        })[0];
+                        return label ? tagFormat(label) : null;
+                    }).filter(v=>v);
                 return [];
             },
             quickLabels : function(){ 
