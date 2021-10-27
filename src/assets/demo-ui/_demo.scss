@@ -256,7 +256,7 @@
   height: 100%!important;
 }
 
-.tag-chat-status,.tag-chat-status-lg {
+.tag-chat-status,.tag-chat-status-lg,.tag-chat-status-sm {
     background: #820000;
     color: #fff;
     border-radius: 6px;
@@ -280,6 +280,12 @@
     font-weight: 400;
     line-height: 20px!important;
     padding: 0 10px;
+}
+.tag-chat-status-sm {
+  font-size: 9px;
+  font-weight: 400;
+  line-height: 13px!important;
+  padding: 0px 5px;
 }
 .tag-chat-status-active {
     font-weight: 600;

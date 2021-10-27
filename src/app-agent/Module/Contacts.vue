@@ -70,14 +70,7 @@
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.name || chat.contactId}}</span>
 
-                            <div v-if="MyConst.config.CHAT_TAG_ENABLED" data-v-5dda926d="" class="chat_tags">
-                                <div data-v-5dda926d="" class="chat_tags text-align-left">
-                                    <span data-v-5dda926d="" class="tag-chat-status" :class="'tag-chat-status-' + chat.status">
-                                        {{chat.status+''}}
-                                    </span>
-                                </div>
-                            </div>
-                            <span v-else-if="chat.lastmsg" class="font-preview"
+                            <span v-if="chat.lastmsg" class="font-preview"
                                 :class="{
                                     'text-blue' : $global.MyFunc.isOutbound(chat.lastmsg.type)
                                 }"
@@ -95,7 +88,14 @@
 
                                 <span v-else>{{chat.lastmsg.text}}</span>
                             </span>
-                            
+                            <div v-if="MyConst.config.CHAT_TAG_ENABLED" data-v-5dda926d="" class="chat_tags">
+                                <div data-v-5dda926d="" class="chat_tags text-align-left">
+                                    <span data-v-5dda926d="" class="tag-chat-status-sm" :class="'tag-chat-status-' + chat.status">
+                                        {{chat.status+''}}
+                                    </span>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="contact-flags">
                             <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
@@ -375,6 +375,12 @@
         max-width: 187px;
         overflow: hidden;
         /*font-weight: 300;*/
+    }
+    .contact-text .chat_tags {
+        line-height: 13px;
+    }
+    .contact-text .chat_tags .tag-chat-status-sm {
+        background: rgba(255, 255, 255, 0.274)!important;
     }
     .contact_waiting  .contact-text .font-name{
         font-weight: 500;
