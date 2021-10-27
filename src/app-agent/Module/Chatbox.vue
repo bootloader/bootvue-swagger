@@ -107,7 +107,7 @@
                                >
                                 {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
                             </span>
-                            <span v-else class="tag-chat-status tag-lighter" v-b-modal.chattags>+</span>
+                            <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
                           <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
