@@ -159,7 +159,7 @@
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
             <div><small>Channel Details</small></div>
-            <i class="contact_type fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
+            <i class="contact_type" v-bind:class="MyDict.socialPrefix(activeChat.contactType,'fa')"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
         </div>
         <hr/>
@@ -268,7 +268,7 @@
 
                 <div class="card-footer">
                     <slide-up-down :active="is_QUICK_ACTIONS && isActionable" :duration="200" class="action-events">
-                            <span v-if="quickActions" v-for="quickAction in quickActions" 
+                            <span v-if="quickActions" v-for="quickAction in quickActions" v-bind:key="'qa-'+quickAction.action"
                              @click="sendQuickAction(quickAction.action)"
                             class="msg_cotainer_smart">  {{quickAction.title}}</span>
                          <hr/>
