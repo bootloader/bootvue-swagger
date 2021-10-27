@@ -151,7 +151,7 @@
                         icon: 'pe-7s-network fa fa-users',
                     },
                     {
-                        title: 'Quick Templates',
+                        title: 'Quick Response',
                         icon: 'pe-7s-browser fa fa-edit',
                         enabled: true,
                         child: [
@@ -183,19 +183,19 @@
                         ],
                     },
                     {
-                        title: 'HSM Templates',
+                        title: 'Template Messages',
                         icon: 'pe-7s-browser fa fa-edit',
                         enabled: true,
                         child: [
                             {
                                 enabled: true,
                                 href: '/app/admins/tmpl/pushtemplate/view/all',
-                                title: 'Push Templates',
+                                title: 'HSM Templates',
                             },
                             {
                                 enabled: true,
                                 href: '/app/admins/tmpl/wabatemplate/view/all',
-                                title: 'WABA Templates',
+                                title: 'WABA Approved',
                             },
                             {
                                 href: '/pages/register-boxed',

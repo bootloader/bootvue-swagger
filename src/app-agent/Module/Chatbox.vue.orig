@@ -169,7 +169,7 @@
         <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
         <br/>
         <span v-for="(quickReply, index) in quickReplies"
-            v-bind:key="index" @click="sendNewMessage(quickReply._message)"
+            v-bind:key="index" @click="sendQuickReply(quickReply._message)"
             v-tooltip="quickReply._message"
             class="msg_cotainer_smart">  {{quickReply.title}}</span>
     </div> 
@@ -276,10 +276,11 @@
 
                      <div v-if="activeChat && activeChat.active" class="control-panel">
                         <!--   Contorl Box-->
+
                      </div>  
                      <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW" class="control-panel text-center">
                             <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
-                            @click="initNewMessage(true)"> 
+                            @click="sendNewMessage(true)"> 
                                 Send Message
                             </b-button>
                      </div>  
@@ -314,6 +315,7 @@
                             class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
                         </div>
                     </div>
+
                 </div>
 
 
@@ -576,7 +578,7 @@
                 //this.loadChat();
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
-                this.initNewMessage();
+                this.sendNewMessage();
             }
         },
         methods: {
@@ -615,10 +617,10 @@
                 //activeChat.messages.push(msg);
                 this.toggleView("CHAT_BOX");
                 this.scrollToBottom();
-                let resp;
+
                 try {
                     console.log("beforeSendcta")
-                    resp = await this.$store.dispatch('SendChat', msg);
+                    var resp = await this.$store.dispatch('SendChat', msg);
                     console.log("resp",resp)
                     // msg.messageId = resp.results[0].messageId;
                 } catch(e){
@@ -627,7 +629,6 @@
                 }
                 this.toggleView("CHAT_BOX");
                 this.scrollToBottom(true);
-                return resp;
             },
             onSendMessage :  function () {
                 this.sendText(this.message_text,this.is_QUICK_MEDIA ?   this.selectedMedia : null);
@@ -643,10 +644,6 @@
             },
             sendQuickMedia : function (media) {
                 this.sendText(null, media.name, null);
-            },
-            async sendNewMessage(text){
-                let resp = await this.sendText(text, null, null);
-                console.log("sendNewMessageResp",resp);
             },
             updateStatus : function (status) {
                 let tags = [];
@@ -679,7 +676,7 @@
                 this.sendText("/exit_chat");
                 this.$router.push("/app/chat")
             },
-            initNewMessage(init){
+            sendNewMessage(init){
                 this.isSendNewMessage = false;
                 console.log("sendNewMessage",init,this.$route.params.sendNewMessage);
                 if(init || this.$route.params.sendNewMessage){
@@ -709,7 +706,6 @@
                         } 
                     }) 
                 }
-
                 if(false  && MyFlags.agent.profileView == type ){
                     MyFlags.agent.showProfile = !MyFlags.agent.showProfile
                     if(!MyFlags.agent.showProfile){
@@ -897,9 +893,14 @@
             defaultSelectedStatusTag(){
                 if(this.activeChat){
                     this.selectStatus(this.activeChat.status);
+                    let tagId = this.activeChat.tagId || [];
                     for(var category in this.quickTags){
                     this.quickTags[category].map((v,i)=>{
+<<<<<<< HEAD
                         this.quickTags[v.category][i].selected = (this.activeChat.tagId && this.activeChat.tagId.indexOf(v.id)!== -1);
+=======
+                        this.quickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
+>>>>>>> deploy-app
                     })
                 }
                 }

@@ -104,7 +104,7 @@
             this.getItems();
         },
         methods: {
-          async getItems (){
+          async getItems (additionalParams){
             var params = {};
             for(var i in this.actions){
               console.log("actions",i,this.actions[i]);
@@ -114,6 +114,9 @@
             for(var i in this.filters){
               var name = this.filters[i].name || this.filters[i].param || this.filters[i].type;
               params[name] = this.filters[i].value;
+            }
+            for(var key in additionalParams){
+              params[key] = additionalParams[key];
             }
             if(this.table && this.table.api){
               var resp = await this.$service.get(this.table.api,params);

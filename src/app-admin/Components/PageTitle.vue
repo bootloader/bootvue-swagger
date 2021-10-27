@@ -16,13 +16,15 @@
                 </div>
             </div>
             <div class="page-title-actions">
-        <span v-for="(filter,index) in filters" v-bind:key="'aaa'+index" class="filter-wrapper">
+
+        <span v-for="(filter,index) in filters" v-bind:key="'filter-'+index" class="filter-wrapper">
               <slot :name="'filter('+filter.name+')'"  v-bind="{filter}"  >
                     <span  v-if="!filter.hidden" >
                     </span>
               </slot>
         </span>
-        <span v-for="(action,index) in actions" v-bind:key="'aaa'+index" class="action-wrapper">
+
+        <span v-for="(action,index) in actions" v-bind:key="'action-'+index" class="action-wrapper">
               <slot :name="'action('+action.name+')'"  v-bind="{action}"  >
                     <span  v-if="!action.hidden && actionShow[action.name]!==false" >
                         <router-link v-if="action.link" tag="button" :to="action.link"
@@ -286,6 +288,7 @@
 </style>
 <style lang="scss">
     .page-title-actions {
+        display: flex;
         .action-wrapper {
             margin-left: 3px;
             display: block;
@@ -327,6 +330,8 @@
         }
         .filter-wrapper{
             float: left;
+            display: flex;
+            margin-left: 5px;
         }
     }
 </style>

@@ -12,24 +12,11 @@
             <template #filter(channelId)="{apply,filter}">
                 <MyChannelSelect v-model="filter.value" @change="apply"> </MyChannelSelect>
             </template>
-            <template #cell(details)="row">
-                <i
-                    :class="[
-                        $global.MyDict.socialPrefix(row.item.contactType, 'fa'),
-                    ]"></i>
-                &nbsp;{{ row.item.lane }}
+            <template #filter(sync)="{apply,filter}">
+                <b-button variant="success" class="fa fa-sync" @click="filter.value=true;apply()"> </b-button>
             </template>
-            <template #cell(disabled)="row">
-                {{ row.item.disabled | display('true:Yes;false:No') }}
-            </template>
-            <template #cell(actions)="row">
-                <b-button
-                    size="sm"
-                    @click="editItem(row.item, row.index, $event.target)"
-                    v-tooltip="row.item.message"
-                    variant="outline-primary">
-                    <i class="fas fa-edit"></i>
-                </b-button>
+            <template #cell(row_actions)="{item}">
+                <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"/>
             </template>
         </master-view>
     </div>
@@ -38,39 +25,40 @@
 <script>
     import MasterView from '../Layout/MasterView.vue'
     import MyChannelSelect from '@/@common/custom/components/MyChannelSelect.vue'
+    import MyHSMTmplSelect from '@/@common/custom/components/MyHSMTmplSelect.vue'
     export default {
         components: {
             MasterView,
-            MyChannelSelect,
+            MyChannelSelect,MyHSMTmplSelect
         },
         data: () => ({
             filters: [
+                {
+                    name: 'sync',
+                    label: 'Sync',
+                    value : false
+                },
                 {
                     label: 'Select Account',
                     name: 'channelId',
                     type: 'lane',
                     value : "",
-                    selectFirst: true,
-                },
-                {
-                    label: 'Search',
-                    type: 'apply',
-                    selectFirst: true,
                 },
             ],
             table: {
                 fields: [
-                    { key: 'category', label: 'category' },
-                    { key: 'name', label: 'name' },
-                    { key: 'namespace', label: 'namespace' },
-                    { key: 'status', label: 'status' },
-                    { key: 'language', label: 'language' },
+                    { key: 'template.category', label: 'category' },
+                    { key: 'template.name', label: 'name' },
+                    { key: 'template.namespace', label: 'namespace' },
+                    { key: 'template.status', label: 'status' },
+                    { key: 'template.language', label: 'language' },
+                    { key: 'row_actions', label: 'Linked HSM Template' },
                 ],
                 items: [],
                 perPage: 25,
                 currentPage: 1,
                 rows: 0,
-                api: 'api/tmpl/waba_templates',
+                api: 'api/tmpl/hsm/waba_templates',
             },
             modelName: 'MODAL_CHANNELS',
             modalInputs: [],
@@ -105,6 +93,14 @@
                         console.log('NoMapping', argument)
                 }
             },
+            async onChange(row,field){
+                if(field == "hsmTemplateId"){
+                    await this.$service.submit('api/tmpl/hsm/link',{
+                        templateId : row.id,
+                        hsmTemplateId : row.hsmTemplateId
+                    })
+                }
+            }
         },
     }
 </script>

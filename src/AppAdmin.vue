@@ -67,6 +67,7 @@ formatters.validators.forEach(ruleName => {
 
 <style lang="scss">
   @import "./assets/base.scss";
+  @import '@/assets/utils/_popular.scss';
   .v-input-error {
     color : red;
   }

@@ -25,7 +25,7 @@
                                   </template>
                                   <template #option="{ contactType, lane }">
                                        <span class="contact_type fab"
-                                              v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}</em>
+                                              v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}
                                   </template>
                           </v-select>
                       </ValidationProvider>

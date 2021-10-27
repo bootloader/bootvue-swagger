@@ -57,6 +57,7 @@
     }),
     methods : {
       async refresh(){
+        //return;
         window.clearTimeout(this.refreshTimer);
         if(!visibility.isSupported() || !visibility.hidden()){
           await this.$store.dispatch("RefeshSession");
@@ -96,7 +97,7 @@
             THAT.$store.dispatch('RefeshTimer');
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
             console.log("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
-            THAT.$store.dispatch('AddChat', testresponse);
+             THAT.$store.dispatch('AddChat', testresponse);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/dept/onassign-__DEPT__", function(testresponse){
             console.log("/dept/onassign-__DEPT__",testresponse);

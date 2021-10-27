@@ -107,6 +107,7 @@ var tunnelClient = (function(win) {
 		on : function subscribe(topic, fun) {
 			var THAT = this;
 			let sub = function(greeting) {
+				console.log("TunnelClient:",topic,greeting);
 				fun(JSON.parse(greeting.body).data, topic, greeting);
 			};
 			onConnect().then(function(linkId) {

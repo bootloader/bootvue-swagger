@@ -106,12 +106,13 @@ const DataService = {
   async getX(url,query) {
     url = slashUrl(url);
     var pathKey = path2key(url);
-    if(store.getters.StateApi[pathKey]){
-      return store.getters.StateApi[pathKey];
-    }
 
     if(this._GET_X[pathKey]){
       await this._GET_X[pathKey];
+    }
+
+    if(store.getters.StateApi[pathKey]){
+      return store.getters.StateApi[pathKey];
     }
 
     let proms = axios.get(url,{ params : query });
@@ -119,7 +120,7 @@ const DataService = {
     let response = await proms;
     delete this._GET_X[pathKey];
     let responseData = processor(query,response.data);
-    if(url.indexOf('/api/') == 0){
+    if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",response.data)
       store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : responseData.results });
     }
