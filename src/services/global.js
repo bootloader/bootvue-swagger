@@ -26,7 +26,7 @@ export const MyConst = {
 		AGENT_CHAT_INIT : false
 	}, window.CONST.CONFIG || window.CONST.CONFG,window.CONST.dev ? {
 		//CHAT_TAG_ENABLED : false,
-		AGENT_CHAT_INIT : true,
+		//AGENT_CHAT_INIT : true,
 	}: {})),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",

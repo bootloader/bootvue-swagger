@@ -173,10 +173,15 @@
     <div v-if="is_SEND_NEW" class="text-center">
         <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
         <br/>
-        <span v-for="(quickReply, index) in quickReplies"
-            v-bind:key="index" @click="sendNewMessage(quickReply._message)"
-            v-tooltip="quickReply._message"
-            class="msg_cotainer_smart">  {{quickReply.title}}</span>
+        <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
+        <br/>
+        <ForEachOption options="/api/options/tmpl/hsm"> 
+            <template #option={option}>
+                <span  @click="sendNewMessage(option)" class="msg_cotainer_smart">
+                    {{option.desc}} ({{option.lang}})
+                </span>
+            </template>
+        </ForEachOption>
     </div> 
     <ChatMessages v-else
         :activeChat="activeChat"
@@ -281,7 +286,8 @@
                      <div v-if="activeChat && activeChat.active" class="control-panel">
                         <!--   Contorl Box-->
                      </div>  
-                     <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW" class="control-panel text-center">
+                     <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
+                            class="control-panel text-center">
                             <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
                             @click="initNewMessage(true)"> 
                                 Send Message
@@ -370,7 +376,8 @@
     import Loading from 'vue-loading-overlay';
     import tunnel from './../../services/tunnel';
     import mustache from 'mustache';
-    import SlideUpDown from 'vue-slide-up-down'
+    import SlideUpDown from 'vue-slide-up-down';
+    import ForEachOption from '@/@common/custom/components/ForEachOption.vue';
 
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
@@ -385,6 +392,7 @@
     import { TextareaEditor } from "@textcomplete/textarea";
 
     import ChatMessages from "./ChatMessages";
+    
 
     var sampleJson = {
         contact : {
@@ -399,7 +407,8 @@
         components: {
             'font-awesome-icon': FontAwesomeIcon,
             Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,
-            ChatMessages
+            ChatMessages,
+            ForEachOption
         },
         computed : {
             inputTextEnabled : function (argument) {
@@ -647,9 +656,20 @@
             sendQuickMedia : function (media) {
                 this.sendText(null, media.name, null);
             },
-            async sendNewMessage(text){
-                let resp = await this.sendText(text, null, null);
+            async sendNewMessage(option){
+                var msg = this.prepareMessage(null,null, null, true);
+                msg.templateId = option.id;
+                let resp = await this.$store.dispatch('SendChat', msg);
                 console.log("sendNewMessageResp",resp);
+                this.isSendNewMessage = false;
+                this.toggleView("CHAT_BOX");
+                this.scrollToBottom(true);
+                this.$router.push({
+                    name: 'defAgentView', 
+                        params: { 
+                            sessionId : resp.results[0].sessionId
+                        } 
+                });
             },
             updateStatus : function (status) {
                 let tags = [];

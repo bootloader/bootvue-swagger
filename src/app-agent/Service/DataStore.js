@@ -258,7 +258,8 @@ const actions = {
                         message : msg.text,
                         template : msg.template,
                         sessionId : msg.sessionId,
-                        template : msg.template,action : msg.action,
+                        templateId : msg.templateId,
+                        action : msg.action,
                         messageIdRef : msg.messageIdRef
                     });
     validateResponse(response);
