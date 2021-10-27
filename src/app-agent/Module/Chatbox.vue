@@ -101,7 +101,12 @@
                                 v-b-modal.chattags >
                                 {{activeChat.status}}
                             </span>
-
+                            <span v-if="activeChat && activeChat.tagId &&  activeChat.tagId.length"
+                                  class="tag-chat-status tag-lighter"
+                                  v-b-modal.chattags
+                               >
+                                {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
+                            </span>
                           <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
@@ -118,10 +123,10 @@
                                 :class="'tag-chat-status-'+ s + ( s== selectedStatus ? ' tag-chat-status-active' : '')">
                                 {{status.label}}
                             </span>
-                            <div v-for="(category, categoryName) in quickTags">
+                            <div v-for="(category, categoryName) in sortedQuickTags">
                                 <hr />
                                 <span class="cat-title">{{categoryName}}</span><br/>
-                                <span v-for="tag in quickTags[categoryName]" 
+                                <span v-for="tag in sortedQuickTags[categoryName]" 
                                     @click="selectTag(tag)"
                                     :class="'tag-chat-status-lg tag ' + 
                                     (tag.selected  ? ' tag-chat-status-active' : '')"
@@ -176,8 +181,7 @@
     <ChatMessages v-else
         :activeChat="activeChat"
         v-show="is_CHAT_BOX"
-    /> 
-   
+    />
 
 </div>
                     </div>
@@ -448,7 +452,7 @@
             }, profileViewHistory : function (argument) {
                 return MyFlags.agent.profileView =='history' && MyFlags.agent.showProfile
             },
-            quickTags  : function () {
+            sortedQuickTags  : function () {
                 return this.$store.getters.StateQuickTagsSorted;
             }
         },
@@ -527,7 +531,7 @@
                 return '' + value + ''
               },
             }],
-            selectedTag : {},
+            selectedTag : [],
             selectedStatus : null
 
         }),
@@ -576,7 +580,6 @@
                 //this.loadChat();
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
-                this.initNewMessage();
             }
         },
         methods: {
@@ -650,8 +653,8 @@
             },
             updateStatus : function (status) {
                 let tags = [];
-                for(var category in this.quickTags){
-                    this.quickTags[category].map(v=>{
+                for(var category in this.sortedQuickTags){
+                    this.sortedQuickTags[category].map(v=>{
                         v.selected ? tags.push(v) : ""
                     }) 
                 }
@@ -663,8 +666,9 @@
                 this.$refs.chattags.hide();
             },
             selectTag : function (tag) {
-                this.quickTags[tag.category].map((v,i)=>{
-                     this.quickTags[tag.category][i].selected = (v.id == tag.id)
+                this.sortedQuickTags[tag.category].map((v,i)=>{
+                     this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id);
+                     v.id == tag.id ? this.selectedTag.push(v) : "";
                 })
             },
             selectStatus : function (status) {
@@ -897,9 +901,10 @@
             defaultSelectedStatusTag(){
                 if(this.activeChat){
                     this.selectStatus(this.activeChat.status);
-                    for(var category in this.quickTags){
-                    this.quickTags[category].map((v,i)=>{
-                        this.quickTags[v.category][i].selected = (this.activeChat.tagId && this.activeChat.tagId.indexOf(v.id)!== -1);
+                    let tagId = this.activeChat.tagId || [];
+                    for(var category in this.sortedQuickTags){
+                    this.sortedQuickTags[category].map((v,i)=>{
+                        this.sortedQuickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
                     })
                 }
                 }
@@ -1325,5 +1330,10 @@
   .tag{
       background-color: #fff;
       text-transform: uppercase;
+  }
+  .tag-lighter{
+      background-color: #fff;
+      text-transform: uppercase;
+      color:#000;
   }
 </style>
