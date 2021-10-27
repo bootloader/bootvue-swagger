@@ -107,6 +107,7 @@
                                >
                                 {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
                             </span>
+                            <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
                           <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
@@ -540,7 +541,6 @@
                 return '' + value + ''
               },
             }],
-            selectedTag : [],
             selectedStatus : null
 
         }),
@@ -687,8 +687,7 @@
             },
             selectTag : function (tag) {
                 this.sortedQuickTags[tag.category].map((v,i)=>{
-                     this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id);
-                     v.id == tag.id ? this.selectedTag.push(v) : "";
+                     this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id && !v.selected);
                 })
             },
             selectStatus : function (status) {
@@ -1355,5 +1354,12 @@
       background-color: #fff;
       text-transform: uppercase;
       color:#000;
+  }
+  .tag-chat-status-active {
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+    font-weight: normal !important;
+    border-width: 1px !important;
   }
 </style>
