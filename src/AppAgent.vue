@@ -117,6 +117,13 @@
              THAT.$store.dispatch('RefeshTimer');
         });
 
+          visibility.change((evt, hidden) => {
+              this.$store.dispatch('OnlineStatus', {
+                type : "active",
+                active : !hidden
+              });
+          });
+
       this.refresh();
     },
     beforeUnmount (){

@@ -47,7 +47,7 @@ const state = {
   contacts : null,
   chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
   chatsCounter : 1, 
-  meta : { isOnline : true },
+  meta : { isOnline : undefined, isActive : true },
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
@@ -104,6 +104,7 @@ const cache = {
       x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments",{
         params : {
           status : isOnline,
+          active : state.meta.isActive,
           isUpdate : isUpdate,
         //  withMessage : false
         }
@@ -144,7 +145,9 @@ const actions = {
         return;
       }
       let response = await cache._RefeshSession({
-        isOnline : state.meta.isOnline,isUpdate});
+        isOnline : state.meta.isOnline,isUpdate,
+        isActive : state.meta.isActive
+      });
       validateResponse(response);
       if(response.data && response.data.details){
           dispatch("SetAgentOptionsStatus", response.data.details);
@@ -180,12 +183,6 @@ const actions = {
 
   async LoadChats({ commit,dispatch }) {
     dispatch("RefeshSession",true);
-    return;
-    let response = await cache._GetChats();
-    validateResponse(response);
-    dispatch("updateChats", response.data.results);
-    commit("setMeta", response.data.meta);
-    return response;
   },
 
   async RefreshChats({ commit,dispatch }) {
@@ -316,23 +313,15 @@ const actions = {
 
   //@Deperecated
   async OnlineStatus({ commit,dispatch },newStatus) {
-    state.meta.isOnline = newStatus;
-    dispatch("RefeshSession",true);
-    return;
-    let StatusForm = new FormData();
-    if(newStatus !== undefined){
-          StatusForm.append('status', newStatus)
+    let force = false;
+    if(newStatus.online !== undefined){
+        state.meta.isOnline = newStatus.online;
+        force = true;
     }
-    let response = await axios.post("/auth/online/status",StatusForm);
-    validateResponse(response);
-    if(newStatus !== undefined){
-      state.meta.isOnline = newStatus;
-      commit("setMeta", state.meta);
+    if(newStatus.active !== undefined){
+      state.meta.isActive = newStatus.active;
     }
-    if(response.data && response.data.results){
-       dispatch("SetAgentOptionsStatus", response.data.results);
-    }
-    return response;
+    dispatch("RefeshSession",force);
   },
 
   async SetAgentOptionsStatus({ commit },agentSessons) {
@@ -357,8 +346,11 @@ const actions = {
              agent.statusScore = 2;
           } else if(session.isLoggedIn){
              agent.statusScore = 1;
+          } 
+          if(agent.code == MyConst.agent){
+              state.meta.isOnline = session.isOnline;
+              commit("setMeta", state.meta);
           }
-
         }
       });
     }

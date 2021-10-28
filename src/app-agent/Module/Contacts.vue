@@ -276,7 +276,10 @@
                 this.$emit('loaded', {});
             },
             async toggleOnline(){
-                await this.$store.dispatch('OnlineStatus', !this.isOnline);
+                await this.$store.dispatch('OnlineStatus', { 
+                    type : "online",
+                    online : !this.isOnline 
+                });
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){
