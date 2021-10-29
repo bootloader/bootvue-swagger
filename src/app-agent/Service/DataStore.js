@@ -47,7 +47,7 @@ const state = {
   contacts : null,
   chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
   chatsCounter : 1, 
-  meta : { isOnline : undefined, isActive : true },
+  meta : { isOnline : undefined, isAway : false },
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
@@ -97,14 +97,14 @@ const cache = {
   })(),
   _RefeshSession : (function () {
     let x = null,lastTime=0; 
-    return async function ({isOnline,isUpdate}) {
+    return async function ({isOnline,isUpdate,isAway}) {
       let then = Date.now()-500; 
       isUpdate = isUpdate && (lastTime < then);
       if(isUpdate) lastTime = Date.now();
       x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments",{
         params : {
           status : isOnline,
-          active : state.meta.isActive,
+          away : isAway,
           isUpdate : isUpdate,
         //  withMessage : false
         }
@@ -146,7 +146,7 @@ const actions = {
       }
       let response = await cache._RefeshSession({
         isOnline : state.meta.isOnline,isUpdate,
-        isActive : state.meta.isActive
+        isAway : state.meta.isAway
       });
       validateResponse(response);
       if(response.data && response.data.details){
@@ -318,8 +318,8 @@ const actions = {
         state.meta.isOnline = newStatus.online;
         force = true;
     }
-    if(newStatus.active !== undefined){
-      state.meta.isActive = newStatus.active;
+    if(newStatus.away !== undefined){
+      state.meta.isAway = newStatus.away;
     }
     dispatch("RefeshSession",force);
   },

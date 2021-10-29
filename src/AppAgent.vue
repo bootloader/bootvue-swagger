@@ -119,8 +119,8 @@
 
           visibility.change((evt, hidden) => {
               this.$store.dispatch('OnlineStatus', {
-                type : "active",
-                active : !hidden
+                type : "away",
+                away : hidden
               });
           });
 
