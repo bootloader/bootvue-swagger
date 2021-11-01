@@ -356,11 +356,11 @@ const actions = {
     }
     state.agents = state.agents.sort(function (a,b) {
       if(a.statusScore > b.statusScore || !b.statusScore){
-        return -1;
+        return (a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
       } else {
         return 1;
       }
-      return 0;
+      //return (a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
     });
     commit("setAgents", state.agents);
   },
