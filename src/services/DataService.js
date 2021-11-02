@@ -120,11 +120,12 @@ const DataService = {
     let response = await proms;
     delete this._GET_X[pathKey];
     let responseData = processor(query,response.data);
+    let results = responseData.results ? responseData.results : responseData;
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",response.data)
-      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : responseData.results });
+      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : results });
     }
-    return responseData.results;
+    return results;
   },
   async get(url,query,config) {
     url = slashUrl(url);

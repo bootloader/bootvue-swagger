@@ -6,7 +6,7 @@
         :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate"
         @action="onAction" >
             <template #filter(agent)="{filter}">
-                <MyAgentSelect v-model="filter.value" @change="agentSelect"> </MyAgentSelect>
+                <MyAgentSelect v-model="filter.value" @change="agentSelect" emptyDisplay="All Teams"> </MyAgentSelect>
             </template>
         </page-title>
 
@@ -251,7 +251,7 @@
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import lineeg from './../Charts/MyLine'
     import {newChartData,updateChartData} from './../Charts/MyLine'
-import MyAgentSelect from '../../@common/custom/components/MyAgentSelect.vue';
+    import MyAgentSelect from '../../@common/custom/components/MyAgentSelect.vue';
 
     library.add(
         faTrashAlt,
@@ -337,7 +337,7 @@ import MyAgentSelect from '../../@common/custom/components/MyAgentSelect.vue';
                     name : "agent", 
                     type : "agentSelect", 
                     options:[], 
-                    value: ""
+                    value: null
                 }],
             summary : {
                 "contactType": null,

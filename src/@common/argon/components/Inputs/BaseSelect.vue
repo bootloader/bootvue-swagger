@@ -228,12 +228,12 @@
             if(typeof option == 'string' || typeof option == 'number'){
               return {
                 id : option, name : option
-              }
+              };
             } else {
               return {
                 id : option.id || option.key || option.code || option.value || option.label || option.name, 
                 name : option.name || option.label || option.value || option.code || option.key || option.id
-              }
+              };
             }
           });
       },
