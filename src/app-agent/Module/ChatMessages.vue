@@ -8,6 +8,19 @@
                     <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
                 </div>
                 <div class="msg_cotainer">
+                    <div v-if="m.replyIdExt || m.replyText">
+                        <div class="msg_cotainer_with_reply"  :id="'reply-id-'+ m.replyIdExt" >
+                            Reply to &nbsp;<i class="fa fa-chevron-right"/>
+                            <span hidden>{{m.replyText}}</span> 
+                        </div>
+                        <b-popover triggers="hover focus" :target="'reply-id-'+ m.replyIdExt"
+                            custom-class="message-preview" placement="right" @show="onReplyShow(m)">
+                            <template #default class="message-preview"> 
+                                <div class="message-text">{{m.replyText}}</div>
+                            </template>
+                        </b-popover> 
+                    </div>    
+ 
                     <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
                     <div v-if="m.attachments"> 
                         <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
@@ -102,9 +115,6 @@
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
 
-    import { Textcomplete } from "@textcomplete/core";
-    import { TextareaEditor } from "@textcomplete/textarea";
-
     import { vLinkify as linkify } from  "vue-linkifier";
     Vue.use(linkify)
 
@@ -118,7 +128,6 @@
             linkify
         },
         computed : {
-
         },
         data: () => ({
             MyFlags,MyDict,MyConst,MyFunc,formatters,
@@ -126,23 +135,16 @@
                 url: 'data-full-src'
             },
         }),
-        created () {
-
-        },
-        updated (){
-
-        },
-        mounted (){
-
-        },
-        beforeUnmount (){
-
-        },
-        watch: {
-
-        },
         methods: {
-
+            async onReplyShow(m) {
+                if(this.activeChat && this.activeChat.messages){
+                    for(var i in this.activeChat.messages){
+                        if(m.replyIdExt && this.activeChat.messages[i].messageIdExt == m.replyIdExt){
+                            m.replyText = this.activeChat.messages[i].text;
+                        }
+                    }
+                }
+            }
         },
         props: {
             isLoading : Boolean,
@@ -172,6 +174,13 @@
   }
   .msg_cotainer span, .msg_cotainer_send span{
         white-space: pre-wrap;
+  }
+  .msg_cotainer_with_reply {
+    background-color: rgba(0, 0, 0, 0.247);
+    border-radius: 6px;
+    padding: 0 5px;
+    font-size: 0.8em;
+    cursor: pointer;
   }
   .msg_cotainer_send{
     margin-top: auto;

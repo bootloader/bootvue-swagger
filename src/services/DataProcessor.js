@@ -73,6 +73,7 @@ function eq(a,b) {
 		  }
 		}
 		m.name = m.name || session.name;
+		m.replyText = m.replyText || "";
 		if(chat.messages){
 			if(index < 0) {
 			  chat.messages.push(m);
