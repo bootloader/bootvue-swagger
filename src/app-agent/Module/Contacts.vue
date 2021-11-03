@@ -180,7 +180,7 @@
                 for(var i in this.$store.getters.StateChats){
                     if(this.$store.getters.StateChats[i]._attention 
                         && this.$store.getters.StateChats[i]._tab == 'TEAM' 
-                        && this.$store.getters.StateChats[i].active){
+                        && this.$store.getters.StateChats[i].local.active){
                         return true;
                     }
                 }

@@ -64,8 +64,8 @@
         }
         let THIS = this;
         this.refreshTimer = window.setTimeout(function () {
-          THIS.refresh();
-        }, tunnel.connected ? 10000 : 1000);
+           THIS.refresh();
+        }, (tunnel.connected ? 10000 : 1000));
       }
     },
     created (){

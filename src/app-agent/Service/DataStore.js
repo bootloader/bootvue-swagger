@@ -34,9 +34,6 @@ function eq(a,b) {
 
   }
 
-function setChatFlags(chat) {
-  return DataProcessor.session(chat);
-}
 var UPDATE_TIME = 0, REFRESH_TIMER = 0;
 var updateTimer = function(){
   UPDATE_TIME = Date.now();
@@ -214,15 +211,16 @@ const actions = {
           DataProcessor.appendMessage(state.chats[c],chat.messages[m]);
         }
         _chat.messages =  state.chats[c].messages || _chat.messages;
+        _chat.local = state.chats[c].local || _chat.local;
 
-        setChatFlags(state.chats[c])
+        DataProcessor.session(state.chats[c])
         state.chats.splice(c,1);
         //commit("setChats", state.chats);
         //return;
       }
     }
-    if(_chat 
-      && _chat.active
+    if(_chat
+        && _chat.active
       )
       state.chats.push(_chat);
     //dispatch("ReadChatMessages",chat.messages);
@@ -270,11 +268,12 @@ const actions = {
       if(chat.messages){
         for (var m  in chat.messages) {
           var msg = chat.messages[m];
-          if(eq(chat.contactType, msgStatus.contactType)
-            && (eq(msg.messageId,msgStatus.messageId) || eq(msgStatus.messageIdExt,m.messageIdExt))
+          if(eq(chat.contact.contactType, msgStatus.contact.contactType)
+            && (eq(msg.messageId,msgStatus.messageId) || eq(msgStatus.messageIdExt,msg.messageIdExt))
           ){
               msg.stamps = msg.stamps || {};
-              msg.stamps[msgStatus.status] = msgStatus.timestamp;
+              msg.stamps[msgStatus.status] = msgStatus.changeStamp;
+              msg.stamps = Object.assign({},msg.stamps);
               console.log("msg.stamps",msg.stamps)
               dispatch("updateChats", state.chats);
               return;
@@ -287,9 +286,11 @@ const actions = {
   async ReadChatMessage({ commit,dispatch },m) {
       if(!m) return;
       m.messageIdRef = m.messageIdRef || guid();
+      let sessionMeatch = false;
       for(var c in state.chats){
         var chat = state.chats[c];
-        if(m.sessionId == chat.sessionId){
+        sessionMeatch = m.sessionId == chat.sessionId
+        if(sessionMeatch){
             DataProcessor.appendMessage(chat,m);
             break;
         }
@@ -452,8 +453,8 @@ const actions = {
   async GetSessionChats({ commit , dispatch},options) {
     let response = await axios.post("/api/sessions/messages",options);
     validateResponse(response);
-    setChatFlags(response.data.results[0]);
-    if(response.data.results[0].active){
+    DataProcessor.session(response.data.results[0]);
+    if(response.data.results[0].local.active){
         dispatch("AddChat",response.data.results[0]);
     } else {
         dispatch("AddHistoryChat",response.data.results[0]);
@@ -519,7 +520,8 @@ const mutations = {
       }
       state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
       chats[c].messages = state.chatsMessages[chats[c].sessionId];
-      setChatFlags(chats[c])
+      chats[c].local =  chats[c].local;
+      DataProcessor.session(chats[c]);
     }
     state.chatsSize = chats.length;
     state.chats = chats;

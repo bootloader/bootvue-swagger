@@ -21,9 +21,12 @@ function eq(a,b) {
  export default {
  	session (session){
 		  session._stamp = new Date().getTime();
+		  session.local = session.local || {
+			  active : false, expired : false
+		  };
 		  var expiryDateStamp = session._stamp-MyConst.config.chatSessionTimeout;
-		  session.expired = session.expired || (session.lastInComingStamp < expiryDateStamp);
-		  session.active = session.active && !session.expired
+		  session.local.expired = session.expired || (session.lastInComingStamp < expiryDateStamp);
+		  session.local.active = session.active && !session.local.expired
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
 		  if((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent){
 		    session._tab = "ME";
@@ -31,7 +34,7 @@ function eq(a,b) {
 		     session._tab = "TEAM";
 		  }
 		  
-		  if(!session.active){
+		  if(!session.local.active){
 			session._tab = "HISTORY";
 		  }
 		  if(session.lastmsg){
@@ -74,6 +77,12 @@ function eq(a,b) {
 		}
 		m.name = m.name || session.name;
 		m.replyText = m.replyText || "";
+
+		if(m.type == "I"){
+			session.lastInComingStamp = Math.max(session.lastInComingStamp,m.timestamp);
+		} else if(m.type == "O"){
+			session.lastResponseStamp = Math.max(session.lastResponseStamp, m.timestamp);
+		}
 		if(chat.messages){
 			if(index < 0) {
 			  chat.messages.push(m);

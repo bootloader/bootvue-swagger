@@ -28,7 +28,7 @@
                                 v-if="activeChat">
                                 <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
                                 <div v-if="assignedToAgent" class="user_assignment">
-                                    <v-select v-if="isChatActive" :options="agentOptions" v-model="assignedToAgent"
+                                    <v-select v-if="chatLocal.active" :options="agentOptions" v-model="assignedToAgent"
                                     @option:selected="onAssignedToAgent" label="code"
                                     :components="{Deselect}">
                                         <template #selected-option="option">
@@ -46,7 +46,7 @@
                                         {{ code }}<em>  - {{ name }}</em>
                                         </template>
                                     </v-select>
-                                    <span v-if="!isChatActive" class="vs__selected">
+                                    <span v-if="!chatLocal.active" class="vs__selected">
                                         Assigned to {{assignedToAgent.code}}
                                     </span>
                                 </div>
@@ -193,7 +193,7 @@
                     </div>
 
 
-                    <div v-if="isActionable && activeChat && activeChat.active" class="msg_card_body-panel">
+                    <div v-if="isActionable && chatLocal.active" class="msg_card_body-panel">
                         <hr/>
                         <div class="msg_card_body-panel-tags" >
                             <div class="quick-replies-wrapper" ref="quickRepliesWrapper" >
@@ -284,19 +284,24 @@
                          <hr/>
                     </slide-up-down>
 
-                     <div v-if="activeChat && activeChat.active" class="control-panel">
+                     <div v-if="chatLocal.active" class="control-panel text-center">
                         <!--   Contorl Box-->
-                     </div>  
-                     <div v-else-if="activeChat && !activeChat.active && !is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
+                            <b-button v-if="isAssignedToMe && ($route.params.profileId != $route.params.contactId)" 
+                                pill variant="outline-white-dirty" class="btn-sm text-white:hover"
+                                @click="goToChat()"> 
+                                Go to Chat
+                            </b-button>
+                    </div>  
+                    <div v-else-if="!chatLocal.active && !is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
                             class="control-panel text-center">
                             <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
                             @click="initNewMessage(true)"> 
                                 Send Message
                             </b-button>
-                     </div>  
-                    <div class="input-group my-input-section"  v-if="activeChat && activeChat.active"
+                    </div>  
+                    <div class="input-group my-input-section"  v-if="chatLocal.active && isActionable"
                         v-bind:class="{ invisible : !isActionable}"
-                        >
+                    >
                         <div class="input-group-prepend">
                             <span
                             @click="toggleView('QUICK_MEDIA')"  v-tooltip="'Select Quick Media'"
@@ -360,18 +365,6 @@
 
 <script>
 
-    import Vue from 'vue';
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faTrashAlt,
-        faCheck,
-        faCalendarAlt,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faWhatsapp
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import { MyFlags,MyDict,MyConst,MyFunc } from './../../services/global';
     import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
@@ -394,38 +387,35 @@
 
     import ChatMessages from "./ChatMessages";
     
-
     var sampleJson = {
         contact : {
           name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
         }
     };
-
     var sampleJsonKeys = formatters.keys(sampleJson);
-
 
     export default {
         components: {
-            'font-awesome-icon': FontAwesomeIcon,
             Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,
             ChatMessages,
             ForEachOption
         },
         computed : {
-            inputTextEnabled : function (argument) {
-               return !!this.$route.params.contactId && !!this.activeChat && this.activeChat.active;
+            chatLocal: function () {
+                return (this.activeChat ? this.activeChat.local : null) || {};
             },
-            isChatActive : function (argument) {
-                return (!!this.activeChat && this.activeChat.active);
+            inputTextEnabled : function () {
+               return !!this.$route.params.contactId && this.chatLocal.active;
             },
-            isActionable : function (argument) {
-               return (!!this.$route.params.contactId && !!this.activeChat && this.activeChat.active)
+            isActionable : function () {
+               return (!!this.$route.params.contactId && this.chatLocal.active)
                && (this.$route.params.profileId == this.$route.params.contactId)
                && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
                ;
             },
-            activeChatss : function(){ 
- 
+            isAssignedToMe : function () {
+               return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
+               ;
             },
             agentOptions : function(){ 
                 return this.$store.getters.StateAgentOptions;
@@ -438,21 +428,22 @@
                 //console.log("quickActions=",this.$store.getters.StateQuickActions)
                 return this.$store.getters.StateQuickActions;
             },
-            is_CHAT_BOX : function (argument) {
+            //STATES based in user selection
+            is_CHAT_BOX : function () {
                 return (this.winMode === null) || this.winMode == "CHAT_BOX" || this.winMode == "QUICK_ACTIONS";
             },
-            is_QUICK_MEDIA : function (argument) {
+            is_QUICK_MEDIA : function () {
                 return this.winMode == "QUICK_MEDIA"
             },
-            is_QUICK_ACTIONS : function (argument) {
+            is_QUICK_ACTIONS : function () {
                 return this.winMode == "QUICK_ACTIONS"
             },
-            is_UPLOAD_MEDIA : function (argument) {
+            is_UPLOAD_MEDIA : function () {
                 return this.winMode == "UPLOAD_MEDIA"
             },
-            is_SEND_NEW : function (argument) {
-                return (this.activeChat.contact.sessionId == this.$route.params.sessionId)
-                    && this.isSendNewMessage && !this.activeChat.active;
+            is_SEND_NEW : function () {
+                return (this.activeChat?.contact?.sessionId == this.$route.params.sessionId)
+                    && this.isSendNewMessage && !this.activeChat?.local?.active;
             },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
@@ -480,7 +471,12 @@
             showQuickReplies : false, countQuickReplies : 3,
             showAgentOption : false,
             assignedToAgent : null,
-            activeChat : null,
+            activeChat : {
+                local : {
+                    active : false,
+                    expired : false
+                }
+            },
             chatsVersionLocal : 0,
             isSendNewMessage : false,
 
@@ -589,6 +585,12 @@
                 //this.loadChat();
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
+                this.initNewMessage();
+            },
+            '$store.getters.StateChatsVersion' : function(){
+                console.log("StateChatsVersion",this.$store.getters.StateChatsVersion)
+                this.refreshActiveChat(true);
+                //this.$forceUpdate();
             }
         },
         methods: {
@@ -667,9 +669,11 @@
                 this.$router.push({
                     name: 'defAgentView', 
                         params: { 
-                            sessionId : resp.results[0].sessionId
+                            sessionId : resp.results[0].sessionId,
+                            profileId : this.$route.params.contactId,
+                            sendNewMessage : false
                         } 
-                });
+                }).catch(err => { console.error("Already ON Same Path") });
             },
             updateStatus : function (status) {
                 let tags = [];
@@ -704,20 +708,33 @@
             },
             initNewMessage(init){
                 this.isSendNewMessage = false;
-                console.log("sendNewMessage",init,this.$route.params.sendNewMessage);
+                console.log("initNewMessage:1",init,this.$route.params.sendNewMessage);
                 if(init || this.$route.params.sendNewMessage){
+                    console.log("initNewMessage:2",init,this.$route.params.sendNewMessage);
                     if(this.activeChat.contact.sessionId != this.$route.params.sessionId){
+                        console.log("initNewMessage:3",this.activeChat.contact.sessionId,this.$route.params.sessionId);
                         this.$router.push({
                             name: 'defAgentView', 
                                 params: { 
                                     sessionId : this.activeChat.contact.sessionId,
+                                    profileId : this.$route.params.contactId,
                                     sendNewMessage : true
                                 } 
                         });
                     } else {
-                        this.isSendNewMessage = !this.activeChat.active;
+                        this.isSendNewMessage = true;
                     }
                 }
+            },
+            async goToChat(){
+                this.$router.push({
+                    name: 'defAgentView', 
+                        params: { 
+                            sessionId : this.$route.params.sessionId,
+                            contactId : this.$route.params.contactId,
+                            profileId : this.$route.params.contactId
+                        } 
+                });
             },
             showContactProfile : function (type, type2) {
                 if(typeof type !='string'){
@@ -889,13 +906,14 @@
             async loadArchiveMessages(forceLoad){
                 this.refreshActiveChat(true);
                 var activeChat = this.activeChat;
-                if(!activeChat){
+                let chatLocal = this.chatLocal;
+                if(!activeChat || !this.activeChat.sessionId){
                      MyFlags.agent.showProfileAllowed = false;
                     return;
                 }
                 MyFlags.agent.showProfileAllowed = true;
                 
-                if( activeChat._tab && activeChat.active){
+                if( activeChat._tab && chatLocal.active){
                     console.log("Setting Tab to ",activeChat,activeChat._tab)
                     MyFlags.agent.contactsTab = activeChat._tab;
                 }
