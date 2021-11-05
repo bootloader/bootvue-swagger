@@ -212,6 +212,7 @@
                 <b-card :title="'Messages - Team'" class="main-card mb-3" :key="chart.updated">
                   <lineeg
                     :cdata="chart.summary"
+                    :options="chart.options"
                   ></lineeg>
                 </b-card>
             </div>
@@ -219,6 +220,7 @@
                 <b-card :title="'Messages - Individuals'" class="main-card mb-3" :key="chart.updated">
                   <lineeg
                     :cdata="chart.summaries"
+                    :options="chart.options"
                   ></lineeg>
                 </b-card>
             </div>
@@ -368,7 +370,13 @@
             chart : {
                 updated : new Date().getTime(),
                 summary : newChartData("summary0"),
-                summaries : newChartData("summaries0")
+                summaries : newChartData("summaries0"),
+                options:{
+                    scales: {
+                        yAxes: [{ ticks: {beginAtZero: true}}],
+                        xAxes: [{ticks: {maxTicksLimit: 4, beginAtZero: true}}]
+                    }
+                }
             },
             model: {
                 agent: '',

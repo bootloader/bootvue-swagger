@@ -37,7 +37,7 @@ export default {
   mounted() {
     console.log("MyLine",this.cdata);
     var cdata = this.cdata || {};
-    if(!cdata.series){
+    if(!cdata.series && !this.options){
       return;
     }
     this.renderChart({
@@ -66,7 +66,11 @@ export default {
             data: cdata.series[key]
           }
       })
-    }, {responsive: true, maintainAspectRatio: false})
+    }, {
+      ...this.options ? this.options : {},
+      responsive: true, 
+      maintainAspectRatio: false,
+    })
 
   }
 }

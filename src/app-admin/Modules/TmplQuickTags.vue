@@ -33,7 +33,7 @@
 
 
 
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Tags '"
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Session Tags '"
         @hidden="cancelReps">
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group">
@@ -113,11 +113,11 @@
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,
         },
         data: () => ({
-            heading: 'Quick Tags',
-            subheading: 'are used to tag customers at contact level',
+            heading: 'Session Tags',
+            subheading: 'Assign Session specific tags to identify the type of discussion with the Customer',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             actions : [{
-              label : "Add Quick Tags", icon : "plus", name : "ADD_ITEM"
+              label : "Add Session Tags", icon : "plus", name : "ADD_ITEM"
             }],
             fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
               { key : 'code', label : "Code" },

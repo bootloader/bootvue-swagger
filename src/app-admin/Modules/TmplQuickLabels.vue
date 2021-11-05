@@ -33,7 +33,7 @@
 
 
 
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Labels '"
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Customer Labels '"
         @hidden="cancelReps">
                   <ValidationObserver ref="form">
                             <div class="position-relative form-group">
@@ -113,11 +113,11 @@
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,
         },
         data: () => ({
-            heading: 'Quick Labels',
-            subheading: 'are used to label customers at contact level',
+            heading: 'Customer Labels',
+            subheading: 'Assign Customer specific labels that your agent can use',
             icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             actions : [{
-              label : "Add Quick Label", icon : "plus", name : "ADD_ITEM"
+              label : "Add Customer Labels", icon : "plus", name : "ADD_ITEM"
             }],
             fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
               { key : 'code', label : "Code" },
