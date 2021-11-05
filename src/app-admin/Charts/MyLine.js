@@ -37,7 +37,7 @@ export default {
   mounted() {
     console.log("MyLine",this.cdata);
     var cdata = this.cdata || {};
-    if(!cdata.series && !this.options){
+    if(!cdata.series){
       return;
     }
     this.renderChart({
