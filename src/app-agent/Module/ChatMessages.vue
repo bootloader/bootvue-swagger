@@ -2,7 +2,7 @@
     <div v-if="activeChat">
         <div v-for="(m,mindex) in activeChat.messages"  v-bind:key="mindex" ><!-- LOOP Start --><span v-if="m">
             
-            <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
+            <div v-if="$global.MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="msg_cotainer">
                     <div v-if="m.replyIdExt || m.replyMessage">
@@ -22,7 +22,7 @@
                 <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
             </div>
 
-            <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
+            <div v-else-if="$global.MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
                 <div class="msg_cotainer_send">
   
                     <ChatMessageContent :message="m"></ChatMessageContent>  
@@ -69,36 +69,17 @@
 
 <script>
 
-    import Vue from 'vue';
-    import { MyFlags,MyDict,MyConst,MyFunc } from './../../services/global';
-    import formatters from './../../services/formatters';
-    import Loading from 'vue-loading-overlay';
-    import SlideUpDown from 'vue-slide-up-down'
     import ChatMessageLog from './ChatMessageLog';
     import ChatMessageContent from './ChatMessageContent';
-
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css';
-
-    import { vLinkify as linkify } from  "vue-linkifier";
-    Vue.use(linkify)
 
     export default {
         name : "ChatMessages",
         components: {
-            Loading: Loading,SlideUpDown, vSelect :vSelect,
             ChatMessageLog,ChatMessageContent
-        },
-        directives: {
-            linkify
         },
         computed : {
         },
         data: () => ({
-            MyFlags,MyDict,MyConst,MyFunc,formatters,
-            viewerOptions : {
-                url: 'data-full-src'
-            },
         }),
         methods: {
             async onReplyShow(m) {

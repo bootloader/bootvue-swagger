@@ -19,22 +19,9 @@
 </template>
 
 <script>
-
-    import Vue from 'vue';
-    import { MyFlags,MyDict,MyConst,MyFunc } from '../../services/global';
-    import formatters from '../../services/formatters';
-    import Loading from 'vue-loading-overlay';
-
-    import { vLinkify as linkify } from  "vue-linkifier";
-    Vue.use(linkify)
-
     export default {
-        name : "ChatMessages",
+        name : "ChatMessageLog",
         components: {
-            Loading: Loading
-        },
-        directives: {
-            linkify
         },
         computed : {
             m(){
@@ -42,29 +29,7 @@
             }
         },
         data: () => ({
-            MyFlags,MyDict,MyConst,MyFunc,formatters,
-            viewerOptions : {
-                url: 'data-full-src'
-            },
         }),
-        created () {
-
-        },
-        updated (){
-
-        },
-        mounted (){
-
-        },
-        beforeUnmount (){
-
-        },
-        watch: {
-
-        },
-        methods: {
-
-        },
         props: {
             message : {
                 type: Object

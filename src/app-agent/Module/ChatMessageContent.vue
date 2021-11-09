@@ -25,17 +25,14 @@
 <script>
 
     import Vue from 'vue';
-    import Loading from 'vue-loading-overlay';
-    import SlideUpDown from 'vue-slide-up-down'
     import AudioPlayer from '@/@common/custom/components/AudioPlayer';
 
     import { vLinkify as linkify } from  "vue-linkifier";
     Vue.use(linkify)
 
     export default {
-        name : "ChatMessages",
+        name : "ChatMessageContent",
         components: {
-            Loading: Loading,SlideUpDown,
             AudioPlayer
         },
         directives: {
@@ -51,9 +48,6 @@
                 url: 'data-full-src'
             },
         }),
-        methods: {
-
-        },
         props: {
             message : {
                 type: Object,
