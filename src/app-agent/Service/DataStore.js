@@ -356,12 +356,12 @@ const actions = {
       });
     }
     state.agents = state.agents.sort(function (a,b) {
-      if(a.statusScore > b.statusScore || !b.statusScore){
-        return (a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
-      } else {
+      if(a.statusScore > b.statusScore){
+        return -1 //(a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
+      } else if(a.statusScore < b.statusScore ){
         return 1;
       }
-      //return (a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
+      return (a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
     });
     commit("setAgents", state.agents);
   },

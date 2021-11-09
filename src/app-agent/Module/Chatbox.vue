@@ -37,7 +37,7 @@
                                         <template #open-indicator="{ attributes }">
                                           <span v-bind="attributes" class="fa fa-caret-down"></span>
                                         </template>
-                                        <template #option="{ code, name, session }">
+                                        <template #option="{ code, name, session}">
                                         <i v-if="!session || !session.isEnabled || !session.isLoggedIn" class="fa fa-times-circle"/>
                                         <i v-else-if="session.isAway" class="fa fa-question-circle"/>
                                         <i v-else-if="session.isOnline" class="fa fa-check-circle"/> 
