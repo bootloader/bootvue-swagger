@@ -885,14 +885,25 @@
                         return chat;
                     }
                 }
-                for(var i in this.$store.getters.StateChatHistory){
-                    var chat = this.$store.getters.StateChatHistory[i];
-                    if(this.$route.params.sessionId == chat.sessionId){
-                        return chat;
-                    }
-                }
+
                 if(this.activeChat && (this.$route.params.sessionId == this.activeChat.sessionId)){
                     return this.activeChat;
+                }
+
+                if(this.$store.getters.StateChatHistory){
+                    for(var i in this.$store.getters.StateChatHistory){
+                        var chat = this.$store.getters.StateChatHistory[i];
+                        if(this.$route.params.sessionId == chat.sessionId){
+                            return chat;
+                        }
+                    }
+                } 
+                
+                if(this.$route.params.sessionId){
+                    this.loadSession({
+                        contactId : this.$route.params.contactId,
+                        sessionId : this.$route.params.sessionId
+                    });
                 }
                 return null;
             },
@@ -902,6 +913,11 @@
                     this.chatsVersionLocal = this.$store.getters.StateChatsVersion;
                 }
                 return this.activeChat
+            },
+            async loadSession(options){
+                let chat = await this.$store.dispatch('GetSessionChats',options);
+                this.activeChat = chat;
+                return chat;
             },
             async loadArchiveMessages(forceLoad){
                 this.refreshActiveChat(true);

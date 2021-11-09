@@ -48,7 +48,7 @@ const state = {
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
-  chatHistory : { sessions : []}
+  chatHistory : { sessions : null}
 };
 var tagFormat = function (argument) {
     return {
