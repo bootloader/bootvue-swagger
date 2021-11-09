@@ -323,5 +323,5 @@ var formatter = {
 }
 
 formatter.init();
-
+Vue.prototype.$formatters = formatter;
 export default formatter;

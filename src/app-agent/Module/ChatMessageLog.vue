@@ -66,7 +66,6 @@
 
         },
         props: {
-            isLoading : Boolean,
             message : {
                 type: Object
             }

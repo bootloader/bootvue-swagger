@@ -4,61 +4,29 @@
             
             <div v-if="MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
-                <div class="img_cont_msg">
-                    <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
-                </div>
                 <div class="msg_cotainer">
-                    <div v-if="m.replyIdExt || m.replyText">
+                    <div v-if="m.replyIdExt || m.replyMessage">
                         <div class="msg_cotainer_with_reply"  :id="'reply-id-'+ m.replyIdExt" >
                             Reply to &nbsp;<i class="fa fa-chevron-right"/>
-                            <span hidden>{{m.replyText}}</span> 
+                            <span hidden>{{m.replyMessage}}</span> 
                         </div>
                         <b-popover triggers="hover focus" :target="'reply-id-'+ m.replyIdExt"
                             custom-class="message-preview" placement="right" @show="onReplyShow(m)">
                             <template #default class="message-preview"> 
-                                <div class="message-text">{{m.replyText}}</div>
+                                <ChatMessageContent :message="m.replyMessage"></ChatMessageContent>
                             </template>
                         </b-popover> 
                     </div>    
- 
-                    <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
-                    <div v-if="m.attachments"> 
-                        <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
-                        <div class="input-group my-attachments">
-                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
-                                <img v-if="atch.mediaType == 'IMAGE'"  
-                                    v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
-                                  <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
-                                        :file="atch.mediaURL"
-                                    ></audio-player>    
-                                <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
-                                <br/>
-                                <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
-                            </span>
-                        </div>
-                    </div>
+                    <ChatMessageContent :message="m"></ChatMessageContent>    
                 </div>
                 <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
             </div>
 
             <div v-else-if="MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
                 <div class="msg_cotainer_send">
-                    <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
-                    <div v-if="m.attachments"> 
-                        <small v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</small>
-                        <div class="input-group my-attachments">
-                            <span v-for="atch in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
-                                <img v-if="atch.mediaType == 'IMAGE'" 
-                                    v-lazy="formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
-                                <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
-                                <br/>
-                                <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
-                            </span>
-                        </div>
-                    </div>
-                    <div v-else-if="m.template" class="my-msg-template-tag">
-                        <span class="fa fa-tag"></span>&nbsp;{{m.template}}
-                    </div>
+  
+                    <ChatMessageContent :message="m"></ChatMessageContent>  
+
                     <span class="msg_time_send">
                         
                         <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
@@ -86,9 +54,6 @@
                         </span>
                     </span>
                 </div>
-                <div class="img_cont_msg">
-                    <span ssrc="assets/images/profile.png" class="rounded-circle user_img_msg"/>
-                </div>
             </div>
 
             <ChatMessageLog v-else-if="m.type=='A' || m.type=='L' || m.type=='N'"
@@ -109,8 +74,8 @@
     import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
     import SlideUpDown from 'vue-slide-up-down'
-    import AudioPlayer from '@/@common/custom/components/AudioPlayer';
     import ChatMessageLog from './ChatMessageLog';
+    import ChatMessageContent from './ChatMessageContent';
 
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
@@ -122,7 +87,7 @@
         name : "ChatMessages",
         components: {
             Loading: Loading,SlideUpDown, vSelect :vSelect,
-            AudioPlayer,ChatMessageLog
+            ChatMessageLog,ChatMessageContent
         },
         directives: {
             linkify
@@ -140,14 +105,13 @@
                 if(this.activeChat && this.activeChat.messages){
                     for(var i in this.activeChat.messages){
                         if(m.replyIdExt && this.activeChat.messages[i].messageIdExt == m.replyIdExt){
-                            m.replyText = this.activeChat.messages[i].text;
+                            m.replyMessage = this.activeChat.messages[i];
                         }
                     }
                 }
             }
         },
         props: {
-            isLoading : Boolean,
             activeChat : {
                 type: Object
             }
@@ -260,21 +224,7 @@
         padding-bottom : 10px;
     }
 
-    .chat-bubble .my-msg-template-tag  {
-        font-size: smaller;
-        color: #00000085;
-    }
 </style>
 <style type="text/css">
  
-     .my-clickable-link {
-        display: inline-block;
-        max-width: 250px;
-        overflow: hidden;
-        word-wrap: normal;
-        text-overflow: ellipsis;
-        clear: none;
-        white-space: nowrap
-    }
-
 </style>

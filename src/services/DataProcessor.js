@@ -76,7 +76,7 @@ function eq(a,b) {
 		  }
 		}
 		m.name = m.name || session.name;
-		m.replyText = m.replyText || "";
+		m.replyMessage = m.replyMessage || null;
 
 		if(m.type == "I"){
 			session.lastInComingStamp = Math.max(session.lastInComingStamp,m.timestamp);

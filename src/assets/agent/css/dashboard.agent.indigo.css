@@ -119,11 +119,6 @@
 			width: 50px;
 			overflow: hidden;
 	}
-	.img_cont_msg{
-			height: 40px;
-			width: 40px;
-			display : none;
-	}
 	.online_icon{
 		position: absolute;
 		height: 15px;
