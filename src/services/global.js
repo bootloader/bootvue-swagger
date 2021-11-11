@@ -27,7 +27,7 @@ export const MyConst = {
 	}, window.CONST.CONFIG || window.CONST.CONFG,window.CONST.dev ? {
 		//CHAT_TAG_ENABLED : false,
 		//AGENT_CHAT_INIT : true,
-		AGENT_CHAT_SEARCH_SESSION : true,
+		//AGENT_CHAT_SEARCH_SESSION : true,
 		// SETUP : {
 		// 	POSTMAN_AGENT_CHAT_INIT_SESSION : true,
 		// 	POSTMAN_AGENT_CHAT_INIT_CONTACT : true
