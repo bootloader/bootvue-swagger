@@ -1,6 +1,12 @@
 <template>
 
     <div v-if="$global.MyFlags.agent.profileView == 'history'" class="text-sm scrollable"  ref="scrollable">
+        
+        <loading :active.sync="isLoading" 
+            :can-cancel="false"  
+            :loader="'dots'"
+            :is-full-page="false"></loading>
+
         <b-table v-if="oldTable" id="agent-session-list" :striped=true
                      :bordered=true
                      :outlined=false
