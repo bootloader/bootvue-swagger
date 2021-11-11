@@ -949,7 +949,7 @@
                 })[0] || {};
 
                 if(!activeChat.messages || forceLoad){
-                    this.isLoading = true;
+                    this.isLoading = (!activeChat.messages || !activeChat.messages.length);
                     var resp = await this.$store.dispatch('GetSessionChats',{
                         contactId : this.activeChat.contactId,
                         sessionId : this.activeChat.sessionId,

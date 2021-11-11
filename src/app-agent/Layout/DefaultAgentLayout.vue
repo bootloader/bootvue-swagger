@@ -25,9 +25,9 @@
                         'col-lg-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'col-xl-6' : (MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'col-xl-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
-                        'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CHATBOX',
+                        'd-none d-sm-none d-md-block' : ($route.params.mvu!='CHATBOX' && $route.params.mvu!='COMPOSE'),
                     }" >
-                    <ChatBoxCompose v-if="MyFlags.agent.mvu=='COMPOSE'"/>
+                    <ChatBoxCompose v-if="$route.params.mvu=='COMPOSE'"/>
                      <Chatbox v-else />
                 </div>
                 
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-    <component is="style" v-html="style">
+    <component :is="'style'" v-html="style">
     </component>
 
     </div>

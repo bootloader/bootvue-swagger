@@ -1,20 +1,7 @@
 <template>
-<div class="card mb-sm-3 mb-md-0 card_contact_profile scheme-color ">
-    
-    <div class="card-header">
-        <center>History</center>
-    </div>
-    <div class="card-body vld-parent">
-        <loading :active.sync="isLoading" 
-        :can-cancel="false"  
-        :loader="'dots'"
-        :is-full-page="false"></loading>
 
-        <div class="information" style="display: flex;" hidden>
-                <img :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
-        </div>
-        <small>
-        <b-table id="agent-session-list" :striped=true
+    <div v-if="$global.MyFlags.agent.profileView == 'history'" class="text-sm scrollable"  ref="scrollable">
+        <b-table v-if="oldTable" id="agent-session-list" :striped=true
                      :bordered=true
                      :outlined=false
                      :small=true
@@ -35,9 +22,9 @@
                     {{ (row.item.startSessionStamp||row.item.fistResponseStamp||row.item.lastInComingStamp||row.item.assignedDeptStamp||row.item.assignedAgentStamp||row.item.lastResponseStamp||row.item.closeSessionStamp) | formatDate}}
                 </template>
                 <template #cell(contactType)="row">
-                    <span class="contact_type fa"
-                                v-bind:class="MyDict.social[row.item.contactType]"
-                                ></span>
+                    <span class="contact_type fab" v-if="row.item.contactType"
+                                v-bind:class="$global.MyDict.social[row.item.contactType]"
+                    ></span>
                 </template>
                 <template #cell(startSessionStamp)="row">
                     {{ row.item.startSessionStamp | formatDate}}
@@ -50,141 +37,44 @@
                     <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
                 </template>   
                 <template #cell(actions)="row">
-                    <router-link tag="button" :id="row.item.sessionId" :to="'/app/chat/'+row.item.contactId+ '/' + row.item.sessionId + '/' + profileId" active-class="disabled"
-                    class="btn btn-outline-primary btn-xs">
+                    <router-link v-if="row.item.sessionId && row.item.contactId" tag="button" :id="row.item.sessionId" 
+                        :to="{ 
+                            name: 'defAgentView', 
+                            params: { 
+                                contactId: row.item.contactId.replace('/','-'),
+                                sessionId : row.item.sessionId,
+                                profileId : profileId,
+                                mvu : 'CHATBOX'
+                            }}"
+                        active-class="disabled"
+                        class="btn btn-outline-primary btn-xs">
                             View Chat
                  </router-link>
-
+                  <span v-else>-</span>
                 </template>
         </b-table>
- </small>
     </div>
-    <div class="card-footer">
-            <div>
-                <p>{{activeChat.name}}</p>
-            </div>
-            
-            <div>
-                <p v-if="activeChat.email"><span class="fa fa-envelope"/> {{activeChat.email}}</p>
-            </div>
-
-            <div>
-                <p v-if="activeChat.phone"><span class="fa fa-phone"/> {{activeChat.phone}}</p>
-            </div>
-
-            <div v-if="activeChat" id="listGroups">
-                <div v-if="activeChat && activeChat.contact" class="contact_labels" >
-                    <span v-for="label in labels" class="badge badge-light" >
-                        <span v-bind:style="{ 'background-color' : '#'+label.color }">&nbsp;</span>
-                        {{label.title}}
-                    </span>  
-                    <span class="badge badge-light btn-add" v-b-modal.tagmodal>+</span>           
-                </div>
-            </div>
-    </div>
-        
-        <b-modal v-if="activeChat && activeChat.contact" id="tagmodal" title="Contact Labels"
-            @ok="tagmodalOk"
-        >
-           <vue-tags-input
-              v-model="labelInput"
-              :tags="labels"
-              :add-only-from-autocomplete="true"
-              :autocomplete-items="quickLabels"
-              @tags-changed="onLabelChange"
-              >
-
-                 <div slot="autocomplete-item"
-                    slot-scope="props"
-                    class="my-item"
-                    @click="props.performAdd(props.item)" >
-                    
-                    <i v-bind:style="{ 'background-color': '#' + props.item.color }">&nbsp;</i>&nbsp;
-
-                    <i class="material-icons" >
-                      {{ props.item.category }}
-                    </i> {{ props.item.title }}
-                </div>
-
-
-                  <div
-                    slot="tag-left"
-                    slot-scope="props"
-                    class="my-tag-left"
-                    @click="props.performOpenEdit(props.index)"
-                  >
-                    <i v-bind:style="{ 'background-color': '#' + props.tag.color }">&nbsp;</i>&nbsp;
-                  </div>
-
-
-          </vue-tags-input>
-        </b-modal>
-
-</div>
-
-
 </template>
 
 <script>
 
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
-    import formatters from '../../services/formatters';
+    import debounce from 'debounce';
 
-    import VueTagsInput from '@johmun/vue-tags-input';
-
-
-    var tagFormat = function (argument) {
-        return {
-            id : argument.id,
-            category : argument.category,
-            title : argument.title,
-            text : argument.title,
-            color : formatters.hexacode(argument.category)
-        };
-    }
+    const D20 = 1000*60*60*24*20;
+    const DT1 = Date.now() + 24 * 60 * 60 * 1000;
 
     export default {
         components: {
             Loading: Loading,
-            VueTagsInput,
             //SmartTagz : SmartTagz
         },
         computed : {
-            activeChat : function(){ 
-                console.log("id",this.$route.params.contactId); 
-                for(var i in this.$store.getters.StateChats){
-                    var chat = this.$store.getters.StateChats[i];
-                    if(this.$route.params.contactId == chat.contactId){
-                        return chat;
-                    }
-                }
-                return {};
-            },
             profileId : function () {
                return this.$route.params.profileId;
             },
-            labels  : function (argument) {
-                var THAT = this;
-                if(this.$route.params.contactId && this.activeChat)
-                    return (THAT.activeChat.contact.labelId || []).map(function (labelId) {
-                        return tagFormat(THAT.$store.getters.StateQuickLabels.filter(t => {
-                            return t.id == labelId;
-                        })[0]);
-                    });
-                return [];
-            },
-            quickLabels : function(){ 
-                console.log("StateQuickLabels=",this.labelInput,this.$store.getters.StateQuickLabels)
-                return this.$store.getters.StateQuickLabels.filter(i => {
-                  return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
-                }).map(function (argument) {
-                    return tagFormat(argument);
-                });
-            },
         }, 
         data: () => ({
-            MyDict,MyFlags,MyConst,
             sessions : {
                 fields: [ 
                     { key : 'contactType', label : "" },
@@ -202,62 +92,95 @@
                 currentPage: 1,
                 rows : 0
             },
-            isLoading : false,
+            isLoading : false, isLoadingsNext : false,
+            collection : [],
+            labelInput : "", newLabels : null,
+            oldTable : true,
+            toStamp : 0,
+            fromStamp : 0
 
-            labelInput : "", newLabels : null
         }),
         created () {
-            // fetch the data when the view is created and the data is
-            // already being observed
-            console.log("CP","created...");
-            this.loadQuickLabels();
-        },
-        updated (){
         },
         mounted (){
-            console.log("CP","mounted...")
-            this.getSessions();
+            const tableScrollBody = this.$el;
+            tableScrollBody.addEventListener('scroll', this.handleScroll);
+            this.loadSessions();
+        },
+        destroyed () {
+            const tableScrollBody = this.$el;
+            tableScrollBody.removeEventListener('scroll', this.handleScroll);
         },
         watch: {
             '$route.params.profileId': function (profileId) {
-                this.getSessions();
+                this.loadSessions();
+            },
+            '$route.params.profileView': function (profileId) {
+                this.loadSessions();
             }
         },
         methods: {
-            async loadQuickLabels(){
-                return await this.$store.dispatch('LoadQuickLabels');
+            loadSessions : function(){
+                this.toStamp = DT1;
+                this.fromStamp = this.toStamp - D20;
+                this.loadSessionsNext();
             },
-            async getSessions (){
+            loadSessionsNext : debounce(async function(){
                 if(!this.$route.params.profileId){
                     this.sessions.items = [];
                     this.sessions.rows = 0;
-                    console.log("CP","No Active Chat")
                     return;
                 }
-                this.isLoading = true;
-                var resp = await this.$store.dispatch('GetSessions',{
-                    contactId : this.$route.params.profileId
-                    //contactType : this.activeChat.contactType
-                });
-                this.sessions.items = (resp || []).sort(function(a,b){
-                    return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
-                });
-                this.sessions.rows = this.sessions.items.length;
-                console.log("sessions",resp,this.sessions);
-                this.isLoading = false;
-            },
-            async tagmodalOk(argument) {
-                console.log("Labels",this.labels);
-                var resp = await this.$store.dispatch('AttachQuickLabels',{
-                    sessionId : this.$route.params.sessionId,
-                    labels : this.newLabels || this.labels
-                    //contactType : this.activeChat.contactType
-                });
-                this.activeChat.contact = resp.data;
-            },
-            onLabelChange : function (newLabels) {
-                console.log("newLabels",this.newLabels);
-                this.newLabels = newLabels; 
+
+                if(this.$route.params.profileView == "history"){
+                    this.isLoading = true;
+                    var resp = await this.$store.dispatch('GetSessions',{
+                        contactId : this.$route.params.profileId,
+                        toStamp : this.toStamp,
+                        fromStamp : this.fromStamp
+                        //contactType : this.activeChat.contactType
+                    });
+                    let newItems = (resp || []);
+                    if(!newItems.length){
+                        newItems = [{
+                            sessionId : "dummysession"+this.fromStamp,
+                            startSessionStamp : this.fromStamp
+                        }];
+                    }
+
+                    this.sessions.items = [...this.sessions.items,...newItems];
+                    this.sessions.items = (this.sessions.items).sort(function(a,b){
+                        return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
+                    });
+                    this.sessions.rows = this.sessions.items.length;
+                    this.isLoading = false;
+                    this.isLoadingsNext = false
+                    this.toStamp = this.toStamp  - D20;
+                    this.fromStamp = this.fromStamp  - D20;
+
+                    // for(var i in this.sessions.items){
+                    //     this.collection.push({
+                    //         data : this.sessions.items[i]
+                    //     });
+                    // }
+                }
+            },200),
+            handleScroll : debounce(async function(event){
+                if(event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight){
+                    if(!this.isLoading && !this.isLoadingsNext){
+                        this.isLoadingsNext = true
+                        this.loadSessionsNext();
+                    }
+                }
+            },1000),
+            cellSizeAndPositionGetter(item, index) {
+                // compute size and position
+                return {
+                    width: 300,
+                    height: 30,
+                    x: 0,
+                    y: index * 30
+                }
             }
         },
 
@@ -268,22 +191,14 @@
 <style type="text/css" scoped>
     .contact_type{
         height: 23px;
+        width: 23px;
     }
-    .card.card_contact_profile .card-body {
-        background-color: #f5f5f5!important;
-    }
-    .contact_labels .badge{
-        margin: 0px 2px!important;
-        padding: 4px 4px!important;
-    }
-    .contact_labels .btn-add{
-        cursor: pointer;
+    .scrollable {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        overflow: scroll;
     }
 </style>
 <style type="text/css">
-    #tagmodal li.ti-tag, #tagmodal li.ti-item{
-        background-color: #efefef!important;
-        color: #212529!important;
-        border: #ccc 1px solid;
-    }
 </style>

@@ -7,8 +7,8 @@
                 </div>
                 <div  class="card-header-right">
                     <div class="quick-options">
-                        <span class="float-right quick-option d-none d-md-block" 
-                            @click="$router.push({ params: { mvu: 'CHATBOX' } })"
+                        <span class="float-right quick-option" 
+                            @click="$router.push({ params: { mvu: 'CONTACTS' } })"
                             v-tooltip="'Cancel'" >
                             <i class="fa fa-times" aria-hidden="true"></i>
                         </span> 

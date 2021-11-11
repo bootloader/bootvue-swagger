@@ -14,19 +14,15 @@
 
 <script>
   import Vue from 'vue';
-  import router from "./app-agent/router";
-  import DataStore from "./app-agent/Service/DataStore";
-  import { MyFlags,MyDict,MyConst } from './services/global';
-  import tunnel from './services/tunnel';
-  import formatters from './services/formatters';  
+  import DataStore from "./Service/DataStore";
+  import tunnel from '../services/tunnel';
   import visibility from 'vue-visibility-change';
   import VueCookies from 'vue-cookies'
   Vue.use(VueCookies)
 
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'
-   Vue.use(Viewer)
-
+  Vue.use(Viewer)
 
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
@@ -41,7 +37,7 @@
 
   const default_layout = "default";
 
-  Vue.component('default-agent-layout', () => import('./app-agent/Layout/DefaultAgentLayout.vue'));
+  Vue.component('default-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
 
   var LOADED_JS = {};
 
@@ -134,7 +130,7 @@
 </script>
 
 <style lang="scss">
-    @import "./assets/base.scss";
+    @import "@/assets/base.scss";
     @import '@/assets/utils/_popular.scss';
-    @import "./assets/demo-ui/_agent-panel.scss";
+    @import "@/assets/demo-ui/_agent-panel.scss";
 </style>

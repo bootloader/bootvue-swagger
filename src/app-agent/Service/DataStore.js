@@ -418,11 +418,12 @@ const actions = {
   },
 
   async GetSessions({ commit },options) {
-    if(state.chatHistory.contactId == options.contactId){
+    let contactId = JSON.stringify(options);
+    if(state.chatHistory.contactId == contactId){
       return state.chatHistory.sessions;
     }
     let response = await axios.get("/api/sessions/contact",{params : options });
-    state.chatHistory.contactId = options.contactId;
+    state.chatHistory.contactId = contactId;
     state.chatHistory.sessions = response.data.results;
     commit("setChatHistory",state.chatHistory)
     return response.data.results;

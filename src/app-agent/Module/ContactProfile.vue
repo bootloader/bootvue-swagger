@@ -40,60 +40,8 @@
         </div>    
 
 
-        <small v-if="MyFlags.agent.profileView == 'history'" >
-        <b-table id="agent-session-list" :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :responsive=true
-                     :borderless=true
-                     :items="sessions.items"
-                     :fields="sessions.fields">
-                <template #cell(assignedToAgent)="row">
-                    <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
-                    <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
-                    &nbsp;{{ row.item.assignedToAgent}}
-                </template>
-                <template #cell(time)="row">
-                    {{ (row.item.startSessionStamp||row.item.fistResponseStamp||row.item.lastInComingStamp||row.item.assignedDeptStamp||row.item.assignedAgentStamp||row.item.lastResponseStamp||row.item.closeSessionStamp) | formatDate}}
-                </template>
-                <template #cell(contactType)="row">
-                    <span class="contact_type fab" 
-                                v-bind:class="MyDict.social[row.item.contactType]"
-                                ></span>
-                </template>
-                <template #cell(startSessionStamp)="row">
-                    {{ row.item.startSessionStamp | formatDate}}
-                </template>
-                <template #cell(fistResponseStamp)="row">
-                    {{ row.item.fistResponseStamp | formatDate}} 
-                </template>
-                <template #cell(closeSessionStamp)="row">
-                    {{ row.item.closeSessionStamp | formatDate}}
-                    <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
-                </template>   
-                <template #cell(actions)="row">
-                    <router-link tag="button" :id="row.item.sessionId" 
-                        :to="{ 
-                            name: 'defAgentView', 
-                            params: { 
-                                contactId: row.item.contactId.replace('/','-'),
-                                sessionId : row.item.sessionId,
-                                profileId : profileId,
-                                mvu : 'CHATBOX'
-                            }}"
-                        active-class="disabled"
-                        class="btn btn-outline-primary btn-xs">
-                            View Chat
-                 </router-link>
-
-                </template>
-        </b-table>
- </small>
+        <ContactHistory v-if="$global.MyFlags.agent.profileView == 'history'" >
+        </ContactHistory>
     </div>
     <div class="card-footer">
             <div v-if="activeChat.contactType">
@@ -176,10 +124,9 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
     import formatters from '../../services/formatters';
-    import debounce from 'debounce';
-
     import VueTagsInput from '@johmun/vue-tags-input';
 
+   import ContactHistory from './ContactHistory.vue';
 
     var tagFormat = function (argument) {
         return {
@@ -194,8 +141,9 @@
     export default {
         components: {
             Loading: Loading,
-            VueTagsInput,MyDict
-            //SmartTagz : SmartTagz
+            VueTagsInput,MyDict,
+            //SmartTagz : SmartTagz,
+            ContactHistory
         },
         computed : {
             activeChat : function(){ 
@@ -212,9 +160,6 @@
                     }
                 }
                 return {};
-            },
-            profileId : function () {
-               return this.$route.params.profileId;
             },
             labels  : function (argument) {
                 var THAT = this;
@@ -237,25 +182,7 @@
         }, 
         data: () => ({
             MyDict,MyFlags,MyConst,
-            sessions : {
-                fields: [ 
-                    { key : 'contactType', label : "" },
-                    //{ key : 'assignedToAgent', label : "Assigned" },{ key : 'contactId', label : "Contact" },
-                    { key : 'time', label : " " },
-                    //{ key : 'startSessionStamp', label : "Start@" },
-                    //{ key : 'fistResponseStamp', label : "Agent@" },
-                    //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
-                    //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
-                    //{ key : 'closeSessionStamp', label : "Closed@" },
-                    { key : 'actions', label : " " }
-                ],
-                items : [],
-                perPage: 25,
-                currentPage: 1,
-                rows : 0
-            },
             isLoading : false,
-
             labelInput : "", newLabels : null
         }),
         created () {
@@ -265,39 +192,10 @@
         updated (){
         },
         mounted (){
-            this.loadSessions();
         },
         watch: {
-            '$route.params.profileId': function (profileId) {
-                this.loadSessions();
-            },
-           '$route.params.profileView': function (profileId) {
-                this.loadSessions();
-            }
         },
         methods: {
-            loadSessions : debounce(async function(){
-                if(!this.$route.params.profileId){
-                    this.sessions.items = [];
-                    this.sessions.rows = 0;
-                    return;
-                }
-
-                if(this.$route.params.profileView == "history"){
-                    this.isLoading = true;
-                    var resp = await this.$store.dispatch('GetSessions',{
-                        contactId : this.$route.params.profileId
-                        //contactType : this.activeChat.contactType
-                    });
-                    this.sessions.items = (resp || []).sort(function(a,b){
-                        return  (b.startSessionStamp||b.fistResponseStamp||b.lastInComingStamp||b.assignedDeptStamp||b.assignedAgentStamp||b.lastResponseStamp||b.closeSessionStamp) - (a.startSessionStamp||a.fistResponseStamp||a.lastInComingStamp||a.assignedDeptStamp||a.assignedAgentStamp||a.lastResponseStamp||a.closeSessionStamp);
-                    });
-                    this.sessions.rows = this.sessions.items.length;
-                    this.isLoading = false;
-                }
-
-
-            },200),
             async tagmodalOk(argument) {
                 var resp = await this.$store.dispatch('AttachQuickLabels',{
                     sessionId : this.$route.params.sessionId,

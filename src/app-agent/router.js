@@ -7,13 +7,14 @@ export default AppRouter.route({
         // Dashboards
         {
             path: '/',
-            redirect: '/app/home',
+            redirect: '/app/home/CHATBOX',
             name : "app"
         },
         {
             path: '/app/home',
+            redirect: '/app/home/CHATBOX',
             name: 'agent-home',
-            component: () => import('./Module/Home.vue'),
+           // component: () => import('./Module/Home.vue'),
         },
         {
             path: '/app/home/:mvu',

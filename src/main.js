@@ -72,7 +72,7 @@ import AppWrapper from './AppWrapper';
 		component : () => import('./AppAdmin.vue')	
 	},
 	"agent" : { 
-		component : () => import('./AppAgent.vue')
+		component : () => import('./app-agent/AppAgent.vue')
 	},
 	"customer" : { //Customer App
 		component : () => import('./AppCustomer.vue')
