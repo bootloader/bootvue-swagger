@@ -4,9 +4,25 @@
         style="min-width: 220px;"
         v-model="model.value"
         v-bind="$attrs"
-        :searchable="false"
-        :clearable="false"
+        :filterable="filterable"
+        :searchable="searchable"
+        :placeholder="placeholder"
+        :clearable="clearable"
+        @search="onSearch"
         @input="clickAction">
+
+        <template #selected-option="option">
+            <span v-if="selectedPrefixClass" v-bind:class="selectedPrefixClass">&nbsp;</span>{{option.label }}
+        </template>
+
+        <template #open-indicator="{ attributes }">
+            <span v-bind="attributes" class="fa fa-caret-down"></span>
+        </template>
+
+        <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="slotScope"></slot>
+        </template>
+
     </v-select>
 </template>
 
@@ -24,7 +40,11 @@
             },
             searchable: {
                 type: Boolean,
-                default: true
+                default: false
+            },
+            filterable : {
+                type: Boolean,
+                default: false  
             },
             clearable: {
                 type: Boolean,
@@ -38,6 +58,21 @@
                 type: String,
                 default: ""
             },
+            optionKey : {
+                type : String,
+                default : "key"
+            },
+            optionLabel : {
+                type : String,
+                default : "label"
+            },
+            value : {
+                default : null
+            },
+            selectDefault : {
+            },
+            selectedPrefixClass : {
+            }
         },
         data: () => ({
             model : {
@@ -63,12 +98,20 @@
             this.loadOptions()
         },
         methods: {
-            async selectModelValue(){
+            selectModelValue(){
                 for(var i in this.model.options){
                     if(this.model.options[i].value == this.value){
                         this.model.value = this.model.options[i];
                     }
                 }
+                if(this.selectDefault && (this.model.value === undefined || this.model.value === null)){
+                    if(this.selectDefault==true && this.model.options[0]){
+                        this.model.value = this.model.options[0];
+                        this.clickAction();
+                    }
+                }
+                console.log("option");
+                this.$emit("option", this.model.value);
             },
             fromOptions(options){
                 let THIS = this;
@@ -76,28 +119,31 @@
                 this.model.options = options.map(function(option){
                     if(typeof option == 'string' || typeof option == 'number'){
                         return {
-                            value : option, label : option
+                            value : option, label : option, item : option
                         };
                     } else {
                         if(option === null || option === undefined){
                             hasEmptyValue = true;
                             return {
                                 value : option,
-                                label : (THIS.emptyDisplay || THIS.placeholder)
+                                label : (THIS.emptyDisplay || THIS.placeholder),
+                                item : option
                             };
                         };
-                        let value = option.id || option.key || option.code || option.value || option.label || option.name;
-                        let label = option.name || option.label || option.value || option.code || option.key || option.id;
+                        let value = option[THIS.optionKey] || option.id || option.key || option.code || option.value || option.label || option.name;
+                        let label = option[THIS.optionLabel] || option.name || option.label || option.value || option.code || option.key || option.id;
                         return {
                             value : value,
-                            label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : '')
+                            label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
+                            item : option
                         };
                     }
                 });
                 if(!hasEmptyValue && THIS.emptyDisplay){
                    this.model.options = [{
                         value : null,
-                        label : this.emptyDisplay
+                        label : this.emptyDisplay,
+                        item : null,
                     },...this.model.options];
                 }
                 this.selectModelValue();
@@ -123,6 +169,12 @@
                 this.$emit("input", value);
                 this.$emit("change", value);
             },
+            onSearch : function (search, loading) {
+                this.$emit("search", search, loading);
+            },
+            option :function (){
+                return this.model.value;
+            }
         },
     }
 </script>

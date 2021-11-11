@@ -30,6 +30,7 @@
     "increase-memory-limit": "^1.0.6",
     "install": "^0.13.0",
     "jsonpath-plus": "^6.0.1",
+    "libphonenumber-js": "^1.9.42",
     "moment": "^2.29.1",
     "mustache": "^4.1.0",
     "node-sass": "^4.14.0",

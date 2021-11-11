@@ -23,10 +23,15 @@ export const MyConst = {
 		chatIdleTimeout : 1000*60*5, // Time after which  chat raised attention
 		agentSessionTimeout : 1000*60*10, // Time to ping server
 		CHAT_TAG_ENABLED : true,
-		AGENT_CHAT_INIT : false
+		AGENT_CHAT_INIT : false,
 	}, window.CONST.CONFIG || window.CONST.CONFG,window.CONST.dev ? {
 		//CHAT_TAG_ENABLED : false,
 		//AGENT_CHAT_INIT : true,
+		AGENT_CHAT_SEARCH_SESSION : true,
+		// SETUP : {
+		// 	POSTMAN_AGENT_CHAT_INIT_SESSION : true,
+		// 	POSTMAN_AGENT_CHAT_INIT_CONTACT : true
+		// }
 	}: {})),
 	logo : {
 		full : window.CONST.CDN_URL + "/logo/logo-long.png",

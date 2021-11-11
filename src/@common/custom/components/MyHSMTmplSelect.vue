@@ -1,40 +1,31 @@
 <template>
-    <v-select
-        :options="model.options"
-        class="w-100 text-black"
-        style="min-width: 220px"
-        v-model="model.value"
-        :searchable="false"
-        :clearable="true"
-        placeholder="Select Template"
-        @input="clickAction">
-        <template #selected-option="option">
-            <div class="">{{ option.name }}</div>
-        </template>
-        <template #open-indicator="{ attributes }">
-            <span v-bind="attributes" class="fa fa-caret-down"></span>
-        </template>
-        <template #option="{ name }">
-            <span class="contact_type contact_type-24 fab"></span>
-            {{ name }}
-        </template>
-    </v-select>
+    <MyVSelect
+            ref="myVSelect"
+            :options="options"
+             v-bind="$attrs"
+            class="w-100 text-black"
+            style="min-width: 220px"
+            v-model="model.value"
+            :searchable="false"
+            :clearable="true"
+            placeholder="Select Template" 
+            @input="clickAction">
+    </MyVSelect>
 </template>
 
 <script>
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css'
+    import MyVSelect from './MyVSelect.vue'
     export default {
         components: {
-            vSelect,
+            MyVSelect,
         },
         props: {
             options: {
-                default: '/api/tmpl/pushtemplate',
+                default: 'getx:/api/tmpl/pushtemplate',
             },
-            value : {
-
-            }
+            value: {
+                default: null,
+            },
         },
         data: () => ({
             model: {
@@ -43,36 +34,19 @@
                 sender: '',
             },
         }),
-        computed: {
-            myOptions: function () {},
-        },
-        watch : {
-            value : function(newVal, oldVal){
-                this.selectModelValue();
-            }
-        },
         mounted: function () {
-            this.loadChannels();
-            this.selectModelValue();
+            this.model.value = this.value;
         },
         methods: {
-            async selectModelValue(){
-                for(var i in this.model.options){
-                    if(this.model.options[i].id == this.value){
-                        this.model.value = this.model.options[i];
-                    }
-                }
-            },
-            async loadChannels() {
-                let resp = await this.$service.getX(this.options)
-                this.model.options = resp;  
-                this.selectModelValue(); 
-            },
             clickAction: function () {
-                let value = this.model.value ? this.model.value.id : null
-                this.$emit('input', value);
-                this.$emit('change', value);
+                //console.log("clickAction");
+                let value = this.model.value;
+                this.$emit("input", value);
+                this.$emit("change", value);
             },
+            option :function (){
+                return this.$refs.myVSelect.option();
+            }
         },
     }
 </script>

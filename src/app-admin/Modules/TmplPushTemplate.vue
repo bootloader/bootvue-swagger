@@ -220,7 +220,7 @@
 <script>
 
     import PageTitle from "../Components/PageTitle.vue";
-    import TemplatePreview from "./../../Layout/Components/TemplatePreview.vue";
+    import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
     import ModalSelector from "./../../Layout/Components/ModalSelector.vue";
     
     import {library} from '@fortawesome/fontawesome-svg-core'
@@ -448,7 +448,6 @@
     }
 </script>
 <style lang="scss">
-  @import "./../../assets/demo-ui/_chat-preview.scss";
   textarea.template-message-editor {
      height: 400px;
   }

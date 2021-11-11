@@ -9,8 +9,8 @@
         >
                 <div class="card-header msg_head chat-head">   
                     <div class="d-block clear-both">               
-                        <div class="d-flex bd-highlight chat-header-left">
-                            <div class="chat-header-left-left d-sm-block d-md-none">
+                        <div class="d-flex bd-highlight card-header-left">
+                            <div class="card-header-left-left d-sm-block d-md-none">
                                 <router-link tag="i" class="fa fa-arrow-left" 
                                     :to="{ 
                                         name: 'defAgentView', 
@@ -58,12 +58,12 @@
                             </div>
                         </div>
 
-                        <div  class="chat-header-right">
-                            <div v-if="activeChat" class="quick_options">
+                        <div  class="card-header-right">
+                            <div v-if="activeChat" class="quick-options">
                                 <b-dropdown id="dropdown-offset" offset="10"
                                     class="float-right quick_option_menu d-sm-block d-md-none"
                                     ref="quick_option_menu" no-caret  variant="link" block right
-                                    toggle-tag="span" toggle-class="quick_option_icon float-right">
+                                    toggle-tag="span" toggle-class="quick-option float-right">
                                     <template #button-content>
                                        <i class="fas fa-ellipsis-v"></i>
                                     </template>
@@ -74,12 +74,12 @@
                                          <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
                                     </b-dropdown-item>
                                 </b-dropdown>
-                                <span class="float-right quick_option_icon d-none d-md-block" 
+                                <span class="float-right quick-option d-none d-md-block" 
                                      v-bind:class="{'my-selected' : profileViewInfo }"
                                     @click="showContactProfile('info')" v-tooltip="'Profile Info'" >
                                     <i class="fa fa-user"></i>
                                 </span> 
-                                <span class="float-right quick_option_icon d-none d-md-block"
+                                <span class="float-right quick-option d-none d-md-block"
                                      v-bind:class="{'my-selected' : profileViewHistory }"
                                      @click="showContactProfile('history')" v-tooltip="'Chat History'" >
                                     <i class="fa fa-history"></i>
@@ -87,13 +87,13 @@
                             </div>
                         </div>
 
-                        <div  class="chat-header-right"  @mouseover="showChatOptions = true"
+                        <div  class="card-header-right"  @mouseover="showChatOptions = true"
                                 @mouseleave="showChatOptions = false">
                         </div>
 
                     </div> 
                     
-                    <div class="d-block clear-both chat-header-lower"> 
+                    <div class="d-block clear-both card-header-lower"> 
 
                         <div class="chat_tags text-align-right float-right">
 
@@ -898,7 +898,7 @@
                         }
                     }
                 } 
-                
+
                 if(this.$route.params.sessionId){
                     this.loadSession({
                         contactId : this.$route.params.contactId,
@@ -1061,25 +1061,6 @@
 
 </script>
 <style type="text/css" scoped>
-    .chat-header-left{
-        float: left;
-    }
-    .chat-header-left-left{
-        color: white;
-        margin: auto 0px auto -16px;
-    }
-    .chat-header-right{
-        float: right;
-    }
-    .chat-header-lower{
-        height: 18px;
-        color: #FFF;
-    }
-    .quick_options {
-        margin-right: -10px;
-        color: white;
-        margin-top: 5px;
-    }
     .msg_card_body-bubbles-header {
     }
     .msg_card_body-bubbles-lane {
@@ -1304,22 +1285,6 @@
     }
 </style>
 <style type="text/css">
-  .m-chatbox .quick_options span.quick_option_icon {
-        color: white!important;
-        font-size: 20px;
-        cursor: pointer;
-        opacity: 0.9;
-        padding : 0px; 
-        width: 30px;
-        height : 30px;
-        text-align: center;
-        margin-left: 5px;
-    }
-     .m-chatbox .quick_options span.quick_option_icon.my-selected {
-        opacity: 1.0;
-        border-radius: 40px;
-        box-shadow: inset 0 0 15px #0000005e;
-     }
 
   .user_info .user_assignment .vs__selected {
     font-size: 13px !important;

@@ -227,10 +227,10 @@ var formatter = {
   },
   phone : function phoneValidator (value) {
     if(phoneFormatted(value)){
-      return true
+      return true;
     } 
     if(phoneFormatted(value.replace(/[\ \+]/g,""))){
-      return true
+      return true;
     } 
     return "errors.ValidPhone";
     //'Enter valid mobile number eg +91 XXXXX XXXXX';

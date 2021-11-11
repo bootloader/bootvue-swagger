@@ -67,16 +67,7 @@
                       <ValidationProvider v-slot="v" rules="required|phone"  class="form-row" vid="input_contact_number" 
                            name="Contact Number">
                           <label>Message Preview</label>
-                          <div class="message-preview WHATSAPP w-100" v-if="preview" >
-                            <div class="message-text">{{preview.text}}</div>
-                            <div class="message-buttons" v-if="preview.options">
-                              <div class="message-button" v-for="(button,key) in preview.options.buttons">
-                                  {{button.label}}
-                              </div>
-
-                            </div>
-                            
-                          </div>
+                           <TemplatePreview v-if="input.templates.selected" :template="input.templates.selected" />
                            <span class="v-input-error">{{ v.errors[0] }}</span>
                       </ValidationProvider> 
 
@@ -97,6 +88,7 @@
 
 <script>
 
+    import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import formatters from './../../services/formatters';
     import PageTitle from "../Components/PageTitle.vue";
@@ -132,7 +124,7 @@
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -151,7 +143,7 @@
                 },
                 templates : {
                   values : [],
-                  selected : [],
+                  selected : null,
                   sender : ""
                 },
                 contacts : ""

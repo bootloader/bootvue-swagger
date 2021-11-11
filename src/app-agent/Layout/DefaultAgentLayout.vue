@@ -27,7 +27,8 @@
                         'col-xl-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CHATBOX',
                     }" >
-                     <Chatbox/>
+                    <ChatBoxCompose v-if="MyFlags.agent.mvu=='COMPOSE'"/>
+                     <Chatbox v-else />
                 </div>
                 
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat" 
@@ -54,6 +55,7 @@
     import Contacts from './../Module/Contacts';
     import ContactSearch from './../Module/ContactSearch';
     import Chatbox from './../Module/Chatbox';
+    import ChatBoxCompose from './../Module/ChatBoxCompose';
     import ContactProfile from './../Module/ContactProfile';
     import VuePerfectScrollbar from 'vue-perfect-scrollbar';
     import { MyFlags,MyDict,MyConst } from './../../services/global';
@@ -62,7 +64,7 @@
     export default {
         name: 'app',
         components: {
-            Contacts,Chatbox,ContactProfile,Sidebar,ContactSearch,
+            Contacts,Chatbox,ContactProfile,Sidebar,ContactSearch,ChatBoxCompose,
             VuePerfectScrollbar,
         },
         data : ()=> ({

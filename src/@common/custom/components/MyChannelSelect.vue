@@ -1,70 +1,69 @@
 <template>
-    <v-select
-        :options="model.options"
-        class="w-100" style="min-width: 220px;"
-        v-model="model.value"
-        :searchable="false"
-        :clearable="false"
-        placeholder="Select Account"
-        @input="clickAction">
-        <template #selected-option="option">
-            <div class="">
+        <MyVSelect
+            ref="myVSelect"
+            :options="options"
+            class="w-100" style="min-width: 220px;"
+            v-model="model.value"
+            :searchable="false"
+            :clearable="false"
+            placeholder="Select Account" :selectDefault="true"
+            @input="clickAction">
+
+            <template #selected-option="option">
+                <div class="">
+                    <span
+                        class="contact_type contact_type-24 fab"
+                        v-bind:class="
+                            $global.MyDict.social[option.item.contactType]
+                        "></span
+                    >&nbsp;&nbsp;{{ option.item.lane }}
+                </div>
+            </template>
+            <template #option="{ item }">
                 <span
                     class="contact_type contact_type-24 fab"
-                    v-bind:class="
-                        $global.MyDict.social[option.contactType]
-                    "></span
-                >&nbsp;&nbsp;{{ option.lane }}
-            </div>
-        </template>
-        <template #open-indicator="{ attributes }">
-            <span v-bind="attributes" class="fa fa-caret-down"></span>
-        </template>
-        <template #option="{ contactType, lane }">
-            <span
-                class="contact_type contact_type-24 fab"
-                v-bind:class="$global.MyDict.social[contactType]"></span>
-            {{ lane }}
-        </template>
-    </v-select>
+                    v-bind:class="$global.MyDict.social[item.contactType]"></span>
+                {{ item.lane }}
+            </template>
+
+        </MyVSelect>
+   
 </template>
 
 <script>
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css'
+    import MyVSelect from './MyVSelect.vue'
     export default {
         components: {
-            vSelect,
+            MyVSelect
         },
         props: {
             options: {
-                default: '/api/options/channels',
+                default: 'getx:/api/options/channels',
+            },
+            value: {
+                default: null,
             },
         },
         data: () => ({
             model : {
-                options: [],
                 value: null,
                 sender: '',
+                option : null,
             }
         }),
         computed :{
-            myOptions : function(){
-
-            }
         },
         mounted: function () {
-            this.loadChannels()
+            this.model.value = this.value;
         },
         methods: {
-            async loadChannels() {
-                let resp = await this.$service.getX(this.options)
-                this.model.options = resp
-            },
             clickAction: function () {
-                let value = this.model.value ? this.model.value.channelId : null;
+                let value = this.model.value;
                 this.$emit("input", value);
                 this.$emit("change", value);
+            },
+            option :function (){
+                return this.$refs.myVSelect.option();
             }
         },
     }

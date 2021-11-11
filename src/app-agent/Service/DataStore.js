@@ -255,6 +255,7 @@ const actions = {
                         sessionId : msg.sessionId,
                         templateId : msg.templateId,
                         action : msg.action,
+                        contact : msg.contact,
                         messageIdRef : msg.messageIdRef
                     });
     validateResponse(response);
