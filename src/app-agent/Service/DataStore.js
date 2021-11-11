@@ -18,22 +18,6 @@ function eq(a,b) {
   return a === b;
 }
 
-  function validateResponse(response){
-    if(response.request.responseURL.endsWith("/auth/login")){
-      //https://app.mehery.com/admin/auth/login
-      console.log("===>",response.request.responseURL)
-      window.location.href = response.request.responseURL;
-    }
-
-    if(response.data && response.data.message){
-        //Vue.toaster.success(response.data.message);
-         console.log("===>",response.data.message)
-         if(Vue.$toast && Vue.$toast.success)
-            Vue.$toast.success(response.data.message)
-    }
-
-  }
-
 var UPDATE_TIME = 0, REFRESH_TIMER = 0;
 var updateTimer = function(){
   UPDATE_TIME = Date.now();
@@ -145,7 +129,6 @@ const actions = {
         isOnline : state.meta.isOnline,isUpdate,
         isAway : state.meta.isAway
       });
-      validateResponse(response);
       if(response.data && response.data.details){
           dispatch("SetAgentOptionsStatus", response.data.details);
       }
@@ -248,7 +231,11 @@ const actions = {
   },
   async SendChat({ commit,dispatch }, msg) {
     dispatch("SendChatPre",msg);
-    let response = await axios.post("/api/sessions/message/send",{
+    let url = "/api/sessions/message/send";
+    if(msg.action == "/add_stick_note"){
+      url = '/api/sessions/note';
+    }
+    let response = await axios.post(url,{
                         id : msg.id,
                         message : msg.text,
                         template : msg.template,
@@ -258,7 +245,6 @@ const actions = {
                         contact : msg.contact,
                         messageIdRef : msg.messageIdRef
                     });
-    validateResponse(response);
     dispatch("SendChatPost",response.data.results[0]);
     return response.data;
   },
@@ -369,7 +355,6 @@ const actions = {
 
   async LoadAgentOptions({ commit,dispatch }) {
     let r1 = await axios.get("/api/options/agents");
-    validateResponse(r1);
     if(r1.data && r1.data.results){
        commit("setAgents", r1.data.results);
     }
@@ -378,25 +363,21 @@ const actions = {
 
   async LoadMediaOptions({ commit }) {
     let response = await axios.get("/gallery/map/media_reply");
-    validateResponse(response);
     commit("setMediaOptions", response.data);
   },
 
   async LoadQuickActions({ commit }) {
     let response = await axios.get("/gallery/map/quick_actions");
-    validateResponse(response);
     commit("setQuickActions", response.data);
   },
 
   async LoadQuickLabels({ commit }) {
     let response = await axios.get("/gallery/map/quick_labels");
-    validateResponse(response);
     commit("setQuickLabels", response.data);
   },
 
   async LoadQuickTags({ commit }) {
     let response = await axios.get("/gallery/map/quick_tags");
-    validateResponse(response);
     commit("setQuickTags", response.data);
   },
 
@@ -404,7 +385,6 @@ const actions = {
     let response = await axios.post("/api/contact/label?sessionId="+sessionId,{
       values : labels
     });
-    validateResponse(response);
     //commit("setQuickTags", response.data);
     return response.data;
   },
@@ -412,7 +392,6 @@ const actions = {
     let response = await axios.post("/api/contact/tag?sessionId="+sessionId,{
       values : tags
     });
-    validateResponse(response);
     //commit("setQuickTags", response.data);
     return response.data;
   },
@@ -422,7 +401,6 @@ const actions = {
         status,
         tags
     });
-    validateResponse(response);
     dispatch("ReadSession", response.data.results);
     return response.data;
   },
@@ -430,7 +408,6 @@ const actions = {
   async LoadQuickReplies({ commit }, tags) {
     if(!state.quickReplies || state.quickReplies.length == 0){
         let response = await axios.get("/category/map/smart_reply");
-        validateResponse(response);
         for (var i in response.data) {
           response.data[i].template = formatters.nullify(response.data[i].template);
         }
@@ -445,7 +422,6 @@ const actions = {
       return state.chatHistory.sessions;
     }
     let response = await axios.get("/api/sessions/contact",{params : options });
-    validateResponse(response);
     state.chatHistory.contactId = options.contactId;
     state.chatHistory.sessions = response.data.results;
     commit("setChatHistory",state.chatHistory)
@@ -453,7 +429,6 @@ const actions = {
   },
   async GetSessionChats({ commit , dispatch},options) {
     let response = await axios.post("/api/sessions/messages",options);
-    validateResponse(response);
     DataProcessor.session(response.data.results[0]);
     if(response.data.results[0].local.active){
         dispatch("AddChat",response.data.results[0]);
@@ -468,7 +443,6 @@ const actions = {
     AssignAgentForm.append('sessionId', sessionId);
     AssignAgentForm.append('agentId', agentId);
     let response = await axios.post("/api/session/agent",AssignAgentForm);
-    validateResponse(response);
     dispatch("AddChat",response.data.results[0]);
     //commit("setQuickTags", response.data);
     return response.data;
@@ -476,13 +450,11 @@ const actions = {
 
   async GetRequest({commit,dispatch},{ url,params }) {
     let response = await axios.get(url,{ params : params });
-    validateResponse(response);
     return response.data;
   },
 
   async PostRequest({commit,dispatch},{ url,params }) {
     let response = await axios.post(url,params);
-    validateResponse(response);
     return response.data;
   },
 
@@ -568,10 +540,5 @@ export default {
   state,
   getters,
   actions,
-  mutations,
-  myGet : async function (url, params) {
-    let response = await axios.get(url,{ params : params });
-    validateResponse(response);
-    return response.data;
-  }
+  mutations
 };

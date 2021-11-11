@@ -5,8 +5,8 @@
         <!-- Sticky Note  -->
         <div v-if="m.type=='N'" class="msg_cotainer_note">
             <div class="text">{{m.text | striphtml | newlines}}</div>
-            <span class="msg_user" v-bind:class="{'float-right' : m.sender == MyConst.agent}">{{m.name | blank3dash}}</span>
-            <span v-bind:class="{'float-right' : m.name == MyConst.agent}">
+            <span class="msg_user" v-bind:class="{'float-right' : m.sender == $global.MyConst.agent}">{{m.name | blank3dash}}</span>
+            <span v-bind:class="{'float-right' : m.name == $global.MyConst.agent}">
                 {{m.timestamp|formatDate}}&nbsp;&nbsp;
             </span>
         </div>

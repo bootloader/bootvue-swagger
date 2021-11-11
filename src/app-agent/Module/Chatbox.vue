@@ -240,7 +240,8 @@
                 <div v-show="is_QUICK_MEDIA" class="card-body media_card_body" >
                     <div class="media_card_body-bubbles">
                         <div class="media_card_body-bubbles-wrapper">
-                            <div v-for="media in mediaOptions" class="media_thumb"  @dblclick="sendQuickMedia(media)">
+                            <div v-for="media in mediaOptions" v-bind:key="media.id"
+                                class="media_thumb"  @dblclick="sendQuickMedia(media)">
                                     <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media.name" v-model="selectedMedia" />
                                     <label class="media_thumb_label" :for="'mdeia-'+media.name">
                                         <img v-lazy="formatters.https_thumburl(media.url)">
@@ -284,59 +285,68 @@
                          <hr/>
                     </slide-up-down>
 
-                     <div v-if="chatLocal.active" class="control-panel text-center">
-                        <!--   Contorl Box-->
-                            <b-button v-if="isAssignedToMe && ($route.params.profileId != $route.params.contactId)" 
-                                pill variant="outline-white-dirty" class="btn-sm text-white:hover"
-                                @click="goToChat()"> 
-                                Go to Chat
-                            </b-button>
-                    </div>  
-                    <div v-else-if="!chatLocal.active && !is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
-                            class="control-panel text-center">
-                            <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
-                            @click="initNewMessage(true)"> 
-                                Send Message
-                            </b-button>
-                    </div>  
-                    <div class="input-group my-input-section"  v-if="chatLocal.active && isActionable"
-                        v-bind:class="{ invisible : !isActionable}"
-                    >
-                        <div class="input-group-prepend">
-                            <span
-                            @click="toggleView('QUICK_MEDIA')"  v-tooltip="'Select Quick Media'"
-                            class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
-                            <span 
-                            @click="toggleView('QUICK_ACTIONS')" v-tooltip="'Trigger Quick Action'"
-                            class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
+                    <!-- If chat is ACTIVE -->
+                    <div v-if="chatLocal.active"> 
+                        <!-- If chat is NOT Actionable -->
+                        <div  v-if="isActionable" class="input-group my-input-section" 
+                            v-bind:class="{ invisible : !isActionable}"> 
+                                <div class="input-group-prepend">
+                                    <span
+                                    @click="toggleView('QUICK_MEDIA')"  v-tooltip="'Select Quick Media'"
+                                    class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
+                                    <span 
+                                    @click="toggleView('QUICK_ACTIONS')" v-tooltip="'Trigger Quick Action'"
+                                    class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
 
+                                </div>
+                                <textarea name="" class="form-control type_msg input-message"  ref="message_text" 
+                                    placeholder="Type your message..." 
+                                    autocomplete="off" :disabled="!inputTextEnabled"
+                                    v-model="message_text"
+                                    @keydown.enter.exact.prevent
+                                    @keyup.enter.exact="onSendMessage"
+                                    @keydown.enter.shift.exact="newline"
+                                    @input="onInputType"
+                                    rows=1
+                                    ></textarea>
+                                <div class="input-group-append">
+                                    <span
+                                        @click="onSendMessage" v-tooltip="'Send'" 
+                                    class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
+                                    <span 
+                                    @click="openFileUpload" v-tooltip="'Select File to upload'"
+                                    class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
+                                </div>
                         </div>
-                        <textarea name="" class="form-control type_msg input-message"  ref="message_text" 
-                            placeholder="Type your message..." 
-                            autocomplete="off" :disabled="!inputTextEnabled"
-                            v-model="message_text"
-                            @keydown.enter.exact.prevent
-                            @keyup.enter.exact="onSendMessage"
-                            @keydown.enter.shift.exact="newline"
-                            @input="onInputType"
-                            rows=1
-                            ></textarea>
-                        <div class="input-group-append">
-                            <span
-                                @click="onSendMessage" v-tooltip="'Send'" 
-                             class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
-                            <span 
-                            @click="openFileUpload" v-tooltip="'Select File to upload'"
-                            class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
+                        <!-- If chat is NOT Actionable -->
+                        <div v-else class="control-panel text-center"> 
+                                <!--   Contorl Box-->
+                                <b-button v-if="isAssignedToMe && ($route.params.profileId != $route.params.contactId)" 
+                                    class="btn-sm text-white:hover" variant="outline-white-dirty" pill
+                                    @click="goToChat()"> 
+                                    Send Message
+                                </b-button>
+                                <b-button 
+                                    class="btn btn-sm text-white:hover" variant="outline-white-dirty" pill
+                                        v-b-modal.stickynote v-tooltip="'Add Sticky Note'">
+                                                <i class="fas fa-sticky-note"></i> 
+                                </b-button>
                         </div>
-                    </div>
+                    </div> 
+                    <!-- If chat is NOT ACTIVE -->
+                    <div v-else-if="!chatLocal.active"> 
+                        <div v-if="!is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
+                                class="control-panel text-center">
+                                <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
+                                @click="initNewMessage(true)"> 
+                                    Send Message
+                                </b-button>
+                        </div> 
+                    </div>    
+ 
                 </div>
 
-
-
-
-
-              <b-modal v-if="isActionable" id="stickynote" ref="stickynote" title="Add Sticky Note"
+              <b-modal id="stickynote" ref="stickynote" title="Add Sticky Note"
                     content-class="card"
                     footer-class="card-footer"
                     header-class="card-header"
@@ -1206,6 +1216,16 @@
 
     .card-footer .control-panel {
         color: #FFF;
+        display: flex;
+        align-content: stretch;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+    }
+    .card-footer .control-panel>* {
+        margin: auto 2px;
     }
     .action-events hr {
         border: 0;
