@@ -3,7 +3,7 @@
         <div class="card-header">
             <div class="d-block clear-both text-white">
                 <div class="d-flex bd-highlight card-header-left">
-                    <h3 class="">New Message</h3>
+                    <h5 class="">New Message</h5>
                 </div>
                 <div  class="card-header-right">
                     <div class="quick-options">
