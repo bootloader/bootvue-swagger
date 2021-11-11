@@ -6,8 +6,18 @@ export default AppRouter.route({
     routes: [
         // Dashboards
         {
+            path: '/',
+            redirect: '/app/home',
+            name : "app"
+        },
+        {
             path: '/app/home',
             name: 'agent-home',
+            component: () => import('./Module/Home.vue'),
+        },
+        {
+            path: '/app/home/:mvu',
+            name: 'agent-action',
             component: () => import('./Module/Home.vue'),
         },
         {

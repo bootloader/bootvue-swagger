@@ -8,6 +8,7 @@
                 <div  class="card-header-right">
                     <div class="quick-options">
                         <span class="float-right quick-option d-none d-md-block" 
+                            @click="$router.push({ params: { mvu: 'CHATBOX' } })"
                             v-tooltip="'Cancel'" >
                             <i class="fa fa-times" aria-hidden="true"></i>
                         </span> 
@@ -25,14 +26,16 @@
                                     :options="contacts" optionKey="contactId"
                                      v-model="model.contact"  ref="contactSelect"
                                     selectedPrefixClass="fa fa-address-book text-xl px-1 text-greyer"
-                                    @search="onContactSearch" />
+                                    @search="onContactSearch" 
+                                    @option="onOptionSelect"
+                                    />
                                 <MyHSMTmplSelect options="getx:/api/options/tmpl/hsm"
                                     selectedPrefixClass="fa fa-file-code text-xl px-1 text-greyer"
                                     v-model="model.templateId" />
                             </div>
                         </form>
                         <TemplatePreview v-if="model.templateId" :templateId="model.templateId" class="template-preview"
-                                    format="COMMON" />
+                            format="COMMON" />
                     </div>
                 </div>
         </div>
@@ -80,6 +83,9 @@
             contacts : []
         }),
         methods : {
+            onOptionSelect (option){
+
+            },
             onContactSearch(search, loading) {
                 if(search.length>0) {
                     this.loadContacts(loading, search);
@@ -136,7 +142,7 @@
                 };
                 let resp = await this.$store.dispatch('SendChat', msg);
                 this.$router.push({
-                    name: 'defAgentView', 
+                        name: 'defAgentView', 
                         params: { 
                             contactId : resp.meta.contactId,
                             sessionId : resp.meta.sessionId,

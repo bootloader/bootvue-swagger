@@ -17,7 +17,7 @@
       <div class="message-preview w-100" :class="format" v-if="templateConfig" >
             <div class="message-text">{{content.text}}</div>
             <div class="message-buttons" v-if="content.options">
-                <div class="message-button" v-for="(button,key) in content.options.buttons">
+                <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
                 {{button.label}}
                 </div>
             </div>

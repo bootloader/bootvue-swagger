@@ -20,6 +20,12 @@
                      @click.prevent>
                     </a>
                 </div>
+                <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_CONTACT">
+                    <a class="input-group-text menu_btn new-chat fa fa-edit" v-b-toggle 
+                        @click="$router.push({ params: { mvu: 'COMPOSE' } })"
+                        @click.prevent>
+                    </a>
+                </div>
             </div>
 
         </div>
