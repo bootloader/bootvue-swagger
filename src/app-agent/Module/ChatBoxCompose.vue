@@ -21,7 +21,11 @@
                     <div class="col-lg-12 p-0 message-box-input">
                         <form class="bg-white text-greyer">
                             <div class="form-group">
-                                <MyChannelSelect v-model="model.channelId"  ref="channelSelect"/>
+                                <MyChannelSelect v-model="model.channelId"  ref="channelSelect"
+                                    :filter="{
+                                        pushToNewContactAllowed : true
+                                    }"
+                                />
                                 <MyVSelect searchable placeholder="To"  :filterable="false" clearable
                                     :options="contacts" optionKey="contactId"
                                      v-model="model.contactId"  ref="contactSelect"

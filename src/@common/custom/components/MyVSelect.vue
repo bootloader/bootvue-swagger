@@ -72,6 +72,8 @@
             selectDefault : {
             },
             selectedPrefixClass : {
+            },
+            filter : {
             }
         },
         data: () => ({
@@ -145,6 +147,25 @@
                         label : this.emptyDisplay,
                         item : null,
                     },...this.model.options];
+                }
+
+                if(this.filter){
+                    let filters = [];
+                    if(Object.prototype.toString.call(this.filter) === '[object Array]') {
+                        filters = [...this.filter];
+                    } else if(Object.prototype.toString.call(this.filter) === '[object Object]') {
+                        filters = [this.filter];
+                    }
+                    this.model.options  = this.model.options.filter(function(option){
+                        return filters.some(function(filter){
+                            for(var key in filter){
+                                if(filter[key] !== option.item[key]){
+                                    return false;
+                                }
+                            }
+                            return true;
+                        });
+                    });
                 }
                 this.selectModelValue();
             },

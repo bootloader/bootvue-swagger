@@ -2,6 +2,7 @@
         <MyVSelect
             ref="myVSelect"
             :options="options"
+             v-bind="$attrs"
             class="w-100" style="min-width: 220px;"
             v-model="model.value"
             :searchable="false"
