@@ -42,10 +42,7 @@
     components : {MyVSelect},
     data() {
         return {
-          templateConfig : null,
-          model : {
-            
-          }
+          templateConfig : null
         };
     },
     computed : {
@@ -58,7 +55,8 @@
         var contentStr = this.templateConfig.template;
         try {
           contentStr = mustache.render(this.templateConfig.template, Object.assign(sampleJson,{
-              data : this.templateConfig.data
+              data : this.templateConfig.data,
+              contact : this?.model?.contact || sampleJson.contact
           }));
         } catch (e) {
           //console.error(e);
@@ -79,9 +77,7 @@
     },
     methods: {
       clickAction: function () {
-          let value = this.model.value;
-          this.$emit("input", value);
-          this.$emit("change", value);
+ 
       },
       optionReady: function(option){
         console.log("Option",option)
@@ -106,6 +102,8 @@
         },
         format : {
           type: String, default : "WHATSAPP"
+        },
+        model : {
         }
     },
     watch : {

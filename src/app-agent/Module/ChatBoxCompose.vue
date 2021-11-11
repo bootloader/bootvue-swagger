@@ -24,10 +24,10 @@
                                 <MyChannelSelect v-model="model.channelId"  ref="channelSelect"/>
                                 <MyVSelect searchable placeholder="To"  :filterable="false" clearable
                                     :options="contacts" optionKey="contactId"
-                                     v-model="model.contact"  ref="contactSelect"
+                                     v-model="model.contactId"  ref="contactSelect"
                                     selectedPrefixClass="fa fa-address-book text-xl px-1 text-greyer"
                                     @search="onContactSearch" 
-                                    @option="onOptionSelect"
+                                    @option="onContactOption"
                                     />
                                 <MyHSMTmplSelect options="getx:/api/options/tmpl/hsm"
                                     selectedPrefixClass="fa fa-file-code text-xl px-1 text-greyer"
@@ -35,7 +35,9 @@
                             </div>
                         </form>
                         <TemplatePreview v-if="model.templateId" :templateId="model.templateId" class="template-preview"
-                            format="COMMON" />
+                            format="COMMON" :model="{
+                                contact : contact, 
+                            }" />
                     </div>
                 </div>
         </div>
@@ -77,14 +79,15 @@
             model : {
                 channelId : null,//"tg:mehery_demo_bot",
                 search : "",
-                contact : null,
+                contactId : null,
                 templateId : null,
             },
+            contact : null, 
             contacts : []
         }),
         methods : {
-            onOptionSelect (option){
-
+            onContactOption (option){
+                this.contact = option ? option.item : null;
             },
             onContactSearch(search, loading) {
                 if(search.length>0) {
