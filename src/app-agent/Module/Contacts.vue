@@ -15,7 +15,7 @@
                     <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
                 <div class="input-group-append" v-if="MyConst.config.AGENT_CHAT_SEARCH_SESSION">
-                    <a class="input-group-text menu_btn new-chat fa fa-edit" v-b-toggle 
+                    <a class="input-group-text menu_btn new-chat fa fa-search-plus" v-b-toggle 
                     @click="MyFlags.agent.showSessionSearch=!MyFlags.agent.showSessionSearch"
                      @click.prevent>
                     </a>
