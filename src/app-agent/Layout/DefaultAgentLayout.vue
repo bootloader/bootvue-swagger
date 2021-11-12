@@ -6,15 +6,15 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat"
                     v-bind:class="{
-                        'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CONTACTS',
+                        'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CONTACTS'
                     }">
 
                     <div id="my-contact-search"
                         class="chat hSlider-wrapper"
                          v-bind:class="{
-                            'open' : MyFlags.agent.showContactSearch,
+                            'open' : MyFlags.agent.showSessionSearch,
                         }">
-                        <ContactSearch/>                     
+                        <SessionSearch/>                     
                     </div>
                       
                     <Contacts v-on:loaded="closeLoading"/>
@@ -53,7 +53,7 @@
 
     import Sidebar from './../Module/Sidebar';
     import Contacts from './../Module/Contacts';
-    import ContactSearch from './../Module/ContactSearch';
+    import SessionSearch from './../Module/SessionSearch';
     import Chatbox from './../Module/Chatbox';
     import ChatBoxCompose from './../Module/ChatBoxCompose';
     import ContactProfile from './../Module/ContactProfile';
@@ -64,7 +64,7 @@
     export default {
         name: 'app',
         components: {
-            Contacts,Chatbox,ContactProfile,Sidebar,ContactSearch,ChatBoxCompose,
+            Contacts,Chatbox,ContactProfile,Sidebar,SessionSearch,ChatBoxCompose,
             VuePerfectScrollbar,
         },
         data : ()=> ({
@@ -154,7 +154,7 @@
   padding: 0px; 
   margin: 0px;
   background: #ddd0;
-  overflow: hidden;
+  overflow: visible;
   left: 0; 
   background: #000;
   width: 100%;
@@ -170,7 +170,9 @@
   left: 0; 
   
 }
-
+.my-contact-search{
+    background: #fff !important;
+}
 
 
 </style>

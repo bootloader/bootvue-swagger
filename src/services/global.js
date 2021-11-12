@@ -47,6 +47,7 @@ export const MyFlags = {
   agent : {
   	showProfile : true, showProfileAllowed : false,
   	showContactSearch :  false,
+	showSessionSearch :  false,
   	profileView : 'history', //history,info
   	contactsTab : 'ME',
   	mvu : 'CONTACTS', //CONTACTS,CHATBOX,CPROFILE

@@ -593,6 +593,7 @@
             },
             '$route.params.sessionId': function (contactId) {
                 //this.loadChat();
+                console.log("$route.params.sessionId",contactId)
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
                 this.initNewMessage();
