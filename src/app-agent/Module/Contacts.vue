@@ -21,7 +21,7 @@
                     </a>
                 </div>
                 <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_CONTACT">
-                    <a class="input-group-text menu_btn new-chat fa fa-edit" v-b-toggle 
+                    <a class="input-group-text menu_btn new-chat fa fa-comment-medical" v-b-toggle
                         @click="$router.push({ params: { mvu: 'COMPOSE' } })"
                         @click.prevent>
                     </a>
@@ -337,6 +337,8 @@
         font-size: 20px;
         text-decoration: none;
         line-height: 23px;
+        padding-left: 12px;
+        padding-right: 8px;
     }
     .contacts{
         list-style: none;
