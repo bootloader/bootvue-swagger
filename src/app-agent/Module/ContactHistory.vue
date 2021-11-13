@@ -55,10 +55,18 @@
                 </template>
         </b-table>
 
-        <loading :active.sync="isLoading" 
+        <div style="height:20px;width:100%;position:relative;">
+            <loading :active.sync="isLoading" 
             :can-cancel="false"  
             :loader="'dots'"
             :is-full-page="false"></loading>
+            <div v-if="!isLoading" class="text-center">
+                <b-button @click="loadSessionsNext"
+                variant="outline-grey" pill
+                class="btn-xs btn"
+                >Load More</b-button>
+            </div>
+        </div>    
 
     </div>
 </template>
@@ -99,13 +107,12 @@
                 currentPage: 1,
                 rows : 0
             },
-            isLoading : false, isLoadingsNext : false,
+            isLoading : false, isLoadingsNext : false, isLoadingAuto : true,
             collection : [],
             labelInput : "", newLabels : null,
             oldTable : true,
             toStamp : 0,
-            fromStamp : 0
-
+            fromStamp : 0,
         }),
         created () {
         },
@@ -130,6 +137,8 @@
             loadSessions : function(){
                 this.toStamp = DT1;
                 this.fromStamp = this.toStamp - D20;
+                this.sessions.items = [];
+                this.isLoadingAuto = true;
                 this.loadSessionsNext();
             },
             loadSessionsNext : debounce(async function(){
@@ -153,6 +162,9 @@
                             sessionId : "dummysession"+this.fromStamp,
                             startSessionStamp : this.fromStamp
                         }];
+                        this.isLoadingAuto = false;
+                    } else {
+                        this.isLoadingAuto = true;
                     }
 
                     this.sessions.items = [...this.sessions.items,...newItems];
@@ -162,8 +174,8 @@
                     this.sessions.rows = this.sessions.items.length;
                     this.isLoading = false;
                     this.isLoadingsNext = false
-                    this.toStamp = this.toStamp  - D20;
-                    this.fromStamp = this.fromStamp  - D20;
+                    this.toStamp = this.fromStamp;
+                    this.fromStamp = this.fromStamp  - D20 * (this.isLoadingAuto ? 1 : 2);
 
                     // for(var i in this.sessions.items){
                     //     this.collection.push({
@@ -174,12 +186,12 @@
             },200),
             handleScroll : debounce(async function(event){
                 if(event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight){
-                    if(!this.isLoading && !this.isLoadingsNext){
+                    if(!this.isLoading && !this.isLoadingsNext && this.isLoadingAuto){
                         this.isLoadingsNext = true
                         this.loadSessionsNext();
                     }
                 }
-            },1000),
+            },200),
             cellSizeAndPositionGetter(item, index) {
                 // compute size and position
                 return {
