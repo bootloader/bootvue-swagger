@@ -270,13 +270,13 @@
                  let tags = [];
                     for(var category in this.sortedQuickTags){
                         this.sortedQuickTags[category].map(v=>{
-                            v.selected ? tags.push(v.code) : ""
+                            v.selected ? tags.push(v) : ""
                         }) 
                     }
                 console.log("tags",tags);
-                let resp = await this.$service.get('/api/sessions/searchby/statusorcategory', {
-                    status : this.selectedStatus.toString(), 
-                    tagCategory : tags.toString(),
+                let resp = await this.$service.post('/api/sessions/search', {
+                    status : this.selectedStatus, 
+                    tagCategory : tags,
                     dateRange1 : this.daterange.startDate.getTime(),
                     dateRange2 :  this.daterange.endDate.getTime()
                 });
