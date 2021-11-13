@@ -276,9 +276,9 @@
                 console.log("tags",tags);
                 let resp = await this.$service.post('/api/sessions/search', {
                     status : this.selectedStatus, 
-                    tagCategory : tags,
-                    dateRange1 : this.daterange.startDate.getTime(),
-                    dateRange2 :  this.daterange.endDate.getTime()
+                    tags : tags,
+                    fronStamp : this.daterange.startDate.getTime(),
+                    toStamp :  this.daterange.endDate.getTime()
                 });
                this.contacts = resp.results;
                this.showResult = true;
