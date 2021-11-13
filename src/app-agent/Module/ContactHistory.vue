@@ -63,7 +63,7 @@
             <div v-if="!isLoading" class="text-center">
                 <b-button @click="loadSessionsNext"
                 variant="outline-grey" pill
-                class="btn-xs btn"
+                class="btn-sm btn p-s1 text-sm"
                 >Load More</b-button>
             </div>
         </div>    
