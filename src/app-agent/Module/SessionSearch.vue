@@ -282,7 +282,7 @@
                 });
                this.contacts = resp.results;
                this.showResult = true;
-            },1000),
+            },150),
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', !this.isOnline);
             },
