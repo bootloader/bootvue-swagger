@@ -10,6 +10,16 @@
             :clearable="true"
             placeholder="Select Template" 
             @input="clickAction">
+
+        <template #selected-option="option">
+            <span v-if="$attrs.selectedPrefixClass" v-bind:class="$attrs.selectedPrefixClass">&nbsp;</span>
+            {{option.item.desc }} ({{option.item.lang }})
+        </template>
+
+        <template #option="option">
+            {{option.item.desc }} ({{option.item.lang }})
+        </template>
+
     </MyVSelect>
 </template>
 
