@@ -867,29 +867,37 @@
                 console.log("this.quickReplies",this.quickReplies);
                 this.scrollToBottom(true);
             },
-            async loadChats(){
-                await this.$store.dispatch('GetChats');
-                await this.$store.dispatch('LoadAgentOptions');
-                this.onSessionChange();
+            async loadSession(options){
+                let chat = await this.$store.dispatch('GetSessionChats',options);
+                this.activeChat = chat;
+                return chat;
             },
+            loadCurrentession : debounce(async function(){
+                if(this.$route.params.sessionId){
+                    return await this.loadSession({
+                        contactId : this.$route.params.contactId,
+                        sessionId : this.$route.params.sessionId
+                    });
+                }
+                return null;
+            }),
             onSessionChange : debounce(async function(){
                 console.log("onSessionChange : Session On Change")
                 this.activeChat = this.selectActiveChat();
 
                 if(this.activeChat == null && this.$route.params.contactId){
-                    let resp = await this.$service.get('/api/sessions/contact/active', {
-                            contactId : this.$route.params.contactId,
-                            sessionId : this.$route.params.sessionId,
-                            _processor : "session"
-                    });
-                    if(resp.results.length > 0){
-                        this.activeChat = resp.results[0];
-                    }
+                    this.loadCurrentession();
                 }
                 this.loadArchiveMessages(true);
                 this.defaultSelectedStatusTag();
             },200),
+            async loadChats(){
+                await this.$store.dispatch('GetChats');
+                await this.$store.dispatch('LoadAgentOptions');
+                this.onSessionChange();
+            },
             selectActiveChat () {
+                console.log("selectActiveChat");
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.sessionId == chat.sessionId){
@@ -909,12 +917,8 @@
                         }
                     }
                 } 
-
                 if(this.$route.params.sessionId){
-                    this.loadSession({
-                        contactId : this.$route.params.contactId,
-                        sessionId : this.$route.params.sessionId
-                    });
+                    this.loadCurrentession();
                 }
                 return null;
             },
@@ -922,13 +926,11 @@
                 if(this.chatsVersionLocal != this.chatsVersionGlobal || force){
                     this.activeChat = this.selectActiveChat();
                     this.chatsVersionLocal = this.$store.getters.StateChatsVersion;
+                    if(!this.activeChat || !this.activeChat.messages || !this.activeChat.messages.length){
+                        this.loadCurrentession();
+                    }
                 }
                 return this.activeChat
-            },
-            async loadSession(options){
-                let chat = await this.$store.dispatch('GetSessionChats',options);
-                this.activeChat = chat;
-                return chat;
             },
             async loadArchiveMessages(forceLoad){
                 this.refreshActiveChat(true);

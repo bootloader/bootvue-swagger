@@ -274,6 +274,11 @@
                         //this.$forceUpdate();
                     }
                 }
+            },
+            "$global.MyFlags.agent.contactsTab" : function(newVal,oldVal){
+                if(newVal == "HISTORY"){
+                    this.$store.dispatch("RefeshSession",true);
+                }
             }
         },
         methods: {

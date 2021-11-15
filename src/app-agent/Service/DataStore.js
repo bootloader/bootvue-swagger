@@ -4,7 +4,7 @@
 import axios from "axios";
 import Vue from 'vue';
 import formatters from '../../services/formatters';
-import {MyConst} from '../../services/global';
+import {MyConst,MyFlags} from '../../services/global';
 
 import DataProcessor from '../../services/DataProcessor';
 
@@ -87,6 +87,7 @@ const cache = {
           status : isOnline,
           away : isAway,
           isUpdate : isUpdate,
+          tab : MyFlags.agent.contactsTab
         //  withMessage : false
         }
       })).then(function (response) {
@@ -429,7 +430,7 @@ const actions = {
     return response.data.results;
   },
   async GetSessionChats({ commit , dispatch},options) {
-    let response = await axios.post("/api/sessions/messages",options);
+    let response = await axios.post("/api/sessions/messages?sessionId="+options.sessionId,options);
     DataProcessor.session(response.data.results[0]);
     if(response.data.results[0].local.active){
         dispatch("AddChat",response.data.results[0]);
@@ -492,8 +493,20 @@ const mutations = {
         chats[c].ilastmsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
         chats[c].lastmsg = chats[c].msg.lastMsg || chats[c].lastmsg;
       }
-      state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
+      
+      if(
+          !state.chatsMessages[chats[c].sessionId] 
+          || !state.chatsMessages[chats[c].sessionId].length
+          || (
+              chats[c].messages 
+              && chats[c].messages.length >= state.chatsMessages[chats[c].sessionId].length
+          )
+      ){
+        state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
+      }
+
       chats[c].messages = state.chatsMessages[chats[c].sessionId];
+      
       chats[c].local =  chats[c].local;
       DataProcessor.session(chats[c]);
     }
