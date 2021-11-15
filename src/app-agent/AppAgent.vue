@@ -20,12 +20,16 @@
   import VueCookies from 'vue-cookies'
   Vue.use(VueCookies)
 
+  import Loading from 'vue-loading-overlay';
+  Vue.use(Loading);
+  Vue.component("Loading",Loading);
+
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'
   Vue.use(Viewer)
 
-  const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
-  const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
+  const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
+  const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
   Vue.use(VueLazyload, {
     preLoad: 1.3,

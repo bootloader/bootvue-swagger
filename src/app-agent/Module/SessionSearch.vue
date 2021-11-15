@@ -17,7 +17,7 @@
                         class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
                 <div class="input-group-append">
-                    <a class="input-group-text menu_btn new-chat fa fa-filter edit-search"
+                    <a class="input-group-text menu_btn new-chat fa fa-filter edit-search" v-tooltip="'Edit Search'"
                         @click="(showResult=!showResult)">
                     </a>
                 </div>
@@ -27,7 +27,7 @@
         
         <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" v-if="!showResult">
 
-             <span class="action-wrapper" >
+             <span class="action-wrapper text-center" >
                 <span class="cat-title">Date Range</span><br/>
                 <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker"
                 :opens="'right'"
@@ -105,9 +105,14 @@
                                 </div>
                             </router-link>
                         </ul>
-                        <ul class="contacts contact-list" v-if="activeChats.length==0">
-                        <center><small>No active session </small></center>
+                        <ul class="contacts contact-list" v-if="activeChats.length==0 && !isLoading">
+                            <center><small>No active session </small></center>
                         </ul>
+                        <loading :active.sync="isLoading" 
+                            :can-cancel="false"  
+                            :loader="'dots'"
+                            :is-full-page="false"></loading>
+
                         <ul class="contacts contact-list-unassigned">
                             
                         </ul>
@@ -206,7 +211,7 @@
                     text : ""
                 }
             },
-           
+            isLoading : false,
             contacts : [],
             formatters,
             showResult : false,
@@ -215,7 +220,7 @@
         }),
         filters: {
           date(val) {   
-            return val ? val.toLocaleString() : ''
+            return val ? val.toLocaleDateString() : ''
           }
         },
         created : function (argument) {
@@ -273,16 +278,22 @@
                             v.selected ? tags.push(v) : ""
                         }) 
                     }
-                console.log("tags",tags);
-                let resp = await this.$service.post('/api/sessions/search', {
-                    status : this.selectedStatus, 
-                    tags : tags,
-                    fronStamp : this.daterange.startDate.getTime(),
-                    toStamp :  this.daterange.endDate.getTime()
-                });
-               this.contacts = resp.results;
-               this.showResult = true;
-            },150),
+                try {
+                    this.contacts = [];
+                    this.isLoading = true;
+                    this.showResult = true;
+                    console.log("tags",tags);
+                    let resp = await this.$service.post('/api/sessions/search', {
+                        status : this.selectedStatus, 
+                        tags : tags,
+                        fronStamp : this.daterange.startDate.getTime(),
+                        toStamp :  this.daterange.endDate.getTime()
+                    });
+                    this.contacts = resp.results;
+                } finally {
+                    this.isLoading = false;
+                }
+            },100),
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', !this.isOnline);
             },
@@ -396,11 +407,7 @@
     }
 
 
-    .img_cont,
-    .user_img {
-        width: 40px;
-        height: 40px;
-    }
+
 
     .contact_type {
         width: 24px;
@@ -412,16 +419,8 @@
       right: 0px;
       position: absolute;
     }
+    
 
-    .contact-text {
-        margin-left: 15px;
-        height: 40px;
-        font-size: 18px;
-        color : rgba(21, 21, 21, 0.68);
-        width: calc(100% - 55px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
     .contact-text .font-name{
         text-overflow: ellipsis;
         max-width: 187px;
@@ -471,12 +470,53 @@
     .search-result{
         background: #fff !important;
         padding: 0;
+        overflow-y: scroll;
     }
    .tag{
        margin: 0 4px 4px 0;
        user-select: none;
        cursor: pointer;
    }
+
+    .contact-preview {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        font-size: 16px;
+        
+        .img_cont,
+        .user_img {
+            width: 40px;
+            height: 40px;
+            flex-grow: 0;
+        }
+
+        .contact-text {
+            flex-grow: 1;
+            margin-left: 15px;
+            height: 40px;
+            color : rgba(21, 21, 21, 0.68);
+            width: calc(100% - 160px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-flags {
+            float: right;
+            text-align: right;
+            align-self :baseline;
+            flex-grow: 0;
+            .contact-time{
+                font-size: .6em;
+                text-align: right;
+                float: right;
+            }
+        }
+
+    }
    
 </style>
 <style lang="scss">
