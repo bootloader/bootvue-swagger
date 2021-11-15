@@ -17,13 +17,15 @@
                 <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_SESSION">
                     <a class="input-group-text menu_btn new-chat fa fa-search-plus" v-b-toggle 
                     @click="MyFlags.agent.showSessionSearch=!MyFlags.agent.showSessionSearch"
-                     @click.prevent>
+                     @click.prevent v-tooltip="'Advance Search'">
                     </a>
                 </div>
                 <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_CONTACT">
                     <a class="input-group-text menu_btn new-chat fa fa-comment-medical" v-b-toggle
                         @click="$router.push({ params: { mvu: 'COMPOSE' } })"
-                        @click.prevent>
+                        @click.prevent
+                            v-tooltip="'Send New Message'"
+                        >
                     </a>
                 </div>
             </div>
@@ -35,8 +37,10 @@
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ME')}" @click="MyFlags.agent.contactsTab = 'ME'">
                     <span class="fa fa-user"/> Me</span>
               </li>
-              <li class="nav-item" v-bind:class="{ contact_attention : urgentChat }">
-                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
+              <li class="nav-item" >
+                <span class="nav-link btn-xs" v-bind:class="{ 
+                    contact_attention : urgentChat, 
+                    'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
               <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000"
@@ -133,7 +137,7 @@
                 </router-link>
             </ul>
             <ul class="contacts contact-list" v-if="activeChats.length==0">
-               <center><small>No active session </small></center>
+               <center><small>No session </small></center>
             </ul>
             <ul class="contacts contact-list-unassigned">
                 
@@ -486,7 +490,7 @@
         background-color: #00000017;
       }
     }
-    .nav-item.contact_attention {
+    .nav-link.contact_attention:not(.active) {
       animation: blinking 1s infinite;
     }
     .chat_flags {
