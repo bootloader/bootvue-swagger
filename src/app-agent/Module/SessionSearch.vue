@@ -3,16 +3,16 @@
         <div class="card-header contacts-header ">
             <div class="input-group">
                     <a class="input-group-text menu_btn new-chat fa fa-arrow-left" v-b-toggle 
-                    @click="MyFlags.agent.showSessionSearch=!MyFlags.agent.showSessionSearch"
+                    @click="$global.MyFlags.agent.showSessionSearch=!$global.MyFlags.agent.showSessionSearch"
                     @click.prevent>
                 </a>
                 <input type="text" 
                     v-model="input.search.text"
-                    placeholder="Search..." name="" class="form-control search">
-                    <!-- @keyup="loadSession"> -->
+                    placeholder="Search..." name="session-search" class="form-control search">
                 <div class="input-group-prepend">
                     <span v-if="!!input.search.text" 
-                        class="input-group-text search_btn" @click="(input.search.text='')" ><i class="fa fa-close"></i></span>
+                        class="input-group-text search_btn" @click="(input.search.text='');localSessionSearch()" >
+                        <i class="fa fa-close"></i></span>
                     <span v-if="!input.search.text" 
                         class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
@@ -25,7 +25,7 @@
             
         </div>
         
-        <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" v-if="!showResult">
+        <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" v-show="!showResult">
 
              <span class="action-wrapper text-center" >
                 <span class="cat-title">Date Range</span><br/>
@@ -47,15 +47,15 @@
             <hr />
 
             <span class="cat-title">Chat Status</span><br/>
-            <span v-for="(status,s) in MyDict.chatStatus" v-if="status.editable"
+            <span v-for="(status,s) in editableStatus" v-bind:key="s"
                 class="tag-chat-status-lg tag" @click="selectStatus(s)"
                 :class="'tag-chat-status-'+ s + (selectedStatus.indexOf(s) != -1 ? ' tag-chat-status-active' : '')">
                 {{status.label}}
             </span>
-            <div v-for="(category, categoryName) in sortedQuickTags">
+            <div v-for="(category, categoryName) in sortedQuickTags" v-bind:key="categoryName" >
                 <hr />
                 <span class="cat-title">{{categoryName}}</span><br/>
-                <span v-for="tag in sortedQuickTags[categoryName]" 
+                <span v-for="(tag, index) in sortedQuickTags[categoryName]"  v-bind:key="index"
                     @click="selectTag(tag)"
                     :class="'tag-chat-status-lg tag ' + 
                     (tag.selected  ? ' tag-chat-status-active' : '')">
@@ -65,15 +65,17 @@
             </div>
             <hr />
             <div style="text-align:center">
-                <button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" @click="loadSession" style="width:120px"> Search </button>
+                <button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" 
+                    @click="loadSession" style="width:120px"> Search </button>
             </div>
             
         </div>
-        <div class="search-result m-contact-search contacts_card card-shadow col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 " v-if="showResult">
+        <div class="search-result m-contact-search contacts_card card-shadow col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 "
+            v-show="showResult">
                     <div class="card-body contacts_body">
-                        <ul class="contacts contact-list" v-if="activeChats && activeChats.length>0">
+                        <ul class="contacts contact-list" v-if="filteredContacts && filteredContacts.length>0">
                             
-                            <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
+                            <router-link tag="li" v-for="(chat,index) in filteredContacts"  :key="'search-' + chat.sessionId" :data-index="index"
                                     :to="{ 
                                     name: 'defAgentView', 
                                     params: { 
@@ -83,17 +85,18 @@
                                         profileView : 'hide',
                                         mvu : 'CHATBOX'
                                     }}"
+                                    v-show="chat.localShow"
                                 >
                                 <div class="d-flex bd-highlight contact-preview">
                                     <div class="img_cont">
                                         <img v-lazy="{
-                                                src : formatters.https_thumburl(chat.profilePic || MyDict.profilePic),
-                                                error : MyDict.profilePic
+                                                src : $formatters.https_thumburl(chat.profilePic || $global.MyDict.profilePic),
+                                                error : $global.MyDict.profilePic
                                             }"
                                             class="rounded-circle user_img" alt="profilpicture">
                                             <span class="online_icon"></span>
                                             <span class="contact_type fab"
-                                            v-bind:class="MyDict.social[chat.contactType]"></span>
+                                            v-bind:class="$global.MyDict.social[chat.contactType]"></span>
                                     </div>
                                     <div class="user_info contact-text">
                                         <span class="font-name" >{{chat.name || chat.contactId}}</span>
@@ -105,7 +108,7 @@
                                 </div>
                             </router-link>
                         </ul>
-                        <ul class="contacts contact-list" v-if="activeChats.length==0 && !isLoading">
+                        <ul class="contacts contact-list" v-if="filteredContacts.length==0 && !isLoading">
                             <center><small>No active session </small></center>
                         </ul>
                         <loading :active.sync="isLoading" 
@@ -124,22 +127,13 @@
 
 <script>
 
-    import { MyFlags,MyDict,MyConst } from '../../services/global';
+    import { MyDict } from '../../services/global';
     import DateRangePicker from 'vue2-daterange-picker'
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
-    import VueMoment from 'vue-moment'
     import moment from 'moment'
-
-
-    import tunnel from '../../services/tunnel';
     import formatters from '../../services/formatters';
-
     import debounce from 'debounce';
     import throttle from 'throttleit';
-
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css';
-
 
     function hour0(mmt){
             return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
@@ -150,33 +144,17 @@
     }
     export default {
         components: {
-            vSelect,
             DateRangePicker
         },
         computed : {
-            activeChats : function(){ 
-                var THAT = this;
-                return (this.contacts || []).filter(function(contact) {
-                    return (contact.name + contact.phone + contact.email + "")
-                            .toLowerCase()
-                            .indexOf(THAT.input.search.text.toLowerCase()) > -1
-                });
-            },
-            isOnline :  function (){
-                if(this.$store.getters.StateMeta){
-                    return this.$store.getters.StateMeta.isOnline;
-                }
-                return false;
-            },
-            contactId : function () {
-               return this.$route.params.contactId;
-            },
             sortedQuickTags  : function () {
                 return this.$store.getters.StateQuickTagsSorted;
+            },
+            editableStatus :function(){
+                return Object.keys(MyDict.chatStatus).map((key) => MyDict.chatStatus[key]).filter((status)=>status.editable);
             }
         },
         data:() => ({
-            MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             daterange : {
                 startDate : null,
                 endDate : null,
@@ -206,13 +184,14 @@
                 }
             })(),
 
+            inputSearchText : "",
             input : {
                 search: {
-                    text : ""
+                    text : "",
                 }
             },
             isLoading : false,
-            contacts : [],
+            contacts : [], filteredContacts : [],
             formatters,
             showResult : false,
             selectedStatus : [],
@@ -235,19 +214,11 @@
             }
         },
         mounted () {
-            // fetch the data when the view is created and the data is
-            // already being observed
-            //MyFlags.agent.contactsTab = this.$route.params.contactsTab
-            //this.pingOnline();
-            
 
         },
-        beforeUnmount (){
-            this.tunnel.off();
-        },
         watch: {
-            '$route.params.sessionId': function () {
-                
+            'input.search.text': function () {
+                this.localSessionSearch();
             }
         },
         methods: {
@@ -259,13 +230,11 @@
                 return daterange;
             },
             onDateRangeSelect : function (r) {
-                console.log("select",r);
                 var range = this.sanitizeDateRange(r);
                 this.dateranegeinput.range.startDate = range.startDate;
                 this.dateranegeinput.range.endDate = range.endDate;
             },
             onDateRangeUpdate : function (r) {
-                console.log("c_update",r);
                 if(this.daterange){
                     this.daterange.startDate = r.startDate;
                     this.daterange.endDate = r.endDate;
@@ -279,7 +248,7 @@
                         }) 
                     }
                 try {
-                    this.contacts = [];
+                    this.filteredContacts = [];
                     this.isLoading = true;
                     this.showResult = true;
                     console.log("tags",tags);
@@ -289,50 +258,23 @@
                         fronStamp : this.daterange.startDate.getTime(),
                         toStamp :  this.daterange.endDate.getTime()
                     });
-                    this.contacts = resp.results;
+                    this.contacts = resp.results.map(function(session){
+                        session.localSearch = JSON.stringify(session.contact).toLowerCase();
+                        return session;
+                    });
+                    this.localSessionSearch();
                 } finally {
                     this.isLoading = false;
                 }
-            },100),
-            async toggleOnline(){
-                await this.$store.dispatch('OnlineStatus', !this.isOnline);
-            },
-            async pingOnline(){ 
-                clearInterval(this.intervalid1);        
-                this.intervalid1 = setInterval(function(){
-                    this.$store.dispatch('OnlineStatus', this.isOnline);
-                }.bind(this), MyConst.config.agentSessionTimeout);
-            },
-            searchTag : function(searchTag) {
-                if(this.search.text === searchTag){
-                    this.search.text = "";
-                } else {
-                    this.search.text = searchTag;
-                }
-            },
-            searchText : function() {
-                var searchTag = this.search.text.split(/(:[\w]+\ *)/).map(function (argument) {
-                    var argument = argument.trim();
-                    if(argument.indexOf(":") == 0){
-                        return (argument == searchTag) ? "" : searchTag;
-                    }
-                    return argument;
-                }).filter(function (argument) {
-                    return !!argument;
-                }).join(" ");
-
-                console.log("sss",[searchTag,this.search,searchTag]);
-                if(this.search.text !== searchTag){
-                    this.search.text = searchTag;
-                } else if(this.search.text === searchTag){
-                    this.search.text = "";
-                } else {
-                    this.search.text = searchTag + " " + this.search.text;
-                }
-            },
-            async loadQuickLabels(){
-                return await this.$store.dispatch('LoadQuickLabels');
-            },
+            },50),
+            localSessionSearch :  throttle(async function(){
+                let THAT = this;
+                let search = THAT.input.search.text.toLowerCase();
+                this.filteredContacts = (this.contacts || []).filter(function(session) {
+                    session.localShow = session.localSearch.indexOf(search) > -1
+                    return session.localShow;
+                });
+            },500),
             selectTag : function (tag) {
                 this.sortedQuickTags[tag.category].map((v,i)=>{
                      this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id) ?  !v.selected : v.selected;
@@ -344,9 +286,6 @@
                  sIndex != -1 ? this.selectedStatus.splice(sIndex, 1) : this.selectedStatus = [...this.selectedStatus, status];
                 console.log("this.selectedStatus", this.selectedStatus, status, sIndex);
             }
-        },
-        beforeUnmount : function (argument) {
-          clearInterval(this.intervalid1);  
         }
     }
 </script>
