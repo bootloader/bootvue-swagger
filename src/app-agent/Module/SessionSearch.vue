@@ -293,11 +293,6 @@
     h2{
         padding-top:20px;
     }
-    .filter-wrapper{
-        padding:15px 20px;
-        display: block;
-        background: #fff;
-    }
     .m-contact-search.card {
         border-radius: 0px !important;
         min-width: 200px;
@@ -402,7 +397,14 @@
     .action-wrapper{
         display: block  ;
     }
-    
+    .filter-wrapper {
+        padding:15px 20px;
+        display: block;
+        background: #fff;
+        overflow-y: scroll;
+        height: 100%;
+        padding-bottom: 80px;
+    }
     .session-search-wrapper{
         background: #fff !important;
     }
