@@ -324,7 +324,7 @@
                                 <b-button v-if="isAssignedToMe && ($route.params.profileId != $route.params.contactId)" 
                                     class="btn-sm text-white:hover" variant="outline-white-dirty" pill
                                     @click="goToChat()"> 
-                                    Send Message
+                                    Send New Message
                                 </b-button>
                                 <b-button 
                                     class="btn btn-sm text-white:hover" variant="outline-white-dirty" pill
@@ -339,7 +339,7 @@
                                 class="control-panel text-center">
                                 <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
                                 @click="initNewMessage(true)"> 
-                                    Send Message
+                                    Send New Message
                                 </b-button>
                         </div> 
                     </div>    

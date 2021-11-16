@@ -295,3 +295,9 @@ body {
 .fa-rotate-45 {
   transform: rotate(45deg);
 }
+
+.center-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

@@ -17,10 +17,9 @@
             </div>
         </div>
         <div class="card-body scheme-bg">
-                <div class="row m-0">
-                    <div class="col-lg-12 p-0 message-box-input">
-                        <form class="bg-white text-greyer">
-                            <div class="form-group">
+                <div class="w-100 m-0">
+                    <div class="w-100 p-0 message-box-input">
+                        <div class="bg-white text-greyer w-100 form-group">
                                 <MyChannelSelect v-model="model.channelId"  ref="channelSelect"
                                     :filter="{
                                         pushToNewContactAllowed : true
@@ -36,14 +35,24 @@
                                 <MyHSMTmplSelect options="getx:/api/options/tmpl/hsm"
                                     selectedPrefixClass="fa fa-file-code text-xl px-1 text-greyer"
                                     v-model="model.templateId" />
-                            </div>
-                        </form>
-                        <TemplatePreview v-if="model.templateId" :templateId="model.templateId" class="template-preview"
-                            format="COMMON" :model="{
-                                contact : contact, 
-                            }" />
+                        </div>
+                        <div class="message-box-preview m-0 w-100 center-wrap"> 
+                                <TemplatePreview v-if="model.templateId" :templateId="model.templateId" 
+                                    class="template-preview"
+                                    format="COMMON" :model="{
+                                        contact : contact, 
+                                    }" />
+                                <div v-else class="text-center mt-5">
+                                    <span class="fa fa-code fa-5x text-white-dirty" />
+                                    <br/>
+                                    <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
+                                    <br/>
+                                </div> 
+                        </div>   
+   
                     </div>
                 </div>
+              
         </div>
         <div class="card-footer">
             <div
@@ -54,8 +63,16 @@
                     variant="outline-white-dirty"
                     class="btn-sm text-white:hover"
                     @click="sendNewMessage(true)">
-                    Send Message
+                    Send
                 </b-button>
+                <b-button 
+                    pill
+                    variant="outline-grey"
+                    class="btn-sm text-white:hover ml-2"
+                        @click="$router.push({ params: { mvu: 'CONTACTS' } })"
+                        v-tooltip="'Cancel'" >
+                        Cancel
+                </b-button> 
             </div>
         </div>
     </div>
@@ -130,7 +147,7 @@
                 }
                 this.contacts = noContacts.length ? [...noContacts] : [];
                 console.log(phoneNumber,phoneNumberPlus);
-                if(search.length < 5) return;
+                if(search.length < 3) return;
                 loading(true);
                 let resp = await this.$service.get('/api/options/contacts', {
                     search : searchedPhone || search, 
@@ -188,13 +205,32 @@
         .message-box-input .v-select .vs__dropdown-toggle{
             border-radius: 0px!important;
         }
-        .message-box-input .v-select .vs__search {
-            padding: 2px 5px;
-            text-align: left;
-        } 
-        .template-preview {
-            margin: 10px;
+        .card-body {
+            height: calc( 100% - 114px);
+            overflow: hidden;
         }
+
+        .message-box-input {
+            height: calc( 100vh - 50px);
+            .form-group {
+                height: 106px;
+                margin: 0px;
+            }
+            .v-select .vs__search {
+                padding: 2px 5px;
+                text-align: left;
+            } 
+            .message-box-preview {
+                height: calc( 100vh - 222px) !important;
+                overflow-y: scroll;
+
+                .template-preview {
+                    margin: 10px;
+                }
+
+            }
+        }
+
     }
 </style>
 
