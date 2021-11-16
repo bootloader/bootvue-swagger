@@ -7720,10 +7720,10 @@
   "resolved" "https://registry.npmjs.org/pe7-icon/-/pe7-icon-1.0.4.tgz"
   "version" "1.0.4"
 
-"pebounce@^0.0.3":
-  "integrity" "sha512-NBM8Bmeb9bFqx2DKv4G2RMVzoN86qPoDDgjggmqSGKw9zz7m7y8yovzi2a5zU7Zo3bMU2WKlsrNORh2yGVMs0w=="
-  "resolved" "https://registry.npmjs.org/pebounce/-/pebounce-0.0.3.tgz"
-  "version" "0.0.3"
+"pebounce@^0.0.6":
+  "integrity" "sha512-ywQspfINJ9IslnfA4i2RKj7jM2htJfrOYMPeEkJhaxL3vng7diS9ydHvw8myAjnvn0elrFchgQeowSOj0PBYJw=="
+  "resolved" "https://registry.npmjs.org/pebounce/-/pebounce-0.0.6.tgz"
+  "version" "0.0.6"
   dependencies:
     "debounce" "^1.2.1"
 
@@ -10569,11 +10569,6 @@
   "integrity" "sha512-fIsgALA3yQAtTnZjyUg5Y1tbVrYkLNBCET/ZvvDTS7tnmaWz8L1IzkESrRs1KIiqIGRVbBbiZAzUImrVBEziDA=="
   "resolved" "https://registry.npmjs.org/vue-toast-notification/-/vue-toast-notification-0.6.2.tgz"
   "version" "0.6.2"
-
-"vue-virtual-collection@^1.5.0":
-  "integrity" "sha512-sgih+795H1uEZ+g62IX4Sv8os9iMieJMI2bxVrCbLBuh6psYeG2sXX0w5LLZLwqQo3mk1XHCc1AwXaTZ5hkj4w=="
-  "resolved" "https://registry.npmjs.org/vue-virtual-collection/-/vue-virtual-collection-1.5.0.tgz"
-  "version" "1.5.0"
 
 "vue-visibility-change@^1.2.1":
   "integrity" "sha512-CgnubNhAY+EXqTHba660YY7FRubBuYkSELIlbXBBdgdiM/g5DmgFtLd2XChCqXs56TTfshnlIA900traBZPZQg=="

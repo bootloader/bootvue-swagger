@@ -16,7 +16,7 @@
                 </div>
                 <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_SESSION">
                     <a class="input-group-text menu_btn new-chat fa fa-search-plus" v-b-toggle 
-                    @click="MyFlags.agent.showSessionSearch=!MyFlags.agent.showSessionSearch"
+                     @click="MyFlags.agent.showSessionSearch=!MyFlags.agent.showSessionSearch"
                      @click.prevent v-tooltip="'Advance Search'">
                     </a>
                 </div>
@@ -73,12 +73,11 @@
                     <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
-                                <span class="online_icon"></span>
                                 <span class="contact_type fab"
                                 v-bind:class="MyDict.social[chat.contactType]"></span>
                         </div>
                         <div class="user_info contact-text">
-                            <span class="font-name" >{{chat.name || chat.contactId}}</span>
+                            <span class="font-name" >{{chat.contact.name || chat.contact.phone || chat.contact.email || chat.contactId}}</span>
 
                             <span v-if="chat.lastmsg" class="font-preview"
                                 :class="{
@@ -109,7 +108,7 @@
                         </div>
                         <div class="contact-flags">
                             <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
-                                :id="'time-details'+ chat.contactId" >{{chat.lastInComingStamp | formatDate}} </span>
+                                :id="'time-details'+ chat.contactId" >{{(chat.lastInComingStamp || chat.updatedStamp) | formatDate}} </span>
 
                             <div id="'nm' + c.contactId" class="chat_flags">
                                 <span>
@@ -377,14 +376,14 @@
     .contacts li.router-link-exact-active, .contacts li.active_contact {
         background-color: rgb(0 0 0 / 6%)
     }
-    .contact-preview .contact_type{
+    /* .contact-preview .contact_type{
       bottom: 0px;
       right: 0px;
       position: absolute;
       width: 24px;
       height: 24px;
-    }
-    .contact-text {
+    } */
+    /* .contact-text {
         margin-left: 15px;
         height: 40px;
         font-size: 18px;
@@ -394,9 +393,8 @@
         text-overflow: ellipsis;
         max-width: 187px;
         overflow: hidden;
-        /*font-weight: 300;*/
-    }
-    .contact-text .chat_tags {
+    } */
+    /* .contact-text .chat_tags {
         line-height: 13px;
     }
     .contact-text .chat_tags .tag-chat-status-sm {
@@ -411,22 +409,11 @@
         overflow: hidden;
         font-size: 10px;
         display: block;
-    }
+    } */
 
-    .contact-flags {
-        width: 60px;
-        font-size: 0.7em;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 0px;
-        margin-left: auto;
-        white-space : break-spaces;
-        max-width:65px;
-    }
-    .contact-time {
+    /* .contact-time {
         height: 28px;
-    }
+    } */
     .card-footer .fa::before {
         margin: 0px;
         cursor: pointer;
@@ -533,10 +520,105 @@
     ul.contacts li.data_assigned {
         /* background: #ffffff75; */
     }
-    ul.contacts li.data_assigned .user_img{
+    /* ul.contacts li.data_assigned .user_img{
         border: 1px solid #495d734d;
     }
     ul.contacts li.data_unassigned .user_img{
         border: 1px dashed #495d734d;
+    } */
+</style>
+
+<style lang="scss" scoped="">
+
+    .contact-preview {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        .contact_type{
+            bottom: 0px;
+            right: 0px;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+        }
+
+        .img_cont,
+        .user_img {
+            width: 40px;
+            height: 40px;
+            flex-grow: 0;
+        }
+        .contact-text {
+            flex-grow: 1;
+            margin-left: 15px;
+            height: 59px;
+            color : rgba(21, 21, 21, 0.68);
+            width: calc(100% - 160px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 18px;
+
+            .font-name{
+                text-overflow: ellipsis;
+                max-width: 187px;
+                overflow: hidden;
+            }
+            .chat_tags {
+                line-height: 13px;
+                .tag-chat-status-sm {
+                    background: rgba(255, 255, 255, 0.274)!important;
+                }
+            }
+            .font-preview{
+                text-overflow: ellipsis;
+                max-width: 187px;
+                overflow: hidden;
+                font-size: 10px;
+                display: block;
+            }
+        }
+        .contact_waiting  .contact-text .font-name{
+            font-weight: 500;
+        }
+        
+        .contact-flags {
+
+            width: 60px;
+            font-size: 0.7em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0px;
+            margin-left: auto;
+            white-space : break-spaces;
+            max-width:65px;
+
+            float: right;
+            text-align: right;
+            align-self :baseline;
+            flex-grow: 0;
+            .contact-time{
+                font-size: 1.0em;
+                text-align: right;
+                float: right;
+                height: 28px;
+            }
+        }
+
     }
+
+    .contacts {
+        li.data_assigned .user_img{
+            border: 1px solid #495d734d;
+        }
+        li.data_unassigned .user_img{
+            border: 1px dashed #495d734d;
+        }
+    }
+
+
 </style>

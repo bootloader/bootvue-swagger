@@ -7,6 +7,7 @@ import formatters from '../../services/formatters';
 import {MyConst,MyFlags} from '../../services/global';
 
 import DataProcessor from '../../services/DataProcessor';
+import jskeeper from '../../services/jskeeper';
 
 import pebounce from 'pebounce';
 
@@ -116,7 +117,8 @@ const cache = {
         return b.matchScore - a.matchScore;
     });
 
-  },500)
+  },500),
+
 }
 
 const actions = {
@@ -430,7 +432,10 @@ const actions = {
     return response.data.results;
   },
   async GetSessionChats({ commit , dispatch},options) {
-    let response = await axios.post("/api/sessions/messages?sessionId="+options.sessionId,options);
+    let response = await jskeeper.first(function(){
+      return axios.post("/api/sessions/messages?sessionId="+options.sessionId,options);
+    },"messages:"+options.sessionId);
+
     DataProcessor.session(response.data.results[0]);
     if(response.data.results[0].local.active){
         dispatch("AddChat",response.data.results[0]);

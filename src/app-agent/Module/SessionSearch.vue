@@ -78,14 +78,17 @@
                         <ul class="contacts contact-list" v-if="filteredContacts && filteredContacts.length>0">
                             
                             <router-link tag="li" v-for="(chat,index) in filteredContacts"  :key="'search-' + chat.sessionId" :data-index="index"
+                                   v-bind:class="{
+                                        active_contact : ($route.params.contactId == chat.contactId)
+                                    }"
                                     :to="{ 
-                                    name: 'defAgentView', 
-                                    params: { 
-                                        contactId: chat.contactId.replace('/','-'),
-                                        sessionId : chat.sessionId,
-                                        profileId : chat.contactId,
-                                        profileView : 'hide',
-                                        mvu : 'CHATBOX'
+                                        name: 'defAgentView', 
+                                        params: { 
+                                            contactId: chat.contactId.replace('/','-'),
+                                            sessionId : chat.sessionId,
+                                            profileId : chat.contactId,
+                                            profileView : 'hide',
+                                            mvu : 'CHATBOX'
                                     }}"
                                     v-show="chat.localShow"
                                 >
@@ -101,7 +104,7 @@
                                             v-bind:class="$global.MyDict.social[chat.contactType]"></span>
                                     </div>
                                     <div class="user_info contact-text">
-                                        <span class="font-name" >{{chat.name || chat.contactId}}</span>
+                                        <span class="font-name" >{{chat.name || chat.phone || chat.email || chat.contactId}}</span>
                                         <span class="font-preview">{{chat.phone || chat.email}}</span>  
                                     </div>
                                     <div class="contact-flags">

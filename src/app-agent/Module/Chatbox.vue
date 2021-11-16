@@ -388,6 +388,7 @@
 
     import debounce from 'debounce';
     import throttle from 'throttleit';
+    import pebounce from 'pebounce';
 
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
@@ -872,7 +873,7 @@
                 this.activeChat = chat;
                 return chat;
             },
-            loadCurrentession : debounce(async function(){
+            loadCurrentession : pebounce(async function(){
                 if(this.$route.params.sessionId){
                     return await this.loadSession({
                         contactId : this.$route.params.contactId,
@@ -886,9 +887,11 @@
                 this.activeChat = this.selectActiveChat();
 
                 if(this.activeChat == null && this.$route.params.contactId){
-                    this.loadCurrentession();
+                    await this.loadCurrentession();
+                    this.loadArchiveMessages(false);
+                } else {
+                    this.loadArchiveMessages(true);
                 }
-                this.loadArchiveMessages(true);
                 this.defaultSelectedStatusTag();
             },200),
             async loadChats(){
@@ -953,7 +956,7 @@
 
                 if(!activeChat.messages || forceLoad){
                     this.isLoading = (!activeChat.messages || !activeChat.messages.length);
-                    var resp = await this.$store.dispatch('GetSessionChats',{
+                    var resp = await this.loadSession({
                         contactId : this.activeChat.contactId,
                         sessionId : this.activeChat.sessionId,
                         contactType : this.activeChat.contactType,
@@ -969,12 +972,11 @@
                     this.selectStatus(this.activeChat.status);
                     let tagId = this.activeChat.tagId || [];
                     for(var category in this.sortedQuickTags){
-                    this.sortedQuickTags[category].map((v,i)=>{
-                        this.sortedQuickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
-                    })
+                        this.sortedQuickTags[category].map((v,i)=>{
+                            this.sortedQuickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
+                        })
+                    }
                 }
-                }
-                
             },
             async onAssignedToAgent (argument) {
                 var resp = await this.$store.dispatch('AssingToAgent',{
