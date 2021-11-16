@@ -28,8 +28,7 @@
         <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" v-show="!showResult">
 
              <span class="action-wrapper text-center" >
-                <span class="cat-title">Date Range</span><br/>
-                <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker"
+                <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker date-range-picker-mobile"
                 :opens="'right'"
                 :time-picker="false"
                 control-container-class="reportrange-text btn"
@@ -176,10 +175,10 @@
                                             hour24(moment()).toDate()],
                         'Last month': [hour0(moment().subtract(1,"month").date(1)).toDate(), 
                                             hour24(moment().date(0)).toDate()],
-                        'This year': [hour0(moment().month(0).date(1)).toDate(), 
-                                            hour24(moment()).toDate()],
-                        'Last year': [hour0(moment().subtract(1,"year").month(0).date(1)).toDate(), 
-                                        hour24(moment().month(0).date(0)).toDate()],
+                        // 'This year': [hour0(moment().month(0).date(1)).toDate(), 
+                        //                     hour24(moment()).toDate()],
+                        // 'Last year': [hour0(moment().subtract(1,"year").month(0).date(1)).toDate(), 
+                        //                 hour24(moment().month(0).date(0)).toDate()],
                     }
                 }
             })(),

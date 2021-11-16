@@ -456,6 +456,85 @@
       border-color :$success!important;
       //color: #484848 !important;
   }
+  &.date-range-picker-mobile {
+    width: 100% !important;
+    margin: 0px!important;
+    padding: 0px!important;
+    
+    .reportrange-text {
+      min-height: 10px!important;
+      font-size: 12px!important;
+      line-height: 12px;
+      padding: 8px 8px;
+      margin: 0px!important;
+    }
+    
+    .daterangepicker {
+      &::before ,  &::after{
+        display: none;
+      }
+      width: 100% !important;
+      min-width : 150px !important;
+      left: 0px !important;
+      right: 0px !important;
+      margin-bottom: 100px;
+      margin-top: 0px;
+      .calendars {
+        width: 100%;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        flex-direction: column;
+        .ranges {
+          width: 100%;
+          ul {
+            display: flex;
+            width: 100% !important;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -ms-flex-pack: distribute;
+            width: 100% !important;
+            justify-content: center;
+            li {
+              display: inline;
+              float: left;
+              line-height: 12px;
+              font-size: 12px;
+              padding: 8px 10px;
+              border-radius: 5px;
+            }
+          }
+        }
+        .calendars-container {
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-orient: vertical;
+          -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+          flex-direction: column;
+          font-size: .2em;
+          align-content: space-around;
+          flex-wrap: wrap;
+          .drp-calendar {
+            border-left: 0px;
+            padding: 0px;
+          }
+        }
+        .calendar-table td, .calendar-table  th {
+          font-size: 12px;
+          padding: 0px;
+          margin: 0px;
+          line-height: 10px;
+        }
+      }
+    }
+  }
+
 }
 
 
