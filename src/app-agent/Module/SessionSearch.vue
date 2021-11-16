@@ -35,25 +35,28 @@
                 :ranges="dateranegeinput.ranges"
                 @select="onDateRangeSelect"
                 @update="onDateRangeUpdate">
-
                     <!--    input slot (new slot syntax)-->
                     <template #input="picker" style="min-width: 350px;">
                         <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
                     </template>
                   </date-range-picker>
             </span>
+            <br/>
+            <div class="section-divider">
+                 <span class="cat-title section-title">Chat Status</span>
+            </div>
+            <div>
+                <span v-for="(status,s) in editableStatus" v-bind:key="s"
+                    class="tag-chat-status-lg tag" @click="selectStatus(s)"
+                    :class="'tag-chat-status-'+ s + (selectedStatus.indexOf(s) != -1 ? ' tag-chat-status-active' : '')">
+                    {{status.label}}
+                </span>
+            </div>
 
-            <hr />
-
-            <span class="cat-title">Chat Status</span><br/>
-            <span v-for="(status,s) in editableStatus" v-bind:key="s"
-                class="tag-chat-status-lg tag" @click="selectStatus(s)"
-                :class="'tag-chat-status-'+ s + (selectedStatus.indexOf(s) != -1 ? ' tag-chat-status-active' : '')">
-                {{status.label}}
-            </span>
-            <div v-for="(category, categoryName) in sortedQuickTags" v-bind:key="categoryName" >
-                <hr />
-                <span class="cat-title">{{categoryName}}</span><br/>
+            <div v-for="(category, categoryName) in sortedQuickTags" v-bind:key="categoryName" class="mt-3">
+                <div class="section-divider">
+                    <span class="cat-title section-title">{{categoryName}}</span>
+                </div>
                 <span v-for="(tag, index) in sortedQuickTags[categoryName]"  v-bind:key="index"
                     @click="selectTag(tag)"
                     :class="'tag-chat-status-lg tag ' + 
@@ -393,8 +396,8 @@
     } */
 </style>
 <style lang="scss" scoped="">
-    .action-wrapper{
-        display: block  ;
+    .action-wrapper {
+        display: block ;
     }
     .filter-wrapper {
         padding:15px 20px;
@@ -403,6 +406,21 @@
         overflow-y: scroll;
         height: 100%;
         padding-bottom: 80px;
+
+        .section-divider {
+            width: 100%;
+            height: 13px; 
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.137); 
+            text-align: left;
+            .section-title {
+                font-size: 12px; 
+                background-color: #ffffff; 
+                padding: 0 5px;
+                border-radius: 5px;
+            }
+        }
+
     }
     .session-search-wrapper{
         background: #fff !important;
@@ -473,6 +491,7 @@
             padding: 0px !important;
         }
     }
+
     .btn-outline-black-dirty {
         color: #5a5a5a;
         border-color: #5a5a5a;

@@ -93,3 +93,23 @@
     }
 
 }
+
+/****================= WIDGET CLASS Compatibility ===============================================  */
+.vue-daterange-picker {
+  .daterangepicker td.active, .daterangepicker td.active:hover {
+      background-color: rgba(var(--scheme-color-rgba), 1);
+      border-color: transparent;
+      color: #fff;
+  }
+  .daterangepicker .btn.btn-success {
+    background-color :  rgba(var(--scheme-color-rgba), 1);
+  }
+  .daterangepicker .btn.btn-secondary {
+    background-color : #FFF;
+    color :  rgba(var(--scheme-color-rgba), 1);
+    border-color: rgba(var(--scheme-color-rgba), 1);
+  }
+  .daterangepicker .ranges ul li.active {
+    background-color :  rgba(var(--scheme-color-rgba), 1);
+  }
+}

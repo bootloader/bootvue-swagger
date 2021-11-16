@@ -458,7 +458,7 @@
   }
   &.date-range-picker-mobile {
     width: 100% !important;
-    margin: 0px!important;
+    margin: 0px 2px!important;
     padding: 0px!important;
     
     .reportrange-text {
@@ -487,6 +487,7 @@
         flex-direction: column;
         .ranges {
           width: 100%;
+          border-bottom : 0px;
           ul {
             display: flex;
             width: 100% !important;
