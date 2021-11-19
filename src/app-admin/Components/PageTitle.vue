@@ -67,15 +67,17 @@
                                 <i v-if="action.icon" class="" :class="action.icon"/>{{action.label}}</button>
                         </div>
 
-                        <div v-else class="d-inline-flex" >
-                            <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn"
+                        <div v-else class="d-inline-flex" > 
+                            <b-button v-b-modal="action.modal"
+                                @click="clickAction(action)" 
+                                 class="btn-shadow  align-items-center btn"
                                 v-bind:class="{
                                     'btn-link' : (action.type == 'link'),
                                     'btn-success' : (!action.type || action.type == 'button')
                                 }">
                                 <i v-if="action.icon" class="mr-2" :class="action.icon"/>
-                                {{action.label}} 
-                            </button>
+                                {{action.label}}
+                            </b-button>
                         </div>
 
                     </span>

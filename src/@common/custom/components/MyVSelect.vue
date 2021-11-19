@@ -156,7 +156,7 @@
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
                             item : option,
-                            prefixClass : option.prefixClass
+                            prefixClass : option.prefixClass || option.icon
                         };
                     }
                 });
@@ -235,4 +235,5 @@
         font-weight: bold;
     }
 }
+
 </style>

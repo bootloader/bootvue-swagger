@@ -538,6 +538,23 @@
 
 }
 
+.my-normalize-v2 {
+  .v-select{
+    color: rgb(87, 87, 87) !important; 
+    .vs__selected{
+      color: rgb(87, 87, 87) !important;
+    }
+  }
+  .vs__search::placeholder,
+  .vs__dropdown-toggle,
+  .vs__dropdown-menu,
+  .vs__dropdown-option{
+    color: rgb(87, 87, 87) !important;
+  }
+  
+}
+
+
 
 /***  ========================= Admin Panel ==========================================*/
 

@@ -7,7 +7,8 @@
                 icon: 'icon-gradient bg-happy-itmeo fa fa-whatsapp',
             }"
             :table="table"
-            :filters="filters" :autoApply="false"
+            :filters="filters" :actions="[{ label : 'Create Message Template', icon : 'plus', name : 'ADD_ITEM', modal : modelName }]"
+            :autoApply="false"
             @action="onAction"
             @rows="onRows">
             <template #filter(channelId)="{apply,filter}">
@@ -57,32 +58,29 @@
             <template #body>
                 <b-row>
                     <b-col cols="2">
-                        <b-list-group>
+                        <b-list-group> 
+                            <b-list-group-item>
+                                <span class="font-weight-bold text-md">Languages</span>
+                            </b-list-group-item>    
                             <b-list-group-item v-for="temp in templates" v-bind:key="temp.lang" pointer
                                 :class="{ 'bg-teal-100' :  temp.lang == template.lang }"
                                 @click="selectTemplate(temp)">
-                                <i class="fa fa-circle"
-                                    :class="{
-                                        'text-success' : temp.template.status == 'approved',
-                                        'text-danger' : temp.template.status == 'rejected'
-                                    }"
-                                /> &nbsp;
+                                <my-status 
+                                    v-model="temp.template.status"
+                                ></my-status>
+                                &nbsp;
                                 <my-text options="data:languages" :value="temp.lang" optionKey="waba" />
                             </b-list-group-item>
-                            <b-list-group-item>
-                                <my-v-select options="data:languages" placeholder="Add language"
-                                    v-model="newLanguage" optionKey="waba" filterable searchable
-                                    :filter="{
-                                        waba  : true
-                                    }"
-                                    style="min-width: 50px;width:100%;"
-                                />{{newLanguage}}
-                            </b-list-group-item>
-                            <b-list-group-item>
-                                {{newLanguage}}
-                            </b-list-group-item>
-
-                        </b-list-group>        
+                                <b-list-group-item>
+                                <my-v-select 
+                                options="data:languages" placeholder="Add language"
+                                v-model="newLanguage" optionKey="waba" filterable searchable
+                                :filter="{
+                                    waba  : true
+                                }"
+                                style="min-width: 50px;width:100%;"/>
+                            </b-list-group-item> 
+                        </b-list-group>
                     </b-col>
                     <b-col cols="7">
                         <validation-observer v-slot="{handleSubmit}" ref="templateStructure">
@@ -90,7 +88,18 @@
                         <b-card  no-body>
 
                             <template #header>
-                                <h6><my-text options="data:languages" :value="template.lang" optionKey="waba" /> Message content</h6>
+                                <span class="font-weight-bold text-md"> 
+                                    <my-text options="data:languages" :value="template.lang" optionKey="waba" /> Message content
+                                </span> &nbsp;
+                                <span v-if="!template.template.status"
+                                    class="text-danger text-left" 
+                                    pointer v-tooltip="'Delete Unsaved template'"
+                                    @click="onDelete(template)">
+                                    <i class="fa fa-trash"/></span>
+                                    <my-status class="float-right"
+                                        v-model="template.template.status"
+                                    >&nbsp;{{template.template.status || 'unsaved'}}</my-status>
+
                             </template>
 
                             <b-card-body  
@@ -235,8 +244,54 @@
                     </b-col>
                 </b-row>   
             </template>
-
         </master-view>
+
+
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Template '">
+                  <ValidationObserver ref="form" class="my-normalize-v2">
+                            <div class="form-group">
+                              <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Message Category</label>
+                                     <my-v-select  class="text-lg text-grey"
+                                        options="data:waba/message_categories" placeholder="Select Message Category"
+                                        v-model="newItem.category" filterable searchable
+                                        style="min-width: 200px;width:100%;"/>
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
+
+                            <base-input :disabled="nonEditable" class="mb-0"
+                                label="Template Name"
+                                v-model="newItem.name" :textLimit="512" required
+                                rules="required|min:4|max:512" >
+                            </base-input>
+
+                            <div class="form-group">
+                                <ValidationProvider v-slot="v" rules="required">
+                                        <label for="examplePassword" class="">Message Language</label>
+                                            <my-v-select  class="text-lg text-grey"
+                                                options="data:languages" placeholder="Select Message Language"
+                                                v-model="newItem.lang" optionKey="waba" filterable searchable
+                                                :filter="{
+                                                    waba  : true
+                                                }"
+                                            style="min-width: 50px;width:100%;"/>
+                                        <span class="v-input-error">{{ v.errors[0] }}</span>
+                                </ValidationProvider>
+                            </div>
+
+                </ValidationObserver>
+
+                 <template #modal-footer>
+                      <div class="position-relative form-group">
+                        <button @click="createItem"
+                            :disabled="!isValidNewItem"
+                          class="form-control btn btn-primary">Create</button>
+                        </div>
+                  </template>
+
+        </b-modal>
+
     </div>
 </template>
 
@@ -246,6 +301,7 @@
     import MyHSMTmplSelect from '@/@common/custom/components/MyHSMTmplSelect.vue'
     import MyText from '../../../@common/custom/components/MyText.vue'
     import MyVSelect from '../../../@common/custom/components/MyVSelect.vue'
+    import MyStatus from '../../../@common/custom/components/MyStatus.vue'
     import BaseTextArea from '../../../@common/argon/components/Inputs/BaseTextArea.vue'
     import BaseInput from '../../../@common/argon/components/Inputs/BaseInput.vue'
     import {createWABATmplSample, createWABATmplSimple} from "@/@model/WABATmpl";
@@ -263,7 +319,7 @@
                 BaseTextArea,
                 BaseInput,
                 BaseSelect,
-                TemplatePreview
+                TemplatePreview,MyStatus
         },
         data: () => ({
             filters: [
@@ -295,7 +351,7 @@
                 rows: 0,
                 api: 'api/tmpl/hsm/waba_templates',
             },
-            modelName: 'MODAL_CHANNELS',
+            modelName: 'MODAL_WABA_TEMPLATE',
             modalInputs: [],
             oldHash: null,
             model: {
@@ -305,6 +361,8 @@
             templateSimple : createWABATmplSimple(),
             templates : [],
             newLanguage : null,
+            newItem : {
+            }
         }),
         computed: {
             items: function () {
@@ -313,8 +371,8 @@
             teams: function () {
                 return this.$store.getters.StateTeams
             },
-            isChanged: function () {
-                return true //this.oldHash !== JSON.stringify(this.oneItem);
+            isValidNewItem: function () {
+                return this.newItem.category && this.newItem.name;
             },
             templateBody : function(){
                 return this.template.template.components.filter(function(comp){
@@ -370,10 +428,13 @@
         watch : {
             'newLanguage' : function (nV,oV) {
                 console.log("watch.newLanguage",nV,oV);
-                  this.addTemplate();
+                this.addTemplate(nV);
             },
             '$route.params.channelId' : function(){
                 this.onLoad();
+            },
+            "newItem.name" : function(){
+                this.newItem.name = this.newItem.name.replace(" ","_").toUpperCase().replace(/[^A-Za-z0-9_]/g,'');
             }
         },
         mounted: function () {
@@ -385,6 +446,20 @@
                     this.filters[1].value = this.$route.params.channelId;
                 } else {
                     this.template = {};
+                }
+            },
+            async createItem () {
+                let success = await this.$refs.form.validate();
+                if(success === true){
+                    this.selectTemplate({
+                        channelId : this.filters[1].value,
+                        code : this.newItem.name,
+                        category : this.newItem.category,
+                        lang : this.newItem.lang
+                    });
+                    this.addTemplate(this.newItem.lang);
+                    this.$refs.form.reset();
+                    this.$bvModal.hide(this.modelName);
                 }
             },
             async onSubmit(){
@@ -416,6 +491,7 @@
             },
             async onAction(argument) {
                 switch (argument.name) {
+                    case "ADD_ITEM" : 
                     default:
                         console.log('NoMapping', argument)
                 }
@@ -428,19 +504,10 @@
                     })
                 }
             },
-            async onRows(rows){
-                if(this.$route.params.channelId && this.$route.params.code && this.$route.params.lang){
-                    console.log("rows",rows)
-                    let temp = rows.filter((row) => {
-                        return (row.channelId == this.$route.params.channelId
-                            && row.code == this.$route.params.code
-                            && row.lang == this.$route.params.lang
-                        );
-                    })[0];
-                    if(temp){
-                        this.selectTemplate(temp);
-                    }
-                }
+            refreshSelectedTemplates(){
+                this.templates = this.$refs.templatesView.getItems().filter((template)=>{
+                    return template.code == this.template.code;
+                });
             },
             async selectTemplate(item) {
                 this.template = item;
@@ -459,15 +526,26 @@
                         }
                     })
                 }
-                this.templates = this.$refs.templatesView.getItems().filter((template)=>{
-                    return template.code == this.template.code;
-                });
+                this.refreshSelectedTemplates();
             },
-            async addTemplate(){
-                if(!this.newLanguage){
+            async onRows(rows){
+                if(this.$route.params.channelId && this.$route.params.code && this.$route.params.lang){
+                    console.log("rows",rows)
+                    let temp = rows.filter((row) => {
+                        return (row.channelId == this.$route.params.channelId
+                            && row.code == this.$route.params.code
+                            && row.lang == this.$route.params.lang
+                        );
+                    })[0];
+                    if(temp){
+                        this.selectTemplate(temp);
+                    }
+                }
+            },
+            async addTemplate(newLanguage){
+                if(!newLanguage){
                     return;
                 }
-                let newLanguage = this.newLanguage;
                 this.fixit();
                 let newTemplate = this.templates.filter((tmp)=> tmp.lang== newLanguage)[0];
                 if(!newTemplate){
@@ -479,6 +557,25 @@
                 
                 if(newTemplate){
                     this.selectTemplate(newTemplate);
+                }
+            },
+            onDelete(item){
+                var templates = this.$refs.templatesView.getItems();
+                for(var i in templates){
+                    let tmpl = templates[i];
+                    if(!(
+                        tmpl.channelId!=item.channelId 
+                        || tmpl.code!=item.code
+                        || tmpl.lang!=item.lang)){
+                        templates.splice(i,1);
+                        this.refreshSelectedTemplates();
+                        if(this.templates[0]){
+                            this.selectTemplate(this.templates[0])
+                        } else {
+                            this.selectTemplate({});
+                        }
+                        break;
+                    };
                 }
             },
             addButton(type){

@@ -125,7 +125,7 @@
                               </div>
 
                               </div>
-                               <div class="col-md-6">
+                               <div class="col-md-6" hidden>
                                   <div class="position-relative form-group">
                                     <label for="exampleCustomMutlipleSelect" class="">Channels</label>
                                     <label for="select-all-channel" class="float-right">Select All
