@@ -31,7 +31,7 @@
           </slot>
         </span>
         </div>
-        <slot v-bind="slotData">
+        
           <textarea
             :id="'fmg-' + inputId"
             :value="value"
@@ -44,7 +44,6 @@
             class="form-control"
             :class="[{'is-valid': valid && validated && successMessage}, {'is-invalid': invalid && validated}, inputClasses]">
           </textarea>
-        </slot>
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
                <i class="fa" :class="[
@@ -53,10 +52,13 @@
                ]"></i>
             </span>
         </div>
-        <div v-if="appendIcon || $slots.append" class="input-group-append">
+        <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
           <span class="input-group-text">
-              <slot name="append">
-                  <i :class="appendIcon"></i>
+               <slot name="append">
+                  <span v-if="textLimit>0" class="">
+                    {{value ? value.length : 0}}/{{textLimit}}
+                  </span>
+                  <i v-else :class="appendIcon"></i>
               </slot>
           </span>
         </div>
@@ -67,7 +69,7 @@
             {{helpMessage || $attrs.placeholder}}
           </div>
       </slot>
-      <password-meter v-show="strengthBar" :password="value" @score="listeners.score" />
+      <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
       <slot name="success">
         <div class="valid-feedback" v-if="valid && validated && successMessage">
           {{successMessage}}
@@ -110,6 +112,10 @@
         type: Boolean,
         default: false,
         description: "Whether to show Password Strength Bar"
+      },
+      textLimit : {
+        type: Number,
+        default: 0,
       },
       group: {
         type: Boolean,
@@ -208,6 +214,7 @@
           prepend !== undefined ||
           this.appendIcon !== undefined ||
           this.prependIcon !== undefined ||
+          this.textLimit > 0 ||
           this.group
         );
       },

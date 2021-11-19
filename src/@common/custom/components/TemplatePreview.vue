@@ -14,14 +14,35 @@
             @input="clickAction">
       </MyVSelect>
 
-      <div class="message-preview w-100" :class="format" v-if="templateConfig" >
-            <div class="message-text">{{content.text}}</div>
+      <div class="message-preview w-100" :class="format" v-if="templateConfig">
+          <span v-if="format=='WHATSAPP'">   
+            <div class="message-text">
+              <div v-if="templateConfig.attachments && templateConfig.attachments[0]"
+                :class="['message-attachment-inline','attachment-'+templateConfig.attachments[0].mediaType]"
+              >
+              </div>
+              <div v-if="templateConfig.title" class="message-title">{{templateConfig.title}}</div>
+              <div class="message-body">{{content.text}}</div>
+            </div>
             <div class="message-buttons" v-if="content.options">
                 <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
                 {{button.label}}
                 </div>
             </div>
+          </span>
+          <span v-else>   
+            <div class="message-text">
+              <div v-if="templateConfig.title" class="message-title">{{templateConfig.title}}</div>
+              <div>{{content.text}}</div>
+            </div>
+            <div class="message-buttons" v-if="content.options">
+                <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
+                {{button.label}}
+                </div>
+            </div>
+          </span>
       </div>
+      
     </div>
 </template>
 
@@ -49,7 +70,7 @@
       content (){
         if(!this.templateConfig){
           return {
-            text : "",options : []
+            text : "", options : {}
           };
         }
         var contentStr = this.templateConfig.template;
@@ -64,7 +85,10 @@
         var contentArray = (contentStr || "").split('---options---');
         return  {
           text : contentArray[0],
-          options : formatters.message_form_options(formatters.map_from_string(contentArray[1]))
+          options : Object.assign({},
+            formatters.message_form_options(formatters.map_from_string(contentArray[1])),
+            this.templateConfig.options
+          )
         }
       },
       options (){
@@ -174,6 +198,37 @@
       background: #e5ddd5;
       padding: 16px;
       .message-text {
+
+          .message-title {
+            font-weight: bold;
+            font-size: 1.3em;
+            padding: 6px 7px 0 9px;
+          }
+          .message-attachment-inline {
+            width: 100%;
+            height: 150px;
+            background-color: #ccd0d5;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 80px 80px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            
+            &.attachment-IMAGE {
+                background-image: url('~@/assets/images/placeholder-img.png');
+            }
+            &.attachment-VIDEO {
+                background-image: url('~@/assets/images/placeholder-vdo.png');
+            }
+            &.attachment-DOCUMENT {
+                background-image: url('~@/assets/images/placeholder-doc.png');
+            }
+
+          }
+          .message-body {
+            padding : 7px 7px 6px 9px;
+          }
+
         white-space: pre-wrap;
         
         background: #ffffff;
@@ -186,7 +241,7 @@
         font-size: 13.6px;
         line-height: 19px;
 
-        padding: 7px 6px 8px 9px !important;
+        padding: 4px 4px 4px 4px !important;
 
         position: relative;
 

@@ -382,7 +382,7 @@
 .clear-both {
   clear: both;
 }
-*[cursor-pointer]{
+*[cursor-pointer],*[pointer]{
   cursor: pointer!important;
 }
 

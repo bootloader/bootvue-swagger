@@ -1,0 +1,21 @@
+{
+    "options" : [
+        {
+            "name" : "Text",
+            "code" : "TEXT",
+            "prefixClass" : "fa fa-font"
+        },{
+            "name" : "Image",
+            "code" : "IMAGE",
+            "prefixClass" : "fa fa-file-image"
+        },{
+            "name" : "Video",
+            "code" : "VIDEO",
+            "prefixClass" : "fa fa-file-video"
+        },{
+            "name" : "Document",
+            "code" : "DOCUMENT",
+            "prefixClass" : "fa fa-file-alt"
+        }
+    ]
+}

@@ -5,6 +5,7 @@
              v-bind="$attrs"
             class="w-100 text-black"
             style="min-width: 220px"
+            :value="value"
             v-model="model.value"
             :searchable="false"
             :clearable="true"
@@ -17,7 +18,7 @@
         </template>
 
         <template #option="option">
-            {{option.item.desc }} ({{option.item.lang }})
+            {{option.item.desc }} ({{option.item.lang }}) 
         </template>
 
     </MyVSelect>
@@ -46,6 +47,11 @@
         }),
         mounted: function () {
             this.model.value = this.value;
+        },
+        watch : {
+            value(){
+                this.model.value = this.value;
+            }
         },
         methods: {
             clickAction: function () {

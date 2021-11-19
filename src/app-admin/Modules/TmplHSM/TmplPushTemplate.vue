@@ -91,7 +91,7 @@
                             <div class="position-relative form-group row">
                               
                               <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Category</label>
+                                    <label for="examplePassword" class="">Grouping Category</label>
                                     <input name="category" id="examplePassword"
                                      placeholder="greeting" type="text"
                                       class="form-control" v-model="newItem.category">
@@ -103,7 +103,7 @@
                                     <ModalSelector class="form-control"
                                       :options="message_types"
                                       v-model="newItem.meta.messageType"
-                                      placeholder="Select Account">
+                                      placeholder="Select Message Type">
                                     </ModalSelector>
                                     <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
@@ -133,7 +133,7 @@
                                       :emptyLabel="'ALL'"
                                       :options="contactTypes"
                                       v-model="newItem.contactType"
-                                      placeholder="Select Account">
+                                      placeholder="Select Contact Type">
                                     </ModalSelector>
                                     <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
@@ -156,7 +156,7 @@
                                       placeholder="Select Content Type">
                                     </ModalSelector>
                                     <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              </ValidationProvider> 
 
                             </div>
 
@@ -219,9 +219,9 @@
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
+    import PageTitle from "../../Components/PageTitle.vue";
     import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
-    import ModalSelector from "./../../Layout/Components/ModalSelector.vue";
+    import ModalSelector from "../../../@common/custom/components/ModalSelector.vue";
     
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -229,7 +229,7 @@
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import mustache from 'mustache';
-    import formatters from './../../services/formatters';
+    import formatters from '../../../services/formatters';
 
     import VJsoneditor from 'v-jsoneditor'
     import TextComplete from 'v-textcomplete'

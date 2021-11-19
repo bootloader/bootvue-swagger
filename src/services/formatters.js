@@ -213,7 +213,7 @@ var formatter = {
   },
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -241,6 +241,34 @@ var formatter = {
     for(var i in lines){
       if(lines[i] && !phoneFormatted(lines[i]) && !phoneFormatted(lines[i].replace(/[\ \+]/g,"")))
           return 'errors.ValidPhonesPerLine';
+    }
+    return true;
+  },
+  HBNumVar :  function(contents,[position,min,max]){
+    var re = /({{(\w+)}})/g;
+    var myArray = contents.match(re) || [];
+    if(min){
+      min = parseInt(min);
+      if(myArray.length<min)
+        return 'errors.LessVariable';
+    }
+    if(max){
+      max = parseInt(max);
+      if(myArray.length>max){
+        return 'errors.ExtraVariable';
+      }
+    }
+    if(position == "end" && myArray.length){
+      let totalLen = contents.length;
+      let varStr = myArray[myArray.length-1];
+      if(contents.indexOf(varStr) != (totalLen-varStr.length)){
+        return 'errors.PositionVariable';
+      }
+    }
+    for(let i=0;i<myArray.length; i++){
+    	if("{{"+(i+1)+"}}" !== myArray[i]){
+    		return 'errors.InvalidVariable';
+    	}
     }
     return true;
   },

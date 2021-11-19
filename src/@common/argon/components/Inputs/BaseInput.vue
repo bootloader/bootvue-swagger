@@ -5,7 +5,7 @@
         {'is-question': question }
       ]">
       <slot name="label">
-        <label v-if="label || name" 
+        <label v-if="!prelabel && (label || name)" 
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -24,12 +24,13 @@
        {'has-label': (label || name) || $slots.label},
        inputGroupClasses
        ]">
-        <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
-        <span class="input-group-text">
+        <div v-if="prependIcon || prelabel || $slots.prepend" class="input-group-prepend">
           <slot name="prepend">
-            <i :class="prependIcon"></i>
+            <span class="input-group-text">
+              <i v-if="prependIcon" :class="prependIcon"></i>
+              <span v-if="prelabel">{{label || name}}</span>
+            </span>
           </slot>
-        </span>
         </div>
         <slot v-bind="slotData">
           <input
@@ -52,10 +53,13 @@
                ]"></i>
             </span>
         </div>
-        <div v-if="appendIcon || $slots.append" class="input-group-append">
+        <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
           <span class="input-group-text">
               <slot name="append">
-                  <i :class="appendIcon"></i>
+                  <span v-if="textLimit>0" class="">
+                    {{value ? value.length : 0}}/{{textLimit}}
+                  </span>
+                  <i v-else :class="appendIcon"></i>
               </slot>
           </span>
         </div>
@@ -100,6 +104,11 @@
         default: false,
         description: "Whether to amnimate placeholder to lable"
       },
+      prelabel: {
+        type: Boolean,
+        default: false,
+        description: "Prepend Label (left)"
+      },
       feedback: {
         type: Boolean,
         default: false,
@@ -109,6 +118,10 @@
         type: Boolean,
         default: false,
         description: "Whether to show Password Strength Bar"
+      },
+      textLimit : {
+        type: Number,
+        default: 0,
       },
       group: {
         type: Boolean,
@@ -207,6 +220,8 @@
           prepend !== undefined ||
           this.appendIcon !== undefined ||
           this.prependIcon !== undefined ||
+          this.prelabel !== undefined ||
+          this.textLimit > 0 ||
           this.group
         );
       },

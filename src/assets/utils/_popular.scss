@@ -4,11 +4,13 @@
 $popular-list:(
     purple-dirty: #9f6bb4,
     purple-darkdirty:  #8648a1,
+    greyish:  #f0f4f6,
     grey:  #8b8b8b,
     greyer:  #5a5a5a,
     blue: #153f9b,
     white : #FFF,
     white-dirty : rgb(226, 226, 226),
+    teal-100 : #d2f4ea,
 );
 
 @each $key,$val in $popular-list{
@@ -22,8 +24,18 @@ $popular-list:(
         color: #{$val};
         border-color: #{$val};
     }
+    .btn-outline-#{$key}:not(:disabled):not(.disabled):active, 
+    .btn-outline-#{$key}:not(:disabled):not(.disabled).active, 
+    .show > .btn-outline-#{$key}.dropdown-toggle {
+        color: #fff;
+        background-color: #{$val};
+        border-color: #{$val};
+    }
     .text-#{$key}\:hover:hover {
         color: #{$val};
+    }
+    .border-#{$key} {
+        border-color: #{$val};
     }
   }
 .text-comma:not(:empty)+.text-comma:not(:empty)::before {

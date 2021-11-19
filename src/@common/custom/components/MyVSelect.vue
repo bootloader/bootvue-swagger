@@ -1,5 +1,5 @@
 <template>
-    <v-select
+    <v-select v-if="type=='dropdown'"
         :options="model.options"
         style="min-width: 220px;"
         v-model="model.value"
@@ -9,10 +9,15 @@
         :placeholder="placeholder"
         :clearable="clearable"
         @search="onSearch"
-        @input="clickAction">
+        @input="onChange">
 
         <template #selected-option="option">
-            <span v-if="selectedPrefixClass" v-bind:class="selectedPrefixClass">&nbsp;</span>{{option.label }}
+            <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
+            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+        </template>
+
+        <template #option="option">
+            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
         </template>
 
         <template #open-indicator="{ attributes }">
@@ -24,11 +29,17 @@
         </template>
 
     </v-select>
+    <span v-else>
+        <slot name="selected-option"  v-bind="{option : model.value}" v-if="model.value" >
+            <span v-if="selectedPrefixClass" v-bind:class="selectedPrefixClass">&nbsp;</span>{{model.value.label }}
+        </slot>
+    </span>
 </template>
 
 <script>
     import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css'
+    import 'vue-select/dist/vue-select.css';
+
     export default {
         components: {
             vSelect,
@@ -74,6 +85,10 @@
             selectedPrefixClass : {
             },
             filter : {
+            },
+            type : {
+                type : String,
+                default : "dropdown"
             }
         },
         data: () => ({
@@ -90,7 +105,7 @@
         },
         watch : {
             value : function(newVal, oldVal){
-                this.selectModelValue();
+                this.valueOnChange(newVal, oldVal);
             },
             options : function(newVal, oldVal){
                 this.loadOptions();
@@ -100,7 +115,11 @@
             this.loadOptions()
         },
         methods: {
+            valueOnChange : function(newVal, oldVal){
+                this.selectModelValue();
+            },
             selectModelValue(){
+                this.model.value = null;
                 for(var i in this.model.options){
                     if(this.model.options[i].value == this.value){
                         this.model.value = this.model.options[i];
@@ -109,10 +128,9 @@
                 if(this.selectDefault && (this.model.value === undefined || this.model.value === null)){
                     if(this.selectDefault==true && this.model.options[0]){
                         this.model.value = this.model.options[0];
-                        this.clickAction();
+                        this.onChange();
                     }
                 }
-                console.log("option");
                 this.$emit("option", this.model.value);
             },
             fromOptions(options){
@@ -137,7 +155,8 @@
                         return {
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
-                            item : option
+                            item : option,
+                            prefixClass : option.prefixClass
                         };
                     }
                 });
@@ -159,7 +178,11 @@
                     this.model.options  = this.model.options.filter(function(option){
                         return filters.some(function(filter){
                             for(var key in filter){
-                                if(filter[key] !== option.item[key]){
+                                if(filter[key] === true){
+                                    if(!option.item[key]){
+                                        return false;
+                                    }
+                                } else if(filter[key] !== option.item[key]){
                                     return false;
                                 }
                             }
@@ -185,7 +208,7 @@
                     this.fromOptions(this.options);
                 }
             },
-            clickAction: function () {
+            onChange: function () {
                 let value = this.model.value ? this.model.value.value : null;
                 this.$emit("input", value);
                 this.$emit("change", value);
