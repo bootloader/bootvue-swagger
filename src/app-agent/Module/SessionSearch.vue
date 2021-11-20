@@ -17,7 +17,8 @@
                         class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
                 </div>
                 <div class="input-group-append">
-                    <a class="input-group-text menu_btn new-chat fa fa-filter edit-search" v-tooltip="'Edit Search'"
+                    <a class="input-group-text menu_btn new-chat  edit-search fa" v-tooltip="showResult ? 'Edit Search' : 'Search Result'"
+                        :class="showResult ? 'fa-undo' : 'fa-list-ul'"
                         @click="(showResult=!showResult)">
                     </a>
                 </div>
