@@ -129,13 +129,13 @@
                                     v-if="hasTextHeaderVariable"  :disabled="nonEditable"
                                     :textLimit="60"
                                     :placeholder="'Sample value for {{1}}'"
-                                    v-model="templateSimple.exmaples.header_text">
+                                    v-model="templateSimple.examples.header_text">
                                 </base-input> 
                                  <base-input 
                                     prelabel :name="'Sample URL'"
                                     v-if="hasMediaHeader"  :disabled="nonEditable"
                                     :placeholder="`Provide URL of sample ${templateSimple.header.format}`"
-                                    v-model="templateSimple.exmaples.header_handler">
+                                    v-model="templateSimple.examples.header_handler">
                                 </base-input>
 
                                 </b-card-text>
@@ -157,7 +157,7 @@
                                             </base-text-area>
                                         </b-col> 
                                         <b-col cols="3">
-                                             <input class="body-card-body-variable" :readonly="nonEditable"
+                                             <input class="body-card-body-variable" :disabled="nonEditable"
                                                 v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
                                                 v-model="samples.text"
                                                 :placeholder="`Sample value for ${samples.variable}`" />
@@ -255,7 +255,7 @@
                                                     prelabel :name="'Sample URL'"
                                                     v-if="button.url && button.url.indexOf('{{1}}') > -1"  :disabled="nonEditable"
                                                     placeholder="Provide complete URL of sample link"
-                                                    v-model="templateSimple.exmaples.header_handler">
+                                                    v-model="templateSimple.examples.header_handler">
                                                 </base-input>
                                             </div>
                                         </b-list-group-item>
@@ -489,7 +489,9 @@ import Header from '../../Layout/Header.vue'
                 return {
                     //template : this.templateSimple.body.text,
                     template : this.templateSimple.examples.body_preview,
-                    title : (this.templateSimple.header.format == 'TEXT') ? this.templateSimple.header.text : null,
+                    title : (this.templateSimple.header.format == 'TEXT') 
+                            ? (this.templateSimple.header.text || "").replace("{{1}}",this.templateSimple.examples.header_text || "{{1}}") 
+                            : null,
                     attachments : ['IMAGE','VIDEO','DOCUMENT'].indexOf(this.templateSimple.header.format) > -1 ? [{
                         mediaType : this.templateSimple.header.format
                     }] : null,
