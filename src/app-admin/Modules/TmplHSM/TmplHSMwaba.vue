@@ -147,13 +147,24 @@
                                 <b-card-sub-title class="mb-2 text-sm">
                                     Enter the text for your message in the language you've selected.
                                 </b-card-sub-title>
-                                <b-card-text>
-                                <base-text-area :disabled="nonEditable"
-                                    placeholder="Type here" v-model="templateBody.text" 
-                                    rules="required|max:1024" rows=10
-                                    :textLimit="1024">
-                                </base-text-area>
+                                <b-card-text class="body-card-body">
+                                    <b-row>
+                                        <b-col cols="9">
+                                            <base-text-area :disabled="nonEditable" name="Body"
+                                                placeholder="Type here" v-model="templateBody.text" 
+                                                rules="required|max:1024|HBNumVar:*,0,60" rows=10
+                                                :textLimit="1024">
+                                            </base-text-area>
+                                        </b-col> 
+                                        <b-col cols="3">
+                                             <input v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
+                                                :placeholder="`Sample value for ${samples.variable}`" />
+                                        </b-col> 
+                                    </b-row>    
+                                
                                 </b-card-text>
+                               
+
                             </b-card-body>
 
                             <b-card-body  
@@ -360,6 +371,7 @@
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
 
     import debounce from "debounce";
+import Header from '../../Layout/Header.vue'
 
     export default {
         components: {
@@ -370,7 +382,8 @@
                 BaseTextArea,
                 BaseInput,
                 BaseSelect,
-                TemplatePreview,MyStatus
+                TemplatePreview,MyStatus,
+                Header
         },
         data: () => ({
             filters: [
@@ -501,7 +514,21 @@
             },
             "newItem.name" : function(){
                 this.newItem.name = this.newItem.name.replace(" ","_").toLowerCase().replace(/[^A-Za-z0-9_]/g,'');
-            }
+            },
+            "templateSimple.body.text" : debounce(function(neVal){
+                if(!neVal) return;
+                let re = /({{(\d+)}})/g;
+                let myArray = neVal.match(re) || [];
+                let body_text = this.templateSimple.examples.body_text
+                if(body_text.length != myArray.length){
+                    this.templateSimple.examples.body_text = myArray.map(function(vr,i){
+                        return {
+                            variable : vr,
+                            text : body_text[i] ? body_text[i].text : null
+                        }
+                    });
+                }    
+            },100)
         },
         mounted: function () {
             this.onLoad();
@@ -694,6 +721,11 @@
             font-size: .8em;
             text-align-last: right;
             float: right;
+        }
+        .body-card-body {
+            .form-control-label {
+                display: none;
+            }
         }
     }
 </style>
