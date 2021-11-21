@@ -54,6 +54,7 @@ function createWABATmplSimple() {
             header_text : null,
             header_handler : null,
             body_text : [],
+            body_preview : "",
             button_url : null
         }
     }

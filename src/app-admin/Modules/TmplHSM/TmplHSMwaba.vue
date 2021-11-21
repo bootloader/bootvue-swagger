@@ -159,6 +159,7 @@
                                         <b-col cols="3">
                                              <input class="body-card-body-variable" :readonly="nonEditable"
                                                 v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
+                                                v-model="samples.text"
                                                 :placeholder="`Sample value for ${samples.variable}`" />
                                         </b-col> 
                                     </b-row>    
@@ -486,7 +487,8 @@ import Header from '../../Layout/Header.vue'
             },
             templatePreview(){
                 return {
-                    template : this.templateSimple.body.text,
+                    //template : this.templateSimple.body.text,
+                    template : this.templateSimple.examples.body_preview,
                     title : (this.templateSimple.header.format == 'TEXT') ? this.templateSimple.header.text : null,
                     attachments : ['IMAGE','VIDEO','DOCUMENT'].indexOf(this.templateSimple.header.format) > -1 ? [{
                         mediaType : this.templateSimple.header.format
@@ -498,6 +500,11 @@ import Header from '../../Layout/Header.vue'
                                 label : btn.text,
                                 type : btn.type
                             }
+                        })
+                    },
+                    data : {
+                        body : this.templateSimple.examples.body_text.map(function(param) {
+                            return param.text || param.variable
                         })
                     }
                 }
@@ -518,15 +525,18 @@ import Header from '../../Layout/Header.vue'
                 if(!neVal) return;
                 let re = /({{(\d+)}})/g;
                 let myArray = neVal.match(re) || [];
-                let body_text = this.templateSimple.examples.body_text
-                if(body_text.length != myArray.length){
+                let body_text = this.templateSimple.examples.body_text;
+                let body_preview = this.templateSimple.body.text;
+                //if(body_text.length != myArray.length){
                     this.templateSimple.examples.body_text = myArray.map(function(vr,i){
+                        body_preview = body_preview.replace(vr,"{{data.body."+i+"}}")
                         return {
                             variable : vr,
                             text : body_text[i] ? body_text[i].text : null
                         }
                     });
-                }    
+                //}   
+                this.templateSimple.examples.body_preview = body_preview; 
             },100)
         },
         mounted: function () {
