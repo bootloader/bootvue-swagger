@@ -157,7 +157,8 @@
                                             </base-text-area>
                                         </b-col> 
                                         <b-col cols="3">
-                                             <input v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
+                                             <input class="body-card-body-variable"
+                                                v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
                                                 :placeholder="`Sample value for ${samples.variable}`" />
                                         </b-col> 
                                     </b-row>    
@@ -263,8 +264,6 @@
 
                             <b-card-footer>
                                 <b-button v-if="!nonEditable"  type="submit" variant="primary" class="float-right">Save</b-button>
-                                <b-button v-if="!nonEditable" variant="outline-primary" class="float-right mr-1"
-                                    v-b-modal="modelNameSamples" >Add Sample</b-button>
                             </b-card-footer>
 
                         </b-card>
@@ -725,6 +724,20 @@ import Header from '../../Layout/Header.vue'
         .body-card-body {
             .form-control-label {
                 display: none;
+            }
+            .body-card-body-variable{
+                border: 1px solid #d0d7dc;
+                // font-size: 1em;
+                // line-height: 20px;
+            }
+             .body-card-body-variable::placeholder{ 
+                 font-size: .8em;
+             }
+            .body-card-body-variable+.body-card-body-variable {
+                border-top: 0px;
+                // border-bottom: 1px solid #d0d7dc;
+                // border-left: 1px solid #d0d7dc;
+                // border-right: 1px solid #d0d7dc;
             }
         }
     }
