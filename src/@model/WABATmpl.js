@@ -50,6 +50,12 @@ function createWABATmplSimple() {
             urlType : 'STATIC',
             buttons: [],
         },
+        exmaples : {
+            header_text : null,
+            header_handler : null,
+            body_text : [],
+            button_url : null
+        }
     }
 }
 

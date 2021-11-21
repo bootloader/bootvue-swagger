@@ -27,7 +27,7 @@
             </div>
             <div class="message-buttons" v-if="content.options">
                 <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
-                {{button.label}}
+                <i v-if="button.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>{{button.label}}
                 </div>
             </div>
           </span>
@@ -38,7 +38,7 @@
             </div>
             <div class="message-buttons" v-if="content.options">
                 <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
-                {{button.label}}
+                  <i v-if="button.type=='URL'" class="fa fa-external-link-alt"/>{{button.label}}
                 </div>
             </div>
           </span>

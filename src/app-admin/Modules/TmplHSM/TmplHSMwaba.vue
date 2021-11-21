@@ -111,7 +111,7 @@
                                 <b-card-sub-title class="mb-2 text-sm">
                                     Add a title or choose which type of media you'll use for this header.</b-card-sub-title>
                                 <b-card-text>
-                                <my-v-select
+                                <my-v-select  class="mb-1"
                                     emptyDisplay="None" :selectDefault="true" :clearable="false"
                                         v-model="templateSimple.header.format" :disabled="nonEditable"
                                         options="data:waba/message_types">
@@ -123,8 +123,21 @@
                                      rules="required|max:60|HBNumVar:*,0,1" 
                                      helpMessage="Your title can include only one variable"
                                     v-model="templateSimple.header.text">
-                                </base-input>   
-                                
+                                </base-input>
+                                <base-input 
+                                    prelabel :name="'Sample {{1}}'"
+                                    v-if="hasTextHeaderVariable"  :disabled="nonEditable"
+                                    :textLimit="60"
+                                    :placeholder="'Sample value for {{1}}'"
+                                    v-model="templateSimple.exmaples.header_text">
+                                </base-input> 
+                                 <base-input 
+                                    prelabel :name="'Sample URL'"
+                                    v-if="hasMediaHeader"  :disabled="nonEditable"
+                                    :placeholder="`Provide URL of sample ${templateSimple.header.format}`"
+                                    v-model="templateSimple.exmaples.header_handler">
+                                </base-input>
+
                                 </b-card-text>
                             </b-card-body>
 
@@ -225,6 +238,12 @@
                                                     v-model="button.url" :textLimit="2000"
                                                      rules="required|max:2000|HBNumVar:end,0,1" >
                                                 </base-input>
+                                                <base-input 
+                                                    prelabel :name="'Sample URL'"
+                                                    v-if="button.url && button.url.indexOf('{{1}}') > -1"  :disabled="nonEditable"
+                                                    placeholder="Provide complete URL of sample link"
+                                                    v-model="templateSimple.exmaples.header_handler">
+                                                </base-input>
                                             </div>
                                         </b-list-group-item>
                                     </b-list-group>
@@ -232,7 +251,9 @@
                             </b-card-body>
 
                             <b-card-footer>
-                                <b-button v-if="!nonEditable" type="submit" variant="primary" class="float-right">Save</b-button>
+                                <b-button v-if="!nonEditable"  type="submit" variant="primary" class="float-right">Save</b-button>
+                                <b-button v-if="!nonEditable" variant="outline-primary" class="float-right mr-1"
+                                    v-b-modal="modelNameSamples" >Add Sample</b-button>
                             </b-card-footer>
 
                         </b-card>
@@ -293,6 +314,25 @@
                         </div>
                   </template>
 
+        </b-modal>
+        <b-modal v-if="templatePreview" :id="modelNameSamples" size="lg"
+            :title="'Add Sample Content'">
+            <b-row>
+                <b-col>
+                    <p class="text-sm">To help us understand what kind of message you want to send, you have the option to provide specific content examples for your template. 
+                    You can add a sample template for one or all languages you are submitting.</p>
+                    
+                    <p class="text-sm">Make sure not to include any actual user or customer information, and provide only sample content in your examples. 
+                        <a href="https://developers.facebook.com/docs/whatsapp/message-templates/guidelines"> Learn More </a>
+                    </p>
+                    <b-list-group>
+
+                    </b-list-group>     
+                </b-col>    
+                <b-col>
+                    <template-preview :template="templatePreview" />
+                </b-col>    
+            </b-row>    
         </b-modal>
         <b-modal v-if="templatePreview" :id="modelNamePreview" 
             :title="'Template Preview'"
@@ -363,7 +403,8 @@
                 api: 'api/tmpl/hsm/waba_templates',
             },
             modelName: 'MODAL_WABA_TEMPLATE',
-            modelNamePreview: 'MODAL_WABA_TEMPLATE_RPEVIEW',
+            modelNamePreview: 'MODAL_WABA_TEMPLATE_PREVIEW',
+            modelNameSamples: 'MODAL_WABA_TEMPLATE_SAMPLES',
             modalInputs: [],
             oldHash: null,
             model: {
@@ -392,7 +433,7 @@
                     return comp.type == "BODY";
                 })[0] || {};
             },
-           templateFooter : function(){
+            templateFooter : function(){
                 return this.template.template.components.filter(function(comp){
                     return comp.type == "FOOTER";
                 })[0] || {};
@@ -421,6 +462,16 @@
             nonEditable : function(){
                 return !!this.template?.template?.status;
             },
+            hasMediaHeader : function(){
+                return ["IMAGE","VIDEO","DOCUMENT"].indexOf(this.templateSimple?.header?.format) > -1;
+            },
+            hasTextHeaderVariable : function(){
+                return (
+                    this.templateSimple?.header?.format == "TEXT" 
+                    && this.templateSimple?.header?.text
+                    && this.templateSimple?.header?.text.indexOf("{{1}}") > -1
+                );
+            },
             templatePreview(){
                 return {
                     template : this.templateSimple.body.text,
@@ -432,7 +483,8 @@
                     options : {
                         buttons : (this.templateSimple?.buttons?.buttons || []).map(function (btn) {
                             return {
-                                label : btn.text
+                                label : btn.text,
+                                type : btn.type
                             }
                         })
                     }
