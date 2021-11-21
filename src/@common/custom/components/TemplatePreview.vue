@@ -23,6 +23,7 @@
               </div>
               <div v-if="templateConfig.title" class="message-title">{{templateConfig.title}}</div>
               <div class="message-body">{{content.text}}</div>
+              <div class="message-footer">{{templateConfig.footer}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
                 <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
@@ -201,8 +202,10 @@
 
           .message-title {
             font-weight: bold;
-            font-size: 1.3em;
+            font-size: 15px;
             padding: 6px 7px 0 9px;
+            color: rgba(0, 0, 0, .76);
+            line-height: 19px;
           }
           .message-attachment-inline {
             width: 100%;
@@ -223,10 +226,19 @@
             &.attachment-DOCUMENT {
                 background-image: url('~@/assets/images/placeholder-doc.png');
             }
-
           }
+
           .message-body {
+            color: #282828;
+            font-size: 13.6px;
+            white-space: pre-wrap;
             padding : 7px 7px 6px 9px;
+          }
+          .message-footer {
+            color: rgba(0, 0, 0, .45);
+            font-size: 13px;
+            line-height: 17px;
+            padding: 0 7px 8px 9px;
           }
 
         white-space: pre-wrap;

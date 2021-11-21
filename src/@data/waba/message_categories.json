@@ -1,67 +1,67 @@
 {
     "options":[
        {
-          "id":"account_update",
+          "id":"ACCOUNT_UPDATE",
           "label":"Account Update",
           "desc":"Let customers know about updates or changes to their account.",
           "icon":"fa fa-cog"
        },
        {
-          "id":"alert_update",
+          "id":"ALERT_UPDATE",
           "label":"Alert Update",
           "desc":"Send important updates or news to customers.",
           "icon":"fa fa-bell"
        },
        {
-          "id":"appointment_update",
+          "id":"APPOINTMENT_UPDATE",
           "label":"Appointment Update",
           "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
           "icon":"fa fa-calendar"
        },
        {
-          "id":"auto_reply",
+          "id":"AUTO_REPLY",
           "label":"Auto Reply",
           "desc":"Send auto-replies to customers when your business isn't open",
           "icon":"fa fa-reply"
        },
        {
-          "id":"issue_resolution",
+          "id":"ISSUE_RESOLUTION",
           "label":"Issue Resolution",
           "desc":"Respond to questions, concerns or feedback from customers about your business.",
           "icon":"far fa-meh"
        },
        {
-          "id":"payment_update",
+          "id":"PAYMENT_UPDATE",
           "label":"Payment Update",
           "desc":"Send a message to customers about their payment.",
           "icon":"fa fa-credit-card"
        },
        {
-          "id":"personal_finance_update",
+          "id":"PERSONAL_FINANCE_UPDATE",
           "label":"Personal Finance Update",
           "desc":"Send a message to customers about their personal finances.",
           "icon":"fa fa-dollar-sign "
        },
        {
-          "id":"reservation_update",
+          "id":"RESERVATION_UPDATE",
           "label":"Reservation Update",
           "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
           "icon":"far fa-calendar"
        },
        {
-          "id":"shipping_update",
+          "id":"SHIPPING_UPDATE",
           "label":"Shipping Update",
           "desc":"Send shipping updates to customers about their orders.",
           "icon":"fa fa-truck"
        },
        {
-          "id":"ticket_finance_update",
+          "id":"TICKET_FINANCE_UPDATE",
           "label":"Ticket Finance Update",
           "desc":"Send ticketing information or updates to customers.",
           "icon":"fa fa-ticket"
        },
        {
-          "id":"transportation_update",
+          "id":"TRANSPORTATION_UPDATE",
           "label":"Transportation Update",
           "desc":"Send transportation information or updates to customers.",
           "icon":"fa fa-plane"

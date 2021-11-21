@@ -95,6 +95,39 @@ var CONTACT_TAGS_DICT = {};
     return false;
   }
 
+  function parseJson(contents){
+    let json = null;
+    if(typeof contents == 'string'){
+      try {
+        let trimdJson  = contents.trim();
+        if(trimdJson[0] == "{" && trimdJson[trimdJson.length-1] == "}"){
+          json = JSON.parse(contents);
+        } else {
+          let matchd = (trimdJson).match(/^([a-zA-Z0-9\ ]*)\((.*)\)$/);
+          if(matchd && matchd.length>2){
+            json = {}
+            json[matchd[1]+"()"] = parseJson(matchd[2])
+          } else {
+            json = contents;
+          }
+        }
+      } catch(e){
+        console.log("NO for ",contents)
+        json = contents;
+      }
+    } else {
+      json = contents;
+    }
+  
+    if(Object.prototype.toString.call(json) === '[object Object]'
+      || Object.prototype.toString.call(json) === '[object Array]') {
+      for(var key in json){
+        json[key] = parseJson(json[key]);
+      }
+    }
+    return  json;
+  }
+
 var formatter = {
 	instance : function (argument) {
 	},
@@ -346,6 +379,9 @@ var formatter = {
 
     Vue.filter('hexacode', function (str) {
         return THAT.hexacode(str);
+    });
+    Vue.filter('json', function (str) {
+      return JSON.stringify(parseJson(str), null, 2);
     });
 
   }

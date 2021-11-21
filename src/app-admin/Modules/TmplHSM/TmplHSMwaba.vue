@@ -21,6 +21,9 @@
             <template #filter(sync)="{apply,filter}">
                 <b-button variant="success" class="fa fa-sync" @click="filter.value=true;apply()"> </b-button>
             </template>
+            <template #cell(template_status)="{item}">
+                <my-status v-model="item.template.status">&nbsp;{{item.template.status}}</my-status>
+            </template>
             <template #cell(row_actions)="{item}">
                 <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"
                     class="text-sm"
@@ -84,7 +87,7 @@
                     </b-col>
                     <b-col cols="7">
                         <validation-observer v-slot="{handleSubmit}" ref="templateStructure">
-                        <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
+                        <b-form role="form" @submit.prevent="handleSubmit(onSaveTamplete)">
                         <b-card  no-body>
 
                             <template #header>
@@ -291,7 +294,15 @@
                   </template>
 
         </b-modal>
-
+        <b-modal v-if="templatePreview" :id="modelNamePreview" 
+            :title="'Template Preview'"
+            @ok="onSubmit">
+                <template-preview :template="templatePreview" />
+        </b-modal>
+        <b-modal id="SHOW_CLIENT_ERROR" size="lg"
+            :title="'WABA Response'">
+            <pre>{{ERROR_JSON | json}}</pre>
+        </b-modal>
     </div>
 </template>
 
@@ -340,7 +351,7 @@
                     { key: 'template_code', label: 'Template Code/Name', sortable: true },
                     { key: 'template.category', label: 'Category', sortable: true },
                     //{ key: 'template.namespace', label: 'namespace' },
-                    { key: 'template.status', label: 'Status', sortable: true },
+                    { key: 'template_status', label: 'Status', sortable: true },
                     { key: 'template.language', label: 'Language' },
                     { key: 'row_actions', label: 'Linked HSM Template' },
                 ],
@@ -352,6 +363,7 @@
                 api: 'api/tmpl/hsm/waba_templates',
             },
             modelName: 'MODAL_WABA_TEMPLATE',
+            modelNamePreview: 'MODAL_WABA_TEMPLATE_RPEVIEW',
             modalInputs: [],
             oldHash: null,
             model: {
@@ -362,7 +374,8 @@
             templates : [],
             newLanguage : null,
             newItem : {
-            }
+            },
+            ERROR_JSON : null,
         }),
         computed: {
             items: function () {
@@ -415,6 +428,7 @@
                     attachments : ['IMAGE','VIDEO','DOCUMENT'].indexOf(this.templateSimple.header.format) > -1 ? [{
                         mediaType : this.templateSimple.header.format
                     }] : null,
+                    footer : this.templateSimple.footer.text,
                     options : {
                         buttons : (this.templateSimple?.buttons?.buttons || []).map(function (btn) {
                             return {
@@ -434,7 +448,7 @@
                 this.onLoad();
             },
             "newItem.name" : function(){
-                this.newItem.name = this.newItem.name.replace(" ","_").toUpperCase().replace(/[^A-Za-z0-9_]/g,'');
+                this.newItem.name = this.newItem.name.replace(" ","_").toLowerCase().replace(/[^A-Za-z0-9_]/g,'');
             }
         },
         mounted: function () {
@@ -483,11 +497,20 @@
                             channelId : this.template.channelId
                         }
                     });
+                    this.template.id = resp.results[0].id;
+                    this.template.lang = resp.results[0].lang;
+                    this.template.code = resp.results[0].code;
+                    this.template.template = resp.results[0].template;
+
                     console.log("resp",resp)
                 } catch(e){
-                    console.log("error",e.response.data);
+                    this.ERROR_JSON = e.response.data.errors[0].body;
+                    this.$bvModal.show("SHOW_CLIENT_ERROR");
                     this.$refs.templateStructure.setErrors(e.response.data.veeErrors)
                 }
+            },
+            onSaveTamplete (){
+                this.$bvModal.show(this.modelNamePreview);
             },
             async onAction(argument) {
                 switch (argument.name) {
