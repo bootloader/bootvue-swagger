@@ -157,7 +157,7 @@
                                             </base-text-area>
                                         </b-col> 
                                         <b-col cols="3">
-                                             <input class="body-card-body-variable"
+                                             <input class="body-card-body-variable" :readonly="nonEditable"
                                                 v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
                                                 :placeholder="`Sample value for ${samples.variable}`" />
                                         </b-col> 
