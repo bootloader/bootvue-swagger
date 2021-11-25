@@ -18,7 +18,7 @@
                 </div>
                 <div class="input-group-append">
                     <a class="input-group-text menu_btn new-chat  edit-search fa" v-tooltip="showResult ? 'Edit Search' : 'Search Result'"
-                        :class="showResult ? 'fa-undo' : 'fa-list-ul'"
+                        :class="showResult ? 'fa-sliders' : 'fa-list-ul'"
                         @click="(showResult=!showResult)">
                     </a>
                 </div>
