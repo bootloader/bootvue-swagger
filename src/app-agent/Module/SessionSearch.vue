@@ -392,6 +392,10 @@
     #chattags hr{
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    hr{
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
     }
     .tag{
         border-color: #000 !important;
@@ -426,7 +430,7 @@
             width: 100%;
             height: 13px; 
             margin-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.137); 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
             text-align: left;
             .section-title {
                 font-size: 12px; 
