@@ -68,13 +68,12 @@
             </div>
             <hr />
             <i  class="note" :class="searchError ? 'shake-horizontal' : ''">Select a minimum of one filter element to continue</i>
-            <br/>
-            <br/>
+            <hr />
             <div style="text-align:center">
                 <button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" 
                     @click="loadSession" style="width:120px"> Search </button>
             </div>
-            <br/>
+            <hr />
             <i class="note">The search works on the principle of AND / OR operation when elements from multiple categories are selected. AND is applied across different categories and OR is applied within the category</i>
         </div>
         <div class="search-result m-contact-search contacts_card card-shadow col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 "
