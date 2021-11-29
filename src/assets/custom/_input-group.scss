@@ -1,0 +1,211 @@
+//
+// Input group
+//
+
+//@import "../core/forms/input-group";
+
+//Customer SCSS
+.form-group.is-question {
+    position: relative;
+    .form-control-label{
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      color: #999;
+      background-color: #fff;
+      z-index: 10;
+      transition: transform 150ms ease-out, font-size 150ms ease-out;
+      font-weight: 100;
+    }
+  
+    .form-control-label.has-value,
+    .form-control-label.is-valid,
+    .form-control-label:focus,
+    .form-control-label:active,
+    .form-control-label.focused {
+      transform: translateY(-125%);
+      font-size: .75em;
+      left: 5px;
+      margin-bottom: 0px;
+      margin: 5px 0px;
+      padding: 0px 7px;
+      background-color: #ffffff5e;
+      font-weight: 400;
+    }
+  
+    .input-group {
+      border-radius: 0px;
+      &.focused {
+        border-bottom: 1px solid #b8b2b2;
+        border-radius: 0px;
+      }
+    }
+
+    select.form-control ,
+    input.form-control {
+      position: relative;
+      // padding: 12px 0px 5px 0;
+      // width: 100%;
+      outline: 0;
+      border: 0;
+      // box-shadow: 0 0px 0 0 #e5e5e5;
+      transition: box-shadow 150ms ease-out;
+      &:focus {
+        box-shadow: 0 0px 0 0 #e5e5e5;
+      }
+
+      &.none-value {
+        color: #999;
+        font-weight: 100;
+      }
+
+    }
+    .input-group-alternative input,
+    .input-group-alternative textarea{
+      border-radius: 0px;
+    }
+  
+    .form-control.is-valid {
+      box-shadow: 0 2px 0 0 lightgreen;
+    }
+  
+  }
+
+  .form-group-input {
+    .help-feedback {
+      display: inline-block;
+      color: #999;
+      font-size: 70%;
+      padding-left: 5px;;
+    }
+  }
+
+
+
+  //////// FLUSHED LAYOUT /// START
+  .basic-component.bc-layout-flushed{
+
+      .form-control:focus {
+        box-shadow: inset 0 0 0 0.1rem #007bff40;
+        border-radius: 0px;
+        &.is-invalid {
+         box-shadow: inset 0 0 0 0.1rem #ff785140;
+        }
+      }
+
+
+      .layout-flushed {
+        padding: 0px;
+        margin: 0px;
+
+        //From .form-control
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    
+        &>div {
+          position: relative;
+        }
+        
+        .form-control-label {
+          padding: 0px 5px 1px 5px;
+          background-color: #d9d9d942;
+          font-size: 11px;
+          position: absolute;
+          z-index: 5;
+          left: 0px;
+          top: 0px;
+          border-bottom-right-radius: 5px;
+          font-style: italic;
+          font-weight: 300;
+        }
+        .complete-box {
+          // line-height: 0px;
+        }
+        .input-group textarea {
+          border: 0px solid #d0d7dc;
+          border-radius: 0.25rem;
+          padding: 18px 5px 18px 10px;
+          font-size: 14px;
+    
+          &:hover{
+            border-color:#8391a5;
+          }
+          &:focus{
+            outline:0;
+            border-color:#20a0ff;
+          }
+          &::-webkit-input-placeholder{
+            color:#97a8be;
+          }
+          &::-moz-placeholder{
+            color:#97a8be
+          }
+          &:-ms-input-placeholder{
+            color:#97a8be
+          }
+          &::placeholder{
+            color:#97a8be
+          }
+    
+        }
+    
+        .input-group .input-group-append {
+          position: absolute;
+          bottom: 0px;
+          right: 0px;
+          z-index: 5;
+          max-width: 20%;
+          background-color: rgba(83, 83, 83, 0.034);
+          .input-group-text {
+            background-color: transparent;
+            border: none;
+            font-size: 12px;
+            padding: 2px 5px;
+          }
+        }
+    
+        .invalid-feedback {
+          z-index: 5;
+          display: block;
+          position: absolute;
+          bottom: 1px;
+          left: 1px;
+          max-width: 80%;
+          padding: 3px 5px 1px 5px;
+          background-color: #ffffffdb;
+        }
+    
+      }
+
+      //First Element
+      &:first-of-type {
+        .layout-flushed,
+        .input-group textarea {
+          border-bottom-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+          border-bottom-color: transparent;
+          border-bottom-width: 0px;
+        }
+      }
+  
+      //Middle Elements
+      &+.bc-layout-flushed:not(:last-of-type) {
+        .layout-flushed,
+        .input-group textarea  {
+          border-radius: 0px;
+          border-bottom-color: transparent;
+          border-bottom-width: 0px;
+        }
+      }
+
+      &:last-of-type {
+        .layout-flushed,
+        .input-group textarea  {
+          border-top-left-radius: 0px;
+          border-top-right-radius: 0px;
+        }
+      }
+
+
+  }
+  //////// FLUSHED LAYOUT /// ENDS

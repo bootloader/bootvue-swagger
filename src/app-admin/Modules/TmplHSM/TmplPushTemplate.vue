@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-tmpl-hsm-list">
         <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
           @action="onAction" ref="pageTitle" :actionShow="{
             'ADD_ITEM' : mode=='view',
@@ -74,8 +74,17 @@
                   </b-popover> 
                   &nbsp;
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
-                    <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
+                    <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
                          <span class="fa fa-edit" title="Edit"/>
+                    </b-button>   
+                  </router-link>
+                  &nbsp;
+                  <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + row.item.id">
+                    <b-button size="sm" 
+                          v-tooltip="'Submit for WABA apporval, required to push template message out of session'" variant="outline-primary">
+                         <span class="fa fa-cloud-upload-alt" title="Submit"/>&nbsp;
+                         <span class="fa fa-random" title="Submit"/>&nbsp;
+                         <span class="fa fa-whatsapp" title="Submit"/>
                     </b-button>   
                   </router-link>
 
@@ -86,77 +95,64 @@
           
         <b-card v-else-if="mode=='edit' && newItem" 
               :id="modelName" size="xl"
-          @hidden="cancelItem">
-                  <ValidationObserver ref="form">
+              @hidden="cancelItem">
+                  <ValidationObserver ref="form" class="template-form">
                             <div class="position-relative form-group row">
                               
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Grouping Category</label>
-                                    <input name="category" id="examplePassword"
-                                     placeholder="greeting" type="text"
-                                      class="form-control" v-model="newItem.category">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              <base-input class="col-md-3" size="sm"
+                                name="Grouping Category" placeholder="Grouping Category"
+                                rules="required|max:20" required
+                                v-model="newItem.category">
+                              </base-input>
 
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Message Type</label>
-                                    <ModalSelector class="form-control"
-                                      :options="message_types"
-                                      v-model="newItem.meta.messageType"
-                                      placeholder="Select Message Type">
-                                    </ModalSelector>
-                                    <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              <BaseVSelect class="col-md-3" size="sm"
+                                name="Message Type"
+                                options="getx:/api/meta/message_types"
+                                 v-model="newItem.meta.messageType"
+                                 placeholder="Select Message Type">
+                              </BaseVSelect>
 
-                               <ValidationProvider v-slot="v" rules="required" class="col-md-6">
-                                    <label for="examplePassword" class="">Description</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Hello User" type="text"
-                                      class="form-control" v-model="newItem.desc">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              <base-input class="col-md-6" size="sm"
+                                name="Description" placeholder="Enter description"
+                                rules="required|max:60" required
+                                v-model="newItem.desc">
+                              </base-input>
 
                             </div>
 
                             <div class="position-relative form-group row">
 
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Template Code</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Hello User" type="text"
-                                      class="form-control" v-model="newItem.code" @change="codeOnChange">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                              <ValidationProvider v-slot="v" class="col-md-3">
-                                    <label for="examplePassword" class="">Contact Type</label>
-                                    <ModalSelector class="form-control"
-                                      :emptyLabel="'ALL'"
-                                      :options="contactTypes"
-                                      v-model="newItem.contactType"
-                                      placeholder="Select Contact Type">
-                                    </ModalSelector>
-                                    <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                              <ValidationProvider v-slot="v"  class="col-md-3">
-                                    <label for="examplePassword" class="">Message Language</label>
-                                    <ModalSelector class="form-control"
-                                      :emptyLabel="'ALL'"
-                                      :options="langs"
-                                      v-model="newItem.lang"
-                                      placeholder="Select Language">
-                                    </ModalSelector>
-                                    <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              <base-input class="col-md-3" size="sm"
+                                name="Template Code" placeholder="CREDIT_ALERT"
+                                rules="required|max:60" required
+                                v-model="newItem.code"
+                                 @change="codeOnChange">
+                              </base-input>
 
-                              <ValidationProvider v-slot="v" rules="required" class="col-md-3">
-                                    <label for="examplePassword" class="">Content Type</label>
-                                    <ModalSelector class="form-control"
-                                      :options="message_content_types"
-                                      v-model="newItem.meta.contentType"
-                                      placeholder="Select Content Type">
-                                    </ModalSelector>
-                                    <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider> 
+                              <BaseVSelect class="col-md-3" size="sm"
+                                name="Contact Type"
+                                :emptyDisplay="'ALL'"
+                                :options="contactTypes"
+                                v-model="newItem.contactType"
+                                 placeholder="Select Contact Type">
+                              </BaseVSelect>
+
+                              <BaseVSelect class="col-md-3" size="sm"
+                                name="Message Language"
+                                filterable searchable
+                                options="getx:/api/meta/langs"
+                                v-model="newItem.lang"
+                                placeholder="Select Language">
+                              </BaseVSelect>
+
+                              <BaseVSelect class="col-md-3" size="sm"
+                                name="Content Type"
+                                :emptyDisplay="'ALL'"
+                                options="getx:/api/meta/message_content_types"
+                                v-model="newItem.meta.contentType"
+                                placeholder="Select Content Type">
+                              </BaseVSelect>
+
 
                             </div>
 
@@ -171,17 +167,59 @@
 
                            <div class="row">
                            <div class="position-relative form-group col-md-4">
-                               <ValidationProvider v-slot="v" >
-                                    <label for="examplePassword" class="">Template : <em>{{newItem.name}}</em></label>
-                                    <text-complete v-model="newItem.template" 
-                                      :placeholder="'eg: Hello {{contact.name}}'"
-                                      :rows="19"
-                                      areaClass="form-control template-message-editor" :strategies="strategies"></text-complete>
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
+                              <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
+                               <base-text-area  name="Header" layout="flushed"
+                                                placeholder="Type here" v-model="newItem.header" 
+                                                rules="max:60|HBNumVar:*,0,1" :rows="1"
+                                                :textLimit="60">
+                              </base-text-area>
+                               <base-text-area  name="Body" layout="flushed"
+                                                placeholder="Type here" v-model="newItem.template" 
+                                                rules="required|max:1024|HBNumVar:*,0,60" :rows="9"
+                                                :textLimit="1024"
+                                                :textCompleteStrategies="strategies">
+                              </base-text-area>
+                              <base-text-area  name="Footer" layout="flushed"
+                                                placeholder="Type here" v-model="newItem.footer" 
+                                                rules="max:60" :rows="1"
+                                                :textLimit="60">
+                              </base-text-area>
+                              <div> 
+                                 <for-each-option v-if="newItem.options && newItem.options.buttons"
+                                    :options="newItem.options.buttons" class="new_buttons w-100"
+                                      optionTag="span"
+                                      optionClass="btn-group btn-group-sm">
+                                      <template #data="{option}">
+                                          <span class="btn btn-outline-grey">
+                                            <i v-if="option.item.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
+                                            <i v-if="option.item.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>
+                                            {{option.label}}
+                                          </span> 
+                                          <span class="btn btn-outline-grey option-action"
+                                            @click="deleteButton(option.item)">
+                                            <i class="fa fa-trash"/>
+                                          </span> 
+                                          <span class="btn btn-outline-grey option-action"
+                                            @click="editButton(option.item)">
+                                              <i class="fa fa-edit"/>
+                                          </span>
+                                      </template>
+                                 </for-each-option>
+                                <b-input-group class="mt-1 px-1px" size="sm">
+                                  <b-form-input 
+                                     placeholder="Type name of button"
+                                    v-model="input.new_button.value"></b-form-input>
+                                  <b-input-group-append>
+                                    <b-button
+                                      variant="outline-grey" @click="addButton">
+                                      <i class="fa fa-plus"/>
+                                    </b-button>
+                                  </b-input-group-append>
+                                </b-input-group>
+                              </div>
                             </div>
                             <div class="position-relative form-group col-md-4">
-                                  <label for="examplePassword" class="">Sample Data</label>
+                                  <label for="examplePassword" class="text-sm">Sample Data</label>
                                   <v-jsoneditor v-model="newItem.data" :show-btns="false" :expandedOnStart="true"
                                     :options="{
                                       'mode' : 'code', 'modes' : ['code'],
@@ -190,8 +228,10 @@
                                   </v-jsoneditor>
                             </div>
                             <div class="position-relative form-group col-md-4">
-                                <label for="examplePassword" class="">Template Preview</label>
-                                <TemplatePreview :template="newItem" style="height: 400px;"/>
+                                <label for="examplePassword" class="text-sm">Template Preview</label>
+                                <TemplatePreview 
+                                  :template="newItem" style="height: 400px;"
+                                  />
                             </div>
                         </div> 
 
@@ -210,6 +250,40 @@
 
         </b-card>
 
+        <b-modal :id="modalEditButton.name" size="md"
+            :title="'Edit Button Details'">
+            <span v-if="modalEditButton.item" >
+            <ButtonRadioGroup 
+              v-model="modalEditButton.item.type"
+              :select-default="true"
+              button-variant="outline-primary"
+              :options="['QUICK_REPLY','URL','PHONE_NUMBER']" />
+            <base-input
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="Button Text" 
+                v-model="modalEditButton.item.label" :textLimit="20" required
+                rules="required|max:20" >
+            </base-input>
+            <base-input v-if="modalEditButton.item.type=='PHONE_NUMBER'" 
+                :class="'mb-0'" prependClass="btn btn-outline-primary"
+                prelabel name="Phone Number"
+                v-model="modalEditButton.item.phone_number" :textLimit="20" required
+                rules="required|phone" >
+            </base-input>
+            <base-input v-if="modalEditButton.item.type=='URL'" 
+                :class="'mb-0'" prependClass="btn btn-outline-primary"
+                prelabel name="Link URL" 
+                helpMessage="You can append only one variable at the of url"
+                v-model="modalEditButton.item.url" :textLimit="2000"
+                  rules="required|max:2000|HBNumVar:end,0,1" >
+            </base-input>
+            </span>
+
+            <template #modal-footer="{ok}">
+                  <button @click="ok"
+                    class="btn btn-primary">Ok</button>
+            </template>
+        </b-modal> 
 
 
 
@@ -232,7 +306,6 @@
     import formatters from '../../../services/formatters';
 
     import VJsoneditor from 'v-jsoneditor'
-    import TextComplete from 'v-textcomplete'
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
 
@@ -245,9 +318,13 @@
               "category": "",
               "desc": "",
               "name" : undefined, 
+              "header" : "",
+              "body" : "",
+              "footer" : "",
               "template" : "" ,
               "code" : "" ,"contactType" : "", lang : 'en_US',
-              options : {}, data : {}, meta : { messageType : null,contentType : null}       
+              options : { buttons : [] },
+              data : {}, meta : { messageType : null,contentType : null}       
       };
     }
 
@@ -261,7 +338,7 @@
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TextComplete,TemplatePreview,VJsoneditor,vSelect,ModalSelector
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TemplatePreview,VJsoneditor,vSelect,ModalSelector
         },
         data: () => ({
             heading: 'Push Templates',
@@ -281,6 +358,9 @@
                 },
                 langs : {
                   values : [], selected : "en_US",
+                },
+                new_button : {
+                  value : ""
                 }
             },
             table : {
@@ -296,6 +376,10 @@
             newItem : newItem(),
             sample : sampleJson,
             modelName :  "MODAL_ADD_QUICK_REPLIES",
+            modalEditButton : {
+              name : "MODAL_EDIT_BUTTON",
+              item : null
+            },
             mode : "view",
             itemId : 'all',
             strategies: [{
@@ -331,17 +415,11 @@
             contactTypes : function () {
               return ['','WHATSAPP','TELEGRAM','TWITTER','FACEBOOK','WEBSITE']
             },
-            langs : function () {
-              return this.$store.getters.StateApi.MetaLangs
-            },
-            message_types : function () {
-              return this.$store.getters.StateApi.MetaMessageTypes
-            },
-            message_content_types : function () {
-              return this.$store.getters.StateApi.MetaMessageContentTypes
-            }   
         },
         watch: {
+            'newItem.options.buttons' (newParams, oldParams) {
+              console.log("buttons",newParams, oldParams)
+            },
             '$route.params.mode': function (mode) {
               this.mode = mode;
             },
@@ -358,9 +436,6 @@
         },
         methods : {
           async loadOptions (argument) {
-              this.$service.getX('/api/meta/message_types');
-              this.$service.getX('/api/meta/message_content_types');
-              this.$service.getX('/api/meta/langs');
           },
           async loadItems (){
             let resp = await this.$service.get('/api/tmpl/pushtemplate');
@@ -377,6 +452,34 @@
               }
               this.editItem(itemSelected);
             }
+          },
+          addButton(){
+              if(!this.input.new_button.value ) return;
+              if(!this.newItem.options) this.newItem.options = {};
+              if(!this.newItem.options.buttons) this.newItem.options.buttons = [];
+
+              let new_button = this.input.new_button;
+              let buttons = this.newItem.options.buttons.filter(function(button){
+                return new_button.value == button.key;
+              });
+              if(buttons && buttons[0]) return;
+              this.newItem.options.buttons = [...this.newItem.options.buttons,{
+                label : new_button.value,
+                key : new_button.value,
+                type : "QUICK_REPLY"
+              }];
+              this.input.new_button.value = null;
+              this.newItem.options = {...this.newItem.options};
+          },
+          deleteButton(buttonToDelete){
+            this.newItem.options.buttons = this.newItem.options.buttons.filter(function(btn){
+              return buttonToDelete.label != btn.label;
+            });
+            this.newItem.options = {...this.newItem.options};
+          },
+          editButton(buttonToEdit){
+            this.modalEditButton.item = buttonToEdit;
+            this.$bvModal.show(this.modalEditButton.name);
           },
           async createItem () {
             let success = await this.$refs.form.validate();
@@ -397,7 +500,6 @@
             this.onAction({name : "CANCEL"});
           }, 
           async editItem(item) {
-              console.log("editItem",item)
               this.newItem = newItem();
               if(item){
                 var itemCopy = JSON.parse(JSON.stringify(item));
@@ -448,7 +550,37 @@
     }
 </script>
 <style lang="scss">
-  textarea.template-message-editor {
-     height: 400px;
+  .m-tmpl-hsm-list {
+    .new_buttons {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: stretch;
+
+      .options-wrapper {
+          margin: 4px 2px 0px;
+          flex-grow: 1;
+          min-width: calc(50% - 4px);
+          text-align: center;
+          .option-action {
+            text-align: right;
+            max-width: 30px;
+            min-width: 30px;
+            width: 30px;
+            padding-left: 2px;
+            padding-right: 2px;
+            .fa {
+              margin: 0px 5px;
+            }
+          }
+      }
+    }
+    .template-form>.row{
+      margin-bottom: 0.1em;
+    }
+    
   }
+
+
 </style>

@@ -111,7 +111,7 @@
     import mustache from 'mustache';
     import formatters from './../../services/formatters';
 
-    import TextComplete from 'v-textcomplete'
+    import TextComplete from '@/@common/cloned/v-textcomplete'
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye

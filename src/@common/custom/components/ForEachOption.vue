@@ -1,47 +1,44 @@
 <template>
-    <span>
-        <span v-for="(option,index) in model.options" v-bind:key="'options-'+index" class="options-wrapper">
-              <slot name="option"  v-bind="{option}"  >
-                    {{option.label || option.name || option.value || option.id }}
-              </slot>
-        </span>   
-    </span>
+    <MySource :options="options">
+        <template #data="data">
+            <component :is="optionTag" 
+                v-for="(option,index) in data.options" v-bind:key="'options-'+index" 
+                :class="['options-wrapper',optionClass]">
+                <slot name="data" v-bind="{option}"  >
+                    #{{index}} - {{option.label || option.name || option.value || option.id }}
+                </slot>
+            </component>  
+        </template>   
+    </MySource>
 </template>
 
 <script>
+    import MySource from "./MySource.vue"
+
     export default {
         components: {
+            MySource
         },
         props: {
             options: {
                 default: '',
+            },
+            optionTag : {
+                default: 'span',
+            },
+            optionClass : {
+                default: '',
             }
         },
         data: () => ({
-            model: {
-                options: [],
-                value: null,
-                sender: '',
-            },
         }),
         computed: {
-            myOptions: function () {},
         },
         watch : {
-            options : function(newVal, oldVal){
-                this.loadChannels();
-            }
         },
         mounted: function () {
-            this.loadChannels();
         },
         methods: {
-            async loadChannels() {
-                if(this.options){
-                    let resp = await this.$service.getX(this.options)
-                    this.model.options = resp;  
-                }
-            }
         },
     }
 </script>

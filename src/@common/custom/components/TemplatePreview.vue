@@ -14,26 +14,27 @@
             @input="clickAction">
       </MyVSelect>
 
-      <div class="message-preview w-100" :class="format" v-if="templateConfig">
+      <div class="message-preview w-100" :class="local_format" v-if="templateConfig">
           <span v-if="format=='WHATSAPP'">   
             <div class="message-text">
               <div v-if="templateConfig.attachments && templateConfig.attachments[0]"
                 :class="['message-attachment-inline','attachment-'+templateConfig.attachments[0].mediaType]"
               >
               </div>
-              <div v-if="templateConfig.title" class="message-title">{{templateConfig.title}}</div>
+              <div v-if="templateConfig.header" class="message-title">{{templateConfig.header}}</div>
               <div class="message-body">{{content.text}}</div>
               <div class="message-footer">{{templateConfig.footer}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
                 <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
-                <i v-if="button.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>{{button.label}}
+                  <i v-if="button.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
+                  <i v-if="button.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>{{button.label}}
                 </div>
             </div>
           </span>
           <span v-else>   
             <div class="message-text">
-              <div v-if="templateConfig.title" class="message-title">{{templateConfig.title}}</div>
+              <div v-if="templateConfig.header" class="message-title">{{templateConfig.header}}</div>
               <div>{{content.text}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
@@ -84,16 +85,22 @@
           //console.error(e);
         }
         var contentArray = (contentStr || "").split('---options---');
+        let templateOptions = formatters.message_form_options(formatters.map_from_string(contentArray[1]));
         return  {
           text : contentArray[0],
           options : Object.assign({},
-            formatters.message_form_options(formatters.map_from_string(contentArray[1])),
-            this.templateConfig.options
+            templateOptions,
+            this.templateConfig.options,{
+              buttons : (templateOptions.buttons || []).concat(this.templateConfig.options.buttons || [])
+            }
           )
         }
       },
       options (){
 
+      },
+      local_format(){
+        return this.format || 'WHATSAPP';
       }
     },
     

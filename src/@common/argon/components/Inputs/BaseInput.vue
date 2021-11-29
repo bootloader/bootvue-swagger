@@ -1,5 +1,6 @@
 <template>
-  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}">
+  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
+    :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size]">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="[
         {'is-question': question }
@@ -12,6 +13,7 @@
           {'is-valid': valid && validated }, 
           {'is-invalid': invalid && validated},
           {'has-value': value != ''},
+          'text-'+size,
           labelClasses
         ]">
           {{label || name}}
@@ -26,7 +28,7 @@
        ]">
         <div v-if="prependIcon || prelabel || $slots.prepend" class="input-group-prepend">
           <slot name="prepend">
-            <span class="input-group-text">
+            <span :class="prependClass">
               <i v-if="prependIcon" :class="prependIcon"></i>
               <span v-if="prelabel">{{label || name}}</span>
             </span>
@@ -43,7 +45,10 @@
             :placeholder="question ? '' : $attrs.placeholder"
             :required="required"
             class="form-control"
-            :class="[{'is-valid': valid && validated && successMessage}, {'is-invalid': invalid && validated}, inputClasses]">
+            :class="[
+                size ? 'form-control-'+size : '',
+                {'is-valid': valid && validated && successMessage}, 
+                {'is-invalid': invalid && validated}, inputClasses]">
         </slot>
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
@@ -179,6 +184,11 @@
         type: String,
         description: "Prepend icon (left)"
       },
+      prependClass: {
+        type: String,
+        default : "input-group-text",
+        description: "Prepend Class (left)"
+      },
       rules: {
         type: [String, Array, Object],
         description: 'Vee validate validation rules',
@@ -188,6 +198,12 @@
         type: String,
         description: 'Input name (used for validation)',
         default: ''
+      },
+      size: {
+        type: String,
+        description: 'size sm/md/lg/xl',
+      },
+      layout : {
       }
     },
     data() {

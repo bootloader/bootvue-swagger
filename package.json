@@ -46,7 +46,7 @@
     "string_score": "^0.1.22",
     "throttleit": "^1.0.0",
     "v-jsoneditor": "^1.4.4",
-    "v-textcomplete": "^0.2.5",
+    "textarea-caret": "^3.0.2",
     "v-tooltip": "^2.1.2",
     "v-viewer": "^1.5.1",
     "vee-validate": "^3.4.5",

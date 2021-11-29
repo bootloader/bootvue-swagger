@@ -3,22 +3,23 @@
             ref="myVSelect"
             :options="options"
              v-bind="$attrs"
+             v-on="$listeners"
             class="w-100 text-black"
             style="min-width: 220px"
             :value="value"
             v-model="model.value"
             :searchable="false"
             :clearable="true"
-            placeholder="Select Template" 
+            :placeholder="placeholder" 
             @input="clickAction">
 
         <template #selected-option="option">
             <span v-if="$attrs.selectedPrefixClass" v-bind:class="$attrs.selectedPrefixClass">&nbsp;</span>
-            {{option.item.desc }} ({{option.item.lang }})
+            {{option ? option.item.desc : null }} ({{option ? option.item.lang : null}})
         </template>
 
         <template #option="option">
-            {{option.item.desc }} ({{option.item.lang }}) 
+            {{option ? option.item.desc : null }} ({{option ? option.item.lang : null }}) 
         </template>
 
     </MyVSelect>
@@ -37,6 +38,9 @@
             value: {
                 default: null,
             },
+            placeholder :{
+                default : "Select Template"
+            }
         },
         data: () => ({
             model: {

@@ -1,74 +1,23 @@
 <template>
-    <v-select v-if="type=='dropdown'"
-        :options="model.options"
-        style="min-width: 220px;"
-        v-model="model.value"
-        v-bind="$attrs"
-        :filterable="filterable"
-        :searchable="searchable"
-        :placeholder="placeholder"
-        :clearable="clearable"
-        @search="onSearch"
-        @input="onChange">
-
-        <template #selected-option="option">
-            <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
-        </template>
-
-        <template #option="option">
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
-        </template>
-
-        <template #open-indicator="{ attributes }">
-            <span v-bind="attributes" class="fa fa-caret-down"></span>
-        </template>
-
-        <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
-              <slot :name="slotName" v-bind="slotScope"></slot>
-        </template>
-
-    </v-select>
-    <span v-else>
-        <slot name="selected-option"  v-bind="{option : model.value}" v-if="model.value" >
-            <span v-if="selectedPrefixClass" v-bind:class="selectedPrefixClass">&nbsp;</span>{{model.value.label }}
+    <component :is="tag">
+        <slot name="data" v-bind="model">
+            {{myDisplay}}
         </slot>
-    </span>
+    </component>
 </template>
 
 <script>
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css';
-    import debounce from 'debounce';
-
     export default {
         components: {
-            vSelect,
         },
         props: {
             options: {
                 default: '/options',
                  description: "examples;- getx:RelativeGetXUrl,dispatch:DispatchableEventName,data:PathNameIn@data"
             },
-            searchable: {
-                type: Boolean,
-                default: false
-            },
-            filterable : {
-                type: Boolean,
-                default: false  
-            },
-            clearable: {
-                type: Boolean,
-                default: true
-            },
             emptyDisplay : {
                 type: String,
                 default: null
-            },
-            placeholder: {
-                type: String,
-                default: ""
             },
             optionKey : {
                 type : String,
@@ -83,25 +32,22 @@
             },
             selectDefault : {
             },
-            selectedPrefixClass : {
-            },
             filter : {
             },
-            type : {
+            tag : {
                 type : String,
-                default : "dropdown"
+                default : "span"
             }
         },
         data: () => ({
             model : {
                 options: [],
-                value: null,
-                sender: '',
+                selected: null
             }
         }),
         computed :{
-            myOptions : function(){
-
+            myDisplay : function(){
+                return this.model?.selected?.label; 
             }
         },
         watch : {
@@ -112,9 +58,6 @@
                 this.loadOptions();
             }
         },
-        created : function(){
-            this.onOption = debounce(this.onOption);
-        },
         mounted: function () {
             this.loadOptions()
         },
@@ -123,27 +66,26 @@
                 this.selectModelValue();
             },
             selectModelValue(){
-                this.model.value = null;
+                this.model.selected = null;
                 for(var i in this.model.options){
                     if(this.model.options[i].value == this.value){
-                        this.model.value = this.model.options[i];
+                        this.model.selected = this.model.options[i];
                     }
                 }
-                if(this.selectDefault && (this.model.value === undefined || this.model.value === null)){
+                let oldOption = this.model.selected;
+                 console.log("selectModelValue1",this.selectDefault,this.model.selected)
+                if(this.selectDefault && (this.model.selected === undefined || this.model.selected === null)){
                     if(this.selectDefault==true && this.model.options[0]){
-                        this.model.value = this.model.options[0];
-                        this.onChange();
+                        this.model.selected = this.model.options[0];
+                        this.onChange(this.model.selected,oldOption);
                     }
                 }
-                this.onOption();
+                console.log("selectModelValue2",this.selectDefault,this.model.selected)
+                this.$emit("option", this.model.selected);
             },
             fromOptions(options){
                 let THIS = this;
                 let hasEmptyValue = false;
-                if(!options || !options.map){
-                    console.error("options",options)
-                }
-
                 this.model.options = options.map(function(option){
                     if(typeof option == 'string' || typeof option == 'number'){
                         return {
@@ -216,35 +158,22 @@
                     this.fromOptions(this.options);
                 }
             },
-            onChange: function () {
-                let value = this.model.value ? this.model.value.value : null;
-                this.$emit("input", value);
-                this.$emit("change", value);
+            async onChange(newVal,oldVal) {
+                if(newVal != oldVal){
+                    let value = this.model?.selected?.value;
+                    this.$emit("input", value);
+                    this.$emit("change", value);
+                }
             },
             onSearch : function (search, loading) {
                 this.$emit("search", search, loading);
             },
-            onOption :function (oldVal, newVal) {
-               this.$emit("option", this.model.value);
+            selected :function (){
+                return this.model?.selected;
             },
             option :function (){
-                return this.model.value;
+                return this.selected();
             }
         },
     }
 </script>
-<style lang="scss">
-.agent-select{
-    .vs__dropdown-toggle{
-        background-color: #31a476;
-        color: #fff;
-    }
-    
-    .vs__selected, .vs__open-indicator{
-        fill: #fff;
-        color: #fff;
-        font-weight: bold;
-    }
-}
-
-</style>

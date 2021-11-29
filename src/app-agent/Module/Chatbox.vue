@@ -176,8 +176,8 @@
         <br/>
         <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
         <br/>
-        <ForEachOption options="/api/options/tmpl/hsm"> 
-            <template #option={option}>
+        <ForEachOption options="/api/options/tmpl/hsm" > 
+            <template #data={option}>
                 <span  @click="sendNewMessage(option)" class="msg_cotainer_smart">
                     {{option.desc}} ({{option.lang}})
                 </span>

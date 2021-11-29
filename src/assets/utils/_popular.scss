@@ -1,10 +1,24 @@
 // Helpers imports
 @import "social";
 
+$threshold: 55%;
+$dark: #000;
+$light: #FFF;
+
+@function set-color($color) {
+    @if (lightness($color) > $threshold) {
+      @return $dark;
+    }
+    @else {
+      @return $light;
+    }
+}
+
 $popular-list:(
     purple-dirty: #9f6bb4,
     purple-darkdirty:  #8648a1,
     greyish:  #f0f4f6,
+    greyed : #dfdfdf,
     grey:  #8b8b8b,
     greyer:  #5a5a5a,
     blue: #153f9b,
@@ -20,14 +34,29 @@ $popular-list:(
     .text-#{$key} {
         color: #{$val};
     }
+    .btn-#{$key} {
+        background-color: #{$val};
+        color: set-color($val);
+        border-color: #{$val};
+    }
+    .btn-#{$key}:not(:disabled):not(.disabled):active, 
+    .btn-#{$key}:not(:disabled):not(.disabled).active, 
+    .btn-#{$key}:not(:disabled):not(.disabled):hover,
+    .show > .btn-#{$key}.dropdown-toggle {
+        color: set-color($val);
+        background-color: darken($val,10%);
+        border-color: darken($val,10%);
+    }
+
     .btn-outline-#{$key} {
         color: #{$val};
         border-color: #{$val};
     }
     .btn-outline-#{$key}:not(:disabled):not(.disabled):active, 
     .btn-outline-#{$key}:not(:disabled):not(.disabled).active, 
+    .btn-outline-#{$key}:not(:disabled):not(.disabled):hover, 
     .show > .btn-outline-#{$key}.dropdown-toggle {
-        color: #fff;
+        color: set-color($val);
         background-color: #{$val};
         border-color: #{$val};
     }

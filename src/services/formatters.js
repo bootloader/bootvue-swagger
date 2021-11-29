@@ -227,14 +227,14 @@ var formatter = {
           inputs.push({ 
               name : key.replace("form-input-", ""),
               label : params[0] || "",
-              type : params[0] || ""
+              type : params[1] || ""
           });
         } else if (key.indexOf("actions-button-") == 0) {
           var params = (options[key] || "").split("\\|");
           buttons.push({ 
               name : key.replace("actions-button-", ""),
               label : params[0] || "",
-              type : params[0] || ""
+              type : params[1] || ""
           });
         }
     });

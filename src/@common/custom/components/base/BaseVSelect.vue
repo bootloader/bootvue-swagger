@@ -1,10 +1,9 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout]">
+  :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
-        {'resizable' : resizable},
       ]">
       <slot name="label">
         <label v-if="label || name" 
@@ -14,6 +13,7 @@
           {'is-valid': valid && validated }, 
           {'is-invalid': invalid && validated},
           {'has-value': value != ''},
+          'text-'+size,
           labelClasses
         ]">
           {{label || name}}
@@ -34,37 +34,20 @@
         </span>
         </div>
         
-          <text-complete v-if="textCompleteStrategies && textCompleteStrategies.length"  
-              :id="'fmg-' + inputId"
-              :value="value"
-              :type="type"
-              v-on="listeners"
-              v-bind="$attrs" 
-              :valid="valid" 
-              :placeholder="$attrs.placeholder"
-              :required="required"
-              class="w-100"
-              :areaClass="[ 'form-control',
-                (valid && validated && successMessage) ? 'is-valid' : '',
-                (invalid && validated) ? 'is-invalid' : '',
-                inputClasses].join(' ')"
-              :strategies="textCompleteStrategies || []">
-          </text-complete>
-
-          <textarea v-else
+        <my-v-select 
             :id="'fmg-' + inputId"
-            :value="value"
-            :type="type"
+            :placeholder="$attrs.placeholder"
+            :value="value" 
             v-on="listeners"
             v-bind="$attrs" 
+            :options="options"
+            :emptyDisplay="emptyDisplay"
             :valid="valid" 
-            :placeholder="$attrs.placeholder"
             :required="required"
-            class="form-control"
-            :class="[
-                {'is-valid': valid && validated && successMessage}, 
-                {'is-invalid': invalid && validated}, inputClasses]">
-          </textarea>
+            :class="['text-'+size,
+              {'is-valid': valid && validated && successMessage}, 
+              {'is-invalid': invalid && validated}, inputClasses]"
+            />
 
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
@@ -107,13 +90,12 @@
 </template>
 <script>
  
- import passwordMeter from "vue-simple-password-meter";
- import TextComplete from '@/@common/cloned/v-textcomplete';
+ import MyVSelect from '@/@common/custom/components/MyVSelect.vue';
 
  var ID_COUNTER = 0;
 
   export default {
-    components: { passwordMeter,TextComplete },
+    components: {MyVSelect },
     inheritAttrs: false,
     name: "base-text-area",
     props: {
@@ -215,17 +197,24 @@
         description: 'Input name (used for validation)',
         default: ''
       },
-      resizable : {
-        type: Boolean,
-        description: 'Resiable',
-        default : false
-      }
+      size: {
+        type: String,
+        description: 'size sm/md/lg/xl',
+      },
+      layout : {
+      },
+      options : {
+      },
+      emptyDisplay :{}
     },
     data() {
       return {
         focused: false,
         inputId : ++ID_COUNTER,
       };
+    },
+    created :  function (params) {
+        console.log("Created", this.options)
     },
     computed: {
       listeners() {
@@ -263,7 +252,7 @@
     },
     methods: {
       updateValue(evt) {
-        let value = (evt.target) ? evt.target.value : evt;
+        let value = (evt?.target?.value);
         this.$emit("input", value);
       },
       onFocus(evt) {
@@ -281,10 +270,4 @@
   };
 </script>
 <style>
-  .basic-text-area textarea{
-    resize: none;
-  }
-  .basic-text-area .resizable textarea{
-    resize: both;
-  }
 </style>

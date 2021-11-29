@@ -26,8 +26,14 @@
             </template>
             <template #cell(row_actions)="{item}">
                 <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"
-                    class="text-sm"
-                />
+                    class="text-sm float-left" style="max-width:100px"
+                />&nbsp;
+                <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + item.id">
+                    <b-button size="sm" 
+                          v-tooltip="'Clone to HSM templates'" variant="outline-primary">
+                         <span class="fa fa-cloud-download-alt" title="Submit"/>
+                    </b-button>   
+                </router-link>
             </template>
             <template #cell(template_code)="{item}">
                 <b-button variant="link" :to="{
@@ -235,7 +241,7 @@
                                                 </base-input>
                                                 <base-input :disabled="nonEditable" :class="'mb-0'"
                                                     prelabel name="Phone Number"
-                                                    v-model="button.url" :textLimit="20" required
+                                                    v-model="button.phone_number" :textLimit="20" required
                                                     rules="required|phone" >
                                                 </base-input>
                                             </div>
@@ -282,8 +288,18 @@
         </master-view>
 
 
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Template '">
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' WABA Template '">
+
                   <ValidationObserver ref="form" class="my-normalize-v2">
+                            <div class="form-group">
+                                <label for="examplePassword" class="">From HSM Template</label>
+                                <MyHSMTmplSelect
+                                    placeholder="Select HSM Template"
+                                    class="text-lg text-grey"
+                                    v-model="newItem.hsmTemplateId" 
+                                    @option="onHSMCloneOption"/> 
+                            </div>  
+
                             <div class="form-group">
                               <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Message Category</label>
@@ -366,12 +382,11 @@
     import MyStatus from '../../../@common/custom/components/MyStatus.vue'
     import BaseTextArea from '../../../@common/argon/components/Inputs/BaseTextArea.vue'
     import BaseInput from '../../../@common/argon/components/Inputs/BaseInput.vue'
-    import {createWABATmplSample, createWABATmplSimple} from "@/@model/WABATmpl";
+    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample} from "@/@common/utils/WABATmpl";
     import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue'
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
 
     import debounce from "debounce";
-import Header from '../../Layout/Header.vue'
 
     export default {
         components: {
@@ -383,7 +398,6 @@ import Header from '../../Layout/Header.vue'
                 BaseInput,
                 BaseSelect,
                 TemplatePreview,MyStatus,
-                Header
         },
         data: () => ({
             filters: [
@@ -428,6 +442,7 @@ import Header from '../../Layout/Header.vue'
             templates : [],
             newLanguage : null,
             newItem : {
+                name : null, category : null, lang : null
             },
             ERROR_JSON : null,
         }),
@@ -489,7 +504,7 @@ import Header from '../../Layout/Header.vue'
                 return {
                     //template : this.templateSimple.body.text,
                     template : this.templateSimple.examples.body_preview,
-                    title : (this.templateSimple.header.format == 'TEXT') 
+                    header : (this.templateSimple.header.format == 'TEXT') 
                             ? (this.templateSimple.header.text || "").replace("{{1}}",this.templateSimple.examples.header_text || "{{1}}") 
                             : null,
                     attachments : ['IMAGE','VIDEO','DOCUMENT'].indexOf(this.templateSimple.header.format) > -1 ? [{
@@ -551,6 +566,20 @@ import Header from '../../Layout/Header.vue'
                 } else {
                     this.template = {};
                 }
+                if(this.$route.query.hsm){
+                    this.newItem.hsmTemplateId = this.$route.query.hsm
+                    this.$bvModal.show(this.modelName);
+                }
+            },
+            async onHSMCloneOption(option){
+                if(option && option.item){
+                    this.newItem.name = option.item.code;
+                    this.newItem.category = (option.item.meta.messageType).toUpperCase();
+                    this.newItem.lang = option.item.lang;
+                    this.newItem.hsm = option.item;
+                } else {
+                    this.newItem.hsm = null;
+                }
             },
             async createItem () {
                 let success = await this.$refs.form.validate();
@@ -561,7 +590,7 @@ import Header from '../../Layout/Header.vue'
                         category : this.newItem.category,
                         lang : this.newItem.lang
                     });
-                    this.addTemplate(this.newItem.lang);
+                    this.addTemplate(this.newItem.lang,this.newItem.hsm);
                     this.$refs.form.reset();
                     this.$bvModal.hide(this.modelName);
                 }
@@ -623,6 +652,7 @@ import Header from '../../Layout/Header.vue'
                 });
             },
             async selectTemplate(item) {
+                console.log("selectTemplate",item);
                 this.template = item;
                 this.templateSimple = createWABATmplSimple();
                 if(this.template && this.template.template && this.template.template.components){
@@ -655,16 +685,16 @@ import Header from '../../Layout/Header.vue'
                     }
                 }
             },
-            async addTemplate(newLanguage){
+            async addTemplate(newLanguage,hsm){
                 if(!newLanguage){
                     return;
                 }
                 this.fixit();
                 let newTemplate = this.templates.filter((tmp)=> tmp.lang== newLanguage)[0];
                 if(!newTemplate){
-                    newTemplate = createWABATmplSample(Object.assign({},this.template,{
+                    newTemplate = cloneWABATmplSample(Object.assign({},this.template,{
                         lang : newLanguage
-                    }));
+                    }),hsm);
                     this.$refs.templatesView.getItems().push(newTemplate);
                 }
                 

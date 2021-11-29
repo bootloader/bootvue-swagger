@@ -69,6 +69,9 @@
 @import "elements/timeline";
 @import "elements/popovers-tooltips";
 
+// Custom Input Elemtns
+@import "custom/components";
+
 // DASHBOARD BOXES
 
 @import "widgets/chart-boxes/chart-boxes";
@@ -96,5 +99,4 @@
 @import "layout/responsive/responsive-base";
 
 // DEMO
-
 @import "demo-ui/demo";

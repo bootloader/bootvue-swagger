@@ -13,13 +13,20 @@
   import router from "./app-admin/router";
   import DataStore from "./app-admin/Service/DataStore";
   import { ValidationProvider, ValidationObserver } from 'vee-validate';
-  
   import VueClipboard from 'vue-clipboard2';
 
   Vue.component('admin-default-layout', () => import('./app-admin/Layout/baseLayout.vue'));
   Vue.component('admin-userpages-layout', () => import('./app-admin/Layout/pagesLayout.vue'));
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
+  Vue.component('BaseInput', () => import('./@common/argon/components/Inputs/BaseInput.vue'));
+  Vue.component('BaseTextArea', () => import('./@common/argon/components/Inputs/BaseTextArea.vue'));
+  Vue.component('ButtonRadioGroup', () => import('./@common/argon/components/ButtonRadioGroup.vue'));
+
+  Vue.component('MySource', () => import('./@common/custom/components/MySource.vue'));
+  Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
+
+  Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
 
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
