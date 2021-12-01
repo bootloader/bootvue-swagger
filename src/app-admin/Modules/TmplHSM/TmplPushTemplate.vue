@@ -296,7 +296,7 @@
     import PageTitle from "../../Components/PageTitle.vue";
     import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
     import ModalSelector from "../../../@common/custom/components/ModalSelector.vue";
-    
+
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUsersSlash,faUsers,faTrash,faEye
@@ -443,11 +443,15 @@
             this.selectItem();
           },
           selectItem : function () {
-            if(this.mode == "edit" && this.itemId != "all"){
+            if(this.mode == "edit"){
               var itemSelected = null;
-              for(var i in this.table.items){
-                if(this.table.items[i].id == this.itemId ){
-                    itemSelected = this.table.items[i];
+              if(this.itemId == "clone" && this.$route.params.template){
+                itemSelected = this.$route.params.template;
+              } else {
+                for(var i in this.table.items){
+                  if(this.table.items[i].id == this.itemId ){
+                      itemSelected = this.table.items[i];
+                  }
                 }
               }
               this.editItem(itemSelected);

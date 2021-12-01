@@ -12,14 +12,13 @@
         <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
           <div class="pt-32 sm:pt-0">
             <h2 class="font-semibold text-4xl text-blueGray-600">
-              A Simple And Smart Tool That Will Help Grow Your Business
+              A Simple And Smart Tool to manage all customer communications
             </h2>
             <p class="mt-4 text-lg leading-relaxed text-blueGray-500">
               {{ $config.PROP_SERVICE_NAME }}'s social media messaging engine
-              provides an all new way of keeping up to your customer acquisition
-              and customer commitments. Powered by intelligent virtual
-              assistants, enterprise data and Machine Learning, enhance your
-              customer delight and Digital ROI's.
+              is the Ultimate WhatsApp Business Solution for Sales & Support with Multiple Users.
+              Keep in touch with all customer coming from Facebook, Twitter, Instagram, Telegram etc
+              using only one tool. 
             </p>
             <div class="mt-12">
               <a
@@ -231,8 +230,7 @@
                       Smart Conversations
                     </h6>
                     <p class="mb-4 text-blueGray-500">
-                      {{ $config.PROP_SERVICE_NAME }}’s Messaging Channel,
-                      Enterprise integrated BOT and Agent Communicator
+                      Save most frequeently used messages to responde quickly.
                     </p>
                   </div>
                 </div>
@@ -259,11 +257,11 @@
                       <i class="fas fa-newspaper"></i>
                     </div>
                     <h6 class="text-xl mb-1 font-semibold">
-                      Intelligent Conversations
+                      Auto Replies
                     </h6>
                     <p class="mb-4 text-blueGray-500">
-                      {{ $config.PROP_SERVICE_NAME }}’s Smart Conversations
-                      powered by Machine Learning
+                      {{ $config.PROP_SERVICE_NAME }}’s Smart Tool will respond to customers
+                      with messages defined by you, when you are offline.
                     </p>
                   </div>
                 </div>

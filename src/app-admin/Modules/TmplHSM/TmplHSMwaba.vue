@@ -7,10 +7,17 @@
                 icon: 'icon-gradient bg-happy-itmeo fa fa-whatsapp',
             }"
             :table="table"
-            :filters="filters" :actions="[{ label : 'Create Message Template', icon : 'plus', name : 'ADD_ITEM', modal : modelName }]"
+            :filters="[{ label : 'HSM Templates', name : 'go2hsm', type : 'link', link : '/app/admins/tmpl/pushtemplate/view/all'},
+                        ...filters]" 
+            :actions="[
+                { label : 'Create Message Template', icon : 'plus', name : 'ADD_ITEM', modal : modelName }
+            ]"
             :autoApply="false"
             @action="onAction"
             @rows="onRows">
+            <template #filter(go2hsm)="{filter}">
+                <b-button variant="link" :to="filter.link">{{filter.label}}</b-button>
+            </template>
             <template #filter(channelId)="{apply,filter}">
                 <MyChannelSelect v-model="filter.value" @change="apply"
                     :filter="{
@@ -28,12 +35,10 @@
                 <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"
                     class="text-sm float-left" style="max-width:100px"
                 />&nbsp;
-                <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + item.id">
-                    <b-button size="sm" 
-                          v-tooltip="'Clone to HSM templates'" variant="outline-primary">
-                         <span class="fa fa-cloud-download-alt" title="Submit"/>
-                    </b-button>   
-                </router-link>
+                <b-button size="sm" @click="toHSM(item)"
+                        v-tooltip="'Clone to HSM templates'" variant="outline-primary">
+                        <span class="fa fa-cloud-download-alt" title="Submit"/>
+                </b-button>   
             </template>
             <template #cell(template_code)="{item}">
                 <b-button variant="link" :to="{
@@ -382,7 +387,7 @@
     import MyStatus from '../../../@common/custom/components/MyStatus.vue'
     import BaseTextArea from '../../../@common/argon/components/Inputs/BaseTextArea.vue'
     import BaseInput from '../../../@common/argon/components/Inputs/BaseInput.vue'
-    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample} from "@/@common/utils/WABATmpl";
+    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM} from "@/@common/utils/WABATmpl";
     import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue'
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
 
@@ -444,7 +449,7 @@
             newItem : {
                 name : null, category : null, lang : null
             },
-            ERROR_JSON : null,
+            ERROR_JSON : null
         }),
         computed: {
             items: function () {
@@ -670,6 +675,16 @@
                     })
                 }
                 this.refreshSelectedTemplates();
+            },
+            toHSM(item){
+                console.log("toHSM",item)
+                this.$router.push({
+                        name : 'pushtemplate',
+                        params : {
+                            mode : 'edit', itemId : 'clone',
+                            template : toHSM(item)
+                        }
+                })
             },
             async onRows(rows){
                 if(this.$route.params.channelId && this.$route.params.code && this.$route.params.lang){

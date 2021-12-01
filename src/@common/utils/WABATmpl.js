@@ -1,5 +1,18 @@
 import formatters from '@/services/formatters';
 
+function toHSM(waba){
+    console.log("toHSMs",waba);
+    waba.template = (waba?.template?.components || []).filter(function(cmp){
+        return cmp.type == "BODY";
+    })[0]?.text;
+
+    waba.header = (waba?.template?.components || []).filter(function(cmp){
+        return cmp.type == "HEADER";
+    })[0]?.text;
+
+    return waba
+}
+
 const varFinder = /({{([\w\d\.]+)}})/g;
 function getVars(replaceVars){
     var myArray = replaceVars.match(varFinder) || [];
@@ -156,4 +169,4 @@ function createWABATmplSimple() {
     }
 }
 
-export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample}
+export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample,toHSM}

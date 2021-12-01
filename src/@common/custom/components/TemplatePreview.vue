@@ -21,7 +21,7 @@
                 :class="['message-attachment-inline','attachment-'+templateConfig.attachments[0].mediaType]"
               >
               </div>
-              <div v-if="templateConfig.header" class="message-title">{{templateConfig.header}}</div>
+              <div v-if="content.header" class="message-title">{{content.header}}</div>
               <div class="message-body">{{content.text}}</div>
               <div class="message-footer">{{templateConfig.footer}}</div>
             </div>
@@ -34,7 +34,7 @@
           </span>
           <span v-else>   
             <div class="message-text">
-              <div v-if="templateConfig.header" class="message-title">{{templateConfig.header}}</div>
+              <div v-if="content.header" class="message-title">{{content.header}}</div>
               <div>{{content.text}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
@@ -76,9 +76,14 @@
           };
         }
         var contentStr = this.templateConfig.template;
+        var headerStr  = this.templateConfig.header || this.templateConfig.title;
         try {
           contentStr = mustache.render(this.templateConfig.template, Object.assign(sampleJson,{
-              data : this.templateConfig.data,
+              data : this.templateConfig?.data,
+              contact : this?.model?.contact || sampleJson.contact
+          }));
+          headerStr = mustache.render(headerStr, Object.assign(sampleJson,{
+              data : this.templateConfig?.data,
               contact : this?.model?.contact || sampleJson.contact
           }));
         } catch (e) {
@@ -88,6 +93,7 @@
         let templateOptions = formatters.message_form_options(formatters.map_from_string(contentArray[1]));
         return  {
           text : contentArray[0],
+          header : headerStr,
           options : Object.assign({},
             templateOptions,
             this.templateConfig.options,{
