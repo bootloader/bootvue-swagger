@@ -12,10 +12,30 @@
                      :dark=false
                      :fixed=false
                      :foot-clone=false
+                     :sort-by.sync="sessions.sortBy"
+                     :sort-desc.sync="sessions.sortDesc"
                      :per-page="sessions.perPage"
                      :current-page="sessions.currentPage"
-                     :items="sessions.items"
+                     :items="filtered"
                      :fields="sessions.fields">
+                <template #top-row="row">
+                      <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="text" v-model="filters.contactName"  class="form-control form-control-sm" /></b-th>
+                      <b-th>&nbsp;</b-th>
+                      <b-th>&nbsp;</b-th>
+                      <b-th>
+                        <select class="form-control form-control-sm" v-model="filters.fistResponseStamp" @click.stop.prevent>
+                            <option value="">--</option>
+                            <option :value="option.value" v-for="option in fistResponseOptions" :key="option.value">{{ option.label }}</option>
+                        </select>
+                      </b-th>
+                      <b-th>
+                        <select class="form-control form-control-sm" v-model="filters.closeSessionStamp" @click.stop.prevent>
+                          <option value="">--</option>
+                          <option :value="option.value" v-for="option in closeSessionOptions" :key="option.value">{{ option.label }}</option>
+                        </select>    
+                      </b-th>
+                </template>
                 <template #cell(assignedToAgent)="row">
                     <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
                     <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
@@ -111,31 +131,80 @@
             AgentChat
            // chart1,chart2,chart3,
         },
+        computed:{
+          filtered() {
+                if(!this.sessions.items.length) return;
+                const filtered = this.sessions.items.filter(item => {
+                  return Object.keys(this.filters).every(key =>{
+                    if(key === "closeSessionStamp"){
+                      switch (this.filters[key]) {
+                        case 0: 
+                          return item[key] == 0;
+                        case "closed":
+                         return item[key] != 0;
+                        default:
+                          return true;
+                      }
+                    }else if(key === "fistResponseStamp"){
+                       switch (this.filters[key]) {
+                        case 0: 
+                          return item[key] == 0;
+                        case "attended":
+                         return item[key] != 0;
+                        default:
+                          return true;
+                       }
+                    } else{
+                      return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
+                    }
+                  }
+                  );
+                });
+                return filtered.length > 0
+                  ? filtered
+                  : [
+                      Object.keys(this.sessions.items[0]).reduce(function(obj, value) {
+                        obj[value] = '';
+                        return obj;
+                      }, {})
+                    ];
+              }
+        },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'Chat Sessions',
             subheading: 'Select date range for report',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-chalkboard-teacher',
-            input : {
-                daterange : {
-                    startDate : null,
-                    endDate : null,
-                }
-            },
             sessions : {
-                fields: [ { key : 'assignedToAgent', label : "Assigned" },{ key : 'contactId', label : "Contact" },
-                    { key : 'actions', label : "Action" },
-                    { key : 'startSessionStamp', label : "Start@" },
-                    { key : 'fistResponseStamp', label : "Agent@" },
+                sortBy: 'assignedToAgent',
+                sortDesc: false,
+                fields: [ { key : 'assignedToAgent', label : "Assigned", sortable: true},{ key : 'contactId', label : "Contact", sortable: false},
+                    { key : 'actions', label : "Action", sortable: false },
+                    { key : 'startSessionStamp', label : "Start@", sortable: true},
+                    { key : 'fistResponseStamp', label : "Agent@", sortable: false },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
-                    { key : 'closeSessionStamp', label : "Closed@" },
+                    { key : 'closeSessionStamp', label : "Closed@", sortable: true},
                     //{ key : 'actions', label : "Action" }
                 ],
                 items : [],
                 perPage: 25,
                 currentPage: 1,
                 rows : 0
+            },
+            closeSessionOptions: [
+              {label : "Closed", value:"closed"},
+              {label : "Open", value:0}
+            ],
+            fistResponseOptions:[
+              {label : "Attended", value:"attended"},
+              {label : "Not Attended", value:0}
+            ],
+            filters:{
+              assignedToAgent:"",
+              contactName:"",
+              closeSessionStamp:"",
+              fistResponseStamp:"",
             },
             input : {
                 daterange : {
