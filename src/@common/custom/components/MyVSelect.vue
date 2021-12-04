@@ -143,7 +143,6 @@
                 if(!options || !options.map){
                     console.error("options",options)
                 }
-
                 this.model.options = options.map(function(option){
                     if(typeof option == 'string' || typeof option == 'number'){
                         return {
@@ -168,6 +167,7 @@
                         };
                     }
                 });
+
                 if(!hasEmptyValue && THIS.emptyDisplay){
                    this.model.options = [{
                         value : null,

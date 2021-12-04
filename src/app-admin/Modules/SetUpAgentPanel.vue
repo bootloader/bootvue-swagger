@@ -89,26 +89,17 @@
                 </div>
                 <br/>
 
-               <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">                    
-                  <b-form-group
-                    :label="oneItem.meta.description"
-                    v-slot="{ ariaDescribedby }"
-                  >
-                    <b-form-radio-group
-                      id="btn-radios-2"
-                      v-model="oneItem.config.value"
-                      :options="oneItem.meta.options"
-                      html-field="label"
-                      text-field="value"
+               <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
 
-                      :aria-describedby="ariaDescribedby"
-                      button-variant="outline-primary"
-                      size="sm"
-                      name="radio-btn-outline"
-                      buttons
-                    ></b-form-radio-group>
-                  </b-form-group>
-
+                 <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
+                  v-model="oneItem.config.value" size="sm"
+                  :options="oneItem.meta.options"
+                 />
+                  <BaseVSelect v-else class="w-100"
+                    v-model="oneItem.config.value" size="sm"
+                    :options="oneItem.meta.options"
+                    placeholder="Select Language"
+                 />
 
                 </div>
                 <div  v-else-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 

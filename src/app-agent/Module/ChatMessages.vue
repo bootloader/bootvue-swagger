@@ -1,6 +1,6 @@
 <template>
     <div v-if="activeChat">
-        <div v-for="(m,mindex) in activeChat.messages"  v-bind:key="mindex" ><!-- LOOP Start --><span v-if="m">
+        <div v-for="(m,mindex) in messages"  v-bind:key="mindex" ><!-- LOOP Start --><span v-if="m">
             
             <div v-if="$global.MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
@@ -78,6 +78,11 @@
             ChatMessageLog,ChatMessageContent
         },
         computed : {
+            messages(){
+                return (this.activeChat.messages || []).sort(function(a,b){
+                    return a.timestamp - b.timestamp;
+                });
+            }
         },
         data: () => ({
         }),

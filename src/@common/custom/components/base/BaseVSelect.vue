@@ -220,7 +220,7 @@
       listeners() {
         return {
           ...this.$listeners,
-          input: this.updateValue,
+          //input: this.updateValue,
           focus: this.onFocus,
           blur: this.onBlur,
           score : this.onScore
@@ -251,8 +251,10 @@
       }
     },
     methods: {
-      updateValue(evt) {
-        let value = (evt?.target?.value);
+      updateValue(value) {
+        if(value?.target){
+          value = (value?.target?.value);
+        }
         this.$emit("input", value);
       },
       onFocus(evt) {

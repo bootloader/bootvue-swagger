@@ -125,7 +125,7 @@
                                 <my-v-select  class="mb-1"
                                     emptyDisplay="None" :selectDefault="true" :clearable="false"
                                         v-model="templateSimple.header.format" :disabled="nonEditable"
-                                        options="data:waba/message_types">
+                                        options="data:hsm/message_format_types">
                                 </my-v-select>  
                                 <base-input
                                     prelabel name="Header Text"
@@ -309,7 +309,7 @@
                               <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Message Category</label>
                                      <my-v-select  class="text-lg text-grey"
-                                        options="data:waba/message_categories" placeholder="Select Message Category"
+                                        options="data:hsm/message_category_types" placeholder="Select Message Category"
                                         v-model="newItem.category" filterable searchable
                                         style="min-width: 200px;width:100%;"/>
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
@@ -421,7 +421,7 @@
             table: {
                 fields: [
                     { key: 'template_code', label: 'Template Code/Name', sortable: true },
-                    { key: 'template.category', label: 'Category', sortable: true },
+                    { key: 'template.category', label: 'Message Type', sortable: true },
                     //{ key: 'template.namespace', label: 'namespace' },
                     { key: 'template_status', label: 'Status', sortable: true },
                     { key: 'template.language', label: 'Language' },

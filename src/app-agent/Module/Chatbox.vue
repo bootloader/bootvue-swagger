@@ -26,7 +26,7 @@
                             </div>
                             <div class="user_info"
                                 v-if="activeChat">
-                                <span class="user_name" @click="showContactProfile" >{{activeChat.name}}</span>
+                                <span class="user_name" @click="showContactProfile" >{{contactName}}</span>
                                 <div v-if="assignedToAgent" class="user_assignment">
                                     <v-select v-if="chatLocal.active" :options="agentOptions" v-model="assignedToAgent"
                                     @option:selected="onAssignedToAgent" label="code"
@@ -176,10 +176,10 @@
         <br/>
         <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
         <br/>
-        <ForEachOption options="/api/options/tmpl/hsm" > 
+        <ForEachOption options="getx:/api/options/tmpl/hsm" > 
             <template #data={option}>
                 <span  @click="sendNewMessage(option)" class="msg_cotainer_smart">
-                    {{option.desc}} ({{option.lang}})
+                    {{option.item.desc}} ({{option.item.lang}})
                 </span>
             </template>
         </ForEachOption>
@@ -466,6 +466,11 @@
             },
             sortedQuickTags  : function () {
                 return this.$store.getters.StateQuickTagsSorted;
+            },
+            contactName (){
+                return (this.activeChat?.contact?.name 
+                            || this.activeChat?.contact?.phone
+                            || this.activeChat?.contact?.email ) || this.activeChat?.name;
             }
         },
         data: () => ({

@@ -107,8 +107,8 @@
 
                               <BaseVSelect class="col-md-3" size="sm"
                                 name="Message Type"
-                                options="getx:/api/meta/message_types"
-                                 v-model="newItem.meta.messageType"
+                                options="data:hsm/message_category_types"
+                                 v-model="newItem.categoryType"
                                  placeholder="Select Message Type">
                               </BaseVSelect>
 
@@ -148,8 +148,8 @@
                               <BaseVSelect class="col-md-3" size="sm"
                                 name="Content Type"
                                 :emptyDisplay="'ALL'"
-                                options="getx:/api/meta/message_content_types"
-                                v-model="newItem.meta.contentType"
+                                 options="data:hsm/message_format_types"
+                                v-model="newItem.formatType"
                                 placeholder="Select Content Type">
                               </BaseVSelect>
 
@@ -365,8 +365,9 @@
             },
             table : {
               fields: [ 
-                        { key : 'category', label : "Category" }, 
+                        { key : 'category', label : "Grouping Category" }, 
                         { key : 'desc', label : "Description" }, 
+                        { key : 'categoryType', label : "Message Type" }, 
                         { key: 'actions', label: 'Actions' }    ],
               items : [],
               perPage: 25,

@@ -2,15 +2,25 @@ import formatters from '@/services/formatters';
 
 function toHSM(waba){
     console.log("toHSMs",waba);
-    waba.template = (waba?.template?.components || []).filter(function(cmp){
+    let hsm = {
+        code : waba?.template?.name,
+        lang : waba?.template?.language,
+        category : waba?.template?.category,
+        categoryType : (waba?.template?.category),
+        meta : {
+        }
+    };
+    hsm.template = (waba?.template?.components || []).filter(function(cmp){
         return cmp.type == "BODY";
     })[0]?.text;
-
-    waba.header = (waba?.template?.components || []).filter(function(cmp){
-        return cmp.type == "HEADER";
+    hsm.header = (waba?.template?.components || []).filter(function(cmp){
+        if(cmp.type == "HEADER"){
+            hsm.formatType = cmp.format; // VIDEO,TEXT
+            return true;
+        }
+        return false;
     })[0]?.text;
-
-    return waba
+    return hsm;
 }
 
 const varFinder = /({{([\w\d\.]+)}})/g;
@@ -70,12 +80,13 @@ function cloneWABATmplSample(template,hsm) {
                 },
                 (function(){
                     let format = (function(){
-                        switch(hsm?.meta?.contentType){
+                        let formatType = (hsm?.formatType || hsm?.meta?.contentType)
+                        switch(formatType){
                             case "IMAGE":
                             case "VIDEO":
                             case "DOCUMENT":
                             case "TEXT":
-                                return hsm?.meta?.contentType;
+                                return formatType;
                             default:
                                 return null;    
                         }

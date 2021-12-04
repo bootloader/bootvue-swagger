@@ -55,8 +55,8 @@
           "icon":"fa fa-truck"
        },
        {
-          "id":"TICKET_FINANCE_UPDATE",
-          "label":"Ticket Finance Update",
+          "id":"TICKET_UPDATE",
+          "label":"Ticket Update",
           "desc":"Send ticketing information or updates to customers.",
           "icon":"fa fa-ticket"
        },
