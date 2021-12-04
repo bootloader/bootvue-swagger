@@ -64,8 +64,12 @@
                     {{ row.item.fistResponseStamp | formatDate}} 
                 </template>
                 <template #cell(closeSessionStamp)="row">
-                    {{ row.item.closeSessionStamp | formatDate}}
-                    <font-awesome-icon v-if="row.item.active" icon="circle" :style="{ color: 'green' }" />
+                    <span class="fa fa-circle text-xs" :class="{
+                        'text-success' : row.item.local.open,
+                        'text-danger' : row.item.local.expired,
+                        'text-info' : row.item.local.resolved,
+                      }" />
+                      {{ row.item.closeSessionStamp| formatDate}}
                 </template>   
                 <template #cell(actions)="row">
                     <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" ></span>
@@ -96,6 +100,7 @@
     import PageTitle from "../Components/PageTitle.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import AgentChat from './AgentChat';
+    import DataProcessor from './../../services/DataProcessor';
 
     //import chart1 from './Analytics/chart1';
     //import chart2 from './Analytics/chart2';
@@ -138,10 +143,14 @@
                   return Object.keys(this.filters).every(key =>{
                     if(key === "closeSessionStamp"){
                       switch (this.filters[key]) {
-                        case 0: 
-                          return item[key] == 0;
+                        case "resolved": 
+                          return item?.local?.resolved;
+                        case "opened": 
+                          return item?.local?.active;
+                        case "expired": 
+                          return item?.local?.expired;
                         case "closed":
-                         return item[key] != 0;
+                         return item?.local?.closed;
                         default:
                           return true;
                       }
@@ -194,7 +203,9 @@
             },
             closeSessionOptions: [
               {label : "Closed", value:"closed"},
-              {label : "Open", value:0}
+              {label : "Expired", value:"expired"},
+              {label : "Resolved", value:"resolved"},
+              {label : "Open", value: "opened"}
             ],
             fistResponseOptions:[
               {label : "Attended", value:"attended"},
@@ -225,7 +236,9 @@
               "startStamp": this.input.daterange.startDate,
               "endStamp": this.input.daterange.endDate
             });
-            this.sessions.items = resp.results;
+            this.sessions.items = resp.results.map(function(session){
+              return DataProcessor.session(session);
+            });
             this.sessions.rows = this.sessions.items.length;
             console.log("sessions",resp,this.sessions )
           },
