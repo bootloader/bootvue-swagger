@@ -12,8 +12,15 @@
                      :dark=false
                      :fixed=false
                      :foot-clone=false
-                     :items="items"
+                     :items="filtered"
                      :fields="fields">
+                <template #top-row="row">
+                      <b-th><input type="text" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="text" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="text" v-model="filters.code"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="text" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
+                      <b-th>&nbsp;</b-th>
+                </template>
 
                 <template #cell(channels)="row">
                   <span v-for="c in row.item.channels" v-if="c" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
@@ -201,18 +208,41 @@
             actions : [{
               label : "Add User", icon : "fa fa-plus", name : "ADD_ITEM"
             }],
-          fields: [ { key : 'dept.name', label : "Team" },{ key : 'name', label : "Name" },
-           { key : 'code', label : "Username" }, { key : 'agent_email', label : "Email" },
-           { key : 'channels', label : "Channels", class : "upper-case" },
+          fields: [ { key : 'dept.name', label : "Team", sortable: true },{ key : 'name', label : "Name" , sortable: true},
+           { key : 'code', label : "Username", sortable: true }, { key : 'agent_email', label : "Email" , sortable: true},
+        //    { key : 'channels', label : "Channels", class : "upper-case" },
            { key : 'actions', label : "Action" }],
+           filters:{
+               deptname:"",
+               name:"",
+               code:"",
+               agent_email:""
+           },
           channels : ["WHATSAPP","FACEBOOK","TWITTER","TELEGRAM","WEBSITE"],
           newItem : newItem(),
           modelName :  "MODAL_ADD_USERS",
           isSelectAllChannel : false
         }),
         computed : {
-            items : function (argument) {
-              return this.$store.getters.StateAgents
+            filtered() {
+                let items = this.$store.getters.StateAgents;
+                if(!items?.length) return;
+                const filtered = items.filter(item => {
+                  return Object.keys(this.filters).every(key =>{
+                        if(key === 'deptname'){
+                            return String(item["dept"].name).toLowerCase().includes(this.filters[key].toLowerCase())
+                        } else return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
+                    }
+                  );
+                });
+                return filtered.length > 0
+                  ? filtered
+                  : [
+                      Object.keys(items[0]).reduce(function(obj, value) {
+                        obj[value] = '';
+                        return obj;
+                      }, {})
+                    ];
             },
             teams : function (argument) {
               return this.$store.getters.StateTeams;
