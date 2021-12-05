@@ -10,11 +10,11 @@
             </template>
         </page-title>
 
-        <div class="card mb-3">
-            <div class="no-gutters row">
+        <div class="mb-3">
+            <div class="gutters row">
                 <div class="col-md-12 col-lg-4">
-                    <ul class="list-group list-group-flush">
-                        <li class="bg-transparent list-group-item"  >
+                    <ul class="list-group ">
+                        <li class="list-group-item"  >
                             <div class="widget-content p-0" >
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper" v-tooltip="'Total Session'">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="bg-transparent list-group-item"  >
+                        <li class="list-group-item"  >
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper" v-tooltip="'Total I/O messages'">
@@ -47,8 +47,8 @@
                     </ul>
                 </div>
                 <div class="col-md-12 col-lg-4">
-                    <ul class="list-group list-group-flush">
-                        <li class="bg-transparent list-group-item">
+                    <ul class="list-group">
+                        <li class="list-group-item">
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="bg-transparent list-group-item">
+                        <li class="list-group-item">
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
@@ -91,8 +91,8 @@
                     </ul>
                 </div>
                 <div class="col-md-12 col-lg-4">
-                    <ul class="list-group list-group-flush">
-                        <li class="bg-transparent list-group-item">
+                    <ul class="list-group">
+                        <li class="list-group-item">
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="bg-transparent list-group-item">
+                        <li class="list-group-item">
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
@@ -438,6 +438,9 @@
 
 
 </script>
-<style type="text/css">
-
+<style type="text/css" scoped>
+.list-group-item{
+    margin-bottom: 2px;
+    border-bottom: 0 none;
+}
 </style>
