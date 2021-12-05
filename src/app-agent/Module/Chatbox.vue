@@ -105,9 +105,9 @@
 
                     </div> 
                     
-                    <div class="d-block clear-both card-header-lower"> 
+                    <div class="clear-both card-header-lower d-none d-md-block"> 
 
-                        <div class="chat_tags text-align-right float-right d-none d-md-block">
+                        <div class="chat_tags text-align-right float-right ">
 
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
@@ -123,7 +123,14 @@
                           
 
                         </div>
-                        <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
+                         
+
+                        <div class="chat-actions float-right">
+                            
+                        </div>
+
+                    </div>
+                    <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
                                 header-class="card-header"
@@ -151,13 +158,7 @@
                                 </span>
                                 
                             </div>
-                            </b-modal> 
-
-                        <div class="chat-actions float-right">
-                            
-                        </div>
-
-                    </div>
+                            </b-modal>
 
                 </div>
 
