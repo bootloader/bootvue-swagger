@@ -39,7 +39,7 @@
                       </template>
                     </b-popover>
                     &nbsp;
-                    <span v-if="row.item.status=='COMPLETED'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteItem(row.item, row.index, $event.target)" ></span>
+                    <span v-if="row.item.status=='COMPLETED'" style="cursor: pointer;" class="fa fa-trash"  @click="deleteItem(row.item, row.index, $event.target)" v-tooltip="'Delete Chat'"></span>
                 </template>
 
 
