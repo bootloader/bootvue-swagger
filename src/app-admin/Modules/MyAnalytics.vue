@@ -17,7 +17,7 @@
                         <li class="list-group-item"  >
                             <div class="widget-content p-0" >
                                 <div class="widget-content-outer">
-                                    <div class="widget-content-wrapper" v-tooltip="'Total Session'">
+                                    <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Unique Conversations</div>
                                             <div class="widget-subheading">{{summary.uniqueConversation | number('0,0')}}</div>
@@ -32,7 +32,7 @@
                         <li class="list-group-item"  >
                             <div class="widget-content p-0">
                                 <div class="widget-content-outer">
-                                    <div class="widget-content-wrapper" v-tooltip="'Total I/O messages'">
+                                    <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Messages Exchanged</div>
                                             <div class="widget-subheading">{{summary.totalMsgExchanged | number('0,0')}}</div>
