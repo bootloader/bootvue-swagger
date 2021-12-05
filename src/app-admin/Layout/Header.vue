@@ -69,7 +69,9 @@
             toggleMobile(className) {
                 const el = document.body;
                 this.isOpen = !this.isOpen;
-
+                if(this.isOpenMobileMenu && this.isOpen){
+                    this.toggleMobile2('header-menu-open')
+                }
                 if (this.isOpen) {
                     el.classList.add(className);
                 } else {
@@ -80,7 +82,9 @@
             toggleMobile2(className) {
                 const el = document.body;
                 this.isOpenMobileMenu = !this.isOpenMobileMenu;
-
+                if(this.isOpenMobileMenu && this.isOpen){
+                    this.toggleMobile('closed-sidebar-open')
+                }
                 if (this.isOpenMobileMenu) {
                     el.classList.add(className);
                 } else {
