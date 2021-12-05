@@ -73,6 +73,18 @@
                                     <b-dropdown-item  @click="showContactProfile('history')">
                                          <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
                                     </b-dropdown-item>
+                                    <b-dropdown-item class="chat_tags dropdown-tags">
+                                        <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
+                                        v-b-modal.chattags >
+                                            {{activeChat.status}}
+                                        </span>
+                                         <span   span v-if="activeChat && activeChat.tagId &&  activeChat.tagId.length"
+                                        class="tag-chat-status tag-lighter"
+                                        v-b-modal.chattags>
+                                            {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
+                                        </span>
+                                        <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
+                                    </b-dropdown-item>
                                 </b-dropdown>
                                 <span class="float-right quick-option d-none d-md-block" 
                                      v-bind:class="{'my-selected' : profileViewInfo }"
@@ -95,7 +107,7 @@
                     
                     <div class="d-block clear-both card-header-lower"> 
 
-                        <div class="chat_tags text-align-right float-right">
+                        <div class="chat_tags text-align-right float-right d-none d-md-block">
 
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
@@ -108,7 +120,10 @@
                                 {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
                             </span>
                             <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
-                          <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
+                          
+
+                        </div>
+                        <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
                                 header-class="card-header"
@@ -136,9 +151,7 @@
                                 </span>
                                 
                             </div>
-                            </b-modal>
-
-                        </div> 
+                            </b-modal> 
 
                         <div class="chat-actions float-right">
                             
@@ -1390,5 +1403,8 @@
     color: #fff !important;
     font-weight: normal !important;
     border-width: 1px !important;
+  }
+  .dropdown-tags .tag-lighter{
+      border: 1px solid #000;
   }
 </style>
