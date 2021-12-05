@@ -260,7 +260,7 @@
         margin-right: 5px;
     } 
     .vue-tags-input .ti-item.ti-selected-item .my-item {
-        background: #fdfbea;
+        background: #c9ecf9;
         color: #283944;
     }
 </style>
