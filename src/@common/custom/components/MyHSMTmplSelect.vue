@@ -33,7 +33,7 @@
         },
         props: {
             options: {
-                default: 'getx:/api/tmpl/pushtemplate',
+                default: 'getx:/api/tmpl/hsm',
             },
             value: {
                 default: null,

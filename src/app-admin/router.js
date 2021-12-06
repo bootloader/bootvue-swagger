@@ -111,17 +111,17 @@ export default AppRouter.route({
         {
             path : "/app/admins/tmpl/pushtemplate/:mode/:itemId",
             name: 'pushtemplate',
-            component: () => import('./Modules/TmplHSM/TmplPushTemplate.vue'),    
+            component: () => import('./Modules/TmplHSM/TmplHSM.vue'),    
         },
         {
             path : "/app/admins/tmpl/wabatemplate/view/all",
             name: 'wabatemplates',
-            component: () => import('./Modules/TmplHSM/TmplHSMwaba.vue'),    
+            component: () => import('./Modules/TmplHSM/TmplWaba.vue'),    
         },
         {
             path : "/app/admins/tmpl/wabatemplate/:channelId/:code/:lang",
             name: 'wabatemplate',
-            component: () => import('./Modules/TmplHSM/TmplHSMwaba.vue'),    
+            component: () => import('./Modules/TmplHSM/TmplWaba.vue'),    
         },
 
         {

@@ -115,7 +115,8 @@
                               <base-input class="col-md-6" size="sm"
                                 name="Description" placeholder="Enter description"
                                 rules="required|max:60" required
-                                v-model="newItem.desc">
+                                v-model="newItem.desc"
+                                @change="descOnChange">
                               </base-input>
 
                             </div>
@@ -126,7 +127,7 @@
                                 name="Template Code" placeholder="CREDIT_ALERT"
                                 rules="required|max:60" required
                                 v-model="newItem.code"
-                                 @change="codeOnChange">
+                                 >
                               </base-input>
 
                               <BaseVSelect class="col-md-3" size="sm"
@@ -220,12 +221,11 @@
                             </div>
                             <div class="position-relative form-group col-md-4">
                                   <label for="examplePassword" class="text-sm">Sample Data</label>
-                                  <v-jsoneditor v-model="newItem.data" :show-btns="false" :expandedOnStart="true"
-                                    :options="{
-                                      'mode' : 'code', 'modes' : ['code'],
-                                      'navigationBar' : false,'mainMenuBar' : false
-                                    }" height="400px">
-                                  </v-jsoneditor>
+                                  <VGrid theme="default" class="w-100"
+                                      :columns="sampleVar.columns"
+                                      :source="templateVariable"
+                                      @afteredit=afterEdit
+                                  ></VGrid>
                             </div>
                             <div class="position-relative form-group col-md-4">
                                 <label for="examplePassword" class="text-sm">Template Preview</label>
@@ -296,6 +296,8 @@
     import PageTitle from "../../Components/PageTitle.vue";
     import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
     import ModalSelector from "../../../@common/custom/components/ModalSelector.vue";
+    import JsonXPath from "../../../@common/utils/JsonXPath";
+    import TmplUtils from "../../../@common/utils/TmplUtils";
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -304,16 +306,21 @@
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import mustache from 'mustache';
     import formatters from '../../../services/formatters';
+     import debounce from "debounce";
 
     import VJsoneditor from 'v-jsoneditor'
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
+
+    import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
+import JsonUtils from '../../../@common/utils/JsonUtils';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
     );
 
     function newItem() {
+      console.log("newItem");
       return {
               "category": "",
               "desc": "",
@@ -324,93 +331,87 @@
               "template" : "" ,
               "code" : "" ,"contactType" : "", lang : 'en_US',
               options : { buttons : [] },
-              data : {}, meta : { messageType : null,contentType : null}       
+              categoryType : "",  formatType : "",
+              model : TmplUtils.sampleModel(), meta : {}       
       };
     }
-
-    var sampleJson = {
-        contact : {
-          name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
-        }
-    };
-
-    var sampleJsonKeys = formatters.keys(sampleJson);
+    let sampleJsonKeys = JsonUtils.paths(newItem().model);
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TemplatePreview,VJsoneditor,vSelect,ModalSelector
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,TemplatePreview,
+            VJsoneditor,vSelect,ModalSelector,
+            VGrid
         },
         data: () => ({
-            heading: 'Push Templates',
-            subheading: 'are HSM messages which can be  sent to contacts without session.',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
-            actions : [{
-              label : "Add Template", icon : "plus", name : "ADD_ITEM",  link : "/app/admins/tmpl/pushtemplate/edit/new"
-            },{
-              label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
-            }],
-            input : {
-                message_types : {
-                  values : [], selected : "shipping_update",
-                },
-                message_content_types : {
-                  values : [], selected : "TEXT",
-                },
-                langs : {
-                  values : [], selected : "en_US",
-                },
-                new_button : {
-                  value : ""
-                }
-            },
-            table : {
-              fields: [ 
-                        { key : 'category', label : "Grouping Category" }, 
-                        { key : 'desc', label : "Description" }, 
-                        { key : 'categoryType', label : "Message Type" }, 
-                        { key: 'actions', label: 'Actions' }    ],
-              items : [],
-              perPage: 25,
-              currentPage: 1,
-              rows : 0
-            },
-            newItem : newItem(),
-            sample : sampleJson,
-            modelName :  "MODAL_ADD_QUICK_REPLIES",
-            modalEditButton : {
-              name : "MODAL_EDIT_BUTTON",
-              item : null
-            },
-            mode : "view",
-            itemId : 'all',
-            strategies: [{
-              match: /(^|\s)\{\{([a-z0-9+\-\_\.]*)$/,
-              search(term, callback) {
-                callback(sampleJsonKeys.filter(function (name) {
-                  return name.startsWith(term);
-                }).slice(0, 10))
-              },
-              template(name) {
-                return name;
-              },
-              replace(value) {
-                return '$1{{' + value + '}} '
-              },
-            }]
+                  heading: 'Push Templates',
+                  subheading: 'are HSM messages which can be  sent to contacts without session.',
+                  icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+                  actions : [{
+                    label : "Add Template", icon : "plus", name : "ADD_ITEM",  link : "/app/admins/tmpl/pushtemplate/edit/new"
+                  },{
+                    label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
+                  }],
+                  input : {
+                      message_types : {
+                        values : [], selected : "shipping_update",
+                      },
+                      message_content_types : {
+                        values : [], selected : "TEXT",
+                      },
+                      langs : {
+                        values : [], selected : "en_US",
+                      },
+                      new_button : {
+                        value : ""
+                      }
+                  },
+                  table : {
+                    fields: [ 
+                              { key : 'category', label : "Grouping Category" }, 
+                              { key : 'desc', label : "Description" }, 
+                              { key : 'categoryType', label : "Message Type" }, 
+                              { key: 'actions', label: 'Actions' }    ],
+                    items : [],
+                    perPage: 25,
+                    currentPage: 1,
+                    rows : 0
+                  },
+                  newItem : newItem(),
+                  modelName :  "MODAL_ADD_QUICK_REPLIES",
+                  modalEditButton : {
+                    name : "MODAL_EDIT_BUTTON",
+                    item : null
+                  },
+                  mode : "view",
+                  itemId : 'all',
+                  strategies: [{
+                    match: /(^|\s)\{\{([a-z0-9+\-\_\.]*)$/,
+                    search(term, callback) {
+                      callback(sampleJsonKeys.filter(function (name) {
+                        return name.startsWith(term);
+                      }).slice(0, 10))
+                    },
+                    template(name) {
+                      return name;
+                    },
+                    replace(value) {
+                      return '$1{{' + value + '}} '
+                    },
+                  }],
+                  sampleVar : {
+                    columns: [
+                      { name: 'Variable', prop: "path", readonly : true},
+                      { name: 'Sample Value', prop: "sample"}] ,
+                    contact : [],
+                    data : []
+                  } 
         }),
         computed : {
-            templatePreview : function (argument) {
-              if(!this.newItem.template)
-                  return this.newItem.template;
-              try {
-                  return mustache.render(this.newItem.template, Object.assign(sampleJson,{
-                    data : this.newItem.data
-                  }));
-              } catch (e){
-                  return this.newItem.template
-              }
+            templateVariable(){
+              return [...this.sampleVar.contact,... this.sampleVar.data];
             },
-            isChanged :  function (argument) {
+            isChanged :  function () {
               return this.oldHash !== JSON.stringify(this.newItem);
             },
             contactTypes : function () {
@@ -427,6 +428,18 @@
             '$route.params.itemId': function (itemId) {
               this.itemId = itemId;
               this.selectItem();
+            },
+            "newItem.code" : function(newVal,oldVal){
+              this.newItem.code = this.newItem.code.replace(" ","_").toLowerCase().replace(/[^A-Za-z0-9_]/g,'');
+              this.newItem.name = [this.newItem.code,this.newItem.contactType,this.newItem.lang].filter(function (argument) {
+                    return !!argument;
+              }).join("_");
+            },
+            "newItem.header" : function(neVal){
+              this.templateTextChange(neVal)
+            },
+            "newItem.template" : function(neVal){
+              this.templateTextChange(neVal)
             }
         },
         created : function (argument) {
@@ -434,12 +447,13 @@
           this.itemId = this.$route.params.itemId;
           this.loadItems();
           this.loadOptions();
+          this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
           async loadOptions (argument) {
           },
           async loadItems (){
-            let resp = await this.$service.get('/api/tmpl/pushtemplate');
+            let resp = await this.$service.get('/api/tmpl/hsm');
             this.table.items = resp.results;
             this.selectItem();
           },
@@ -490,7 +504,7 @@
             let success = await this.$refs.form.validate();
             console.log("validSuccess",success)
             if(success === true){
-              await this.$service.post('/api/tmpl/pushtemplate', this.newItem);
+              await this.$service.post('/api/tmpl/hsm', this.newItem);
               this.newItem = newItem();
               this.$refs.form.reset();
               this.onAction({name : "CANCEL"});
@@ -498,7 +512,7 @@
             }
           },
           async deleteItem(item) {
-             await this.$service.delete('/api/tmpl/pushtemplate', item);
+             await this.$service.delete('/api/tmpl/hsm', item);
           }, 
           async cancelItem(item) {
              this.newItem = newItem();
@@ -512,7 +526,7 @@
                   this.newItem[key] = itemCopy[key];
                 }
                 this.newItem.meta = this.newItem.meta || {};
-                this.newItem.data = this.newItem.data || {};
+                this.newItem.model = this.newItem.model || newItem().model;
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
@@ -524,7 +538,9 @@
           onAction : function (argument) {
             switch(argument.name){
               case "ADD_ITEM" :
+                this.newItem = newItem();
                 this.oldHash = JSON.stringify(this.newItem);
+                this.templateTextChange();
                 //this.$bvModal.show(this.modelName)
                 this.mode = "edit";
                 console.log("ADD_ITEM",argument);
@@ -532,6 +548,7 @@
               case "EDIT_ITEM" :
                 this.oldHash = JSON.stringify(this.newItem);
                 this.mode = "edit";
+                this.templateTextChange();
                 //this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
@@ -543,11 +560,38 @@
                 console.log("NoMapping",argument) 
             }
           },
-          codeOnChange : function (argument) {
-            this.newItem.code = this.newItem.code.replace(/\s/g,"_").replace(/\_\_+/g, '_').toUpperCase();
-            this.newItem.name = [this.newItem.code,this.newItem.contactType,this.newItem.lang].filter(function (argument) {
-                return !!argument;
-            }).join("_");
+          descOnChange : function (argument) {
+            if(!this.newItem.code){
+                this.newItem.code = this.newItem.desc;  
+            }
+          },
+          afterEdit(e){
+              const rs = JsonXPath({
+                path : '$.' +e.detail.model.path,
+                json: this.newItem.model,
+                resultType: "all",
+                value : e.detail.model.sample
+              });
+              this.newItem.__ob__.dep.notify()
+          },
+          templateTextChange(){
+            let neVal = (this.newItem.header + this.newItem.template + this.newItem.footer)
+            let newItem = this.newItem;
+            this.sampleVar.data = TmplUtils.getVars(
+                neVal,/({{(data\.[\w\d\.]+)}})/g).map(function(v,i){
+                return {
+                    path : v.path,
+                    sample : JsonXPath({path : '$.' +v.path,json : newItem.model})[0]
+                }
+            });
+            this.sampleVar.contact = sampleJsonKeys.map(function(key,i){
+                return {
+                    index : i,
+                    path : key,
+                    sample : JsonXPath({ path : '$.'+key,json : newItem.model})[0]
+                }
+            });
+            this.newItem.__ob__.dep.notify()
           }
         }
 

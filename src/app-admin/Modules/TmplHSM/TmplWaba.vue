@@ -127,6 +127,12 @@
                                         v-model="templateSimple.header.format" :disabled="nonEditable"
                                         options="data:hsm/message_format_types">
                                 </my-v-select>  
+                                 <base-input 
+                                    prelabel :name="'Sample URL of media'"
+                                    v-if="hasMediaHeader"  :disabled="nonEditable"
+                                    :placeholder="`Provide URL of sample ${templateSimple.header.format}`"
+                                    v-model="templateSimple.examples.header_handler">
+                                </base-input>
                                 <base-input
                                     prelabel name="Header Text"
                                     v-if="templateSimple.header.format == 'TEXT'"  :disabled="nonEditable"
@@ -135,19 +141,12 @@
                                      helpMessage="Your title can include only one variable"
                                     v-model="templateSimple.header.text">
                                 </base-input>
-                                <base-input 
-                                    prelabel :name="'Sample {{1}}'"
-                                    v-if="hasTextHeaderVariable"  :disabled="nonEditable"
-                                    :textLimit="60"
-                                    :placeholder="'Sample value for {{1}}'"
-                                    v-model="templateSimple.examples.header_text">
-                                </base-input> 
-                                 <base-input 
-                                    prelabel :name="'Sample URL'"
-                                    v-if="hasMediaHeader"  :disabled="nonEditable"
-                                    :placeholder="`Provide URL of sample ${templateSimple.header.format}`"
-                                    v-model="templateSimple.examples.header_handler">
-                                </base-input>
+                                <span cols="12" class="body-card-body-variable-grid">
+                                    <VGrid v-if="templateSimple.varMap && hasTextHeaderVariable"  theme="default" class="w-100" style="min-height:100px"
+                                    :columns="sampleVar.columns"
+                                    :source="templateSimple.varMap.header"
+                                    @afteredit=afterVarEdit></VGrid>
+                                </span>
 
                                 </b-card-text>
                             </b-card-body>
@@ -160,23 +159,24 @@
                                 </b-card-sub-title>
                                 <b-card-text class="body-card-body">
                                     <b-row>
-                                        <b-col cols="9">
+                                        <b-col cols="12">
                                             <base-text-area :disabled="nonEditable" name="Body"
-                                                placeholder="Type here" v-model="templateBody.text" 
+                                                placeholder="Type here" v-model="templateSimple.body.text" 
                                                 rules="required|max:1024|HBNumVar:*,0,60" rows=10
                                                 :textLimit="1024">
                                             </base-text-area>
                                         </b-col> 
-                                        <b-col cols="3">
-                                             <input class="body-card-body-variable" :disabled="nonEditable"
-                                                v-for="(samples,i) in templateSimple.examples.body_text" :key="'b'+i"
-                                                v-model="samples.text"
-                                                :placeholder="`Sample value for ${samples.variable}`" />
-                                        </b-col> 
-                                    </b-row>    
-                                
+                                    </b-row>  
+                                    <b-row v-if="templateSimple.varMap">
+                                        <b-col cols="12" class="body-card-body-variable-grid">
+                                            <VGrid theme="default" class="w-100" style="min-height:100px"
+                                            :columns="sampleVar.columns"
+                                            :source="templateSimple.varMap.body"
+                                            @afteredit=afterVarEdit></VGrid>
+                                        </b-col>
+                                    </b-row>   
+
                                 </b-card-text>
-                               
 
                             </b-card-body>
 
@@ -187,7 +187,7 @@
                                     Add a short line of text to the bottom of your message template.</b-card-sub-title>
                                 <b-card-text>
                                 <base-input :disabled="nonEditable"
-                                    v-model="templateFooter.text" :textLimit="60"
+                                    v-model="templateSimple.footer.text" :textLimit="60"
                                     rules="max:60" >
                                 </base-input>
                                 </b-card-text>
@@ -266,7 +266,7 @@
                                                     prelabel :name="'Sample URL'"
                                                     v-if="button.url && button.url.indexOf('{{1}}') > -1"  :disabled="nonEditable"
                                                     placeholder="Provide complete URL of sample link"
-                                                    v-model="templateSimple.examples.header_handler">
+                                                    v-model="templateSimple.examples.button_url">
                                                 </base-input>
                                             </div>
                                         </b-list-group-item>
@@ -275,7 +275,7 @@
                             </b-card-body>
 
                             <b-card-footer>
-                                <b-button v-if="!nonEditable"  type="submit" variant="primary" class="float-right">Save</b-button>
+                                <b-button type="submit" variant="primary" class="float-right">Save</b-button>
                             </b-card-footer>
 
                         </b-card>
@@ -390,8 +390,10 @@
     import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM} from "@/@common/utils/WABATmpl";
     import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue'
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
-
+    import JsonXPath from "@/@common/utils/JsonXPath";
+    import TmplUtils from '@/@common/utils/TmplUtils';
     import debounce from "debounce";
+    import VGrid from "@revolist/vue-datagrid";
 
     export default {
         components: {
@@ -402,7 +404,7 @@
                 BaseTextArea,
                 BaseInput,
                 BaseSelect,
-                TemplatePreview,MyStatus,
+                TemplatePreview,MyStatus,VGrid
         },
         data: () => ({
             filters: [
@@ -449,6 +451,13 @@
             newItem : {
                 name : null, category : null, lang : null
             },
+            sampleVar : {
+              columns: [
+                { name: 'component', prop: "component", readonly : true},
+                { name: 'Variable', prop: "numVar", readonly : true},
+                { name: 'Data Path', prop: "path"},
+                { name: 'Sample Value', prop: "sample"}],
+            },
             ERROR_JSON : null
         }),
         computed: {
@@ -460,16 +469,6 @@
             },
             isValidNewItem: function () {
                 return this.newItem.category && this.newItem.name;
-            },
-            templateBody : function(){
-                return this.template.template.components.filter(function(comp){
-                    return comp.type == "BODY";
-                })[0] || {};
-            },
-            templateFooter : function(){
-                return this.template.template.components.filter(function(comp){
-                    return comp.type == "FOOTER";
-                })[0] || {};
             },
             canAddButton : function(){
                 if(this.templateSimple?.buttons?.buttons){
@@ -510,7 +509,7 @@
                     //template : this.templateSimple.body.text,
                     template : this.templateSimple.examples.body_preview,
                     header : (this.templateSimple.header.format == 'TEXT') 
-                            ? (this.templateSimple.header.text || "").replace("{{1}}",this.templateSimple.examples.header_text || "{{1}}") 
+                            ? this.templateSimple.examples.header_preview 
                             : null,
                     attachments : ['IMAGE','VIDEO','DOCUMENT'].indexOf(this.templateSimple.header.format) > -1 ? [{
                         mediaType : this.templateSimple.header.format
@@ -524,7 +523,9 @@
                             }
                         })
                     },
+                    model : this.templateSimple?.model,
                     data : {
+                        ...this.templateSimple?.model?.data,
                         body : this.templateSimple.examples.body_text.map(function(param) {
                             return param.text || param.variable
                         })
@@ -544,25 +545,16 @@
                 this.newItem.name = this.newItem.name.replace(" ","_").toLowerCase().replace(/[^A-Za-z0-9_]/g,'');
             },
             "templateSimple.body.text" : debounce(function(neVal){
-                if(!neVal) return;
-                let re = /({{(\d+)}})/g;
-                let myArray = neVal.match(re) || [];
-                let body_text = this.templateSimple.examples.body_text;
-                let body_preview = this.templateSimple.body.text;
-                //if(body_text.length != myArray.length){
-                    this.templateSimple.examples.body_text = myArray.map(function(vr,i){
-                        body_preview = body_preview.replace(vr,"{{data.body."+i+"}}")
-                        return {
-                            variable : vr,
-                            text : body_text[i] ? body_text[i].text : null
-                        }
-                    });
-                //}   
-                this.templateSimple.examples.body_preview = body_preview; 
+                this.afterTextEdit();
+            },100),
+            "templateSimple.header.text" : debounce(function(neVal){
+                this.afterTextEdit();
             },100)
         },
         mounted: function () {
             this.onLoad();
+            this.afterTextEdit = debounce(this.afterTextEdit,100);
+            this.afterTextEdit();
         },
         methods: {
             async onLoad(){
@@ -603,31 +595,39 @@
             async onSubmit(){
                 // this will be called only after form is valid. You can do an api call here to register users
                 try {
-                    let resp = await this.$service.post("/api/tmpl/hsm/waba_templates",{
-                        category : this.template.template.category,
-                        language : this.template.template.language,
-                        name : this.template.template.name,
-                        components : this.template.template.components.filter(function(cmp){
-                            if((!cmp.type && cmp.type == "NONE")
-                                || (cmp.type == "HEADER" && !cmp.format)
-                                || (cmp.type == "FOOTER" && !cmp.text)
-                                || (cmp.type == "BUTTONS" && (!cmp.buttons || !cmp.buttons.length))
-                            ){
-                                return false;
-                            } return true;
-                        }),
-                    },{
-                        params : {
-                            channelId : this.template.channelId
-                        }
-                    });
+
+                    let templateRequest =  {
+                        channelId : this.template.channelId,
+                        id : this.template.id,
+                        hsmTemplateId : this.template.hsmTemplateId,
+                        varMap : this.templateSimple.varMap
+                    }
+
+                    if(!this.nonEditable){
+                        templateRequest.template = {
+                            category : this.template.template.category,
+                            language : this.template.template.language,
+                            name : this.template.template.name,
+                            components : this.template.template.components.filter(function(cmp){
+                                if((!cmp.type && cmp.type == "NONE")
+                                    || (cmp.type == "HEADER" && !cmp.format)
+                                    || (cmp.type == "FOOTER" && !cmp.text)
+                                    || (cmp.type == "BUTTONS" && (!cmp.buttons || !cmp.buttons.length))
+                                ){
+                                    return false;
+                                } return true;
+                            }),
+                        };
+                    }
+
+                    let resp = await this.$service.post("/api/tmpl/hsm/waba_templates",templateRequest);
                     this.template.id = resp.results[0].id;
                     this.template.lang = resp.results[0].lang;
                     this.template.code = resp.results[0].code;
                     this.template.template = resp.results[0].template;
-
                     console.log("resp",resp)
                 } catch(e){
+                    console.error("eeee",e)
                     this.ERROR_JSON = e.response.data.errors[0].body;
                     this.$bvModal.show("SHOW_CLIENT_ERROR");
                     this.$refs.templateStructure.setErrors(e.response.data.veeErrors)
@@ -657,23 +657,8 @@
                 });
             },
             async selectTemplate(item) {
-                console.log("selectTemplate",item);
                 this.template = item;
-                this.templateSimple = createWABATmplSimple();
-                if(this.template && this.template.template && this.template.template.components){
-                    let templateSimple = this.templateSimple;
-                    this.template.template.components.map(function(cmp){
-                        if (cmp.type == "HEADER"){
-                            templateSimple.header = cmp;
-                        } else if(cmp.type == "BODY"){
-                            templateSimple.body = cmp;
-                        } else if(cmp.type == "FOOTER"){
-                            templateSimple.footer = cmp;
-                        } else if(cmp.type == "BUTTONS"){
-                            templateSimple.buttons = cmp;
-                        }
-                    })
-                }
+                this.templateSimple = createWABATmplSimple(this.template);
                 this.refreshSelectedTemplates();
             },
             toHSM(item){
@@ -712,7 +697,6 @@
                     }),hsm);
                     this.$refs.templatesView.getItems().push(newTemplate);
                 }
-                
                 if(newTemplate){
                     this.selectTemplate(newTemplate);
                 }
@@ -748,7 +732,48 @@
             },
             fixit :  debounce(function(params) {
                 this.newLanguage = null;
-            })
+            }),
+            afterTextEdit(){
+                let THAT = this;
+                ["body","header"].map(function(component){
+                    console.log(component,THAT.templateSimple[component].text);
+                    if(!THAT.templateSimple[component].text) return;
+                    let body = TmplUtils.convertToOrderedVars(THAT.templateSimple[component].text,/({{(\d+)}})/g);
+                    let body_preview = THAT.templateSimple[component].text;
+                    let templateSimple = THAT.templateSimple;
+                    THAT.templateSimple.varMap[component] = body.vars.map(function(vr,i){
+                        let path = templateSimple.varMap[component][i]?.path || "data." + component + "_var_" + vr.number;
+                        body_preview = body_preview.replace(vr.variable,"{{"+path+"}}")
+                        return {
+                            component : component,
+                            numVar : vr.variable,
+                            variable : vr.variable,
+                            path : path,
+                            sample : templateSimple.varMap[component][i]?.sample,
+                        }
+                    });
+                    THAT.templateSimple.examples[component+"_preview"] = body_preview; 
+                })
+            },
+            afterVarEdit(e){
+                let path = e.detail.model.path || "data." + e.detail.model.component + "_var_"+ e.detail.model.numVar.replace(/(\{\{)|(\}\})/g, '');
+                e.detail.model.path = path;
+                if(e.detail.prop == "path"){
+                    e.detail.model.sample = JsonXPath({path : '$.' +path,json: this.templateSimple.model})[0] || e.detail.model.sample;
+                }
+                const rs = JsonXPath({
+                    path : '$.' +path,
+                    json: this.templateSimple.model,
+                    resultType: "all",
+                    value : e.detail.model.sample
+                });
+                [...this.templateSimple.varMap.header, ...this.templateSimple.varMap.body].map(function(vr){
+                    if(vr.path && vr.path == path){
+                        vr.sample = e.detail.model.sample;
+                    }
+                });
+                this.templateSimple.__ob__.dep.notify()
+          },
         },
     }
 </script>
@@ -796,6 +821,19 @@
                 // border-left: 1px solid #d0d7dc;
                 // border-right: 1px solid #d0d7dc;
             }
+        }
+        .body-card-body-variable-grid{
+            width: 100%;
+            .main-viewport {
+                height: 100%;
+                .viewports {
+                    width: 100%;
+                }
+            }
+
+        }
+        input,textarea {
+            font-size: 13px;
         }
     }
 </style>

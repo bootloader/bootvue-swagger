@@ -194,7 +194,7 @@
             });
           },
           async loadTemplates (){
-            let resp = await this.$service.get('/api/tmpl/pushtemplate');
+            let resp = await this.$service.get('/api/tmpl/hsm');
             this.input.templates.values = resp.results;
           },
           onAction : function (argument) {

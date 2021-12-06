@@ -17,7 +17,17 @@
 
                 <template #cell(value)="row">
                   <span v-if="row.item.meta.inputType=='OPTIONS'">
-                    {{row.item.config.value|display(row.item.meta.options)}}
+
+                    <span v-if="row.item.meta.source">
+                      <MySource
+                        :value="row.item.config.value"
+                        :options="row.item.meta.source">
+                      </MySource>  
+                    </span>
+                    <span v-else>
+                        {{row.item.config.value|display(row.item.meta.options)}}
+                    </span>
+                  
                   </span>
                   <span v-else-if="row.item.meta.inputType=='COLOR'">
                      <v-swatches
@@ -58,7 +68,7 @@
                   <span v-else>{{row.item.config.value}}</span>
                 </template>
                 <template #cell(actions)="row">
-                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"  
+                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
                      v-tooltip="row.item.message" variant="outline-primary">
                      <i class="fas fa-edit"></i>
                   </b-button>
@@ -91,15 +101,23 @@
 
                <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
 
-                 <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
-                  v-model="oneItem.config.value" size="sm"
-                  :options="oneItem.meta.options"
-                 />
-                  <BaseVSelect v-else class="w-100"
-                    v-model="oneItem.config.value" size="sm"
-                    :options="oneItem.meta.options"
-                    placeholder="Select Language"
-                 />
+                    <span v-if="oneItem.meta.source" class="w-100">
+                      <MyVSelect class="w-100"
+                        :options="oneItem.meta.source" 
+                        v-model="oneItem.config.value">
+                      </MyVSelect>
+                    </span>
+                    <span v-else>
+                        <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
+                          v-model="oneItem.config.value" size="sm"
+                          :options="oneItem.meta.options"
+                        />
+                          <BaseVSelect v-else class="w-100"
+                            v-model="oneItem.config.value" size="sm"
+                            :options="oneItem.meta.options"
+                            placeholder="Select Language"
+                        />
+                    </span>
 
                 </div>
                 <div  v-else-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 

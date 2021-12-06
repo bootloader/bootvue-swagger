@@ -78,14 +78,18 @@
         var contentStr = this.templateConfig.template;
         var headerStr  = this.templateConfig.header || this.templateConfig.title;
         try {
-          contentStr = mustache.render(this.templateConfig.template, Object.assign(sampleJson,{
-              data : this.templateConfig?.data,
-              contact : this?.model?.contact || sampleJson.contact
-          }));
-          headerStr = mustache.render(headerStr, Object.assign(sampleJson,{
-              data : this.templateConfig?.data,
-              contact : this?.model?.contact || sampleJson.contact
-          }));
+          let model = Object.assign(sampleJson,{
+                data :  this?.model?.data || Object.assign({},
+                          sampleJson.data,
+                          this.templateConfig?.model?.data || {},
+                          this.templateConfig?.data),
+                contact : this?.model?.contact || Object.assign({},
+                            sampleJson.contact,
+                            this.templateConfig?.model?.contact || {},
+                            this.templateConfig?.contact)
+          });
+          contentStr = mustache.render(this.templateConfig.template,model);
+          headerStr = mustache.render(headerStr, model);
         } catch (e) {
           //console.error(e);
         }

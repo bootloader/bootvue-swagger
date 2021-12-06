@@ -1,5 +1,8 @@
 import formatters from '@/services/formatters';
 
+import TmplUtils from './TmplUtils';
+import JsonXPath from './JsonXPath';
+
 function toHSM(waba){
     console.log("toHSMs",waba);
     let hsm = {
@@ -22,42 +25,36 @@ function toHSM(waba){
     })[0]?.text;
     return hsm;
 }
-
-const varFinder = /({{([\w\d\.]+)}})/g;
-function getVars(replaceVars){
-    var myArray = replaceVars.match(varFinder) || [];
-    var varList = [];
-    for(var i in myArray){
-        varList.push({ 
-            i : i,
-            numVar : myArray[i],
-            path : myArray[i].replace(/(\{\{)|(\}\})/g,'')
-        })
-    }
-    return varList;
-}
-function replaceVars(content){
-    return content.replace(varFinder, (() => {
-        var number = 0;
-        return () => {
-          return `{{${++number}}}`;
-        }
-    })());
-}
 function cloneWABATmplSample(template,hsm) {
     hsm = hsm || {};
     let bodyText = null,headerText;
     let templateRaw = (hsm?.body || hsm?.template || "").split("---options---");
     let varMap = {};
 
+    
     if(templateRaw[0]){
-        varMap.body = getVars(templateRaw[0]);
-        bodyText = replaceVars(templateRaw[0]);
+        let body = TmplUtils.convertToOrderedVars(templateRaw[0]);
+        bodyText = body.text;
+        varMap.body = body.vars;
+        if(hsm?.model){
+            for(var i in varMap.body){
+                varMap.body[i].component = "body";
+                varMap.body[i].sample =  JsonXPath({ path : '$.'+varMap.body[i].path,json : hsm?.model})[0]
+            }
+        }
     }
-
+    console.log("Not Returned")
+    
     if(hsm?.header){
-        varMap.header = getVars(hsm?.header);
-        headerText = replaceVars(hsm?.header);
+        let header = TmplUtils.convertToOrderedVars(hsm?.header);
+        headerText = header.text;
+        varMap.header = header.vars;
+        if(hsm?.model){
+            for(var i in varMap.header){
+                varMap.header[i].component = "header";
+                varMap.header[i].sample =  JsonXPath({ path : '$.'+varMap.header[i].path,json : hsm?.model})[0]
+            }
+        }
     }
     let templateOptions = formatters.message_form_options(formatters.map_from_string(templateRaw[1]));
 
@@ -69,6 +66,11 @@ function cloneWABATmplSample(template,hsm) {
         contactType : template.contactType,
         channelType : template.channelType,
         varMap : varMap,
+        hsmTemplateId : template.hsmTemplateId || hsm?.id,
+        model : Object.assign(TmplUtils.sampleModel(),{
+            data : hsm?.model?.data || hsm?.data,
+            contact :  hsm?.model?.contact,
+        }),
         template : {
             name : template.code,
             language : template.lang,
@@ -126,6 +128,7 @@ function createWABATmplSample(template) {
         category : template.category,
         contactType : template.contactType,
         channelType : template.channelType,
+        varMap : template.varMap,
         template : {
             name : template.code,
             language : template.lang,
@@ -153,8 +156,8 @@ function createWABATmplSample(template) {
     }
 }
 
-function createWABATmplSimple() {
-    return {
+function createWABATmplSimple(template) {
+    let templateSimple =  {
         header: {
             type: null,
             text: null,
@@ -173,11 +176,34 @@ function createWABATmplSimple() {
         examples : {
             header_text : null,
             header_handler : null,
+            header_preview : "",
             body_text : [],
             body_preview : "",
             button_url : null
-        }
+        },
+        varMap : {
+            body : [],
+            header  : []
+        },
+        model : TmplUtils.sampleModel()
     }
+
+    if(template && template.template && template.template.components){
+        template.template.components.map(function(cmp){
+            if (cmp.type == "HEADER"){
+                templateSimple.header = cmp;
+            } else if(cmp.type == "BODY"){
+                templateSimple.body = cmp;
+            } else if(cmp.type == "FOOTER"){
+                templateSimple.footer = cmp;
+            } else if(cmp.type == "BUTTONS"){
+                templateSimple.buttons = cmp;
+            }
+        });
+        console.log("template.varMap",template.varMap)
+        templateSimple.varMap = template.varMap || templateSimple.varMap;
+    }
+    return templateSimple;
 }
 
 export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample,toHSM}

@@ -25,7 +25,7 @@
 
   Vue.component('MySource', () => import('./@common/custom/components/MySource.vue'));
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
-
+  Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
 
   VueClipboard.config.autoSetContainer = true // add this line
