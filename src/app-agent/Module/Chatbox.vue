@@ -192,7 +192,7 @@
         <br/>
         <ForEachOption options="getx:/api/options/tmpl/hsm" > 
             <template #data={option}>
-                <span  @click="sendNewMessage(option)" class="msg_cotainer_smart">
+                <span  @click="sendNewMessage(option.item)" class="msg_cotainer_smart">
                     {{option.item.desc}} ({{option.item.lang}})
                 </span>
             </template>
