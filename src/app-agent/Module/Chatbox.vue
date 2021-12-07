@@ -190,7 +190,8 @@
         <br/>
         <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
         <br/>
-        <ForEachOption options="getx:/api/options/tmpl/hsm" > 
+        <ForEachOption options="getx:/api/options/tmpl/hsm" 
+                 :filter="{ 'meta.agentAllowed' : true }"> 
             <template #data={option}>
                 <span  @click="sendNewMessage(option.item)" class="msg_cotainer_smart">
                     {{option.item.desc}} ({{option.item.lang}})

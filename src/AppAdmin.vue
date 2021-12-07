@@ -17,6 +17,8 @@
 
   Vue.component('admin-default-layout', () => import('./app-admin/Layout/baseLayout.vue'));
   Vue.component('admin-userpages-layout', () => import('./app-admin/Layout/pagesLayout.vue'));
+  Vue.component('master-view', () => import('./app-admin/Layout/MasterView.vue'));
+
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
   Vue.component('BaseInput', () => import('./@common/argon/components/Inputs/BaseInput.vue'));
@@ -27,6 +29,7 @@
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
   Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
+   Vue.component('MyAxon', () => import('./@common/custom/components/MyAxon.vue'));
 
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)

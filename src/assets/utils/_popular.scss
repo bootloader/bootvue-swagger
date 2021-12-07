@@ -70,3 +70,7 @@ $popular-list:(
 .text-comma:not(:empty)+.text-comma:not(:empty)::before {
     content: ',';
 }
+
+.dull {
+    opacity: 0.7;
+}

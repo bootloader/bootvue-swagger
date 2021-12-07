@@ -1,5 +1,5 @@
 <template>
-    <MySource :options="options">
+    <MySource :options="options" :filter="filter">
         <template #data="data">
             <component :is="optionTag" 
                 v-for="(option,index) in data.options" v-bind:key="'options-'+index" 
@@ -28,6 +28,8 @@
             },
             optionClass : {
                 default: '',
+            },
+            filter : {
             }
         },
         data: () => ({

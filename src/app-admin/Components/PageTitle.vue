@@ -17,7 +17,7 @@
             </div>
             <div class="page-title-actions">
 
-        <span v-for="(filter,index) in filters" v-bind:key="'filter-'+index" class="filter-wrapper">
+        <span v-for="(filter,index) in ifFilters" v-bind:key="'filter-'+index" class="filter-wrapper">
               <slot :name="'filter('+filter.name+')'"  v-bind="{filter}"  >
                     <span  v-if="!filter.hidden" >
                     </span>
@@ -187,7 +187,9 @@
             
         },
         computed : {
-            
+            ifFilters(){
+                return this.filters || [];
+            }
         },
         filters: {
           date(val) {   

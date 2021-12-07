@@ -132,11 +132,15 @@
                     this.model.options  = this.model.options.filter(function(option){
                         return filters.some(function(filter){
                             for(var key in filter){
+                                let meta = key.split(".");
+                                let value = meta[1] 
+                                        ? (option.item[meta[0]] ? option.item[meta[0]][meta[1]] : undefined) 
+                                        : option.item[key];
                                 if(filter[key] === true){
-                                    if(!option.item[key]){
+                                    if(!value){
                                         return false;
                                     }
-                                } else if(filter[key] !== option.item[key]){
+                                } else if(filter[key] !== value){
                                     return false;
                                 }
                             }

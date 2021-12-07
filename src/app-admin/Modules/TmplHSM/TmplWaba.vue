@@ -13,7 +13,7 @@
                 { label : 'Create Message Template', icon : 'plus', name : 'ADD_ITEM', modal : modelName }
             ]"
             :autoApply="false"
-            @action="onAction"
+            @action="onAction" 
             @rows="onRows">
             <template #filter(go2hsm)="{filter}">
                 <b-button variant="link" :to="filter.link">{{filter.label}}</b-button>
@@ -434,6 +434,7 @@
                 perPage: 25,
                 currentPage: 1,
                 rows: 0,
+                small : true,
                 api: 'api/tmpl/hsm/waba_templates',
             },
             modelName: 'MODAL_WABA_TEMPLATE',

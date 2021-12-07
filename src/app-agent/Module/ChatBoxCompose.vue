@@ -34,7 +34,11 @@
                                     />
                                 <MyHSMTmplSelect options="getx:/api/options/tmpl/hsm"
                                     selectedPrefixClass="fa fa-file-code text-xl px-1 text-greyer"
-                                    v-model="model.templateId" />
+                                    v-model="model.templateId"
+                                    :filter="{
+                                        'meta.agentAllowed' : true
+                                    }"
+                                     />
                         </div>
                         <div class="message-box-preview m-0 w-100 center-wrap"> 
                                 <TemplatePreview v-if="model.templateId" :templateId="model.templateId" 

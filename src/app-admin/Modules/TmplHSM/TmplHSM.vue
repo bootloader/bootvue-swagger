@@ -1,23 +1,17 @@
 <template>
     <div class="m-tmpl-hsm-list">
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-          @action="onAction" ref="pageTitle" :actionShow="{
-            'ADD_ITEM' : mode=='view',
-            'CANCEL' : mode=='edit'
-          }"></page-title>
 
-          <b-card v-if="mode=='view'" title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="table.items"
-                     :fields="table.fields"
-                     :tbody-tr-class="rowClass">
+        <master-view v-show="mode=='view'" ref="templatesView"
+            :header="{
+                heading: 'Push Templates',
+                subheading: 'are HSM messages which can be  sent to contacts without session.',
+                icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+            }"
+            :table="table"
+            :actions="[{
+              label : 'Add Template', icon : 'plus', name : 'ADD_ITEM',  link : '/app/admins/tmpl/pushtemplate/edit/new'
+            }]"
+            @action="onAction">
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
@@ -79,6 +73,16 @@
                     </b-button>   
                   </router-link>
                   &nbsp;
+                  <MyAxon class="btn btn-sm btn-outline-primary"
+                    api="/api/tmpl/hsm/meta"
+                     activeTitle="Disable for agent panel" title="Enable for agent panel"
+                     inactiveClass="fab fa-redhat dull"
+                     activeClass="fa fa-user-secret"
+                    :active="(row.item.meta && row.item.meta.agentAllowed)"
+                    :params="{ templateId : row.item.id}"
+                    :body="{ agentAllowed : !(row.item.meta && row.item.meta.agentAllowed)}"
+                    @complete=loadItems />
+                  &nbsp;
                   <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + row.item.id">
                     <b-button size="sm" 
                           v-tooltip="'Submit for WABA apporval, required to push template message out of session'" variant="outline-primary">
@@ -90,165 +94,179 @@
 
                 </template>
 
-            </b-table>
-        </b-card>
-          
-        <b-card v-else-if="mode=='edit' && newItem" 
-              :id="modelName" size="xl"
-              @hidden="cancelItem">
-                  <ValidationObserver ref="form" class="template-form">
-                            <div class="position-relative form-group row">
-                              
-                              <base-input class="col-md-3" size="sm"
-                                name="Grouping Category" placeholder="Grouping Category"
-                                rules="required|max:20" required
-                                v-model="newItem.category">
-                              </base-input>
+        </master-view>    
 
-                              <BaseVSelect class="col-md-3" size="sm"
-                                name="Message Type"
-                                options="data:hsm/message_category_types"
-                                 v-model="newItem.categoryType"
-                                 placeholder="Select Message Type">
-                              </BaseVSelect>
+        <master-view v-if="mode=='edit' && newItem"  ref="templatesEdit"
+            :header="{
+                heading: newItem.desc,
+                subheading: newItem.categoryType,
+                icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+            }"
+            :table="table"
+            :actions="[{
+              label : 'Cancel', name : 'CANCEL', type : 'link', link : '/app/admins/tmpl/pushtemplate/view/all'
+            }]"
+            @action="onAction">
+             <template #body>
+                      <b-card 
+                        :id="modelName" size="xl"
+                        @hidden="cancelItem">
+                            <ValidationObserver ref="form" class="template-form">
+                                      <div class="position-relative form-group row">
+                                        
+                                        <base-input class="col-md-3" size="sm"
+                                          name="Grouping Category" placeholder="Grouping Category"
+                                          rules="required|max:20" required
+                                          v-model="newItem.category">
+                                        </base-input>
 
-                              <base-input class="col-md-6" size="sm"
-                                name="Description" placeholder="Enter description"
-                                rules="required|max:60" required
-                                v-model="newItem.desc"
-                                @change="descOnChange">
-                              </base-input>
+                                        <BaseVSelect class="col-md-3" size="sm"
+                                          name="Message Type"
+                                          options="data:hsm/message_category_types"
+                                          v-model="newItem.categoryType"
+                                          placeholder="Select Message Type">
+                                        </BaseVSelect>
 
+                                        <base-input class="col-md-6" size="sm"
+                                          name="Description" placeholder="Enter description"
+                                          rules="required|max:60" required
+                                          v-model="newItem.desc"
+                                          @change="descOnChange">
+                                        </base-input>
+
+                                      </div>
+
+                                      <div class="position-relative form-group row">
+
+                                        <base-input class="col-md-3" size="sm"
+                                          name="Template Code" placeholder="CREDIT_ALERT"
+                                          rules="required|max:60" required
+                                          v-model="newItem.code"
+                                          >
+                                        </base-input>
+
+                                        <BaseVSelect class="col-md-3" size="sm"
+                                          name="Contact Type"
+                                          :emptyDisplay="'ALL'"
+                                          :options="contactTypes"
+                                          v-model="newItem.contactType"
+                                          placeholder="Select Contact Type">
+                                        </BaseVSelect>
+
+                                        <BaseVSelect class="col-md-3" size="sm"
+                                          name="Message Language"
+                                          filterable searchable
+                                          options="getx:/api/meta/langs"
+                                          v-model="newItem.lang"
+                                          placeholder="Select Language">
+                                        </BaseVSelect>
+
+                                        <BaseVSelect class="col-md-3" size="sm"
+                                          name="Content Type"
+                                          :emptyDisplay="'ALL'"
+                                          options="data:hsm/message_format_types"
+                                          v-model="newItem.formatType"
+                                          placeholder="Select Content Type">
+                                        </BaseVSelect>
+
+
+                                      </div>
+
+
+                                      <div class="position-relative form-group row">
+
+
+            
+                                      </div>
+
+
+
+                                    <div class="row">
+                                    <div class="position-relative form-group col-md-4">
+                                        <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
+                                        <base-text-area  name="Header" layout="flushed"
+                                                          placeholder="Type here" v-model="newItem.header" 
+                                                          rules="max:60|HBNumVar:*,0,1" :rows="1"
+                                                          :textLimit="60">
+                                        </base-text-area>
+                                        <base-text-area  name="Body" layout="flushed"
+                                                          placeholder="Type here" v-model="newItem.template" 
+                                                          rules="required|max:1024|HBNumVar:*,0,60" :rows="9"
+                                                          :textLimit="1024"
+                                                          :textCompleteStrategies="strategies">
+                                        </base-text-area>
+                                        <base-text-area  name="Footer" layout="flushed"
+                                                          placeholder="Type here" v-model="newItem.footer" 
+                                                          rules="max:60" :rows="1"
+                                                          :textLimit="60">
+                                        </base-text-area>
+                                        <div> 
+                                          <for-each-option v-if="newItem.options && newItem.options.buttons"
+                                              :options="newItem.options.buttons" class="new_buttons w-100"
+                                                optionTag="span"
+                                                optionClass="btn-group btn-group-sm">
+                                                <template #data="{option}">
+                                                    <span class="btn btn-outline-grey">
+                                                      <i v-if="option.item.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
+                                                      <i v-if="option.item.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>
+                                                      {{option.label}}
+                                                    </span> 
+                                                    <span class="btn btn-outline-grey option-action"
+                                                      @click="deleteButton(option.item)">
+                                                      <i class="fa fa-trash"/>
+                                                    </span> 
+                                                    <span class="btn btn-outline-grey option-action"
+                                                      @click="editButton(option.item)">
+                                                        <i class="fa fa-edit"/>
+                                                    </span>
+                                                </template>
+                                          </for-each-option>
+                                          <b-input-group class="mt-1 px-1px" size="sm">
+                                            <b-form-input 
+                                              placeholder="Type name of button"
+                                              v-model="input.new_button.value"></b-form-input>
+                                            <b-input-group-append>
+                                              <b-button
+                                                variant="outline-grey" @click="addButton">
+                                                <i class="fa fa-plus"/>
+                                              </b-button>
+                                            </b-input-group-append>
+                                          </b-input-group>
+                                        </div>
+                                      </div>
+                                      <div class="position-relative form-group col-md-4">
+                                            <label for="examplePassword" class="text-sm">Sample Data</label>
+                                            <VGrid theme="default" class="w-100"
+                                                :columns="sampleVar.columns"
+                                                :source="templateVariable"
+                                                @afteredit=afterEdit
+                                            ></VGrid>
+                                      </div>
+                                      <div class="position-relative form-group col-md-4">
+                                          <label for="examplePassword" class="text-sm">Template Preview</label>
+                                          <TemplatePreview 
+                                            :template="newItem" style="height: 400px;"
+                                            />
+                                      </div>
+                                  </div> 
+
+                            </ValidationObserver>
+
+                            <div class="text-center form-group">
+                              <router-link  @click="cancelItem"  tag="button"  :to="'/app/admins/tmpl/pushtemplate/view/all'"
+                                class="btn btn-warning">Cancel</router-link >
+          &nbsp;
+                              <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged" 
+                                class="btn btn-primary">Update</button>
+          &nbsp;
+                              <button v-if="!newItem.id"  @click="createItem" :disabled="!isChanged" 
+                                class="btn btn-primary">Create</button>
                             </div>
 
-                            <div class="position-relative form-group row">
+                  </b-card>
 
-                              <base-input class="col-md-3" size="sm"
-                                name="Template Code" placeholder="CREDIT_ALERT"
-                                rules="required|max:60" required
-                                v-model="newItem.code"
-                                 >
-                              </base-input>
-
-                              <BaseVSelect class="col-md-3" size="sm"
-                                name="Contact Type"
-                                :emptyDisplay="'ALL'"
-                                :options="contactTypes"
-                                v-model="newItem.contactType"
-                                 placeholder="Select Contact Type">
-                              </BaseVSelect>
-
-                              <BaseVSelect class="col-md-3" size="sm"
-                                name="Message Language"
-                                filterable searchable
-                                options="getx:/api/meta/langs"
-                                v-model="newItem.lang"
-                                placeholder="Select Language">
-                              </BaseVSelect>
-
-                              <BaseVSelect class="col-md-3" size="sm"
-                                name="Content Type"
-                                :emptyDisplay="'ALL'"
-                                 options="data:hsm/message_format_types"
-                                v-model="newItem.formatType"
-                                placeholder="Select Content Type">
-                              </BaseVSelect>
-
-
-                            </div>
-
-
-                            <div class="position-relative form-group row">
-
-
-  
-                            </div>
-
-
-
-                           <div class="row">
-                           <div class="position-relative form-group col-md-4">
-                              <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
-                               <base-text-area  name="Header" layout="flushed"
-                                                placeholder="Type here" v-model="newItem.header" 
-                                                rules="max:60|HBNumVar:*,0,1" :rows="1"
-                                                :textLimit="60">
-                              </base-text-area>
-                               <base-text-area  name="Body" layout="flushed"
-                                                placeholder="Type here" v-model="newItem.template" 
-                                                rules="required|max:1024|HBNumVar:*,0,60" :rows="9"
-                                                :textLimit="1024"
-                                                :textCompleteStrategies="strategies">
-                              </base-text-area>
-                              <base-text-area  name="Footer" layout="flushed"
-                                                placeholder="Type here" v-model="newItem.footer" 
-                                                rules="max:60" :rows="1"
-                                                :textLimit="60">
-                              </base-text-area>
-                              <div> 
-                                 <for-each-option v-if="newItem.options && newItem.options.buttons"
-                                    :options="newItem.options.buttons" class="new_buttons w-100"
-                                      optionTag="span"
-                                      optionClass="btn-group btn-group-sm">
-                                      <template #data="{option}">
-                                          <span class="btn btn-outline-grey">
-                                            <i v-if="option.item.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
-                                            <i v-if="option.item.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>
-                                            {{option.label}}
-                                          </span> 
-                                          <span class="btn btn-outline-grey option-action"
-                                            @click="deleteButton(option.item)">
-                                            <i class="fa fa-trash"/>
-                                          </span> 
-                                          <span class="btn btn-outline-grey option-action"
-                                            @click="editButton(option.item)">
-                                              <i class="fa fa-edit"/>
-                                          </span>
-                                      </template>
-                                 </for-each-option>
-                                <b-input-group class="mt-1 px-1px" size="sm">
-                                  <b-form-input 
-                                     placeholder="Type name of button"
-                                    v-model="input.new_button.value"></b-form-input>
-                                  <b-input-group-append>
-                                    <b-button
-                                      variant="outline-grey" @click="addButton">
-                                      <i class="fa fa-plus"/>
-                                    </b-button>
-                                  </b-input-group-append>
-                                </b-input-group>
-                              </div>
-                            </div>
-                            <div class="position-relative form-group col-md-4">
-                                  <label for="examplePassword" class="text-sm">Sample Data</label>
-                                  <VGrid theme="default" class="w-100"
-                                      :columns="sampleVar.columns"
-                                      :source="templateVariable"
-                                      @afteredit=afterEdit
-                                  ></VGrid>
-                            </div>
-                            <div class="position-relative form-group col-md-4">
-                                <label for="examplePassword" class="text-sm">Template Preview</label>
-                                <TemplatePreview 
-                                  :template="newItem" style="height: 400px;"
-                                  />
-                            </div>
-                        </div> 
-
-                  </ValidationObserver>
-
-                  <div class="text-center form-group">
-                    <router-link  @click="cancelItem"  tag="button"  :to="'/app/admins/tmpl/pushtemplate/view/all'"
-                      class="btn btn-warning">Cancel</router-link >
-&nbsp;
-                    <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged" 
-                      class="btn btn-primary">Update</button>
-&nbsp;
-                    <button v-if="!newItem.id"  @click="createItem" :disabled="!isChanged" 
-                      class="btn btn-primary">Create</button>
-                  </div>
-
-        </b-card>
+             </template>  
+        </master-view>
 
         <b-modal :id="modalEditButton.name" size="md"
             :title="'Edit Button Details'">
@@ -285,9 +303,6 @@
             </template>
         </b-modal> 
 
-
-
-
     </div>
 </template>
 
@@ -313,7 +328,7 @@
     import 'vue-select/dist/vue-select.css';
 
     import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
-import JsonUtils from '../../../@common/utils/JsonUtils';
+    import JsonUtils from '../../../@common/utils/JsonUtils';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -344,14 +359,6 @@ import JsonUtils from '../../../@common/utils/JsonUtils';
             VGrid
         },
         data: () => ({
-                  heading: 'Push Templates',
-                  subheading: 'are HSM messages which can be  sent to contacts without session.',
-                  icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
-                  actions : [{
-                    label : "Add Template", icon : "plus", name : "ADD_ITEM",  link : "/app/admins/tmpl/pushtemplate/edit/new"
-                  },{
-                    label : "Cancel", name : "CANCEL", type : 'link', link : "/app/admins/tmpl/pushtemplate/view/all"
-                  }],
                   input : {
                       message_types : {
                         values : [], selected : "shipping_update",
@@ -375,7 +382,10 @@ import JsonUtils from '../../../@common/utils/JsonUtils';
                     items : [],
                     perPage: 25,
                     currentPage: 1,
-                    rows : 0
+                    rows : 0,
+                    tableClass : 'text-sm',
+                    api: 'api/tmpl/hsm',
+                    sortBy : "createdStamp"
                   },
                   newItem : newItem(),
                   modelName :  "MODAL_ADD_QUICK_REPLIES",
@@ -445,7 +455,6 @@ import JsonUtils from '../../../@common/utils/JsonUtils';
         created : function (argument) {
           this.mode = this.$route.params.mode;
           this.itemId = this.$route.params.itemId;
-          this.loadItems();
           this.loadOptions();
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
@@ -453,8 +462,7 @@ import JsonUtils from '../../../@common/utils/JsonUtils';
           async loadOptions (argument) {
           },
           async loadItems (){
-            let resp = await this.$service.get('/api/tmpl/hsm');
-            this.table.items = resp.results;
+            await this.$refs.templatesView.apply();
             this.selectItem();
           },
           selectItem : function () {
@@ -530,10 +538,6 @@ import JsonUtils from '../../../@common/utils/JsonUtils';
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
-          },
-          rowClass(item, type) {
-            if (!item || type !== 'row') return
-            if (this.newItem.id == item.id) return 'table-success'
           },
           onAction : function (argument) {
             switch(argument.name){

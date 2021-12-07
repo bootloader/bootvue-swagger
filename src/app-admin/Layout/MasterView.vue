@@ -35,17 +35,18 @@
         </vue-good-table>  
         <div v-else-if="table" >
           <b-table id="agent-session-list" :striped=true :class="[table.tableClass]"
-                        :bordered=true
-                        :outlined=false
-                        :small=true
-                        :hover=true
-                        :dark=false
-                        :fixed=false
-                        :foot-clone=false
+                        :bordered="table.bordered || true"
+                        :outlined="table.outlined || false"
+                        :small="table.small || false"
+                        :hover="table.hover || true"
+                        :dark="table.dark || false"
+                        :fixed="table.fixed || false"
+                        :foot-clone="table.footClone || false"
                         :per-page="table.perPage"
                         :current-page="table.currentPage"
                         :items="table.items"
                         :fields="table.fields"
+                        :sort-by="table.sortBy"
                         filter>
 
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
@@ -114,6 +115,8 @@
               default: function () {
                   return { message: 'hello' }
               }
+          },
+          size : {
           }
         },
         data: () => ({
