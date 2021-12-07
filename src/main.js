@@ -42,6 +42,7 @@ Vue.use(VTooltip);
 VTooltip.options.defaultClass = 'my-tooltip';
 VTooltip.options.defaultTemplate =
   '<div class="foo" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
+VTooltip.enabled = window.innerWidth > 768;
 Vue.use(VueToast);
 
 import AppWrapper from './AppWrapper';
