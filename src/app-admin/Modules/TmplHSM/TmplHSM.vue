@@ -11,7 +11,8 @@
             :actions="[{
               label : 'Add Template', icon : 'plus', name : 'ADD_ITEM',  link : '/app/admins/tmpl/pushtemplate/edit/new'
             }]"
-            @action="onAction">
+            @action="onAction"
+            @rows="selectItem">
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
@@ -463,7 +464,6 @@
           },
           async loadItems (){
             await this.$refs.templatesView.apply();
-            this.selectItem();
           },
           selectItem : function () {
             if(this.mode == "edit"){
@@ -471,9 +471,11 @@
               if(this.itemId == "clone" && this.$route.params.template){
                 itemSelected = this.$route.params.template;
               } else {
-                for(var i in this.table.items){
-                  if(this.table.items[i].id == this.itemId ){
-                      itemSelected = this.table.items[i];
+                let items = this.$refs.templatesView.getItems();
+                console.log("items",items)
+                for(var i in items){
+                  if(items[i].id == this.itemId ){
+                      itemSelected = items[i];
                   }
                 }
               }
