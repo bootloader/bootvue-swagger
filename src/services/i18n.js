@@ -38,6 +38,7 @@ let i18nConfig = {
         'LessVariable' : "Insufficent number of valiables in {_field_}",
         'ExtraVariable' : "More than allowed valiables in {_field_}",
         'InvalidVariable' : "Invalid valiables in {_field_}",
+        'InvalidVariableSeq' : "Invalid valiables sequence in {_field_}",
         'PositionVariable' : "Invalid position of valiables in {_field_}",
       }
     }

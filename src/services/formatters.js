@@ -214,7 +214,7 @@ var formatter = {
   },
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum","HBNumVar"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -245,9 +245,31 @@ var formatter = {
     }
     return true;
   },
+  HBPrefixedVar :  function(contents,values){
+    values = values || [];
+    let position = values[0];
+    let min = values[1];
+    let max = values[2];
+    let prefixes = values.slice(3);
+    var re = /({{([\w\d\.\_]+)}})/g;
+    var vars = contents.match(re) || [];
+    for(var v in vars){
+      if(!prefixes.some(function(pref){
+        return vars[v].indexOf("{{"+pref) == 0;
+      })){
+        return 'errors.InvalidVariable'; 
+      }
+    }
+    return this.HBVar({contents,position,min,max,vars})
+  },
   HBNumVar :  function(contents,[position,min,max]){
-    var re = /({{(\w+)}})/g;
-    var myArray = contents.match(re) || [];
+    var re = /({{([\w\d\.\_]+)}})/g;
+    var vars = contents.match(re) || [];
+    return  this.HBVar({contents,position,min,max,vars,ordered: true})
+  },
+  HBVar :  function({ contents,position,min,max,vars,ordered}){
+    console.log("HBVar",vars);
+    var myArray = vars
     if(min){
       min = parseInt(min);
       if(myArray.length<min)
@@ -266,10 +288,13 @@ var formatter = {
         return 'errors.PositionVariable';
       }
     }
-    for(let i=0;i<myArray.length; i++){
-    	if("{{"+(i+1)+"}}" !== myArray[i]){
-    		return 'errors.InvalidVariable';
-    	}
+    if(ordered){
+      for(let i=0;i<myArray.length; i++){
+        console.log("HBVar","{{"+(i+1)+"}}" !== myArray[i])
+        if("{{"+(i+1)+"}}" !== myArray[i]){
+          return 'errors.InvalidVariableSeq';
+        }
+      }
     }
     return true;
   },

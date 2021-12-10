@@ -15,7 +15,7 @@
 
     <div class="autocomplete transition" :id="'autocomplete-' + id" v-show="showList">
       <ul>
-        <li v-for="(value, index) in list"
+        <li v-for="(value, index) in list" :key="index"
             :class="(actived.value == value) ? 'active' : ''"
             @click="selectList(value)"
             v-html="template(value)"></li>
@@ -56,7 +56,7 @@ export default {
       default: true
     },
     rows: {
-      type: Number,
+      type: [Number,String],
       default: 2
     },
   },
@@ -140,12 +140,12 @@ export default {
               item.remote(i, (list) => {
                 if (list.length !== 0) {
                   that.list = list
-                  item.search(i, that.getList)
+                  item.search(i, that.getList,content)
                   that.showList = true
                 }
               })
             } else {
-              item.search(i, that.getList)
+              item.search(i, that.getList,content)
             }
           }
 
@@ -206,15 +206,21 @@ export default {
         return
       }
 
-      let replace = start.replace(this.match, this.replace(value))
-
+      let replaceValue = this.replace(value,end);
+      
+      let replace,cursorPositionNew;
+      if(typeof replaceValue == 'string'){
+        replace = start.replace(this.match, replaceValue);
+        cursorPositionNew = replace.length;
+      } else {
+        replace = start.replace(this.match, replaceValue[0]+replaceValue[1]);
+        cursorPositionNew = replace.length-replaceValue[1].length;
+      }
       this.updateValue(replace + end)
 
       textarea.focus()
 
-      let length  = replace.length
-
-      this.setCaretPosition(textarea, length)
+      this.setCaretPosition(textarea, cursorPositionNew)
 
       this.showList = false
       this.actived.value = ''

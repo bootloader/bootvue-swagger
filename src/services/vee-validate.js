@@ -18,7 +18,7 @@ extend('required', {
     if(formatters[ruleName]){
       extend(ruleName, {
         validate(value, args,a) { 
-            console.log("validate", ruleName,value, args,a)
+            //console.log("validate", ruleName,value, args,a)
             //values._field_ = i18n.t(`fields.${field}`);
             let vResult = formatters[ruleName](value, args);
             if(vResult === true){
@@ -37,7 +37,7 @@ extend('required', {
       dirty: ['is-dirty', 'is-dirty'], // multiple classes per flag!
     },
     defaultMessage: (field, values) => {
-      console.log("defaultMessage",field, values);
+      //console.log("defaultMessage",field, values);
       // override the field name.
       let key = `fields.${field}`;
       let label = i18n.t(key)

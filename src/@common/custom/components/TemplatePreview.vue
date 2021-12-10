@@ -22,7 +22,7 @@
               >
               </div>
               <div v-if="content.header" class="message-title">{{content.header}}</div>
-              <div class="message-body">{{content.text}}</div>
+              <div class="message-body" :inner-html.prop="content.text | waMarkDown"></div>
               <div class="message-footer">{{templateConfig.footer}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
@@ -53,6 +53,7 @@
   import formatters from '../../../services/formatters';
   import mustache from 'mustache';
   import MyVSelect from './MyVSelect.vue'
+  import {waMarkDown} from '@/@common/utils/WABATmpl';
 
   var sampleJson = {
     contact : {
@@ -128,6 +129,11 @@
         }
       },
     },
+    filters : {
+      waMarkDown(textRef) {
+        return waMarkDown(textRef);
+      }
+    },
     props: {
         icon: String,
         heading: String,
@@ -153,6 +159,7 @@
           this.templateConfig = this.template
       }
     },
+
  }
 </script>
 <style lang="scss">

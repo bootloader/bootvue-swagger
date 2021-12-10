@@ -187,19 +187,21 @@
                                         <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
                                         <base-text-area  name="Header" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.header" 
-                                                          rules="max:60|HBNumVar:*,0,1" :rows="1"
-                                                          :textLimit="60">
+                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data." :rows="1"
+                                                          :textLimit="60"
+                                                          :textCompleteStrategies="strategies">
                                         </base-text-area>
                                         <base-text-area  name="Body" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.template" 
-                                                          rules="required|max:1024|HBNumVar:*,0,60" :rows="9"
+                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data." :rows="9"
                                                           :textLimit="1024"
                                                           :textCompleteStrategies="strategies">
                                         </base-text-area>
                                         <base-text-area  name="Footer" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.footer" 
                                                           rules="max:60" :rows="1"
-                                                          :textLimit="60">
+                                                          :textLimit="60"
+                                                          >
                                         </base-text-area>
                                         <div> 
                                           <for-each-option v-if="newItem.options && newItem.options.buttons"
@@ -324,7 +326,6 @@
     import formatters from '../../../services/formatters';
      import debounce from "debounce";
 
-    import VJsoneditor from 'v-jsoneditor'
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
 
@@ -356,7 +357,7 @@
     export default {
         components: {
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,TemplatePreview,
-            VJsoneditor,vSelect,ModalSelector,
+            vSelect,ModalSelector,
             VGrid
         },
         data: () => ({
@@ -397,17 +398,22 @@
                   mode : "view",
                   itemId : 'all',
                   strategies: [{
-                    match: /(^|\s)\{\{([a-z0-9+\-\_\.]*)$/,
+                    match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
                     search(term, callback) {
-                      callback(sampleJsonKeys.filter(function (name) {
+                      let data = "data.".startsWith(term) ? "data." :term;
+                      callback([...sampleJsonKeys,data].filter(function (name) {
                         return name.startsWith(term);
                       }).slice(0, 10))
                     },
                     template(name) {
                       return name;
                     },
-                    replace(value) {
-                      return '$1{{' + value + '}} '
+                    replace(start,end) {
+                      let suffix = end.trim().startsWith("}}") ? '' : '}} ';
+                      if(start == "data."){
+                        return ['$1{{' + start, suffix];
+                      }
+                      return '$1{{' + start + suffix
                     },
                   }],
                   sampleVar : {

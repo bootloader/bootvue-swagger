@@ -163,7 +163,8 @@
                                             <base-text-area :disabled="nonEditable" name="Body"
                                                 placeholder="Type here" v-model="templateSimple.body.text" 
                                                 rules="required|max:1024|HBNumVar:*,0,60" rows=10
-                                                :textLimit="1024">
+                                                :textLimit="1024"
+                                                :textCompleteStrategies="strategies">
                                             </base-text-area>
                                         </b-col> 
                                     </b-row>  
@@ -452,6 +453,24 @@
             newItem : {
                 name : null, category : null, lang : null
             },
+            strategies: [{
+                match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
+                search(term, callback,content) {
+                    var re = /({{([\w\d\.\_]+)}})/g;
+                    var vars = content.match(re) || [];
+                    callback([term || (vars.length+1)+'']);
+                },
+                template(name) {
+                    return name;
+                },
+                replace(start,end) {
+                    let suffix = end.trim().startsWith("}}") ? '' : '}} ';
+                    if(start == "data."){
+                    return ['$1{{' + start, suffix];
+                    }
+                    return '$1{{' + start + suffix
+                },
+            }],
             sampleVar : {
               columns: [
                 { name: 'component', prop: "component", readonly : true},
@@ -738,7 +757,6 @@
             afterTextEdit(){
                 let THAT = this;
                 ["body","header"].map(function(component){
-                    console.log(component,THAT.templateSimple[component].text);
                     if(!THAT.templateSimple[component].text) return;
                     let body = TmplUtils.convertToOrderedVars(THAT.templateSimple[component].text,/({{(\d+)}})/g);
                     let body_preview = THAT.templateSimple[component].text;
