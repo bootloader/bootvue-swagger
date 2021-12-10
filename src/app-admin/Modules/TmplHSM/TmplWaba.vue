@@ -572,7 +572,8 @@
             async onHSMCloneOption(option){
                 if(option && option.item){
                     this.newItem.name = option.item.code;
-                    this.newItem.category = (option.item.meta.messageType).toUpperCase();
+                    console.log("option",option.item)
+                    this.newItem.category = (option.item.categoryType || "").toUpperCase();
                     this.newItem.lang = option.item.lang;
                     this.newItem.hsm = option.item;
                 } else {
