@@ -573,7 +573,7 @@
                 if(option && option.item){
                     this.newItem.name = option.item.code;
                     console.log("option",option.item)
-                    this.newItem.category = (option.item.categoryType || "").toUpperCase();
+                    this.newItem.category = (option.item.categoryType || option.item?.meta?.messageType || "").toUpperCase();
                     this.newItem.lang = option.item.lang;
                     this.newItem.hsm = option.item;
                 } else {
