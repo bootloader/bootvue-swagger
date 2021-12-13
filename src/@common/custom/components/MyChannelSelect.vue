@@ -13,7 +13,7 @@
             <template #selected-option="option">
                 <div class="">
                     <span
-                        class="contact_type contact_type-24 fab"
+                        class="contact_type contact_type-24 fac-bg fab"
                         v-bind:class="
                             $global.MyDict.social[option.item.contactType]
                         "></span
@@ -22,7 +22,7 @@
             </template>
             <template #option="{ item }">
                 <span
-                    class="contact_type contact_type-24 fab"
+                    class="contact_type contact_type-24 fac-bg fab"
                     v-bind:class="$global.MyDict.social[item.contactType]"></span>
                 {{ item.lane }}
             </template>

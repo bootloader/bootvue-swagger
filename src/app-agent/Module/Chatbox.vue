@@ -179,7 +179,7 @@
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
             <div><small>Channel Details</small></div>
-            <i class="contact_type" v-bind:class="MyDict.socialPrefix(activeChat.contactType,'fa')"></i>            
+            <i class="contact_type fac-bg" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
         </div>
         <hr/>

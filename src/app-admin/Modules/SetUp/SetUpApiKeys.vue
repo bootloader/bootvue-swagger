@@ -94,8 +94,8 @@
 
 <script>
 
-    import MasterView from "../Layout/MasterView.vue";
-    import { MyFlags,MyDict,MyConst } from '../../services/global';
+    import MasterView from "../../Layout/MasterView.vue";
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
 
     import VSwatches from 'vue-swatches'
 

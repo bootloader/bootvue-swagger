@@ -45,7 +45,7 @@
     </div>
     <div class="card-footer">
             <div v-if="activeChat.contactType">
-                <p><span class="contact_type" v-bind:class="MyDict.socialPrefix(activeChat.contactType,'fa')" />{{activeChat.name}}</p>
+                <p><span class="contact_type fac-bg fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)" />{{activeChat.name}}</p>
             </div>
             
             <div>

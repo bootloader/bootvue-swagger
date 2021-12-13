@@ -7,11 +7,13 @@ $social-list:(
     facebook: #4267B2,
     twitter:  #1DA1F2,
     telegram:  #0088cc,
+    telegram-plane:  #0088cc,
     whatsapp: #25D366,
     whatsapp-dull: #10b981,
     google: #dc4a38,
     dribbble: #f26798,
     skype : #00aff0,
+    chrome : #4c8bf5,
     instagram-y : #fdf497,
     instagram-r : #fd5949,
     instagram-p : #d6249f,
@@ -25,15 +27,31 @@ $social-list:(
     .text-#{$key} {
         color: #{$val};
     }
+    .fac-bg.fa-#{$key}::before{
+        background-color: #{$val};
+    }  
   }
-
+.fac-bg::before {
+    color : #FFF;
+}
+.fac-bg.fa-instagram::before,
 .bg-instagram,.bg-instagram\:before::before,.bg-instagram\:after::after  {
     background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
 }
+
 .fa-instagram.text-instagram::before {
     //background: -webkit-linear-gradient(#eee, #333);
     background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.fac-bg {
+    &.fa-telegram:before {
+        content: "\f3fe";
+    }
+    &.fa-facebook:before {
+        content: "\f39e";
+    }
 }

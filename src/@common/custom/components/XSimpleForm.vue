@@ -13,7 +13,7 @@
                             html-field="label"
                             text-field="value"
 
-                            :readonly="input.meta.readonly"
+                            :readonly="input.meta.readonly || (input.meta.createonly && !empty(input.config.value))"
                             :aria-describedby="ariaDescribedby"
                             button-variant="outline-primary"
                             size="sm"
@@ -26,7 +26,7 @@
                     :label="input.meta.title || input.meta.key">
                     <b-form-input id="input-1"
                         v-model="input.config.value" 
-                        :readonly="input.meta.readonly"
+                        :readonly="input.meta.readonly || (input.meta.createonly && !empty(input.config.value))"
                         :value="input.meta.defaultValue"
                         @change="onChange(input.meta,input.config)"
                         trim></b-form-input>
@@ -53,7 +53,9 @@
         },
         data() {
             return {
-
+                empty(value){
+                    return value == undefined || value === null || value === ""
+                }
             }
         },
         mounted : function (argument) {

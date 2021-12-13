@@ -7,14 +7,30 @@
             icon : 'icon-gradient bg-happy-itmeo fa fa-plug',
           }"
           :table=table
-          :actions=actions
+          :actions="[{ name :'add_channel',label : 'Add Channel'}]"
           @action="onAction"      
        >
+
+          <template #action(add_channel)="{action}">
+                <base-dropdown class="nav-item" menu-on-right title-tag="a">
+                    <a slot="title-container" class="btn btn-primary" href="#" role="button"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{action.label}}
+                    </a>
+                    <a class="dropdown-item" @click="addItem('wa360')">WhatsApp</a>
+                    <a class="dropdown-item" @click="addItem('tg')">Telegram</a>
+                    <a class="dropdown-item" @click="addItem('fb')">Facebook</a>
+                    <a class="dropdown-item" @click="addItem('tw')">Twitter</a>
+                    <a class="dropdown-item" @click="addItem('ig')">Instagram</a>
+                    <a class="dropdown-item" @click="addItem('web')">WebChat</a>
+                </base-dropdown>
+          </template>
+
           <template #cell(details)="row">
             <i :class="[$global.MyDict.socialPrefix(row.item.contactType,'fa')]"></i>
             &nbsp;{{row.item.lane}}
           </template>
-       >
+       
           <template #cell(disabled)="row">
             {{row.item.disabled|display('true:Yes;false:No')}}
           </template>
@@ -28,11 +44,16 @@
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-eye"></i>
             </b-button>&nbsp;
-            <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)"  
+            <b-button size="sm" @click="disableItem(row.item, row.index, $event.target)"  
                 v-tooltip="row.item.disabled ? 'Connect' : 'Disconnect'"
-                 variant="outline-primary" class="fa-stack fa-1x">
-                <i class="fas fa-plug fa-stack-1x"></i>
-                <i v-if="row.item.disabled" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
+                 variant="outline-primary">
+                <i class="fas fa-plug" :class="{
+                  'fa-x' : row.item.disabled
+                  }"></i>
+            </b-button>&nbsp;
+            <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)"  
+                v-tooltip="'Delete'" variant="outline-primary">
+                <i class="fas fa-trash"/>
             </b-button>
           </template>
 
@@ -100,16 +121,17 @@
 
 <script>
 
-    import MasterView from "../Layout/MasterView.vue";
+    import MasterView from "../../Layout/MasterView.vue";
     import XSimpleForm from "@/@common/custom/components/XSimpleForm.vue";
-    import { MyFlags,MyDict,MyConst } from '../../services/global';
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
     import JsonXPath from '@/@common/utils/JsonXPath'
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
 
-    function newItem() {
+    function newItem(channelType) {
       return {
+          channelType,
           "config" : {},
           "meta": {}
         };
@@ -182,25 +204,30 @@
             this.oneItemView = resp.results[0];
             this.$bvModal.show(this.modelName + "_VIEW")
           },
-          async deleteItem(item) {
+          async disableItem(item) {
             await this.$service.post('api/config/channel/'+item.channelType + "?disabled="+ !item.disabled, item );
             this.loadItems();
+          },
+          async deleteItem(item) {
+            await this.$service.delete('api/config/channel/'+item.channelId + "?disabled="+ !item.disabled, item );
+            this.loadItems();
+          },
+          async addItem(channelType) {
+            this.oneItem = newItem(channelType);
+            this.onAction({name : 'ADD_ITEM'});
           },
           async onAction (argument) {
             switch(argument.name){
               case "ADD_ITEM" :
                 this.oldHash = JSON.stringify(this.oneItem);
                 this.openForm(this.oneItem);
-                console.log("ADD_ITEM",argument);
                 break;
               case "EDIT_ITEM" :
                 this.oldHash = JSON.stringify(this.oneItem);
                 this.openForm(this.oneItem);
-                console.log("ADD_ITEM",argument);
                 break;
               case "VIEW_ITEM" :
                 this.openForm(this.oneItem);
-                console.log("ADD_ITEM",argument);
                 break;
               case "CANCEL" :
                 this.$bvModal.hide(this.modelName)

@@ -104,7 +104,7 @@
                                             }"
                                             class="rounded-circle user_img" alt="profilpicture">
                                             <span class="online_icon"></span>
-                                            <span class="contact_type fab"
+                                            <span class="contact_type fab fac-bg"
                                             v-bind:class="$global.MyDict.social[chat.contactType]"></span>
                                     </div>
                                     <div class="user_info contact-text">

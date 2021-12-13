@@ -73,8 +73,8 @@
                     <div class="d-flex bd-highlight contact-preview">
                         <div class="img_cont">
                             <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
-                                <span class="contact_type fab"
-                                v-bind:class="MyDict.social[chat.contactType]"></span>
+                                <span class="contact_type fab fac-bg"
+                                v-bind:class="MyDict.socialPrefix(chat.contactType)"></span>
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.contact.name || chat.contact.phone || chat.contact.email || chat.contactId}}</span>
@@ -143,15 +143,17 @@
             </ul>
         </div>
         <div class="card-footer">
-            &nbsp; <i class="contact_type fa fa-facebook" @click="searchTag(':facebook')"
+            &nbsp; <i class="contact_type fac-bg fa fa-facebook" @click="searchTag(':facebook')"
                     v-bind:class="{'my-selected' : search.text==':facebook' }"></i>
-                <i class="contact_type fa fa-whatsapp"  @click="searchTag(':whatsapp')"
+                <i class="contact_type fa fac-bg fa-whatsapp"  @click="searchTag(':whatsapp')"
                     v-bind:class="{'my-selected' : search.text==':whatsapp' }" ></i>
-                <i class="contact_type fab fa-twitter"  @click="searchTag(':twitter')" 
+                <i class="contact_type fac-bg fab fa-twitter"  @click="searchTag(':twitter')" 
                     v-bind:class="{'my-selected' : search.text==':twitter' }"></i>
-                <i class="contact_type fab fa-telegram-plane"  @click="searchTag(':telegram')"
+                <i class="contact_type fac-bg fab fa-telegram"  @click="searchTag(':telegram')"
                     v-bind:class="{'my-selected' : search.text==':telegram' }"></i>
-                <i class="contact_type fa fa-chrome" @click="searchTag(':website')"
+                <i class="contact_type fac-bg fab fa-instagram"  @click="searchTag(':instagram')"
+                    v-bind:class="{'my-selected' : search.text==':instagram' }"></i>
+                <i class="contact_type fac-bg fa fa-chrome" @click="searchTag(':website')"
                     v-bind:class="{'my-selected' : search.text==':website' }"></i>
             
             <span

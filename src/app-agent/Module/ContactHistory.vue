@@ -23,8 +23,8 @@
                     {{ (row.item.startSessionStamp||row.item.fistResponseStamp||row.item.lastInComingStamp||row.item.assignedDeptStamp||row.item.assignedAgentStamp||row.item.lastResponseStamp||row.item.closeSessionStamp) | formatDate}}
                 </template>
                 <template #cell(contactType)="row">
-                    <span class="contact_type fab" v-if="row.item.contactType"
-                                v-bind:class="$global.MyDict.social[row.item.contactType]"
+                    <span class="contact_type fab fac-bg" v-if="row.item.contactType"
+                                v-bind:class="$global.MyDict.socialPrefix(row.item.contactType)"
                     ></span>
                 </template>
                 <template #cell(startSessionStamp)="row">

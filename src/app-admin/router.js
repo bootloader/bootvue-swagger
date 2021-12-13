@@ -127,17 +127,17 @@ export default AppRouter.route({
         {
             path : "/app/setup/agent-panel",
             name: 'SetUpAgentPanel',
-            component: () => import('./Modules/SetUpAgentPanel.vue'),    
+            component: () => import('./Modules/SetUp/SetUpAgentPanel.vue'),    
         },
         {
             path : "/app/setup/client-api-keys",
             name: 'SetUpAgentPanel',
-            component: () => import('./Modules/SetUpApiKeys.vue'),    
+            component: () => import('./Modules/SetUp/SetUpApiKeys.vue'),    
         },
         {
             path : "/app/setup/channels",
             name: 'SetUpChannels',
-            component: () => import('./Modules/SetUpChannels.vue'),    
+            component: () => import('./Modules/SetUp/SetUpChannels.vue'),    
         },
 
         {

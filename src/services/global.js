@@ -56,8 +56,8 @@ export const MyFlags = {
 
 export const MyDict = {
 	social : {
-	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "f fa-chrome", "TELEGRAM" : "fab fa-telegram-plane",  
-	 "TWITTER" : "f fa-twitter","WHATSAPP" : "f fa-whatsapp",
+	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "fa fa-chrome", "TELEGRAM" : "fa fa-telegram",  
+	 "TWITTER" : "fa fa-twitter","WHATSAPP" : "fa fa-whatsapp","INSTAGRAM" : "fa fa-instagram",
 	},
 	chatStatus : {
 		"UNASSIGNED"	: {label : "UNASSIGNED" }, 
@@ -72,7 +72,7 @@ export const MyDict = {
 	socialPrefix : function(argument,prefix){
 		var clz = this._socialPrefix(argument);
 		if(prefix){
-			return clz.replace(/^fa |^f /,'fab ');
+			return clz.replace(/^fa |^f /,prefix+' ');
 		} else {
 			return clz.replace(/^f /,'');
 		}

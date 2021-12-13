@@ -45,14 +45,14 @@
                                 @input="clickAction(action)">
                                 <template #selected-option="option">
                                     <div class="">
-                                    <span class="contact_type contact_type-24 fab"
+                                    <span class="contact_type contact_type-24 fab fac-bg"
                                             v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
                                 </template>
                                 <template #open-indicator="{ attributes }">
                                     <span v-bind="attributes" class="fa fa-caret-down"></span>
                                 </template>
                                 <template #option="{ contactType, lane }">
-                                    <span class="contact_type contact_type-24 fab"
+                                    <span class="contact_type contact_type-24 fac-bg fab"
                                             v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}
                                 </template>
                         </v-select>

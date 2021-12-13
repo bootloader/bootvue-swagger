@@ -200,8 +200,8 @@
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import PageTitle from "../../Components/PageTitle.vue";
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
 
     import VSwatches from 'vue-swatches'
 
