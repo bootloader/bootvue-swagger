@@ -19,6 +19,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 
 import { i18n } from "./services/i18n";
 import "./services/vee-validate"; 
+import Vue2TouchEvents from 'vue2-touch-events'
 
 
 axios.defaults.withCredentials = true
@@ -44,10 +45,11 @@ VTooltip.options.defaultTemplate =
   '<div class="foo" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
 VTooltip.enabled = window.innerWidth > 768;
 Vue.use(VueToast);
+Vue.use(Vue2TouchEvents)
 
 import AppWrapper from './AppWrapper';
 
-;(function(configs,app){
+(function(configs,app){
 	var config = configs[app] || configs.dev
 	console.log("ALWAYS",app,config);
 

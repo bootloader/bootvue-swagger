@@ -1,5 +1,8 @@
 <template>
-<div class="card mb-sm-3 mb-md-0 card_contact_profile scheme-color ">
+<div class="card mb-sm-3 mb-md-0 card_contact_profile scheme-color "
+    v-touch:swipe.right="onSwipeRight"
+    v-touch:swipe.left="onSwipeLeft"
+>
     
     <div class="card-header">
         <span class="fa fa-close float-right"
@@ -217,6 +220,39 @@
                     } 
                 }) 
 
+            },
+            onSwipeLeft(){
+                if(this.$route.params.profileView != "history"){
+                    this.$router.push({
+                        name: 'defAgentView', 
+                        params: { 
+                            profileView : "history",
+                            mvu : 'CPROFILE'
+                        } 
+                    }) 
+                }
+            },
+            onSwipeRight(){
+                if(this.$route.params.profileView == "history"){
+                    this.$router.push({
+                        name: 'defAgentView', 
+                        params: { 
+                            profileView : "info",
+                            mvu : 'CPROFILE'
+                        } 
+                    }) 
+                    return;
+                }
+                if(this.$route.params.profileView == "info"){
+                    MyFlags.agent.mvu='CHATBOX'
+                    this.$router.push({
+                        name: 'defAgentView', 
+                        params: { 
+                            profileView : 'hide',
+                            mvu : 'CHATBOX'
+                        } 
+                    }) 
+                }
             }
         },
 

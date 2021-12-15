@@ -1,5 +1,8 @@
 <template>
-     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color ">
+     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color "
+        v-touch:swipe.right="onSwipeRight"
+        v-touch:swipe.left="onSwipeLeft"
+     >
         <div class="card-header contacts-header">
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -327,6 +330,28 @@
             async loadQuickLabels(){
                 return await this.$store.dispatch('LoadQuickLabels');
             },
+            onSwipeLeft(){
+                let curTab = MyFlags.agent.contactsTab;
+                switch (curTab) {
+                    case "ME":
+                        MyFlags.agent.contactsTab = "TEAM"
+                        break;
+                    case "TEAM":
+                        MyFlags.agent.contactsTab = "HISTORY"
+                        break;
+                }
+            },
+            onSwipeRight(){
+                let curTab = MyFlags.agent.contactsTab;
+                switch (curTab) {
+                    case "HISTORY":
+                        MyFlags.agent.contactsTab = "TEAM"
+                        break;
+                    case "TEAM":
+                        MyFlags.agent.contactsTab = "ME"
+                        break;
+                }
+            }
         },
         beforeUnmount : function (argument) {
           //clearInterval(this.intervalid1);  

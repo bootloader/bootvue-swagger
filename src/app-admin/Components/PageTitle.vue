@@ -24,86 +24,85 @@
               </slot>
         </span>
 
-        <span v-for="(action,index) in actions" v-bind:key="'action-'+index" class="action-wrapper">
-              <slot :name="'action('+action.name+')'"  v-bind="{action}"  >
-                    <span  v-if="!action.hidden && actionShow[action.name]!==false" >
-                        <router-link v-if="action.link" tag="button" :to="action.link"
-                            type="button" class="btn-shadow d-inline-flex align-items-center btn"
-                            v-bind:class="{
-                                'btn-link' : (action.type == 'link'),
-                                'btn-success' : (!action.type || action.type == 'button')
-                            }">
-                            <i v-if="action.icon" class="mr-2" :class="action.icon" />
-                            {{action.label}} 
-                        </router-link>
+        
 
-                        <div v-else-if="action.type == 'lane'" class="d-inline-flex align-items-center" style="min-width: 220px;">
-                            <v-select  :options="input.lane.options"  class="w-100"
-                                v-model="input.lane.value"
-                                :searchable="false" :clearable="false"
-                                placeholder="Select Account"
-                                @input="clickAction(action)">
-                                <template #selected-option="option">
-                                    <div class="">
-                                    <span class="contact_type contact_type-24 fab fac-bg"
-                                            v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
-                                </template>
-                                <template #open-indicator="{ attributes }">
-                                    <span v-bind="attributes" class="fa fa-caret-down"></span>
-                                </template>
-                                <template #option="{ contactType, lane }">
-                                    <span class="contact_type contact_type-24 fac-bg fab"
-                                            v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}
-                                </template>
-                        </v-select>
-                        </div>
 
-                        <div v-else-if="action.type == 'search'" class="d-inline-flex">
-                            <input class="form-control" type="text" name="" v-model="input.search.value">
-                        </div>
+        <span class="action-wrapper" v-if="dateranegeinput && !dateranegeinput.hidden" >
+            <date-range-picker v-model="dateranegeinput.range" class=""
+            :opens="'left'"
+            :time-picker="false"
+            control-container-class="reportrange-text btn btn-success"
+            :ranges="dateranegeinput.ranges"
+            @select="onDateRangeSelect"
+            @update="onDateRangeUpdate">
 
-                        <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
-                            <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
-                                <i v-if="action.icon" class="" :class="action.icon"/>{{action.label}}</button>
-                        </div>
+        <!--    input slot (new slot syntax)-->
+        <template #input="picker" style="min-width: 350px;">
+            <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
+        </template>
+        </date-range-picker>
+        </span>
 
-                        <div v-else class="d-inline-flex" > 
-                            <b-button v-b-modal="action.modal"
-                                @click="clickAction(action)" 
-                                 class="btn-shadow  align-items-center btn"
+            <span v-for="(action,index) in actions" v-bind:key="'action-'+index" class="action-wrapper">
+                <slot :name="'action('+action.name+')'"  v-bind="{action}"  >
+                        <span  v-if="!action.hidden && actionShow[action.name]!==false" >
+                            <router-link v-if="action.link" tag="button" :to="action.link"
+                                type="button" class="btn-shadow d-inline-flex align-items-center btn"
                                 v-bind:class="{
                                     'btn-link' : (action.type == 'link'),
                                     'btn-success' : (!action.type || action.type == 'button')
                                 }">
-                                <i v-if="action.icon" class="mr-2" :class="action.icon"/>
-                                {{action.label}}
-                            </b-button>
-                        </div>
+                                <i v-if="action.icon" class="mr-2" :class="action.icon" />
+                                {{action.label}} 
+                            </router-link>
 
-                    </span>
+                            <div v-else-if="action.type == 'lane'" class="d-inline-flex align-items-center" style="min-width: 220px;">
+                                <v-select  :options="input.lane.options"  class="w-100"
+                                    v-model="input.lane.value"
+                                    :searchable="false" :clearable="false"
+                                    placeholder="Select Account"
+                                    @input="clickAction(action)">
+                                    <template #selected-option="option">
+                                        <div class="">
+                                        <span class="contact_type contact_type-24 fab"
+                                                v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
+                                    </template>
+                                    <template #open-indicator="{ attributes }">
+                                        <span v-bind="attributes" class="fa fa-caret-down"></span>
+                                    </template>
+                                    <template #option="{ contactType, lane }">
+                                        <span class="contact_type contact_type-24 fab"
+                                                v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}
+                                    </template>
+                            </v-select>
+                            </div>
 
-              </slot> 
-        </span> 
+                            <div v-else-if="action.type == 'search'" class="d-inline-flex">
+                                <input class="form-control" type="text" name="" v-model="input.search.value">
+                            </div>
 
+                            <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
+                                <button  @click="clickAction(action)" class="btn-shadow  align-items-center btn btn-success">
+                                    <i v-if="action.icon" class="" :class="action.icon"/>{{action.label}}</button>
+                            </div>
 
-                 <span class="action-wrapper" v-if="dateranegeinput && !dateranegeinput.hidden" >
-                       <date-range-picker v-model="dateranegeinput.range" class=""
-                        :opens="'left'"
-                        :time-picker="false"
-                        control-container-class="reportrange-text btn btn-success"
-                        :ranges="dateranegeinput.ranges"
-                        @select="onDateRangeSelect"
-                        @update="onDateRangeUpdate">
+                            <div v-else class="d-inline-flex" > 
+                                <b-button v-b-modal="action.modal"
+                                    @click="clickAction(action)" 
+                                    class="btn-shadow  align-items-center btn"
+                                    v-bind:class="{
+                                        'btn-link' : (action.type == 'link'),
+                                        'btn-success' : (!action.type || action.type == 'button')
+                                    }">
+                                    <i v-if="action.icon" class="mr-2" :class="action.icon"/>
+                                    {{action.label}}
+                                </b-button>
+                            </div>
 
-                    <!--    input slot (new slot syntax)-->
-                    <template #input="picker" style="min-width: 350px;">
-                      <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
-                    </template>
-                  </date-range-picker>
-                 </span>
+                        </span>
 
- 
-
+                    </slot> 
+                </span>
             </div>
         </div>
         <div style="clear: both;height: 0px;"></div>

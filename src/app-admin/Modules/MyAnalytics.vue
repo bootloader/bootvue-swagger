@@ -210,9 +210,6 @@
         <div class="row">
             <div class="col-md-6 col-xl-6">
                 <b-card :title="'Messages - Team'" class="main-card mb-3" :key="chart.updated">
-                    <button class="btn-shadow  align-items-center btn btn-success refresh-button" @click="loadAnalytics">
-                        <i class="fa fa-sync" aria-hidden="true"></i>
-                    </button>
                   <lineeg
                     :cdata="chart.summary"
                     :options="chart.options"
@@ -221,9 +218,6 @@
             </div>
             <div class="col-md-6 col-xl-6">
                 <b-card :title="'Messages - Individuals'" class="main-card mb-3" :key="chart.updated">
-                    <button class="btn-shadow  align-items-center btn btn-success refresh-button" @click="loadAnalytics">
-                        <i class="fa fa-sync" aria-hidden="true"></i>
-                    </button>
                   <lineeg
                     :cdata="chart.summaries"
                     :options="chart.options"

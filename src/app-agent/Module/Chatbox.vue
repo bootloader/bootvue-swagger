@@ -6,6 +6,8 @@
             @mouseleave="dragLeave"
             @paste="onpaste"
             :id="chatsVersionGlobal"
+            v-touch:swipe.right="onSwipeRight"
+            v-touch:swipe.left="onSwipeLeft"
         >
                 <div class="card-header msg_head chat-head">   
                     <div class="d-block clear-both">               
@@ -1089,7 +1091,19 @@
             },
             async fileUploadedAll(e){
                 this.toggleView("CHAT_BOX");
+            },
+            onSwipeRight(){
+                this.$router.push({
+                        name: 'defAgentView', 
+                        params: { 
+                            mvu : 'CONTACTS'
+                    }
+                })
+            },
+            onSwipeLeft(){
+                this.showContactProfile('info')
             }
+            
         },
 
     }
