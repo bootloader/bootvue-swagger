@@ -10680,6 +10680,11 @@
     "babel-runtime" "^6.26.0"
     "marker-clusterer-plus" "^2.1.4"
 
+"vue2-touch-events@^3.2.2":
+  "integrity" "sha512-rGV8jxgOQEJYkJCp7uOBe3hjvmG1arThrq1wGtJHwJTgi65+P2a+0l4CYcQO/U1ZFqTq2/TT2+oTE6H7Y+6Eog=="
+  "resolved" "https://registry.npmjs.org/vue2-touch-events/-/vue2-touch-events-3.2.2.tgz"
+  "version" "3.2.2"
+
 "vue2-transitions@^0.3.0":
   "integrity" "sha512-m1ad8K8kufqiEhj5gXHkkqOioI5sW0FaMbRiO0Tv2WFfGbO2eIKrfkFiO3HPQtMJboimaLCN4p/zL81clLbG4w=="
   "resolved" "https://registry.npmjs.org/vue2-transitions/-/vue2-transitions-0.3.0.tgz"
