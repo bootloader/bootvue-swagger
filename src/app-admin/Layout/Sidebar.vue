@@ -152,7 +152,7 @@
                     },
                     {
                         title: 'Quick Response',
-                        icon: 'pe-7s-browser fa fa-edit',
+                        icon: 'pe-7s-browser fa fa-comment-dots',
                         enabled: true,
                         child: [
                             {
@@ -183,8 +183,8 @@
                         ],
                     },
                     {
-                        title: 'Template Messages',
-                        icon: 'pe-7s-browser fa fa-edit',
+                        title: 'Templates',
+                        icon: 'pe-7s-browser fa fa-comment-alt',
                         enabled: true,
                         child: [
                             {
@@ -478,6 +478,9 @@
 
 </style>
 <style type="text/css">
+    .v-sidebar-menu .vsm-icon.far,
+    .v-sidebar-menu .vsm-icon.fab,
+    .v-sidebar-menu .vsm-icon.fas,
     .v-sidebar-menu .vsm-icon.fa {
         font-size: 18px !important;
         opacity: 0.3;

@@ -5,7 +5,7 @@
             :header="{
                 heading: 'Push Templates',
                 subheading: 'are HSM messages which can be  sent to contacts without session.',
-                icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+                icon: 'pe-7s-browser icon-gradient bg-tempting-azure far fa-comment-alt',
             }"
             :table="table"
             :actions="[{
@@ -75,9 +75,9 @@
                   </router-link>
                   &nbsp;
                   <MyAxon class="btn btn-sm btn-outline-primary"
-                    api="/api/tmpl/hsm/meta"
+                     api="/api/tmpl/hsm/meta"
                      activeTitle="Disable for agent panel" title="Enable for agent panel"
-                     inactiveClass="fab fa-redhat dull"
+                     inactiveClass="fa fa-user-secret dull fa-x"
                      activeClass="fa fa-user-secret"
                     :active="(row.item.meta && row.item.meta.agentAllowed)"
                     :params="{ templateId : row.item.id}"
@@ -86,9 +86,7 @@
                   &nbsp;
                   <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + row.item.id">
                     <b-button size="sm" 
-                          v-tooltip="'Submit for WABA apporval, required to push template message out of session'" variant="outline-primary">
-                         <span class="fa fa-cloud-upload-alt" title="Submit"/>&nbsp;
-                         <span class="fa fa-random" title="Submit"/>&nbsp;
+                          v-tooltip="'Submit to WhatsApp for apporval, required to push template message out of session'" variant="outline-primary">
                          <span class="fa fa-whatsapp" title="Submit"/>
                     </b-button>   
                   </router-link>
@@ -149,7 +147,7 @@
                                         <BaseVSelect class="col-md-3" size="sm"
                                           name="Contact Type"
                                           :emptyDisplay="'ALL'"
-                                          :options="contactTypes"
+                                          options="@data/contact_types"
                                           v-model="newItem.contactType"
                                           placeholder="Select Contact Type">
                                         </BaseVSelect>
@@ -224,17 +222,15 @@
                                                     </span>
                                                 </template>
                                           </for-each-option>
-                                          <b-input-group class="mt-1 px-1px" size="sm">
-                                            <b-form-input 
-                                              placeholder="Type name of button"
-                                              v-model="input.new_button.value"></b-form-input>
-                                            <b-input-group-append>
-                                              <b-button
-                                                variant="outline-grey" @click="addButton">
-                                                <i class="fa fa-plus"/>
-                                              </b-button>
-                                            </b-input-group-append>
-                                          </b-input-group>
+                                           <base-input
+                                                class="mt-1 px-1px d-block" prependClass="btn btn-outline-grey btn-sm" size="sm"
+                                                prelabel name="Button Text"
+                                                v-model="input.new_button.value" :textLimit="20"
+                                                rules="max:20" >
+                                                <template #append>
+                                                    <i class="fa fa-plus pointer" pointer @click="addButton"/>
+                                                </template>  
+                                            </base-input>
                                         </div>
                                       </div>
                                       <div class="position-relative form-group col-md-4">
@@ -418,7 +414,7 @@
                   }],
                   sampleVar : {
                     columns: [
-                      { name: 'Variable', prop: "path", readonly : true},
+                      { name: 'Variable', prop: "variable", readonly : true},
                       { name: 'Sample Value', prop: "sample"}] ,
                     contact : [],
                     data : []
@@ -432,8 +428,13 @@
               return this.oldHash !== JSON.stringify(this.newItem);
             },
             contactTypes : function () {
-              return ['','WHATSAPP','TELEGRAM','TWITTER','FACEBOOK','WEBSITE']
+              return ['','WHATSAPP','TELEGRAM','TWITTER','FACEBOOK','INSTAGRAM','WEBSITE']
             },
+            templateName :function () {
+              return [this.newItem.code,this.newItem.contactType,this.newItem.lang].filter(function (argument) {
+                    return !!argument;
+              }).join("_");
+            }
         },
         watch: {
             'newItem.options.buttons' (newParams, oldParams) {
@@ -447,10 +448,10 @@
               this.selectItem();
             },
             "newItem.code" : function(newVal,oldVal){
-              this.newItem.code = this.newItem.code.replace(" ","_").toLowerCase().replace(/[^A-Za-z0-9_]/g,'');
-              this.newItem.name = [this.newItem.code,this.newItem.contactType,this.newItem.lang].filter(function (argument) {
-                    return !!argument;
-              }).join("_");
+              this.newItem.code = this.newItem.code.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
+            },
+            "templateName" : function(){
+              this.newItem.name = this.templateName;
             },
             "newItem.header" : function(neVal){
               this.templateTextChange(neVal)
@@ -466,6 +467,7 @@
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
+          
           async loadOptions (argument) {
           },
           async loadItems (){
@@ -592,6 +594,7 @@
             this.sampleVar.data = TmplUtils.getVars(
                 neVal,/({{(data\.[\w\d\.]+)}})/g).map(function(v,i){
                 return {
+                    variable : v.variable,
                     path : v.path,
                     sample : JsonXPath({path : '$.' +v.path,json : newItem.model})[0]
                 }
@@ -600,6 +603,7 @@
                 return {
                     index : i,
                     path : key,
+                    variable : `{{${key}}}`,
                     sample : JsonXPath({ path : '$.'+key,json : newItem.model})[0]
                 }
             });

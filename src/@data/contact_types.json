@@ -1,0 +1,28 @@
+{
+    "options": [
+        {
+         "code": "WHATSAPP",
+         "name": "WHATSAPP"
+        },
+        {
+         "code": "TELEGRAM",
+         "name": "TELEGRAM"
+        },
+        {
+         "code": "TWITTER",
+         "name": "TWITTER"
+        },
+        {
+            "code": "FACEBOOK",
+            "name": "FACEBOOK"
+        },
+        {
+            "code": "INSTAGRAM",
+            "name": "INSTAGRAM"
+        },
+        {
+            "code": "WEBSITE",
+            "name": "WEBSITE"
+        }
+    ]
+ }
