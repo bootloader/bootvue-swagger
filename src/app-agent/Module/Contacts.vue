@@ -1,5 +1,5 @@
 <template>
-     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color "
+     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color m-contacts_card"
         v-touch:swipe.right="onSwipeRight"
         v-touch:swipe.left="onSwipeLeft"
      >
@@ -10,9 +10,9 @@
                         <i class="fa fa-bars"></i>
                     </a>
                 </div>
-                <input type="text" 
-                    v-model="search.text"
-                    placeholder="Search..." name="" class="form-control search">
+                    <text-complete v-model="search.text" placeholder="Search..." name="" 
+                    class="form-control contact-search"
+                     :rows="1" resize="none"/>
                 <div class="input-group-prepend">
                     <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
                     <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
@@ -182,10 +182,17 @@
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import debounce from "debounce";
+    import TextComplete from '../../@common/cloned/v-textcomplete/TextComplete.vue';
+    import contact_types from '@/@data/contact_types.json';
+
+    let sampleJsonKeys = contact_types.options.map(function(c){
+        return c.code.toLowerCase();
+    });
 
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
+                TextComplete,
         },
         computed : {
             urgentChat : function (argument) {
@@ -208,11 +215,14 @@
                     return (chat._tab == tab) || searchText;
                 }).filter(function(chat){
                     var _searchTags = searchTags.filter(function (searchTag) {
+                        console.log(chat.name,searchTag._text);
                         if(searchTag.isTag){
-                            return ((chat.contactType || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
+                            return (
+                                (chat.contactType || "").toLowerCase().indexOf(searchTag._text) == 0
+                                || (chat.status || "").toLowerCase().indexOf(searchTag._text) == 0
+                            );
                         } else {
-                            console.log(chat.name,searchTag.text)
-                            return ((chat._searchText || "").toLowerCase().indexOf(searchTag.text.toLowerCase()) > -1);
+                            return ((chat._searchText || "").toLowerCase().indexOf(searchTag._text) > -1);
                         }
                     });
                     return (_searchTags.length == searchTags.length);// && chat.active;
@@ -244,6 +254,25 @@
                 contactType : null,
                 text : ""
              }, 
+            strategies: [{
+                match: /(^|\s)\:([a-z0-9+\-\_\.]*)$/,
+                async search(term, callback) {
+                    console.log("term",term)
+                    callback(sampleJsonKeys.filter(function (name) {
+                        return term && name.startsWith(term);
+                    }).slice(0, 10))
+                },
+                template(name) {
+                    return name;
+                },
+                replace(start,end) {
+                    let suffix = end.trim().startsWith(" ") ? '' : ' ';
+                    if(start == "data."){
+                    return ['$1:' + start, suffix];
+                    }
+                    return '$1:' + start + suffix
+                },
+            }],
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
         }),
@@ -354,6 +383,55 @@
         }
     }
 </script>
+
+<style lang="scss">
+    .m-contacts_card{
+        .contacts-header {
+            .contact-search {
+                border-radius: 15px 0 0 15px !important;
+                background-color: rgba(0,0,0,0.3) !important;
+                border: 0 !important;
+                line-height: 20px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                background: transparent;
+                outline: 0;
+                textarea {
+                    color: white !important;
+                    resize: none;
+                    height: 32px;
+                    background: transparent;
+                    border: 0 !important;
+                    outline: 0;
+                    &:focus{
+                        box-shadow:none !important;
+                        outline:0px !important;
+                    } 
+                }
+                .autocomplete {
+                    background: var(--scheme-color);
+                    color: #FFF;
+                    border: none;
+                    border-radius: 3px;
+                    ul {
+                        border: none;
+                        li {
+                            padding: 1px 10px;
+                            min-width: 80px;
+                            border: none;
+                            background: #0000004a;
+                            &.active {
+                                background: transparent;
+                                font-weight: 500
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+</style>
 <style type="text/css" scoped="">
     .contacts_body{
         padding:  0 0 !important;
@@ -552,7 +630,6 @@
 </style>
 
 <style lang="scss" scoped="">
-
     .contact-preview {
         display: flex;
         flex-wrap: nowrap;

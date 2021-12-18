@@ -86,7 +86,7 @@ const cache = {
             return !tag.isTag && tag.text;
           }).map(function(tag){
             return tag.text
-          }).join(" ")
+          }).join("*")
         //  withMessage : false
         }
       })).then(function (response) {
@@ -546,13 +546,18 @@ const mutations = {
     updateTimer();
   },
   setSessionSearch(state,searchText){
-    state.searchChat = searchText.split(/(:[\w]+\ )/).filter(function (argument) {
+      searchText = (searchText || "").trim();  
+      if(searchText){
+        searchText = searchText+ "*";
+      }   
+      state.searchChat = (searchText).split(/(:[\w]+)/).filter(function (argument) {
           return !!argument;
       }).map(function (argument) {
           var tags = argument.split(":");
           return {
               isTag : !tags[0],
-              text : (tags[0] || tags[1]).trim()
+              text : (tags[0] || tags[1]).trim(),
+              _text : (tags[0] || tags[1]).toLowerCase().replaceAll("*","").trim()
           }
       });
   },
