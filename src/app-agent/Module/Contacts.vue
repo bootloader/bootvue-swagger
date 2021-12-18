@@ -35,7 +35,7 @@
 
         </div>
         <div class="card-header contact-tabs">
-             <ul class="nav nav-tabs nav-fill card-header-tabs">
+             <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="!isSearch">
               <li class="nav-item">
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ME')}" @click="MyFlags.agent.contactsTab = 'ME'">
                     <span class="fa fa-user"/> Me</span>
@@ -50,6 +50,14 @@
                     class="nav-item" >
                 <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'HISTORY')}" @click="MyFlags.agent.contactsTab = 'HISTORY'">
                     <span class="fa fa-stopwatch"/> History</span>
+              </li>
+             </ul>
+             <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="isSearch">  
+              <li class="nav-item">
+                <span class="nav-link btn-xs active">
+                    <span class="fa fa-search"/> Results for "{{search.text}}"
+                     <span class="fa fa-times float-right" @click="search.text=''"></span>
+                </span>
               </li>
             </ul>
         </div>
@@ -171,19 +179,9 @@
 <script>
 
 
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faTrashAlt,
-        faCheck,
-        faCalendarAlt,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faWhatsapp
-    } from '@fortawesome/free-solid-svg-icons'
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import { MyFlags,MyDict,MyConst } from './../../services/global';
-    import tunnel from './../../services/tunnel';
+    import debounce from "debounce";
 
     export default {
         components: {
@@ -202,25 +200,12 @@
             },
             activeChats : function(){ 
                 console.log("activeChats",this.$store.getters.StateChats.length); 
-                let searchTags = this.search.text.split(/(:[\w]+\ )/).filter(function (argument) {
-                    return !!argument;
-                }).map(function (argument) {
-                    var tags = argument.split(":");
-                    return {
-                        isTag : !tags[0],
-                        text : (tags[0] || tags[1]).trim()
-                    }
-                });
+                let searchText = this.search.text.trim();
+                let searchTags = this.$store.getters.SearchChat;
                 var tab = MyFlags.agent.contactsTab;
                 //console.log("searchTags",searchTags)
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
-                    return chat._tab == tab;
-                    if(tab == 'ME'){
-                        return (chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent;
-                     }  else if(tab == 'TEAM'){
-                        return !((chat.assignedToAgent == MyConst.agent) || !chat.assignedToAgent);
-                     }
-                    return false;
+                    return (chat._tab == tab) || searchText;
                 }).filter(function(chat){
                     var _searchTags = searchTags.filter(function (searchTag) {
                         if(searchTag.isTag){
@@ -249,6 +234,9 @@
             contactId : function () {
                return this.$route.params.contactId;
             },
+            isSearch(){
+                return !!this.search.text.trim();
+            }
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -264,6 +252,7 @@
             // already being observed
             this.loadChats();
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
+        this.searchChat = debounce(this.searchChat,500)
         },
         beforeUnmount (){
             //this.tunnel.off();
@@ -287,9 +276,16 @@
                 if(newVal == "HISTORY"){
                     this.$store.dispatch("RefeshSession",true);
                 }
+            },
+            "search.text" :  function (searchText) {
+                this.$store.commit("setSessionSearch",this.search.text);
+                this.searchChat();
             }
         },
         methods: {
+            async searchChat(){
+                this.$store.dispatch("RefeshSession",true);
+            },
             async loadChats(){
                 await this.$store.dispatch('GetChats');
                 this.$emit('loaded', {});

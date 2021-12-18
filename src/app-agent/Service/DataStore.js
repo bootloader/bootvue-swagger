@@ -33,7 +33,8 @@ const state = {
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
-  chatHistory : { sessions : null}
+  chatHistory : { sessions : null},
+  searchChat : []
 };
 var tagFormat = function (argument) {
     return {
@@ -64,19 +65,11 @@ const getters = {
     return sortedObj;
   },
   StateAgentOptions: (state) => state.agents,
-  StateChatHistory: (state) => state.chatHistory.sessions
+  StateChatHistory: (state) => state.chatHistory.sessions,
+  SearchChat :(state) => state.searchChat,
 };
 
 const cache = {
-  _GetChats : (function () {
-    let x = null; 
-    return async function () {
-      x =  x || (axios.get("/api/sessions/assigned",{
-        //params : {withMessage : false}
-      }));
-      return x;
-    };
-  })(),
   _RefeshSession : (function () {
     let x = null,lastTime=0; 
     return async function ({isOnline,isUpdate,isAway}) {
@@ -88,7 +81,12 @@ const cache = {
           status : isOnline,
           away : isAway,
           isUpdate : isUpdate,
-          tab : MyFlags.agent.contactsTab
+          tab : MyFlags.agent.contactsTab,
+          search : state.searchChat.filter(function(tag){
+            return !tag.isTag && tag.text;
+          }).map(function(tag){
+            return tag.text
+          }).join(" ")
         //  withMessage : false
         }
       })).then(function (response) {
@@ -546,6 +544,17 @@ const mutations = {
   setAgents(state, agents) {
     state.agents = agents;
     updateTimer();
+  },
+  setSessionSearch(state,searchText){
+    state.searchChat = searchText.split(/(:[\w]+\ )/).filter(function (argument) {
+          return !!argument;
+      }).map(function (argument) {
+          var tags = argument.split(":");
+          return {
+              isTag : !tags[0],
+              text : (tags[0] || tags[1]).trim()
+          }
+      });
   },
   setUser(state, username) {
     state.user = username;
