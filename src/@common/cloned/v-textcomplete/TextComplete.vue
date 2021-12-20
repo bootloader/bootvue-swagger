@@ -10,6 +10,7 @@
               :rows="rows"
               name="textcomplete"
               @focus="handleFocus"
+              @blur="handleBlur"
               @keydown="keyEvent"
               @keyup="keyUp"></textarea>
 
@@ -94,7 +95,12 @@ export default {
   },
   methods: {
     handleFocus(event) {
-      this.$emit('focus', event)
+      this.$emit('focus', event);
+      this.$emit('active', {active:true});
+    },
+    handleBlur(event) {
+      this.$emit('blur', event);
+      this.$emit('active', {active:false});
     },
     resizeTextarea() {
       var { autosize } = this

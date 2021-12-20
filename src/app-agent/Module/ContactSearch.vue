@@ -140,7 +140,6 @@
             // already being observed
             this.loadLanes();
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
-            //this.pingOnline();
             this.loadContacts();
 
         },
@@ -165,12 +164,6 @@
             },1000),
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', !this.isOnline);
-            },
-            async pingOnline(){ 
-                clearInterval(this.intervalid1);        
-                this.intervalid1 = setInterval(function(){
-                    this.$store.dispatch('OnlineStatus', this.isOnline);
-                }.bind(this), MyConst.config.agentSessionTimeout);
             },
             searchTag : function(searchTag) {
                 if(this.search.text === searchTag){
@@ -208,6 +201,7 @@
         }
     }
 </script>
+
 <style type="text/css" scoped="">
     .m-contact-search.card {
         border-radius: 0px !important;

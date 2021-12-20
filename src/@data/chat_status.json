@@ -1,0 +1,36 @@
+{
+    "options": [
+        {
+            "code": "OPEN",
+            "name": "OPEN"
+        },
+        {
+            "code": "UNASSIGNED",
+            "name": "UNASSIGNED"
+        },
+        {
+            "code": "URGENT",
+            "name": "URGENT"
+        },
+        {
+            "code": "ONHOLD",
+            "name": "ONHOLD"
+        },
+        {
+            "code": "ATTENTION",
+            "name": "ATTENTION"
+        },
+        {
+            "code": "EXPIRED",
+            "name": "EXPIRED"
+        },
+        {
+            "code": "RESOLVED",
+            "name": "RESOLVED"
+        },
+        {
+            "code": "CLOSED",
+            "name": "CLOSED"
+        }
+    ]
+ }

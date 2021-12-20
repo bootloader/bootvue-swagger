@@ -1,5 +1,5 @@
 <template>
-     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color m-contacts_card"
+     <div class="card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color m-contacts-card"
         v-touch:swipe.right="onSwipeRight"
         v-touch:swipe.left="onSwipeLeft"
      >
@@ -10,9 +10,9 @@
                         <i class="fa fa-bars"></i>
                     </a>
                 </div>
-                    <text-complete v-model="search.text" placeholder="Search..." name="" 
-                    class="form-control contact-search"
-                     :rows="1" resize="none"/>
+                    <text-complete v-model="search.text" placeholder="Search..." name="" @active="searchInActive"
+                        class="form-control contact-search" :strategies="this.search.active ? strategies : []"
+                        :rows="1" resize="none"/>
                 <div class="input-group-prepend">
                     <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
                     <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
@@ -184,10 +184,13 @@
     import debounce from "debounce";
     import TextComplete from '../../@common/cloned/v-textcomplete/TextComplete.vue';
     import contact_types from '@/@data/contact_types.json';
+    import chat_status from '@/@data/chat_status.json';
 
-    let sampleJsonKeys = contact_types.options.map(function(c){
+    let sampleJsonKeys = [...contact_types.options.map(function(c){
         return c.code.toLowerCase();
-    });
+    }),...chat_status.options.map(function(c){
+        return c.code.toLowerCase();
+    })];
 
     export default {
         components: {
@@ -252,14 +255,15 @@
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: {
                 contactType : null,
-                text : ""
-             }, 
+                text : "",
+                active : false
+            }, 
             strategies: [{
                 match: /(^|\s)\:([a-z0-9+\-\_\.]*)$/,
                 async search(term, callback) {
                     console.log("term",term)
                     callback(sampleJsonKeys.filter(function (name) {
-                        return term && name.startsWith(term);
+                        return name.startsWith(term);
                     }).slice(0, 10))
                 },
                 template(name) {
@@ -314,6 +318,9 @@
         methods: {
             async searchChat(){
                 this.$store.dispatch("RefeshSession",true);
+            },
+            searchInActive(e){
+                this.search.active = e.active;
             },
             async loadChats(){
                 await this.$store.dispatch('GetChats');
@@ -385,7 +392,7 @@
 </script>
 
 <style lang="scss">
-    .m-contacts_card{
+    .m-contacts-card{
         .contacts-header {
             .contact-search {
                 border-radius: 15px 0 0 15px !important;

@@ -1,5 +1,5 @@
 <template>
-     <div class="m-contact-search card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color ">
+     <div class="m-session-search card mb-sm-3 mb-md-0 contacts_card card-shadow scheme-color ">
         <div class="card-header contacts-header ">
             <div class="input-group">
                     <a class="input-group-text menu_btn new-chat fa fa-arrow-left" v-b-toggle 
@@ -8,7 +8,7 @@
                 </a>
                 <input type="text" 
                     v-model="input.search.text"
-                    placeholder="Search..." name="session-search" class="form-control search">
+                    placeholder="Search..." name="session-search" class="form-control search contact-search">
                 <div class="input-group-prepend">
                     <span v-if="!!input.search.text" 
                         class="input-group-text search_btn" @click="(input.search.text='');localSessionSearch()" >
@@ -76,7 +76,7 @@
             <hr />
             <i class="note">The search works on the principle of AND / OR operation when elements from multiple categories are selected. AND is applied across different categories and OR is applied within the category</i>
         </div>
-        <div class="search-result m-contact-search contacts_card card-shadow col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 "
+        <div class="search-result contacts_card card-shadow col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 "
             v-show="showResult">
                     <div class="card-body contacts_body">
                         <ul class="contacts contact-list" v-if="filteredContacts && filteredContacts.length>0">
@@ -310,7 +310,7 @@
     h2{
         padding-top:20px;
     }
-    .m-contact-search.card {
+    .m-session-search.card {
         border-radius: 0px !important;
         min-width: 200px;
     }
@@ -499,6 +499,29 @@
    }
 </style>
 <style lang="scss">
+    .m-session-search{
+        .contacts-header {
+            .contact-search {
+                border-radius: 15px 0 0 15px !important;
+                background-color: rgba(0,0,0,0.3) !important;
+                border: 0 !important;
+                line-height: 20px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                background: transparent;
+                outline: 0;
+                color: white !important;
+                resize: none;
+                background: transparent;
+                border: 0 !important;
+                outline: 0;
+                &:focus{
+                    box-shadow:none !important;
+                    outline:0px !important;
+                }
+            }
+        }
+    }
     .session-search-date-picker.vue-daterange-picker {
         min-height: 35px;
         .reportrange-text{
