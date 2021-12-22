@@ -79,7 +79,10 @@
         },
         computed : {
             messages(){
-                return (this.activeChat.messages || []).sort(function(a,b){
+                let sessionId = this.activeChat.sessionId;
+                return (this.activeChat.messages || []).filter(function(m){
+                    return sessionId == m.sessionId;
+                }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
             }
