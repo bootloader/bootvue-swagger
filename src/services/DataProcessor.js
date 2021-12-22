@@ -25,13 +25,17 @@ function eq(a,b) {
 			  active : false, expired : false
 		  };
 		  var expiryDateStamp = session._stamp-MyConst.config.chatSessionTimeout;
-		  session.local.expired = (session.expired || (session.lastInComingStamp < expiryDateStamp)) && !session.resolved;
+
+		  session.local.activeInbound =  (session.lastInComingStamp>0 && session.lastInComingStamp > expiryDateStamp)
+		  session.local.expired = (
+			  	session.expired 
+				|| (session.lastInComingStamp>0 && session.lastInComingStamp < expiryDateStamp)) 
+			&& !session.resolved;
 		  session.local.active = session.active && !session.local.expired;
 		 	//Extra Derived 
 		  session.local.resolved = !!session.resolved;
-		  session.local.open = session.local.active && !session.local.expired;
+		  session.local.open = session.local.active && !session.local.expired && session.local.activeInbound;
 		  session.local.closed = session.local.expired || !session.local.active;
-
 
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
 		  if((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent){

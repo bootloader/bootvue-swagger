@@ -303,7 +303,7 @@
                     </slide-up-down>
 
                     <!-- If chat is ACTIVE -->
-                    <div v-if="chatLocal.active"> 
+                    <div v-if="chatLocal.active && !is_SEND_NEW"> 
                         <!-- If chat is NOT Actionable -->
                         <div  v-if="isActionable" class="input-group my-input-section" 
                             v-bind:class="{ invisible : !isActionable}"> 
@@ -338,7 +338,7 @@
                         <!-- If chat is NOT Actionable -->
                         <div v-else class="control-panel text-center"> 
                                 <!--   Contorl Box-->
-                                <b-button v-if="isAssignedToMe && ($route.params.profileId != $route.params.contactId)" 
+                                <b-button v-if="isAssignedToMe" 
                                     class="btn-sm text-white:hover" variant="outline-white-dirty" pill
                                     @click="goToChat()"> 
                                     Send New Message
@@ -439,7 +439,7 @@
                return (!!this.$route.params.contactId && this.chatLocal.active)
                && (this.$route.params.profileId == this.$route.params.contactId)
                && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
-               ;
+               && this.chatLocal.open;
             },
             isAssignedToMe : function () {
                return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
@@ -471,7 +471,7 @@
             },
             is_SEND_NEW : function () {
                 return (this.activeChat?.contact?.sessionId == this.$route.params.sessionId)
-                    && this.isSendNewMessage && !this.activeChat?.local?.active;
+                    && this.isSendNewMessage && !this.activeChat?.local?.open;
             },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
@@ -614,9 +614,9 @@
                 this.loadQuickReplies();
                 this.onSessionChange();
             },
-            '$route.params.sessionId': function (contactId) {
+            '$route.params.sessionId': function (sessionId) {
                 //this.loadChat();
-                console.log("$route.params.sessionId",contactId)
+                console.log("$route.params.sessionId",sessionId)
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
                 this.initNewMessage();
@@ -761,14 +761,19 @@
                 }
             },
             async goToChat(){
-                this.$router.push({
-                    name: 'defAgentView', 
-                        params: { 
-                            sessionId : this.$route.params.sessionId,
-                            contactId : this.$route.params.contactId,
-                            profileId : this.$route.params.contactId
-                        } 
-                });
+                if(this.$route.params.profileId == this.$route.params.contactId){
+                    return this.initNewMessage(true);
+                } else {
+                    this.$router.push({
+                            name: 'defAgentView', 
+                                params: { 
+                                    sessionId : this.$route.params.sessionId,
+                                    contactId : this.$route.params.contactId,
+                                    profileId : this.$route.params.contactId
+                                } 
+                        });
+                }
+ 
             },
             showContactProfile : function (type, type2) {
                 if(typeof type !='string'){
