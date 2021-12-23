@@ -13,8 +13,19 @@
             }]"
             @action="onAction"
             @rows="selectItem">
-
+                <template #cell(desc)="row">
+                  <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id" class=" btn-outline-primary-link pointer">
+                         <span class="fa fa-edit" title="Edit"/>
+                    {{row.item.desc}}  
+                  </router-link>
+                </template>
                 <template #cell(actions)="row">
+                  <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
+                    <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
+                         <span class="fa fa-edit" title="Edit"/>
+                    </b-button>   
+                  </router-link>
+                  &nbsp;
                   <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
@@ -29,7 +40,7 @@
                       </template>
                   </b-popover> 
                   &nbsp;
-                 <b-button size="sm" cursor-pointer  :id="'template-info-'+ row.item.id " variant="outline-primary">
+                  <b-button size="sm" cursor-pointer  :id="'template-info-'+ row.item.id " variant="outline-primary">
                     <span class="fa fa-info-circle" title="View" /> 
                   </b-button> 
                   <b-popover triggers="hover focus" :target="'template-info-'+ row.item.id"
@@ -67,12 +78,6 @@
 
                       </template>
                   </b-popover> 
-                  &nbsp;
-                  <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
-                    <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
-                         <span class="fa fa-edit" title="Edit"/>
-                    </b-button>   
-                  </router-link>
                   &nbsp;
                   <MyAxon class="btn btn-sm btn-outline-primary"
                      api="/api/tmpl/hsm/meta"
@@ -145,11 +150,11 @@
                                         </base-input>
 
                                         <BaseVSelect class="col-md-3" size="sm"
-                                          name="Contact Type"
+                                          name="Channel Type"
                                           :emptyDisplay="'ALL'"
                                           options="@data/contact_types"
                                           v-model="newItem.contactType"
-                                          placeholder="Select Contact Type">
+                                          placeholder="Select Channel Type">
                                         </BaseVSelect>
 
                                         <BaseVSelect class="col-md-3" size="sm"
@@ -234,12 +239,15 @@
                                         </div>
                                       </div>
                                       <div class="position-relative form-group col-md-4">
-                                            <label for="examplePassword" class="text-sm">Sample Data</label>
+                                            <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
+                                              <small>Note : use {{data.&lt;variable&gt;}} for customer variables</small>
+                                            </label>
                                             <VGrid theme="default" class="w-100"
                                                 :columns="sampleVar.columns"
                                                 :source="templateVariable"
                                                 @afteredit=afterEdit
                                             ></VGrid>
+                                            
                                       </div>
                                       <div class="position-relative form-group col-md-4">
                                           <label for="examplePassword" class="text-sm">Template Preview</label>
@@ -405,7 +413,7 @@
                       return name;
                     },
                     replace(start,end) {
-                      let suffix = end.trim().startsWith("}}") ? '' : '}} ';
+                      let suffix = end.trim().startsWith("}}") ? '' : '}}';
                       if(start == "data."){
                         return ['$1{{' + start, suffix];
                       }
@@ -500,13 +508,15 @@
                 return new_button.value == button.key;
               });
               if(buttons && buttons[0]) return;
-              this.newItem.options.buttons = [...this.newItem.options.buttons,{
+              let newButonItem = {
                 label : new_button.value,
                 key : new_button.value,
                 type : "QUICK_REPLY"
-              }];
+              };
+              this.newItem.options.buttons = [...this.newItem.options.buttons,newButonItem];
               this.input.new_button.value = null;
               this.newItem.options = {...this.newItem.options};
+              this.editButton(newButonItem);
           },
           deleteButton(buttonToDelete){
             this.newItem.options.buttons = this.newItem.options.buttons.filter(function(btn){

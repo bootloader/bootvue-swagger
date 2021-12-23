@@ -2,27 +2,27 @@
     "options": [
         {
          "code": "WHATSAPP",
-         "name": "WHATSAPP"
+         "name": "WhatsApp"
         },
         {
          "code": "TELEGRAM",
-         "name": "TELEGRAM"
+         "name": "Telegram"
         },
         {
          "code": "TWITTER",
-         "name": "TWITTER"
+         "name": "Twitter"
         },
         {
             "code": "FACEBOOK",
-            "name": "FACEBOOK"
+            "name": "Facebook"
         },
         {
             "code": "INSTAGRAM",
-            "name": "INSTAGRAM"
+            "name": "Instagram"
         },
         {
             "code": "WEBSITE",
-            "name": "WEBSITE"
+            "name": "WebChat"
         }
     ]
  }
