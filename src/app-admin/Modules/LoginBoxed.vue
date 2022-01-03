@@ -91,7 +91,7 @@ import { mapActions } from "vuex";
     methods: {
         ...mapActions(["LogIn"]),
         async submit() {
-          const User = new FormData();
+          const User = new URLSearchParams();
           User.append("username", this.form.username);
           User.append("password", this.form.password);
           try {

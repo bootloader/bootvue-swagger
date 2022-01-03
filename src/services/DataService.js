@@ -141,7 +141,7 @@ const DataService = {
   },
   async submit(url,params,config) {
     url = slashUrl(url);
-    let SubmitForm = new FormData();
+    let SubmitForm = new URLSearchParams();
     for (var key in params) {
        SubmitForm.append(key, params[key]);
     }

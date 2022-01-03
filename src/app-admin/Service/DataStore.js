@@ -44,7 +44,7 @@ const getters = {
 const actions = {
   async Register({dispatch}, form) {
     await axios.post('register', form)
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('username', form.username)
     UserForm.append('password', form.password)
     await dispatch('LogIn', UserForm)
@@ -75,9 +75,10 @@ const actions = {
     commit("setTeams", response.data.results);
   },
   async SetTeamsDefault({ commit },team) {
-    let UserForm = new FormData();
+    let UserForm = new URLSearchParams();
     UserForm.append('dept_id', team.id);
-    let response = await axios.post("/api/admins/dept/default",UserForm);
+    let response = await axios.post("/api/admins/dept/default",UserForm
+    );
     commit("setTeams", response.data.results);
   },
 
@@ -93,16 +94,17 @@ const actions = {
   },
 
   async SetAgentDefault({ commit },agent) {
-    let UserForm = new FormData();
+    let UserForm = new URLSearchParams();
     UserForm.append('agent_id', agent.id);
-    let response = await axios.post("/api/admins/agent/default",UserForm);
+    let response = await axios.post("/api/admins/agent/default",UserForm
+    );
     commit("setAgents", response.data.results);
   },
 
   async DeActivateAgent ({ commit },agent){
      console.log("--",agent)
      agent.isactive = (agent.isactive == "Y" ? "N" : "Y");
-     let UserForm = new FormData();
+     let UserForm = new URLSearchParams();
      UserForm.append('agent_id', agent.id);
      UserForm.append('status', agent.isactive);
      let response = await axios.delete("/api/admins/agent?agent_id="+agent.id +"&status=" + agent.isactive,{
@@ -112,7 +114,7 @@ const actions = {
   },
   async DeAdminAgent ({ commit },agent){
      console.log("--",agent)
-     let UserForm = new FormData();
+     let UserForm = new URLSearchParams();
      UserForm.append('agent_id', agent.id);
      let response = await axios.post("/api/admins/agent/admin",UserForm);
      commit("setAgents", response.data);
@@ -130,7 +132,7 @@ const actions = {
   },
 
   async CreatQuickReps({ commit },qReps) {
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
@@ -154,7 +156,7 @@ const actions = {
 
 // Quick Actions
   async CreatQuickAxns({ commit },qReps) {
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
@@ -178,7 +180,7 @@ const actions = {
 
 // Quick Labels
   async CreatQuickLabels({ commit },qReps) {
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
@@ -202,7 +204,7 @@ const actions = {
 
   // Quick Tags
   async CreatQuickTags({ commit },qReps) {
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('id', qReps.id);
     UserForm.append('category', qReps.category);
     UserForm.append('title', qReps.title);
@@ -226,7 +228,7 @@ const actions = {
 // Media
 
   async CreatQuickMeds({ commit },qMeds) {
-    let UserForm = new FormData()
+    let UserForm = new URLSearchParams()
     UserForm.append('name', qMeds.name);
     UserForm.append('category', qMeds.category);
     UserForm.append('title', qMeds.title);

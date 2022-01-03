@@ -21,7 +21,7 @@
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
                   &nbsp;
-                  <b-button size="sm"@click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
+                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
                      <font-awesome-icon icon="eye" title="View"/>
                   </b-button>                                
                 </template>
@@ -53,11 +53,11 @@
                               </ValidationProvider>
                             </div>
 
-                            <div v-if="newItem.name" class="row">
+                            <div v-if="newItem.id" class="row">
                                 <img :src="newItem.url"  class="position-relative form-group col-md-12">
                             </div>
 
-                            <div v-if="!newItem.name" class="row">
+                            <div v-if="!newItem.id" class="row">
                               <div class="position-relative form-group col-md-12">
                                 <vue-dropzone ref="myVueDropzone"
                                  id="dropzone" :options="dropzoneOptions"
@@ -74,10 +74,10 @@
                         <button @click="cancelItem"
                           class="btn btn-warning">Cancel</button>
 &nbsp;
-                        <button v-if="newItem.name"  @click="updateItem" :disabled="!isChanged"
+                        <button v-if="newItem.id"  @click="updateItem" :disabled="!isChanged"
                           class="btn btn-primary">Update</button>
 &nbsp;
-                        <button v-if="!newItem.name"  @click="createItem" :disabled="!isChangedAndAdded"
+                        <button v-if="!newItem.id"  @click="createItem" :disabled="!isChangedAndAdded"
                           class="btn btn-primary">Upload</button>
                       </div>
                   </template>
@@ -108,6 +108,7 @@
 
     function newItem() {
       return {
+              id : null,
               "category": "",
               "title": "",
               "template" : "", url : "",         };
@@ -218,7 +219,7 @@
           }, 
           async editItem(item) {
               this.newItem = newItem();
-              this.newItem.name = item.name;
+              this.newItem.id = item.id;
               this.newItem.category = item.category;
               this.newItem.title = item.title;
               this.newItem.message = item.message;
@@ -230,7 +231,7 @@
           },
           rowClass(item, type) {
             if (!item || type !== 'row') return
-            if (this.newItem.name == item.name) return 'table-success'
+            if (this.newItem.id == item.id) return 'table-success'
           },
           onAction : function (argument) {
             switch(argument.name){

@@ -240,6 +240,7 @@ const actions = {
                         id : msg.id,
                         message : msg.text,
                         template : msg.template,
+                        attachments : msg.attachments,
                         sessionId : msg.sessionId,
                         templateId : msg.templateId,
                         action : msg.action,
@@ -444,7 +445,7 @@ const actions = {
   },
 
   async AssingToAgent({commit,dispatch},{ sessionId,agentId }) {
-    let AssignAgentForm = new FormData();
+    let AssignAgentForm = new URLSearchParams();
     AssignAgentForm.append('sessionId', sessionId);
     AssignAgentForm.append('agentId', agentId);
     let response = await axios.post("/api/session/agent",AssignAgentForm);

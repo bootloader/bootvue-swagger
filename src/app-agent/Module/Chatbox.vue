@@ -259,7 +259,7 @@
                         <div class="media_card_body-bubbles-wrapper">
                             <div v-for="media in mediaOptions" v-bind:key="media.id"
                                 class="media_thumb"  @dblclick="sendQuickMedia(media)">
-                                    <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media.name" v-model="selectedMedia" />
+                                    <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media" v-model="selectedMedia" />
                                     <label class="media_thumb_label" :for="'mdeia-'+media.name">
                                         <img v-lazy="formatters.https_thumburl(media.url)">
                                     </label>
@@ -628,12 +628,12 @@
             }
         },
         methods: {
-            prepareMessage : function (text,template,action,empty) {
+            prepareMessage : function (text,media,action,empty) {
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
                 }
-                if(!text && !template && !action && !empty){
+                if(!text && !media && !action && !empty){
                     return;
                 }
                 var sessionId = activeChat.sessionId;
@@ -642,12 +642,17 @@
                     text : text, timestamp : new Date().getTime(),
                     sender : MyConst.agent, name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
-                    template : template,
+                    attachments : media ? [{
+                        mediaType : media.type,
+                        mediaId : media.id,
+                        mediaURL : media.url,
+                        mediaCaption : media.title,
+                    }] : undefined,
                     action : action, type : (action ? "A" : "O")
                 };
                 return msg;
             },
-            async sendText(text,template, action){
+            async sendText(text,media, action){
                 this.showQuickReplies = false;
                 this.selectedMedia = null;
 
@@ -655,7 +660,7 @@
                     await this.$refs.myVueDropzone.processQueue();
                 } 
 
-                var msg = this.prepareMessage(text,template, action);
+                var msg = this.prepareMessage(text,media, action);
                 if(!msg){
                     console.log("I Return")
                     return;
@@ -1006,6 +1011,7 @@
                 }
             },
             async onAssignedToAgent (argument) {
+                console.log("onAssignedToAgent",argument);
                 var resp = await this.$store.dispatch('AssingToAgent',{
                     sessionId : this.activeChat.sessionId,
                     agentId : argument.id
