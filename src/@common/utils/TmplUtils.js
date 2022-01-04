@@ -43,6 +43,8 @@ function sampleModel (){
         contact : {
           name : "John Doe", phone : "919876543210", email : "John.Doe."+(counter++)+"@company.com"
         },
+        global : {
+        },
         data : {}
     };
 }

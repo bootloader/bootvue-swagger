@@ -162,12 +162,6 @@
             oldHash : null
         }),
         computed : {
-            items : function () {
-              return this.$store.getters.StateAgents
-            },
-            teams : function () {
-              return this.$store.getters.StateTeams;
-            },
             isChanged :  function () {
               return true; //this.oldHash !== JSON.stringify(this.oneItem);
             }

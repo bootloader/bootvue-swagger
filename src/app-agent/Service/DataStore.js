@@ -242,7 +242,10 @@ const actions = {
                         template : msg.template,
                         attachments : msg.attachments,
                         sessionId : msg.sessionId,
-                        templateId : msg.templateId,
+                        hsm : Object.assign({
+                          id : msg.templateId,
+                          code : msg.templateCode,
+                        },msg.template),
                         action : msg.action,
                         contact : msg.contact,
                         messageIdRef : msg.messageIdRef

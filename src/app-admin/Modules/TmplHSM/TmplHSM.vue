@@ -240,7 +240,7 @@
                                       </div>
                                       <div class="position-relative form-group col-md-4">
                                             <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
-                                              <small>Note : use {{data.&lt;variable&gt;}} for customer variables</small>
+                                              <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
                                             </label>
                                             <VGrid theme="default" class="w-100"
                                                 :columns="sampleVar.columns"
@@ -404,9 +404,10 @@
                   strategies: [{
                     match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
                     search(term, callback) {
-                      let data = "data.".startsWith(term) ? "data." :term;
-                      callback([...sampleJsonKeys,data].filter(function (name) {
-                        return name.startsWith(term);
+                      let data = "data.".startsWith(term) ? "data." : null;
+                      let global = "global.".startsWith(term) ? "global." : null;
+                      callback([...sampleJsonKeys,data,global].filter(function (name) {
+                        return name && name.startsWith(term);
                       }).slice(0, 10))
                     },
                     template(name) {
@@ -414,7 +415,7 @@
                     },
                     replace(start,end) {
                       let suffix = end.trim().startsWith("}}") ? '' : '}}';
-                      if(start == "data."){
+                      if(/^(data|global)\.$/.test(start)){
                         return ['$1{{' + start, suffix];
                       }
                       return '$1{{' + start + suffix
@@ -602,7 +603,7 @@
             let neVal = (this.newItem.header + this.newItem.template + this.newItem.footer)
             let newItem = this.newItem;
             this.sampleVar.data = TmplUtils.getVars(
-                neVal,/({{(data\.[\w\d\.]+)}})/g).map(function(v,i){
+                neVal,/({{((data|global)\.[\w\d\.]+)}})/g).map(function(v,i){
                 return {
                     variable : v.variable,
                     path : v.path,

@@ -135,6 +135,11 @@ export default AppRouter.route({
             component: () => import('./Modules/SetUp/SetUpApiKeys.vue'),    
         },
         {
+            path : "/app/setup/company-vars",
+            name: 'SetUpCompanyVars',
+            component: () => import('./Modules/SetUp/SetUpCompanyVars.vue'),    
+        },
+        {
             path : "/app/setup/channels",
             name: 'SetUpChannels',
             component: () => import('./Modules/SetUp/SetUpChannels.vue'),    

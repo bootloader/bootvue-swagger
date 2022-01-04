@@ -219,6 +219,12 @@
                     },
                     {
                         enabled: true,
+                        href: '/app/setup/company-vars',
+                        title: 'Variable Setup',
+                        icon: 'pe-7s-key fa fa-code',
+                    },
+                    {
+                        enabled: true,
                         href: '/app/setup/client-api-keys',
                         title: 'API Keys',
                         icon: 'pe-7s-key fa fa-key',
