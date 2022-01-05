@@ -14,6 +14,7 @@
           {'is-valid': valid && validated }, 
           {'is-invalid': invalid && validated},
           {'has-value': value != ''},
+          {'is-disabled' : disabled},
           labelClasses
         ]">
           {{label || name}}
@@ -34,16 +35,16 @@
         </span>
         </div>
         
-          <text-complete v-if="textCompleteStrategies && textCompleteStrategies.length"  
+          <text-complete v-if="textCompleteStrategies && textCompleteStrategies.length && !disabled"  
               :id="'fmg-' + inputId"
               :value="value"
               :type="type"
               v-on="listeners"
               v-bind="$attrs" 
-              :valid="valid" 
+              :valid="valid" :disabled="disabled"
               :placeholder="$attrs.placeholder"
               :required="required"
-              class="w-100"
+              class=""
               :areaClass="[ 'form-control',
                 (valid && validated && successMessage) ? 'is-valid' : '',
                 (invalid && validated) ? 'is-invalid' : '',
@@ -57,6 +58,7 @@
             :type="type"
             v-on="listeners"
             v-bind="$attrs" 
+            :disabled="disabled"
             :valid="valid" 
             :placeholder="$attrs.placeholder"
             :required="required"
@@ -218,6 +220,11 @@
       resizable : {
         type: Boolean,
         description: 'Resiable',
+        default : false
+      },
+      disabled : {
+        type: Boolean,
+        description: 'Disabled',
         default : false
       }
     },

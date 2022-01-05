@@ -28,6 +28,7 @@
   import globalDirectives from '@/@common/argon/plugins/globalDirectives';
   Vue.use(globalDirectives);
 
+  Vue.component('MyModalBox', () => import('./@common/custom/components/MyModalBox.vue'));
   Vue.component('MySource', () => import('./@common/custom/components/MySource.vue'));
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
   Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));

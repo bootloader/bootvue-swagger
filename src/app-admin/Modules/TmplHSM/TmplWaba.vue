@@ -33,12 +33,16 @@
             </template>
             <template #cell(row_actions)="{item}">
                 <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"
-                    class="text-sm float-left" style="max-width:100px"
-                />&nbsp;
-                <b-button size="sm" @click="toHSM(item)"
-                        v-tooltip="'Clone to HSM templates'" variant="outline-primary">
+                    class="text-sm float-left mx-1" style="max-width:100px"
+                />
+                <b-button size="sm" @click="toHSM(item)" class="mx-1"
+                        v-tooltip="'Clone to HSM template'" variant="outline-primary">
                         <span class="fa fa-cloud-download-alt" title="Submit"/>
-                </b-button>   
+                </b-button>  
+                <b-button size="sm" @click="deleteItem(item)" class="mx-1"
+                        v-tooltip="'Delete template'" variant="outline-danger">
+                        <span class="fa fa-trash-alt" title="Submit"/>
+                </b-button> 
             </template>
             <template #cell(template_code)="{item}">
                 <b-button variant="link" :to="{
@@ -599,6 +603,10 @@
                     this.newItem.hsm = null;
                 }
             },
+            async deleteItem(item) {
+                await this.$service.delete(this.table.api, item);
+                this.$refs.templatesView.apply();
+            }, 
             async createItem () {
                 let success = await this.$refs.form.validate();
                 if(success === true){

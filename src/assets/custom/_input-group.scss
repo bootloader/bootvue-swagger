@@ -80,6 +80,12 @@
     }
   }
 
+  .basic-component.bc-layout-default{
+    .input-group > .complete-box {
+      flex: 1 1 auto;
+    }
+  }
+
 
 
   //////// FLUSHED LAYOUT /// START
@@ -93,6 +99,9 @@
         }
       }
 
+      .input-group > .complete-box {
+        width: 100%;
+      }
 
       .layout-flushed {
         padding: 0px;

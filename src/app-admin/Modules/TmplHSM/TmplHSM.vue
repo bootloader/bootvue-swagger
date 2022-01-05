@@ -259,21 +259,28 @@
 
                             </ValidationObserver>
 
-                            <div class="text-center form-group">
-                              <router-link  @click="cancelItem"  tag="button"  :to="'/app/admins/tmpl/pushtemplate/view/all'"
-                                class="btn btn-warning">Cancel</router-link >
-          &nbsp;
+                      <template #footer>
+                            <div class="text-center">
+                              <router-link  @click="cancelItem"  
+                                tag="button"  :to="'/app/admins/tmpl/pushtemplate/view/all'"
+                                class="btn btn-warning mx-2">Cancel</router-link >
                               <button v-if="newItem.id"  @click="createItem" :disabled="!isChanged" 
-                                class="btn btn-primary">Update</button>
-          &nbsp;
+                                class="btn btn-primary mx-2">Update</button>
+                                      &nbsp;
                               <button v-if="!newItem.id"  @click="createItem" :disabled="!isChanged" 
-                                class="btn btn-primary">Create</button>
+                                class="btn btn-primary mx-2">Create</button>
                             </div>
+                      </template>
 
                   </b-card>
 
              </template>  
         </master-view>
+
+        <MyModalBox v-if="mode=='edit' && newItem" size="md" autostart>
+         <i class="fa fa-exclamation-circle text-warning"/> HSM template is comprehensive template, final output may differ for each channel. 
+         For example : WhatsApp has a limitation of maximum 3 buttons in single message, so when you submit for WhatsApp approval you will be prompted to modify the template accordingly. 
+        </MyModalBox>  
 
         <b-modal :id="modalEditButton.name" size="md"
             :title="'Edit Button Details'">
@@ -579,6 +586,10 @@
                 break;
               case "CANCEL" :
                 this.mode = "view";
+                this.$router.push({
+                  name : "pushtemplate",
+                  params : { mode : "view", itemId : "all" }
+                })
                 //this.$bvModal.hide(this.modelName)
                 break;
               default:
