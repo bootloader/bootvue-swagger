@@ -253,7 +253,15 @@ const actions = {
     dispatch("SendChatPost",response.data.results[0]);
     return response.data;
   },
-
+  async SendFile({ commit,dispatch }, msg){
+    dispatch("SendChatPre",msg.message);
+    let bodyFormData = new FormData();
+    bodyFormData.append("message",JSON.stringify(msg.message));
+    bodyFormData.append("file",msg.file, msg.fileName);
+    let response = await axios.post("/api/sessions/message/upload",bodyFormData);
+    dispatch("ReadChatMessage",response.results[0]);                  
+    return response.data;
+  },
   async UpdateChatMessageStatus({ commit,dispatch },msgStatus) {
     for(var c in state.chats){
       var chat = state.chats[c];

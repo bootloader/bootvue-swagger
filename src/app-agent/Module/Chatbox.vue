@@ -274,7 +274,24 @@
                         </div>
                     </div>
                 </div>
+                <div v-show="is_RECORD_AUDIO" class="card-body upload_card_body">
+                    <av-media class="av-media" type="frequ" :media="media" line-color="white"
+                        frequ-direction="mo"
+                    :frequ-lnum="60"/>
+                    <div class="button-wrapper">
 
+                        <b-button 
+                            class="btn-sm text-white:hover" variant="outline-white-dirty" pill
+                            @click="onCancelRecording"> 
+                            Cancel
+                        </b-button>
+                        <b-button 
+                            class="btn-sm text-white:hover" variant="outline-white-dirty" pill
+                            @click="onSendRecording"> 
+                            Stop and Send
+                        </b-button>
+                    </div>
+                </div>
                 <div v-show="is_UPLOAD_MEDIA" class="card-body upload_card_body" >
                     <div class="card-body-title">Upload Preview <span class="fa fa-close align-right" @click="cancelUpload"/></div>
                     <div  class="upload_card_body-bubbles">
@@ -332,7 +349,10 @@
                                     class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
                                     <span 
                                     @click="openFileUpload" v-tooltip="'Select File to upload'"
-                                    class="input-group-text attach_btn input-group-text-right"><i class="fa fa-paperclip"></i></span>
+                                    class="input-group-text attach_btn"><i class="fa fa-paperclip"></i></span>
+                                    <span 
+                                    @click="openAudioRecord" v-tooltip="'Send Voice Message'"
+                                    class="input-group-text attach_btn input-group-text-right"><i class="fa fa-microphone"></i></span>
                                 </div>
                         </div>
                         <!-- If chat is NOT Actionable -->
@@ -391,7 +411,7 @@
 </template>
 
 <script>
-
+    import Vue from 'vue';
     import { MyFlags,MyDict,MyConst,MyFunc } from './../../services/global';
     import formatters from './../../services/formatters';
     import Loading from 'vue-loading-overlay';
@@ -414,7 +434,11 @@
     import { TextareaEditor } from "@textcomplete/textarea";
 
     import ChatMessages from "./ChatMessages";
-    
+
+    import getUserMedia from "get-user-media-promise";
+    import AudioVisual from 'vue-audio-visual'
+    Vue.use(AudioVisual);
+
     var sampleJson = {
         contact : {
           name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
@@ -426,7 +450,8 @@
         components: {
             Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,
             ChatMessages,
-            ForEachOption
+            ForEachOption,
+            getUserMedia
         },
         computed : {
             chatLocal: function () {
@@ -468,6 +493,9 @@
             },
             is_UPLOAD_MEDIA : function () {
                 return this.winMode == "UPLOAD_MEDIA"
+            },
+            is_RECORD_AUDIO : function () {
+                return this.winMode == "RECORD_AUDIO"
             },
             is_SEND_NEW : function () {
                 return (this.activeChat?.contact?.sessionId == this.$route.params.sessionId)
@@ -570,8 +598,9 @@
                 return '' + value + ''
               },
             }],
-            selectedStatus : null
-
+            selectedStatus : null,
+            media: null,
+            mediaRecorder : null
         }),
         created () {
             // fetch the data when the view is created and the data is
@@ -1084,6 +1113,54 @@
                 this.$refs.myVueDropzone.$el.click();
                 this.winMode = "UPLOAD_MEDIA";
             },
+
+            openAudioRecord : function () {
+                this.winMode = "RECORD_AUDIO";
+                let chunks = [];
+                let _THAT = this;
+                getUserMedia({ audio: true })
+                    .then(function(stream) {
+                        _THAT.media = stream;
+                        const mime = "audio/webm;codecs=opus"
+                        _THAT.mediaRecorder = new MediaRecorder(_THAT.media, {mimeType: mime});
+                        _THAT.mediaRecorder.start();
+                        _THAT.mediaRecorder.onstop = function(e) {
+                            if(_THAT.uploadRecording){
+                                let blob = new Blob(chunks, { 'type' : "audio/mpeg" });
+                                _THAT.media.getTracks().forEach(track => track.stop());
+                                chunks= [];
+                                _THAT.mediaRecorder = null;
+                                let reqObj = {
+                                    message:_THAT.prepareMessage(null, null,null,true),
+                                    file: blob,
+                                    fileName:"Recording.mp3"
+                                }
+                                _THAT.$store.dispatch("SendFile",reqObj);                  
+                                _THAT.winMode="CHAT_BOX";
+                            } else {
+                                _THAT.media.getTracks().forEach(track => track.stop());
+                                chunks= [];
+                                _THAT.mediaRecorder = null;
+                                _THAT.winMode="CHAT_BOX";
+                            }
+                    
+                        }
+                        _THAT.mediaRecorder.ondataavailable = function(e) {
+                            chunks.push(e.data);
+                        }
+
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            },
+            onSendRecording(){
+                this.uploadRecording = true;
+                this.mediaRecorder.stop();
+            },
+            onCancelRecording(){
+                this.uploadRecording = false;
+                this.mediaRecorder.stop(false);
+            },
             //DZ options
             async fileAdded(argument) {
                  //this.dz.file_dropped = true;
@@ -1121,6 +1198,30 @@
 
 </script>
 <style type="text/css" scoped>
+
+    .av-media{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - 100px);
+    }
+
+    .button-wrapper{
+        display: flex;
+        height: 100px;
+        justify-content: center;
+        align-content: space-between;
+    }
+    .button-wrapper .btn-sm{
+        width: 40%;
+        margin: 0 10px;
+        height: 50px;
+        box-shadow: 0 1.5px 1.5px #00000052;
+        background-color: #fff;
+        color: #000;
+        font-size: 18px;
+        max-width: 200px;
+    }
     .msg_card_body-bubbles-header {
     }
     .msg_card_body-bubbles-lane {
@@ -1355,7 +1456,10 @@
     }
 </style>
 <style type="text/css">
-
+    .av-media canvas{
+        max-height: 200px;
+        height: 100%;
+    }
   .user_info .user_assignment .vs__selected {
     font-size: 13px !important;
     color: rgb(255 255 255);
