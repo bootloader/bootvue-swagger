@@ -1120,7 +1120,7 @@
                 let _THAT = this;
                 getUserMedia({ audio: true })
                     .then(function(stream) {
-                        this.winMode = "RECORD_AUDIO";
+                        _THAT.winMode = "RECORD_AUDIO";
                         _THAT.media = stream;
                         const mime = "audio/webm;codecs=opus"
                         _THAT.mediaRecorder = new MediaRecorder(_THAT.media, {mimeType: mime});
@@ -1151,7 +1151,7 @@
                         }
 
                 }).catch(function(error) {
-                    console.log(error);
+                    Vue.$toast.error("Please enable Microphone");
                 });
             },
             onSendRecording(){
