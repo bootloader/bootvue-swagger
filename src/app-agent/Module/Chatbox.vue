@@ -1114,6 +1114,7 @@
                 this.winMode = "UPLOAD_MEDIA";
             },
 
+
             openAudioRecord : function () {
                 let chunks = [];
                 let _THAT = this;
