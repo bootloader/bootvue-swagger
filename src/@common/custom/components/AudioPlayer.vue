@@ -125,11 +125,9 @@ export default {
 	},
 	filters: {
 		convertTimeHHMMSS(val) {
-            console.log("=====val====",val);
+            val = val || 0;
 			let hhmmss = new Date(val * 1000).toISOString().substr(11, 8);
-
 			return hhmmss.indexOf("00:") === 0 ? hhmmss.substr(3) : hhmmss;
-            
 		}
 	},
 	watch: {
@@ -146,11 +144,15 @@ export default {
 			this.stop();
 			window.open(this.file, 'download');
 		},
-		load() {
+		async load() {
 			if (this.$refs.audio.readyState >= 2) {
 				this.loaded = true;
-				this.durationSeconds = parseInt(this.$refs.audio.duration);
-
+                while(this.$refs.audio.duration === Infinity) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    this.$refs.audio.currentTime = 10000000*Math.random();
+                }
+                this.durationSeconds = parseInt(this.$refs.audio.duration);
+                this.$refs.audio.currentTime = 0;
 				return this.playing = this.autoPlay;
 			}
 
