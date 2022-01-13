@@ -1889,6 +1889,13 @@
   dependencies:
     "follow-redirects" "^1.14.0"
 
+"axios@^0.24.0":
+  "integrity" "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA=="
+  "resolved" "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz"
+  "version" "0.24.0"
+  dependencies:
+    "follow-redirects" "^1.14.4"
+
 "babel-code-frame@^6.22.0", "babel-code-frame@^6.26.0":
   "integrity" "sha1-Y/1D99weO7fONZR9uP42mj9Yx0s="
   "resolved" "https://registry.npmjs.org/babel-code-frame/-/babel-code-frame-6.26.0.tgz"
@@ -3017,6 +3024,11 @@
   "integrity" "sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ=="
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   "version" "2.6.12"
+
+"core-js@^3.7.0":
+  "integrity" "sha512-nuqhq11DcOAbFBV4zCbKeGbKQsUDRqTX0oqx7AttUBuqe3h20ixsE039QHelbL6P4h+9kytVqyEtyZ6gsiwEYw=="
+  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.20.2.tgz"
+  "version" "3.20.2"
 
 "core-util-is@~1.0.0":
   "integrity" "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
@@ -4557,7 +4569,7 @@
     "inherits" "^2.0.3"
     "readable-stream" "^2.3.6"
 
-"follow-redirects@^1.0.0", "follow-redirects@^1.14.0":
+"follow-redirects@^1.0.0", "follow-redirects@^1.14.0", "follow-redirects@^1.14.4":
   "integrity" "sha512-wtphSXy7d4/OR+MvIFbCVBDzZ5520qV8XfPklSN5QtxuMUJZ+b0Wnst1e1lCDocfzuCkHqj8k0FpZqO+UIaKNA=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.5.tgz"
   "version" "1.14.5"
@@ -4752,6 +4764,11 @@
   dependencies:
     "call-bind" "^1.0.2"
     "get-intrinsic" "^1.1.1"
+
+"get-user-media-promise@^1.1.4":
+  "integrity" "sha512-k49YuV2z0d3gKHLPTFKYfzEA9kduuQk7YBf8ev2dxrKk+DhMyuzfQnK9ZSxkEhE/jv3BZY62M0eICWa7lak9nw=="
+  "resolved" "https://registry.npmjs.org/get-user-media-promise/-/get-user-media-promise-1.1.4.tgz"
+  "version" "1.1.4"
 
 "get-value@^2.0.3", "get-value@^2.0.6":
   "integrity" "sha1-3BXKHGcjh8p2vTesCjlbogQqLCg="
@@ -10453,6 +10470,15 @@
   "resolved" "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
   "version" "1.1.2"
 
+"vue-audio-visual@^2.4.0":
+  "integrity" "sha512-I4rUzJ/g3Np4LvAJ0Sjj2EFRV/uNzpbmM/NA7EjbWd3NwLj8+7sBBeGeFOYljx3FVhSEt3dKIFvtSPFjhQk0lw=="
+  "resolved" "https://registry.npmjs.org/vue-audio-visual/-/vue-audio-visual-2.4.0.tgz"
+  "version" "2.4.0"
+  dependencies:
+    "axios" "^0.24.0"
+    "core-js" "^3.7.0"
+    "vue" "^2.6.12"
+
 "vue-beautiful-chat@^2.5.0":
   "integrity" "sha512-P/XnjgvqD7bdss9wL+88ukaXVhRAYAgNg990G1U3K3sIy7ijkvvuzP2qnLge8Ce01iqRT61OY/f25gjFIOU22g=="
   "resolved" "https://registry.npmjs.org/vue-beautiful-chat/-/vue-beautiful-chat-2.5.0.tgz"
@@ -10653,7 +10679,7 @@
   "resolved" "https://registry.npmjs.org/vue-visibility-change/-/vue-visibility-change-1.2.1.tgz"
   "version" "1.2.1"
 
-"vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@^2.6.11", "vue@>=1.x.x", "vue@~2", "vue@2.x":
+"vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.18", "vue@^2.5.21", "vue@^2.6.0", "vue@^2.6.10", "vue@^2.6.11", "vue@^2.6.12", "vue@>=1.x.x", "vue@~2", "vue@2.x":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

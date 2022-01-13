@@ -110,6 +110,14 @@
 import IndexDropdown from "./IndexDropdown.vue";
 import LoginDropdown from "./LoginDropdown.vue";
 
+import jslocator from "@/services/jslocator";
+
+jslocator.config({
+  ipgeolocation : {
+    apiKey : 'bbeeffef0d324caeac1fe3efa8565f10'
+  }
+});
+
 export default {
   props : {
     position : {
@@ -136,12 +144,21 @@ export default {
   data() {
     return {
       navbarOpen: false,
+      country : null,
     };
   },
   methods: {
     setNavbarOpen: function () {
       this.navbarOpen = !this.navbarOpen;
     },
+    async updateCountry(){
+      let loc = await jslocator.get();
+      console.log("updateCountry",loc)
+      this.country = loc.country_name;
+    }
+  },
+  mounted(){
+    this.updateCountry();
   },
   components: {
     IndexDropdown,LoginDropdown
