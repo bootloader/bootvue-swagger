@@ -1,5 +1,16 @@
 const axios = require('axios')
 
+
+/**
+ * Buy plans
+ * 
+ * https://ipgeolocation.io/pricing.html
+ * https://www.abstractapi.com/ip-geolocation-api#pricing
+ * https://ip-api.com/docs/api:json
+ * https://ipapi.com/product
+ * 
+ * 
+ */
 var jslocator = {
     location: {
         isUpdated : false,
@@ -36,7 +47,7 @@ var jslocator = {
             dst_savings: 0,
         },
     },
-    options: null,
+    options: {},
     request: null,
     async fetch() {
         if (this.options.ipgeolocation && this.options.ipgeolocation.apiKey) {
@@ -51,10 +62,24 @@ var jslocator = {
             } catch (e) {
                 console.log(e)
             }
+        } else {
+            this.request = fetch(
+                'https://ip2c.org/self'
+            );
+            let response = await this.request;
+            let text = await response.text();
+            let d = text.split(";");
+            this.location = { isUpdated : true};
+            this.location.country_code2 = d[1];
+            this.location.country_code3 = d[2];
+            this.location.country_name= d[3];
+            this.location.isUpdated = false;
+            return this.location;
         }
+        return this.location;
     },
     async config(options) {
-        this.options = options
+        this.options.ipgeolocation = options.ipgeolocation
         return await this.fetch()
     },
     async get() {

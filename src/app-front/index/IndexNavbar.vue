@@ -112,11 +112,11 @@ import LoginDropdown from "./LoginDropdown.vue";
 
 import jslocator from "@/services/jslocator";
 
-jslocator.config({
-  ipgeolocation : {
-    apiKey : 'bbeeffef0d324caeac1fe3efa8565f10'
-  }
-});
+// jslocator.config({
+//   ipgeolocation : {
+//     apiKey : 'bbeeffef0d324caeac1fe3efa8565f10'
+//   }
+// });
 
 export default {
   props : {
