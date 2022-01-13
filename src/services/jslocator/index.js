@@ -4,6 +4,7 @@ const axios = require('axios')
 /**
  * Buy plans
  * 
+ * https://about.ip2c.org/#inputs  - free
  * https://ipgeolocation.io/pricing.html
  * https://www.abstractapi.com/ip-geolocation-api#pricing
  * https://ip-api.com/docs/api:json
