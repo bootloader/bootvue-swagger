@@ -42,47 +42,9 @@
 <div v-if="!activeChat" class="msg_card_body-logo">
     <span class=""></span>
 </div>
-<div v-else-if="activeChat" v-for="m in activeChat.messages">
-    
-    <div v-if="m.type == 'I' || m.type == 'Ii'" 
-        class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
-        <div class="msg_cotainer">
-            <span>{{m.text | striphtml | newlines}}</span>
-        </div>
-        <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
-    </div>
-
-    <div v-else-if="m.type=='O' || m.type=='Oi'" 
-          class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">
-       <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
-        <div class="msg_cotainer_send">
-            <span>{{m.text | striphtml | newlines}}</span>
-            <div v-if="m.attachments"> <span class="fa fa-paperclip"></span>&nbsp;{{m.template}} 
-                <div class="input-group my-attachments" style="max-width: 200px;">
-                    <img v-for="atch in m.attachments" :src="atch.mediaURL | thumburl" class="" style="max-width: 200px;">
-                </div>
-            </div>
-            <div v-else-if="m.template" class="my-msg-template-tag">
-                <span class="fa fa-tag"></span>&nbsp;{{m.template}}
-            </div>
-            <i v-if="m.logs" class="log_icon fa fa-exclamation-triangle float-right" v-tooltip="m.logs+''"></i>
-            <span class="msg_time_send">{{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span></span>
-        </div>
-    </div>
-
-    <div v-else-if="m.type=='A' || m.type=='L'" 
-        class="d-flex justify-content-center chat-bubble chat-bubble-note" data-local-id="m.localId" :data-message-id="m.messageId">
-        <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin" >&nbsp;</i>
-        <div class="msg_cotainer_action">
-            {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name ||'---'}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
-
-            <i v-if="m.logs" v-for="log in m.logs" class="prepend-comma">
-                &nbsp;{{log | log_option(m.action)| striphtml | newlines}}</i>
-
-        </div>
-    </div>    
-
-</div>
+    <ChatMessages v-else
+        :activeChat="activeChat"
+    />
                     </div>
 
                 </div>
@@ -110,12 +72,13 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
     import mustache from 'mustache';
-    import SlideUpDown from 'vue-slide-up-down'
+    import SlideUpDown from 'vue-slide-up-down';
+    import ChatMessages from "@/app-agent/Module/ChatMessages";
 
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
-            Loading: Loading,SlideUpDown
+            Loading: Loading,SlideUpDown,ChatMessages
         },
         props: {
             session: Object,

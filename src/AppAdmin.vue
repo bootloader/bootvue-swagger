@@ -5,6 +5,7 @@
             <router-view></router-view>
         </transition>
     </component>
+    <MyTheme/>
   </div>
 </template>
 
@@ -38,11 +39,29 @@
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
 
-  const default_layout = "default";
 
+  import 'viewerjs/dist/viewer.css'
+  import Viewer from 'v-viewer'
+  Vue.use(Viewer)
+
+  const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
+  const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
+  import VueLazyload from 'vue-lazyload'
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: errorimage,
+    loading: loadimage,
+    attempt: 1,
+    throttleWait : 1000
+  })
+
+  import MyTheme from '@/@common/custom/layout/MyTheme';
+
+  const default_layout = "default";
   console.log("ADMIN APP IS LOADED")
   export default {
     name:"AppAdmin",
+    components : {MyTheme},
     computed: {
       layout() {
         return 'admin-' +(this.$route.meta.layout || default_layout) + '-layout';
