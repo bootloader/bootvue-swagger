@@ -109,9 +109,6 @@
                 if ( color[0] == '#' ) {
                         color= color.substr(1);
                 }
-
-                console.log("color",color);
-
                 var r,g,b;
                 if ( color.length == 6 ) {
                     [ r, g, b ] = [ `${color[0]}${color[1]}`, `${color[2]}${color[3]}`, `${color[4]}${color[5]}` ];

@@ -61,7 +61,7 @@
   console.log("ADMIN APP IS LOADED")
   export default {
     name:"AppAdmin",
-    components : {MyTheme},
+    components : { MyTheme },
     computed: {
       layout() {
         return 'admin-' +(this.$route.meta.layout || default_layout) + '-layout';
