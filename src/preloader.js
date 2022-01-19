@@ -16,4 +16,6 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname)){
 	window.CONST.APP = "dev";
 } else if(pathname.indexOf("/content") == 0){
 	window.CONST.APP = "content";
+} else if(pathname.indexOf("/front") == 0){
+	window.CONST.APP = "front";
 }
