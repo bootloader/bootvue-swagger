@@ -102,6 +102,13 @@ module.exports = {
         title: 'Index Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'index']
       },
+      'content' : {
+        entry: './src/main.js',
+        template: 'public/app-content.html',
+        filename: 'app-content.html',
+        title: 'Content Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'content']
+      },
     },
 
 

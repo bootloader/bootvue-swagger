@@ -95,7 +95,12 @@ import AppWrapper from './AppWrapper';
 	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
-	}
+	},
+    "content" : { //Partner App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-content/AppContent.vue')
+	},
 },window.CONST.APP);
 
 
