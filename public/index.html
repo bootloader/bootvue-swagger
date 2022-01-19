@@ -23,19 +23,21 @@
       // Single Page Apps for GitHub Pages
       // CREDITS: https://github.com/rafgraph/spa-github-pages
       // See also 404.html
-      ((l) => {
+      CONST = ((l) => {
         if (l.search[1] !== '/' ) {
           return
         }
+        const decoded = l.search.slice(1).split('&');
+        let CONST = JSON.parse(decodeURIComponent(decoded[1].split("=")[1]));
+        let search = [decoded[0],decoded[2].replace(/~and~/g, '&')].join("?");
 
-        const decoded = l.search.slice(1).split('&').
-          map((s) => s.replace(/~and~/g, '&')).
-          join('?');
-
+        let dest = l.pathname.slice(0, -1) + search + l.hash;
+        console.log("dest",dest,CONST)
         window.history.replaceState(
-          null, null,
-          l.pathname.slice(0, -1) + decoded + l.hash
+           null, null,
+           dest
         );
+        return CONST;
       })(window.location)
     </script>
     <div id="app"></div>
