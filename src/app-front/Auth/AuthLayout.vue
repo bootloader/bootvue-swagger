@@ -24,12 +24,12 @@ import FooterSmall from "./FooterSmall.vue";
 
 import socialBgBottomRight from "@/assets/vendor/notus/img/social-bg-bottom-right.png";
 import socialBgBottom from "@/assets/vendor/notus/img/social-bg-bottom.png";
-import socialBgToCenter from "@/assets/vendor/notus/img/social-bg-to-center.png";
+//import socialBgToCenter from "@/assets/vendor/notus/img/social-bg-to-center.png";
 
 export default {
   data() {
     return {
-      bgCoverDesktop : [socialBgToCenter,socialBgBottomRight][Math.round(Math.random()*1)],
+      bgCoverDesktop : socialBgBottomRight, //[socialBgToCenter,socialBgBottomRight][Math.round(Math.random()*1)],
       bgCoverMobile : socialBgBottom
     };
   },

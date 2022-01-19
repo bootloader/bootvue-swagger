@@ -65,7 +65,8 @@ export default {
     },
     computed : {
         isStrip : function (params) {
-            return this.strips ? true : (Math.round(Math.random()*1) == 0)
+            //return this.strips ? true : (Math.round(Math.random()*1) == 0)
+            return true;
         }
     }
 
