@@ -31,8 +31,12 @@
             &nbsp;{{row.item.lane}}
           </template>
        
-          <template #cell(disabled)="row">
-            {{row.item.disabled|display('true:Yes;false:No')}}
+          <template #cell(status)="row">
+            <my-status :value="!row.item.disabled" icon="fa fa-wave-square" v-tooltip="'Connected'" />
+            <my-status 
+                  v-if="row.item.sandbox"
+                  :value="row.item.sandbox" icon="fa fa-box-open" v-tooltip="'Sandbox'" 
+                    class="ml-1"/>
           </template>
 
           <template #cell(actions)="row">
@@ -128,6 +132,7 @@
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
+import MyStatus from '../../../@common/custom/components/MyStatus.vue';
 
     function newItem(channelType) {
       return {
@@ -138,7 +143,8 @@
     }
     export default {
         components: {
-            MasterView,XSimpleForm
+            MasterView,XSimpleForm,
+                MyStatus
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -147,7 +153,7 @@
               fields: [ 
                 { key : 'details', label : "Channel" },
                 { key : 'name', label : "Desc" },
-                { key : 'disabled', label : "Disabled" },
+                { key : 'status', label : "Status" },
                 { key : 'actions', label : "Action" }],
               items : [],
               perPage: 25,

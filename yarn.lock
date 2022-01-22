@@ -3050,6 +3050,11 @@
     "js-yaml" "^3.13.1"
     "parse-json" "^4.0.0"
 
+"country-to-currency@^1.0.3":
+  "integrity" "sha512-fAEsYetCDNi64HLzGu/vkuJc7LCMPbkU4vhs/WDOOF6xzFS7EqDZx3jlmT97/EWNSWgDkAmoBHzY+QK3/KoDRQ=="
+  "resolved" "https://registry.npmjs.org/country-to-currency/-/country-to-currency-1.0.3.tgz"
+  "version" "1.0.3"
+
 "create-ecdh@^4.0.0":
   "integrity" "sha512-mf+TCx8wWc9VpuxfP2ht0iSISLZnt0JgWlrOKZiNqyUZWnjIaCIVNQArMHnCZKfEYRg6IM7A+NeJoN8gf/Ws0A=="
   "resolved" "https://registry.npmjs.org/create-ecdh/-/create-ecdh-4.0.4.tgz"
