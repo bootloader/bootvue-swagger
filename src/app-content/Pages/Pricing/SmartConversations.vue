@@ -445,7 +445,7 @@
         box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
         margin: 0 auto;
         background: #fff;
-        font-family: 'Montserrat';
+        
         width: 100%;
     }
     .price-table {
@@ -497,7 +497,7 @@
     .price-table tr.price-table-head td {
         font-size: 16px;
         font-weight: 600;
-        font-family: 'Montserrat';
+        
         text-transform: uppercase;
     }
     .price-table tr td.header{
@@ -514,7 +514,7 @@
         padding: 16px 24px;
         font-size: 40px;
         font-weight: 600;
-        font-family: 'Montserrat';
+        
         white-space: nowrap;
     }
     .price-table td.price a {
@@ -524,7 +524,7 @@
         margin-top: 16px;
         font-size: 12px;
         font-weight: 600;
-        font-family: 'Montserrat';
+        
         text-transform: uppercase;
         display: inline-block;
         border-radius: 64px;
@@ -532,7 +532,7 @@
         white-space: nowrap;
     }
     .price-table td.price-table-popular {
-        font-family: 'Montserrat';
+        
         border-top: 3px solid #5336ca;
         color: #5336ca;
         text-transform: uppercase;
