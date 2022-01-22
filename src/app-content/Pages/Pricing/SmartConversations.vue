@@ -17,7 +17,7 @@
                             v-bind:class="[
                                 labelID == 'planName' ? 'price-table-head' : '',
                             ]">
-                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1">{{ row.label }}</td>
+                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"></i></td>
                                 <td v-if="['header'].indexOf(row.type) != -1" :colspan="planData.length+1" :class="row.type">{{ row.label }}</td>
                                 <td v-for="item in planData"  v-if="row.type =='price'" :class="labelID">
                                     <span v-if="item[labelID] != 'NA'">{{
@@ -125,9 +125,8 @@
                     planName: {label:'',type:'text',hintText:''},
                     channel: {label:'',type:'text',hintText:''},
                     price: {label:'Mehery License Fees (per month)',type:'price',hintText:''},
-                    sessionTemplateFees: {label:'Mehery Session / Template Fees',type:'text',hintText:''} ,
                     perWASessionTemplate: {label:'Per WA Session / Template *',type:'text',hintText:''} ,
-                    nonWaMessageFee: {label:'Per message charges for non-WA channels',type:'price',hintText:''} ,
+                    nonWaMessageFee: {label:'Per Non-WA message Fee',type:'price',hintText:''} ,
                     features: {label:'Features',type:'header',hintText:''},
                     agents: {label:'Agent',type:'text',hintText:''},
                     agentDashboard: {label:'Agent Dashboard',type:'boolean',hintText:''},
@@ -145,9 +144,9 @@
                     nlpMachineLearning: {label:'NLP and Machine Learning',type:'boolean',hintText:''},
                     addOn: {label:'Add Ons',type:'header',hintText:''} ,
                     eachAdditionalAgent: {label:'Per Additional Agent, per month',type:'price',hintText:''},
-                    apiSetup: {label:'CRM, Call Centers - Set-Up Fee',type:'price',hintText:''},
-                    perWhatsappNum: {label:'Per Additional WhatsApp number',type:'price',hintText:''},
-                    setupFee: {label:'Set-up Fees',type:'price',hintText:''},
+                    apiSetup: {label:'CRM, Call Centers - Set-Up Fee',type:'price',hintText:'We will integrate with any Call Center or CRM Solution of your choice.'},
+                    perWhatsappNum: {label:'Per Additional WhatsApp number',type:'price',hintText:'Within the same FB Business Manager ID'},
+                    setupFee: {label:'Set-up Fees',type:'price',hintText:'Only if Mehery Support is required'},
                     support:  {label:'Support',type:'header',hintText:''},
                     emailWhatsAppSupport: {label: 'Email & WhatsApp Support', type:'boolean', hintText:''},
                 },
@@ -501,6 +500,11 @@
         font-family: 'Montserrat';
         text-transform: uppercase;
     }
+    .price-table tr td.header{
+        background: #e7e7f1;
+        font-size: 18px;
+        font-weight: bold;
+    }
     .price-table tr.price-table-head {
         background-color: #5336ca;
         color: #ffffff;
@@ -548,6 +552,7 @@
     .container {
         z-index: 1;
         position: relative;
-        padding: 100px 0 50px 0;
+        padding: 50px 0 50px 0;
     }
+    
 </style>

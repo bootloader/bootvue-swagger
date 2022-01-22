@@ -3,7 +3,7 @@ import AppRouter from './../services/router'
 console.log('Partner ROUTER')
 export default AppRouter.route({
     app: 'content',
-    base: '/content',
+    base: '/',
     linkActiveClass: 'active',
     scrollBehavior: (to, from, savedPosition) => {
         if (savedPosition) {
@@ -23,36 +23,35 @@ export default AppRouter.route({
         {
             path: '/pricing',
             name: 'pricing',
-            redirect: '/pricing/smart-conversations',
-            component: () => import('./Pages/PagesLayout.vue'),
-            children: [
-                {
-                    path: '/pricing/smart-conversations',
-                    name: 'smart-conversations',
-                    component: () =>
-                        import(
-                            /* webpackChunkName: "smart-conversations" */ './Pages/Pricing/SmartConversations.vue'
-                        ),
-                    meta: {
-                        role: ['GUEST'],
-                    },
-                },
-                {
-                    path: '/pricing/api',
-                    name: 'api',
-                    component: () =>
-                        import(
-                            /* webpackChunkName: "api" */ './Pages/Pricing/Api.vue'
-                        ),
-                    meta: {
-                        role: ['GUEST'],
-                    },
-                },
-                {
-                    path: '*',
-                    component: () => import('./Pages/NotFoundPage.vue'),
-                },
-            ],
+            component: () => import('./Pages/Index/Index.vue'),
+            // children: [
+            //     {
+            //         path: '/pricing/smart-conversations',
+            //         name: 'smart-conversations',
+            //         component: () =>
+            //             import(
+            //                 /* webpackChunkName: "smart-conversations" */ './Pages/Pricing/SmartConversations.vue'
+            //             ),
+            //         meta: {
+            //             role: ['GUEST'],
+            //         },
+            //     },
+            //     {
+            //         path: '/pricing/api',
+            //         name: 'api',
+            //         component: () =>
+            //             import(
+            //                 /* webpackChunkName: "api" */ './Pages/Pricing/Api.vue'
+            //             ),
+            //         meta: {
+            //             role: ['GUEST'],
+            //         },
+            //     },
+            //     {
+            //         path: '*',
+            //         component: () => import('./Pages/NotFoundPage.vue'),
+            //     },
+            // ],
         },
     ],
     //   beforeEach : function (to, from, next) {
