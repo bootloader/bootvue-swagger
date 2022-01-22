@@ -19,3 +19,4 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname)){
 } else if(pathname.indexOf("/front") == 0){
 	window.CONST.APP = "front";
 }
+console.log("preloader",window.CONST)

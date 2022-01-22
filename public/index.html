@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <base href="/" target="_blank">
     <title>Dev App</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
 
@@ -23,22 +24,23 @@
       // Single Page Apps for GitHub Pages
       // CREDITS: https://github.com/rafgraph/spa-github-pages
       // See also 404.html
-      window.CONST = ((l) => {
+      window.CONST = Object.assign(window.CONST || {},((l) => {
+        console.log("search",l.search)
         if (l.search[1] !== '/' ) {
           return
         }
         const decoded = l.search.slice(1).split('&');
         let CONST = JSON.parse(decodeURIComponent(decoded[1].split("=")[1]));
-        let search = [decoded[0],decoded[2].replace(/~and~/g, '&')].join("?");
+        let search = decoded[0] + (decoded[2] ? ("?" + decoded[2].replace(/~and~/g, '&')) : "");
 
         let dest = l.pathname.slice(0, -1) + search + l.hash;
         console.log("dest",dest,CONST)
-        window.history.replaceState(
-           null, null,
-           dest
-        );
+          window.history.replaceState(
+            null, null,
+            dest
+          );
         return CONST;
-      })(window.location)
+      })(window.location))
     </script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
