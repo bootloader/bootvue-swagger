@@ -116,6 +116,8 @@
         data() {
             return {
                 text: {},
+                supportedCur:["INR","USD","EUR","IDR","GPB","NZD","AUD"],
+                defaultCur:"USD",
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
                     channel: {label:'',type:'text',hintText:''},
@@ -123,7 +125,7 @@
                     perWASessionTemplate: {label:'Per WA Session / Template *',type:'text',hintText:''} ,
                     nonWaMessageFee: {label:'Per Non-WA message Fee',type:'price',hintText:''} ,
                     features: {label:'Features',type:'header',hintText:''},
-                    agents: {label:'Agent',type:'text',hintText:''},
+                    agents: {label:'Agent',type:"boolean",hintText:''},
                     agentDashboard: {label:'Agent Dashboard',type:'boolean',hintText:''},
                     templateCreationWABA: {label:'Template Creation - WABA',type:'boolean',hintText:''},
                     marketingBroadcasts: {label:'Marketing Broadcasts',type:'boolean',hintText:''} ,
@@ -135,7 +137,7 @@
                     aPIsAndWebhooks: {label:'APIs and Webhooks',type:'boolean',hintText:''} ,
                     eCommercePluginForWA: {label:'eCommerce Plugin for WA',type:'boolean',hintText:''},
                     meheryBranding: {label:'Mehery Branding',type:'boolean',hintText:''},
-                    botWorkflows: {label:'BOT workflows',type:'boolean',hintText:''},
+                    botWorkflows: {label:'BOT workflows',type:'text',hintText:''},
                     nlpMachineLearning: {label:'NLP and Machine Learning',type:'boolean',hintText:''},
                     addOn: {label:'Add Ons',type:'header',hintText:''} ,
                     eachAdditionalAgent: {label:'Per Additional Agent, per month',type:'price',hintText:''},
@@ -173,7 +175,7 @@
                         aPIsAndWebhooks: true,
                         eCommercePluginForWA: false,
                         meheryBranding: false,
-                        botWorkflows: 'BASIC',
+                        botWorkflows: 'Basic',
                         nlpMachineLearning: false,
                         eachAdditionalAgent: {
                             INR: '₹2,000',
@@ -289,7 +291,8 @@
         mounted: function () {
             jslocator.get().then((resp) => {
                 let country = resp.country_code2
-                this.currency = countryToCurrency[country]
+                this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
+                                countryToCurrency[country] : this.defaultCur;
                 console.log('this.currency', this.currency)
             })
         },

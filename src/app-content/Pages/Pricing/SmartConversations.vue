@@ -117,9 +117,8 @@
     export default {
         data() {
             return {
-                countryToCurrency: {
-                    AUT: 'EUR',
-                },
+                supportedCur:["INR","USD","EUR","IDR","GPB","NZD","AUD"],
+                defaultCur:"USD",
                 text: {},
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
@@ -140,7 +139,7 @@
                     aPIsAndWebhooks: {label:'APIs and Webhooks',type:'boolean',hintText:''} ,
                     eCommercePluginForWA: {label:'eCommerce Plugin for WA',type:'boolean',hintText:''},
                     meheryBranding: {label:'Mehery Branding',type:'boolean',hintText:''},
-                    botWorkflows: {label:'BOT workflows',type:'boolean',hintText:''},
+                    botWorkflows: {label:'BOT workflows',type:'text',hintText:''},
                     nlpMachineLearning: {label:'NLP and Machine Learning',type:'boolean',hintText:''},
                     addOn: {label:'Add Ons',type:'header',hintText:''} ,
                     eachAdditionalAgent: {label:'Per Additional Agent, per month',type:'price',hintText:''},
@@ -178,7 +177,7 @@
                         aPIsAndWebhooks: false,
                         eCommercePluginForWA: false,
                         meheryBranding: true,
-                        botWorkflows: 'BASIC',
+                        botWorkflows: 'Basic',
                         nlpMachineLearning: false,
                         eachAdditionalAgent: {
                             INR: '₹2,000',
@@ -246,7 +245,7 @@
                         aPIsAndWebhooks: true,
                         eCommercePluginForWA: false,
                         meheryBranding: true,
-                        botWorkflows: 'BASIC',
+                        botWorkflows: 'Basic',
                         nlpMachineLearning: false,
                         eachAdditionalAgent: {
                             INR: '₹2,000',
@@ -429,7 +428,8 @@
         mounted: function () {
             jslocator.get().then((resp) => {
                 let country = resp.country_code2
-                this.currency = countryToCurrency[country]
+                this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
+                                countryToCurrency[country] : this.defaultCur;
                 console.log('this.currency', this.currency)
             })
         },

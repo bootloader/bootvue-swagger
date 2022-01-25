@@ -8,19 +8,13 @@
         <div class="content-container">
             <div class="content" id="c1">
                 <h3>
-                    Get access to Smart Messaging services which include
-                    connectivity to your branded Facebook Messenger, Telegram,
-                    Twitter DM, a native web chat and a WhatsApp Business API
-                    Account
+                    Smart Messaging is for Organizations which need a full function Solution, with BOT interactions, Agent dashboards with quick action elements to enhance Agent productivity, downstream application linkages, eCommerce hooks and more.
                 </h3>
                 <SmartConversations />
             </div>
             <div class="content" id="c2">
                 <h3>
-                    Get access to Mehery's Messaging API services which include
-                    connectivity to your branded Facebook Messenger, Telegram,
-                    Twitter DM, a native web chat and a WhatsApp Business API
-                    Account
+                    Mehery API solution, is for organizations, who have omnichannel solutions from Call Center Application Vendors or CRM vendors and want to plug in social media messengers
                 </h3>
                 <Api />
             </div>
@@ -33,19 +27,12 @@
     import SmartConversations from '../Pricing/SmartConversations.vue'
     import Api from '../Pricing/Api.vue'
     export default {
-        components() {
-            Api, SmartConversations
-        },
         data() {
             return {}
         },
         computed: {},
         mounted: function () {
-            jslocator.get().then((resp) => {
-                let country = resp.country_code2
-                this.currency = countryToCurrency[country]
-                console.log('this.currency', this.currency)
-            })
+           
         },
         methods: {},
         components: { SmartConversations, Api },
