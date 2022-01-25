@@ -111,7 +111,7 @@
                 h3 {
                     text-align: center;
                     margin-top: 30px;
-                    font-size: 26px;
+                    font-size: 20px;
                 }
             }
         }
