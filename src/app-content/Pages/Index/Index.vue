@@ -10,13 +10,15 @@
                 <h3>
                     Smart Messaging is for Organizations which need a full function Solution, with BOT interactions, Agent dashboards with quick action elements to enhance Agent productivity, downstream application linkages, eCommerce hooks and more.
                 </h3>
-                <SmartConversations />
+                <SmartConversationsMobile v-if="isMobile()" />
+                <SmartConversations v-else />
             </div>
             <div class="content" id="c2">
                 <h3>
                     Mehery API solution, is for organizations, who have omnichannel solutions from Call Center Application Vendors or CRM vendors and want to plug in social media messengers
                 </h3>
-                <Api />
+                <ApiMobile v-if="isMobile()"  />
+                <Api v-else  />
             </div>
         </div>
     </div>
@@ -25,7 +27,9 @@
     import jslocator from '../../../services/jslocator'
     import countryToCurrency from 'country-to-currency'
     import SmartConversations from '../Pricing/SmartConversations.vue'
-    import Api from '../Pricing/Api.vue'
+    import ApiMobile from '../Pricing/ApiMobile.vue'
+import SmartConversationsMobile from '../Pricing/SmartConversationsMobile.vue'
+import Api from '../Pricing/Api.vue'
     export default {
         data() {
             return {}
@@ -34,8 +38,13 @@
         mounted: function () {
            
         },
-        methods: {},
-        components: { SmartConversations, Api },
+        methods: {
+            isMobile() {
+                if ('maxTouchPoints' in navigator) return navigator.maxTouchPoints > 0 ? true : false
+                else return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            }
+        },
+        components: { SmartConversations, ApiMobile, SmartConversationsMobile, Api },
     }
 </script>
 <style lang="scss" scoped>
@@ -115,5 +124,10 @@
                 }
             }
         }
+    }
+</style>
+<style>
+    .my-tooltip{
+        z-index: 1000;
     }
 </style>

@@ -4,40 +4,41 @@
             <h1 align="center">Mehery Smart Conversations</h1>
             <br />
             <div class="main">
-                <table class="price-table">
+                <table class="price-table" v-for="item in planData">
                     <tbody>
                         <tr>
-                            <td class="price-blank"></td>
-                            <td class="price-table-popular">Most popular</td>
+                            <td class="price-blank">&nbsp;</td>
+                            <td v-if="item.popular" class="price-table-popular" scope="col">Most popular</td>
+                            <td class="price-blank" v-else>&nbsp;</td>
                         </tr>
                         <tr
                             v-for="(row, labelID, index, key) in labels"
                             v-bind:class="[
                                 labelID == 'planName' ? 'price-table-head' : '',
                             ]">
-                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"  v-tooltip="row.hintText"></i></td>
-                                <td v-if="['header'].indexOf(row.type) != -1" :colspan="planData.length+1" :class="row.type">{{ row.label }}</td>
-                                <td v-for="item in planData"  v-if="row.type =='price'" :class="labelID">
+                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1" scope="row">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"  v-tooltip="row.hintText"></i></td>
+                                <td v-if="['header'].indexOf(row.type) != -1" :class="row.type" scope="row">{{ row.label }}</td>
+                                <td  v-if="row.type =='price'" :class="labelID">
                                     <span v-if="item[labelID] != 'NA'">{{
                                     item[labelID][currency]
                                     }}</span>
                                     <i v-else class="fas fa-times"></i>
                                 </td>
-                                <td v-for="item in planData"  v-if="row.type =='boolean'">
+                                <td  v-if="row.type =='boolean'">
                                     <i
                                     class="fas"
                                     :class="
                                         item[labelID] ? 'fa-check' : 'fa-times'
                                     "></i>
                                 </td>
-                                <td v-for="item in planData"  v-if="row.type =='text'">
+                                <td  v-if="row.type =='text'">
                                     {{ item[labelID] }}
                                 </td>
                         </tr>
                         <tr>
                             <td></td>
 
-                            <td class="price" v-for="i in planData.length">
+                            <td class="price">
                                 <a href="https://app.mehery.com/partner/auth/register?purpose=smartconversations">Get started</a>
                             </td>
                         </tr>
@@ -91,6 +92,7 @@
                     {
                         planName: 'Starter',
                         channel: 'WA Only',
+                        popular:false,
                         price: {
                             INR: '₹ 8,999',
                             USD: '$ 109.99',
@@ -159,6 +161,7 @@
                     {
                         planName: 'Advanced',
                         channel: 'All Channels',
+                        popular:true,
                         price: {
                             INR: '₹ 24,999',
                             USD: '$	299.99',
@@ -357,5 +360,14 @@
         position: relative;
         padding: 50px 0 50px 0;
     }
-
+    @media all and (max-width: 640px) {
+        
+        .main{
+            box-shadow: none;
+        }
+        .price-table {
+            margin-bottom: 50px;
+            box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+        }
+    }
 </style>

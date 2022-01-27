@@ -4,40 +4,41 @@
             <h1 align="center">Mehery Smart Conversations</h1>
             <br />
             <div class="main">
-                <table class="price-table">
+                <table class="price-table" v-for="item in planData">
                     <tbody>
                         <tr>
-                            <td class="price-blank"></td>
-                            <td class="price-table-popular">Most popular</td>
+                            <td class="price-blank">&nbsp;</td>
+                            <td v-if="item.popular" class="price-table-popular" scope="col">Most popular</td>
+                            <td class="price-blank" v-else>&nbsp;</td>
                         </tr>
                         <tr
                             v-for="(row, labelID, index, key) in labels"
                             v-bind:class="[
                                 labelID == 'planName' ? 'price-table-head' : '',
                             ]">
-                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"  v-tooltip="row.hintText"></i></td>
-                                <td v-if="['header'].indexOf(row.type) != -1" :colspan="planData.length+1" :class="row.type">{{ row.label }}</td>
-                                <td v-for="item in planData"  v-if="row.type =='price'" :class="labelID">
+                                <td v-if="['text','price','boolean'].indexOf(row.type) != -1" scope="row">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"  v-tooltip="row.hintText"></i></td>
+                                <td v-if="['header'].indexOf(row.type) != -1" :class="row.type" scope="row">{{ row.label }}</td>
+                                <td  v-if="row.type =='price'" :class="labelID">
                                     <span v-if="item[labelID] != 'NA'">{{
                                     item[labelID][currency]
                                     }}</span>
                                     <i v-else class="fas fa-times"></i>
                                 </td>
-                                <td v-for="item in planData"  v-if="row.type =='boolean'">
+                                <td  v-if="row.type =='boolean'">
                                     <i
                                     class="fas"
                                     :class="
                                         item[labelID] ? 'fa-check' : 'fa-times'
                                     "></i>
                                 </td>
-                                <td v-for="item in planData"  v-if="row.type =='text'">
+                                <td  v-if="row.type =='text'">
                                     {{ item[labelID] }}
                                 </td>
                         </tr>
                         <tr>
                             <td></td>
 
-                            <td class="price" v-for="i in planData.length">
+                            <td class="price">
                                 <a href="https://app.mehery.com/partner/auth/register?purpose=smartconversations">Get started</a>
                             </td>
                         </tr>
@@ -55,9 +56,9 @@
     export default {
         data() {
             return {
-                text: {},
                 supportedCur:["INR","USD","EUR","IDR","GPB","NZD","AUD"],
                 defaultCur:"USD",
+                text: {},
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
                     channel: {label:'',type:'text',hintText:''},
@@ -65,7 +66,7 @@
                     perWASessionTemplate: {label:'Per WA Session / Template *',type:'text',hintText:''} ,
                     nonWaMessageFee: {label:'Per Non-WA message Fee',type:'price',hintText:''} ,
                     features: {label:'Features',type:'header',hintText:''},
-                    agents: {label:'Agent',type:"boolean",hintText:''},
+                    agents: {label:'Agent',type:'text',hintText:''},
                     agentDashboard: {label:'Agent Dashboard',type:'boolean',hintText:''},
                     templateCreationWABA: {label:'Template Creation - WABA',type:'boolean',hintText:''},
                     marketingBroadcasts: {label:'Marketing Broadcasts',type:'boolean',hintText:''} ,
@@ -89,32 +90,33 @@
                 },
                 planData: [
                     {
-                        planName: 'Starter',
+                        planName: 'STARTER',
                         channel: 'WA Only',
+                        popular:false,
                         price: {
-                            INR: '₹ 8,999',
-                            USD: '$ 109.99',
-                            EUR: '€ 99.99',
-                            IDR: 'IDR 1.65mio',
-                            GPB: '£ 84.99',
-                            NZD: 'A$ 159.99',
-                            AUD: 'A$ 159.99',
+                            INR: '₹ 3,999',
+                            USD: '$ 49.99',
+                            EUR: '€ 45.99',
+                            IDR: 'IDR 750k',
+                            GPB: '£ 39.99',
+                            NZD: 'A$ 74.99',
+                            AUD: 'A$ 74.99',
                         },
                         sessionTemplateFees: 'As per Table',
                         perWASessionTemplate: 'WA Fees + 20%',
                         nonWaMessageFee:'NA',
-                        agents: false,
-                        agentDashboard: false,
+                        agents: '5',
+                        agentDashboard: true,
                         templateCreationWABA: true,
                         marketingBroadcasts: true,
-                        quickReplies: false,
+                        quickReplies: true,
                         whatsAppChatWidget: true,
-                        customerTags: false,
-                        sessionTags: false,
-                        chatDistributionRules: false,
-                        aPIsAndWebhooks: true,
+                        customerTags: true,
+                        sessionTags: true,
+                        chatDistributionRules: true,
+                        aPIsAndWebhooks: false,
                         eCommercePluginForWA: false,
-                        meheryBranding: false,
+                        meheryBranding: true,
                         botWorkflows: 'Basic',
                         nlpMachineLearning: false,
                         eachAdditionalAgent: {
@@ -157,16 +159,86 @@
                         emailWhatsAppSupport: true,
                     },
                     {
-                        planName: 'Advanced',
-                        channel: 'All Channels',
+                        planName: 'BASIC',
+                        channel: 'WA Only',
+                        popular:true,
                         price: {
-                            INR: '₹ 24,999',
-                            USD: '$	299.99',
-                            EUR: '€ 274.99',
-                            IDR: 'IDR 4.50 mio',
-                            GPB: '£	229.99',
-                            NZD: 'A$ 429.99',
-                            AUD: 'A$ 429.99',
+                            INR: '₹ 8,999',
+                            USD: '$ 109.99',
+                            EUR: '€ 99.99',
+                            IDR: 'IDR 1.65mio',
+                            GPB: '£ 84.99',
+                            NZD: 'A$ 159.99',
+                            AUD: 'A$ 159.99',
+                        },
+                        sessionTemplateFees: 'As per Table',
+                        perWASessionTemplate: 'WA Fees + 20%',
+                        nonWaMessageFee:'NA',
+                        agents: '5',
+                        agentDashboard: true,
+                        templateCreationWABA: true,
+                        marketingBroadcasts: true,
+                        quickReplies: true,
+                        whatsAppChatWidget: true,
+                        customerTags: true,
+                        sessionTags: true,
+                        chatDistributionRules: true,
+                        aPIsAndWebhooks: true,
+                        eCommercePluginForWA: false,
+                        meheryBranding: true,
+                        botWorkflows: 'Basic',
+                        nlpMachineLearning: false,
+                        eachAdditionalAgent: {
+                            INR: '₹2,000',
+                            USD: '$25',
+                            EUR: '€23.00',
+                            IDR: 'IDR 375k',
+                            GPB: '£20.00',
+                            NZD: 'A$37.50',
+                            AUD: 'A$37.50',
+                            
+                        },
+                        apiSetup:{
+                            INR: '₹ 8,000',
+                            USD: '$	100',
+                            EUR: '€ 92',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	80',
+                            NZD: 'A$150',
+                            AUD: 'A$150',
+                        },
+                        perWhatsappNum:{
+                            INR: '₹ 8,000',
+                            USD: '$	100',
+                            EUR: '€ 92',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	80',
+                            NZD: 'A$150',
+                            AUD: 'A$150',
+                        },
+                        setupFee:{
+                            INR: '₹ 79,996',
+                            USD: '$	1,000',
+                            EUR: '€ 1,000',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	800',
+                            NZD: 'A$ 1,500',
+                            AUD: 'A$ 1,500',
+                        },
+                        emailWhatsAppSupport: true,
+                    },
+                    {
+                        planName: 'ADVANCE',
+                        channel: 'All Channels',
+                        popular:false,
+                        price: {
+                            INR: '₹34,999',
+                            USD: '$449.99',
+                            EUR: '€415.99',
+                            IDR: 'IDR 6.75mio',
+                            GPB: '£349.99',
+                            NZD: 'A$649.99',
+                            AUD: 'A$649.99',
                         },
                         sessionTemplateFees: 'As per Table',
                         perWASessionTemplate: 'WA Fees + 20%',
@@ -179,17 +251,17 @@
                             NZD:'A$ 0.0075',
                             AUD:'A$ 0.0075'
                         },
-                        agents: false,
-                        agentDashboard: false,
+                        agents: 'Unlimited',
+                        agentDashboard: true,
                         templateCreationWABA: true,
                         marketingBroadcasts: true,
-                        quickReplies: false,
+                        quickReplies: true,
                         whatsAppChatWidget: true,
-                        customerTags: false,
-                        sessionTags: false,
-                        chatDistributionRules: false,
+                        customerTags: true,
+                        sessionTags: true,
+                        chatDistributionRules: true,
                         aPIsAndWebhooks: true,
-                        eCommercePluginForWA: false,
+                        eCommercePluginForWA: true,
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
                         nlpMachineLearning: false,
@@ -222,9 +294,77 @@
                             AUD: 'A$ 1,500',
                         },
                         emailWhatsAppSupport: true,
-                    }
+                    },
+                    {
+                        planName: 'Super',
+                        channel: 'All Channels',
+                        popular:false,
+                        price: {
+                            INR: '₹49,999',
+                            USD: '$649.99',
+                            EUR: '€599.99',
+                            IDR: 'IDR 9.95mio',
+                            GPB: '£499.99',
+                            NZD: 'A$924.99',
+                            AUD: 'A$924.99',
+                        },
+                        sessionTemplateFees: 'As per Table',
+                        perWASessionTemplate: 'WA Fees + 20%',
+                        nonWaMessageFee:{
+                            USD:'$ 0.0050',
+                            EUR:'€ 0.0046',
+                            INR:'₹ 0.10',
+                            IDR:'IDR 75',
+                            GPB:'£ 0.0040',
+                            NZD:'A$ 0.0075',
+                            AUD:'A$ 0.0075'
+                        },
+                        agents: 'Unlimited',
+                        agentDashboard: true,
+                        templateCreationWABA: true,
+                        marketingBroadcasts: true,
+                        quickReplies: true,
+                        whatsAppChatWidget: true,
+                        customerTags: true,
+                        sessionTags: true,
+                        chatDistributionRules: true,
+                        aPIsAndWebhooks: true,
+                        eCommercePluginForWA: true,
+                        meheryBranding: false,
+                        botWorkflows: 'Advanced',
+                        nlpMachineLearning: true,
+                        eachAdditionalAgent: 'NA',
+                        apiSetup:{
+                            INR: '₹ 8,000',
+                            USD: '$	100',
+                            EUR: '€ 92',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	80',
+                            NZD: 'A$150',
+                            AUD: 'A$150',
+                        },
+                        perWhatsappNum:{
+                            INR: '₹ 8,000',
+                            USD: '$	100',
+                            EUR: '€ 92',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	80',
+                            NZD: 'A$150',
+                            AUD: 'A$150',
+                        },
+                        setupFee:{
+                            INR: '₹ 79,996',
+                            USD: '$	1,000',
+                            EUR: '€ 1,000',
+                            IDR: 'IDR 1.50mio',
+                            GPB: '£	800',
+                            NZD: 'A$ 1,500',
+                            AUD: 'A$ 1,500',
+                        },
+                        emailWhatsAppSupport: true,
+                    },
                 ],
-                currency: 'INR',
+                currency: 'IND',
             }
         },
         computed: {},
@@ -357,5 +497,14 @@
         position: relative;
         padding: 50px 0 50px 0;
     }
-
+    @media all and (max-width: 640px) {
+        
+        .main{
+            box-shadow: none;
+        }
+        .price-table {
+            margin-bottom: 50px;
+            box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+        }
+    }
 </style>
