@@ -21,6 +21,7 @@
       </slot>
       <div :class="[
        {'input-group': hasIcon || (feedback)},
+        size ? 'input-group-'+size : '',
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},

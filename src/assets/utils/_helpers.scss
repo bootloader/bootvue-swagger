@@ -307,6 +307,17 @@ body {
   padding-right: 1px;
 }
 
+// MIND the GAP
+.mg-1 {
+  margin-right: .25em;
+  &:first-of-type {
+    margin-left: 0.0em;
+  }
+  &:last-of-type {
+    margin-right: 0.0em;
+  }
+}
+
 .pointer{
   cursor: pointer;
 }

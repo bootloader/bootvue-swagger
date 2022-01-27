@@ -24,6 +24,7 @@
   Vue.component('ValidationObserver', ValidationObserver);
   Vue.component('BaseInput', () => import('./@common/argon/components/Inputs/BaseInput.vue'));
   Vue.component('BaseTextArea', () => import('./@common/argon/components/Inputs/BaseTextArea.vue'));
+  Vue.component('BaseSelect', () => import('./@common/argon/components/Inputs/BaseSelect.vue'));
   Vue.component('ButtonRadioGroup', () => import('./@common/argon/components/ButtonRadioGroup.vue'));
   Vue.component('BaseDropdown', () => import('./@common/argon/components/BaseDropdown.vue'));
   import globalDirectives from '@/@common/argon/plugins/globalDirectives';

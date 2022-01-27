@@ -214,7 +214,7 @@ var formatter = {
   },
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -298,6 +298,16 @@ var formatter = {
     }
     return true;
   },
+  URL : function(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;  
+    }
+    return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
+  },
+
   init : function () {
     var THAT = this;
 
