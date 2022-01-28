@@ -11,6 +11,9 @@
           :actions=actions
           @action="onAction"      
        >
+          <template #cell(changelog)="row">
+              <small>Modified on {{row.item.updatedStamp | formatStamp}} by {{row.item.updatedBy}}</small>
+          </template>
           <template #cell(actions)="row">
             <b-button size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
@@ -62,16 +65,16 @@
                     rules="required|URL" >
                 </base-input>
             </ValidationObserver>
-               <template #modal-footer>
-                    <div class="position-relative">
-                        <button @click="deleteItem(oneItem)" v-if="oneItem.id"
-                          name="generate" id="resetKeys"
-                          class="btn btn-outline-danger btn-sm mg-1">Delete</button>
-                        <button @click="saveItem(false)"
-                          name="save" id="saveitem" :disabled="!(isChanged)"
-                          class="btn btn-primary btn-sm mg-1">Save</button>
-                      </div>
-                </template>
+            <template #modal-footer>
+                <div class="position-relative">
+                    <button @click="deleteItem(oneItem)" v-if="oneItem.id"
+                      name="generate" id="resetKeys"
+                      class="btn btn-outline-danger btn-sm mg-1">Delete</button>
+                    <button @click="saveItem(false)"
+                      name="save" id="saveitem" :disabled="!(isChanged)"
+                      class="btn btn-primary btn-sm mg-1">Save</button>
+                  </div>
+            </template>
         </b-modal>
         <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Details : ${lastItem.name}`" size="md">
             <b-input-group class="mt-3" size="sm">
@@ -142,6 +145,16 @@
                   variant="outline-success">Copy</b-button>
               </b-input-group-append>
             </b-input-group>
+            <template #modal-footer="{cancel}">
+                    <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
+                      target="_blank"
+                      class="btn btn-outline-greyer btn-sm mg-1 float-start ml-0 mr-auto"
+                      name="generate" 
+                      >View Docs</a>
+                    <button @click="cancel()"
+                      name="save" id="saveitem"
+                      class="btn btn-primary btn-sm mg-1">OK</button>
+            </template>
         </b-modal>
 
     </div>
@@ -179,6 +192,7 @@
                 { key : 'code', label : "Queue" },
                 { key : 'appType', label : "Type" },
                 { key : 'actions', label : "Actions" },
+                { key : 'changelog', label : "Changelog" },
               ],
               items : [],
               perPage: 25,
