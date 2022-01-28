@@ -428,9 +428,9 @@
         mounted: function () {
             jslocator.get().then((resp) => {
                 let country = resp.country_code2
-                this.currency = this.supportedCur.indexOf(countryToCurrency["GB"]) != -1 ? 
+                this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
                                 countryToCurrency[country] : this.defaultCur;
-                console.log("resp",resp,"this.currency", this.currency, "country",country, "countryToCurrency[country]",countryToCurrency["GB"], this.supportedCur.indexOf(countryToCurrency["GB"]) != -1)
+                console.log("Nagendra this line ===>resp",resp,"this.currency", this.currency, "country",country, "countryToCurrency[country]",countryToCurrency["GB"], this.supportedCur.indexOf(countryToCurrency["GB"]) != -1)
             })
         },
         methods: {},
