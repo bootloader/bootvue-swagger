@@ -17,7 +17,7 @@
                                 labelID == 'planName' ? 'price-table-head' : '',
                             ]">
                                 <td v-if="['text','price','boolean'].indexOf(row.type) != -1" scope="row">{{ row.label }} <i class="fas fa-info-circle" v-if="row.hintText != ''" :title="row.hintText"  v-tooltip="row.hintText"></i></td>
-                                <td v-if="['header'].indexOf(row.type) != -1" :class="row.type" scope="row">{{ row.label }}</td>
+                                <td v-if="['header'].indexOf(row.type) != -1" :class="row.type" scope="row" colspan="2">{{ row.label }}</td>
                                 <td  v-if="row.type =='price'" :class="labelID">
                                     <span v-if="item[labelID] != 'NA'">{{
                                     item[labelID][currency]
