@@ -226,8 +226,8 @@
                     {
                         enabled: true,
                         href: '/app/setup/client-api-keys',
-                        title: 'API Keys',
-                        icon: 'pe-7s-key fa fa-key',
+                        title: 'Client Apps',
+                        icon: 'pe-7s-key fa fa-th-large',
                     },
                     {
                         enabled: true,

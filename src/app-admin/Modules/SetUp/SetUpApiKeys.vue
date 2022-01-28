@@ -4,8 +4,8 @@
       <master-view 
           :header="{
             heading : 'Client Apps',
-            subheading : 'Client Apps are used to interact with messaging services',
-            icon : icon,
+            subheading : 'Client Apps are used to interact with messaging apis',
+            icon : 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-th-large',
           }"
           :table=table
           :actions=actions
@@ -64,7 +64,7 @@
             </ValidationObserver>
                <template #modal-footer>
                     <div class="position-relative">
-                        <button @click="deleteItem(oneItem)"
+                        <button @click="deleteItem(oneItem)" v-if="oneItem.id"
                           name="generate" id="resetKeys"
                           class="btn btn-outline-danger btn-sm mg-1">Delete</button>
                         <button @click="saveItem(false)"
@@ -169,7 +169,6 @@
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-            icon: 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-key',
             actions : [{
               label : "Create App", icon : "fa fa-plus", name : "ADD_ITEM", action : "ADD_ITEM"
             }],
