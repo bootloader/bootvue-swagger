@@ -57,7 +57,7 @@
         data() {
             return {
                 text: {},
-                supportedCur:["INR","USD","EUR","IDR","GPB","NZD","AUD"],
+                supportedCur:["INR","USD","EUR","IDR","GBP","NZD","AUD"],
                 defaultCur:"USD",
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
@@ -98,7 +98,7 @@
                             USD: '$ 109.99',
                             EUR: '€ 99.99',
                             IDR: 'IDR 1.65mio',
-                            GPB: '£ 84.99',
+                            GBP: '£ 84.99',
                             NZD: 'A$ 159.99',
                             AUD: 'A$ 159.99',
                         },
@@ -124,7 +124,7 @@
                             USD: '$25',
                             EUR: '€23.00',
                             IDR: 'IDR 375k',
-                            GPB: '£20.00',
+                            GBP: '£20.00',
                             NZD: 'A$37.50',
                             AUD: 'A$37.50',
                             
@@ -134,7 +134,7 @@
                             USD: '$	100',
                             EUR: '€ 92',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	80',
+                            GBP: '£	80',
                             NZD: 'A$150',
                             AUD: 'A$150',
                         },
@@ -143,7 +143,7 @@
                             USD: '$	100',
                             EUR: '€ 92',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	80',
+                            GBP: '£	80',
                             NZD: 'A$150',
                             AUD: 'A$150',
                         },
@@ -152,7 +152,7 @@
                             USD: '$	1,000',
                             EUR: '€ 1,000',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	800',
+                            GBP: '£	800',
                             NZD: 'A$ 1,500',
                             AUD: 'A$ 1,500',
                         },
@@ -167,7 +167,7 @@
                             USD: '$	299.99',
                             EUR: '€ 274.99',
                             IDR: 'IDR 4.50 mio',
-                            GPB: '£	229.99',
+                            GBP: '£	229.99',
                             NZD: 'A$ 429.99',
                             AUD: 'A$ 429.99',
                         },
@@ -178,7 +178,7 @@
                             EUR:'€ 0.0046',
                             INR:'₹ 0.10',
                             IDR:'IDR 75',
-                            GPB:'£ 0.0040',
+                            GBP:'£ 0.0040',
                             NZD:'A$ 0.0075',
                             AUD:'A$ 0.0075'
                         },
@@ -202,7 +202,7 @@
                             USD: '$	100',
                             EUR: '€ 92',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	80',
+                            GBP: '£	80',
                             NZD: 'A$150',
                             AUD: 'A$150',
                         },
@@ -211,7 +211,7 @@
                             USD: '$	100',
                             EUR: '€ 92',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	80',
+                            GBP: '£	80',
                             NZD: 'A$150',
                             AUD: 'A$150',
                         },
@@ -220,7 +220,7 @@
                             USD: '$	1,000',
                             EUR: '€ 1,000',
                             IDR: 'IDR 1.50mio',
-                            GPB: '£	800',
+                            GBP: '£	800',
                             NZD: 'A$ 1,500',
                             AUD: 'A$ 1,500',
                         },
@@ -233,10 +233,10 @@
         computed: {},
         mounted: function () {
             jslocator.get().then((resp) => {
-                let country = resp.country_code2
+                let country = resp.country_code2;
                 this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
                                 countryToCurrency[country] : this.defaultCur;
-                console.log('this.currency', this.currency)
+                console.log('this.currency', this.currency);
             })
         },
         methods: {},
