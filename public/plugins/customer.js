@@ -97,6 +97,10 @@
 
 
         },
+
+        open : function(){
+            this.postMessage( { event : "CHAT_TOGGLE" });
+        },
         ON_CHAT_LOAD : function () {
            this.postMessage({event : "SET_OPTIONS", options : OPTIONS });
         },
@@ -142,21 +146,10 @@
     var myScript = scripts[index];
     var serviceUrl = myScript.src; 
     try {
-        return myChat.init(JSON.parse(myScript.innerHTML));
+        myChat.init(JSON.parse(myScript.innerHTML));
+        win.myChat = myChat;
     } catch(e){
         console.error(e);
     }
-    var pluginUrl = "https://api.mehery.com/postman/plugin/customer/app/chat/";
-    if(serviceUrl.indexOf("/assets/js/customer.plugin.")>0){
-    	var urlparts = serviceUrl.split("/assets/js/customer.plugin.");
-    	var domainUrl = urlparts[0];
-    	var theme = (urlparts[1].split("theme=")[1] || "").split("&")[0];
-    	if(theme){
-    		pluginUrl = domainUrl + "/" + "dummy/customer?page=plugin."+theme;    		
-    	}
-    }
-    console.log("pluginUrl",pluginUrl)
-   
-
-    win.myChat = myChat;
+    
 }(this));
