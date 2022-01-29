@@ -123,11 +123,11 @@
                     API Endpoint</b-button>
               </b-input-group-prepend>
               <b-form-input readonly
-                :value="`https://${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`"
+                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`"
               ></b-form-input>
               <b-input-group-append>
                 <b-button
-                  v-clipboard:copy="`https://${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`" 
+                  v-clipboard:copy="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`" 
                   variant="outline-success">Copy</b-button>
               </b-input-group-append>
             </b-input-group>
