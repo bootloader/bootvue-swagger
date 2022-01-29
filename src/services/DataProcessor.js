@@ -32,6 +32,8 @@ function eq(a,b) {
 				|| (session.lastInComingStamp>0 && session.lastInComingStamp < expiryDateStamp)) 
 			&& !session.resolved;
 		  session.local.active = session.active && !session.local.expired;
+		  session.local.lastActivityStamp = session.lastInComingStamp || session.updatedStamp;
+
 		 	//Extra Derived 
 		  session.local.resolved = !!session.resolved;
 		  session.local.open = session.local.active && !session.local.expired && session.local.activeInbound;
