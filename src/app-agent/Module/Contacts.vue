@@ -235,7 +235,7 @@
                     } else if(!a._assignedToMe && b._assignedToMe){
                         return 1;
                     }
-                    return b.local.lastActivityStamp - a.local.lastActivityStamp;
+                    return b?.local?.lastActivityStamp - a?.local?.lastActivityStamp;
                 });
             },
             isOnline :  function (){
