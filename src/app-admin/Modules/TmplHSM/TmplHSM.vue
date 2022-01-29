@@ -160,7 +160,7 @@
                                         <BaseVSelect class="col-md-3" size="sm"
                                           name="Message Language"
                                           filterable searchable
-                                          options="getx:/api/meta/langs"
+                                          options="data:languages"
                                           v-model="newItem.lang"
                                           placeholder="Select Language">
                                         </BaseVSelect>
