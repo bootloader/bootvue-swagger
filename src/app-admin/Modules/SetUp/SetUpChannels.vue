@@ -63,10 +63,9 @@
 
       </master-view >
 
-
         <b-modal v-if="oneItem" :id="modelName+'_VIEW'" :title="'View Details '" size="md"
             @hidden="cancelItem">
-
+            
                 <b-input-group class="mt-3">
                   <b-input-group-prepend>
                       <b-button variant="outline-dark"  class="text-sm w-120px">
@@ -103,21 +102,21 @@
                         </div>
                 </template>
         </b-modal>
-
+        <ValidationObserver ref="form" class="modal-form" v-slot="{ invalid }">
         <b-modal v-if="oneItem" :id="modelName" :title="'Add/Edit Details '" size="md"
+          header-class="py-2"
             @hidden="cancelItem">
-                <x-simple-form
-                :inputs="modalInputs"
+                <x-simple-form size="sm"
+                :inputs="modalInputs" :isnew="!oneItem.id"
                 @change="onConfigChange">
                 </x-simple-form>
                 <template #modal-footer>
-                      <div class="position-relative form-group">
-                        <button @click="saveItem"
-                          name="password" id="examplePassword" :disabled="!(isChanged)"
-                          class="form-control btn btn-primary">Save</button>
-                        </div>
+                  <button @click="saveItem"
+                    name="password" id="examplePassword" :disabled="!(isChanged) || invalid"
+                    class="btn btn-primary btn-sm">Save</button>
                 </template>
         </b-modal>
+        </ValidationObserver>
 
 
     </div>

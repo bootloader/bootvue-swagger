@@ -81,6 +81,13 @@
   }
 
   .basic-component.bc-layout-default{
+
+    &.bc-size-sm {
+      .form-group {
+        margin-bottom: .5rem;
+      }
+    }
+
     .input-group > .complete-box {
       flex: 1 1 auto;
     }

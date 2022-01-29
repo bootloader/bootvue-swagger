@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-master-view">
         <page-title :heading=header.heading :icon=header.icon
         :actions=actions :filters=filters :subheading=header.subheading @action="onActionINT" 
         ref="pageTitle">
@@ -34,7 +34,9 @@
 
         </vue-good-table>  
         <div v-else-if="table" >
-          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]"
+
+          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items.length>0"
+                        empty-filtered-text="No Records"
                         :bordered="table.bordered || true"
                         :outlined="table.outlined || false"
                         :small="table.small || false"
@@ -48,14 +50,23 @@
                         :fields="table.fields"
                         :sort-by="table.sortBy"
                         filter>
-
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
                   <slot :name="slotName" v-bind="slotScope"></slot>
                 </template>
-
+                <template #empty="scope">
+                  <h4> --- {{ scope.emptyText }}  ---- </h4>
+                </template>
+                <template #emptyfiltered="scope">
+                  <h4> --- {{ scope.emptyFilteredText }} ---- </h4>
+                </template>
             </b-table>
-
-            <b-pagination  v-if="table"
+            <div v-else class="center-box">
+                <div class="center-item">
+                  <div> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                   <span class="no-item-text"> No {{header.heading}} </span>
+                </div>
+            </div>
+            <b-pagination  v-if="table && table.items.length>table.perPage"
                   v-model="table.currentPage"
                   :total-rows="table.rows"
                   :per-page="table.perPage"
@@ -195,7 +206,39 @@
 
 </script>
 <style lang="scss">
-
+.m-master-view {
+  .center-box {
+    .center-item > div {
+      height: 10em;
+      width: 10em;
+      opacity: 0.05;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      border: 5px solid black;
+      border-radius: 50%;
+      .no-item-icon {
+          font-size: 5em;
+          background-image: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)) !important;
+          background-clip: text;
+          text-fill-color: black;
+          -webkit-text-fill-color : black;
+          margin: auto;
+          padding: 26px;
+          &::after {
+            position: relative;
+            left: -50%;
+          }
+      }
+    }
+    .no-item-text {
+        line-height: 40px;
+        text-transform: uppercase;
+        color: #c3c3c3;
+        font-weight: bold;
+    }
+  }
+}
 </style>
 <style type="text/css" scoped >
  

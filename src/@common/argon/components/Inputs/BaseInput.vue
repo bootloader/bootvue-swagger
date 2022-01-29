@@ -205,6 +205,8 @@
         description: 'size sm/md/lg/xl',
       },
       layout : {
+        type : String,
+        default : "default"
       }
     },
     data() {

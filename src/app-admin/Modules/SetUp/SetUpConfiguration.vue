@@ -18,10 +18,11 @@
                 <template #cell(value)="row">
                   <span v-if="row.item.meta.inputType=='OPTIONS'">
 
-                    <span v-if="row.item.meta.source">
+                    <span v-if="row.item.meta.optionsSource">
                       <MySource
                         :value="row.item.config.value"
-                        :options="row.item.meta.source">
+                        :options="row.item.meta.optionsSource"
+                        :optionKey="row.item.meta.optionsKey">
                       </MySource>  
                     </span>
                     <span v-else>
@@ -85,27 +86,24 @@
 
                 </div>
             </div>
-
         </div>
 
-
+        <ValidationObserver ref="form" class="modal-form" v-slot="{ invalid }">
         <b-modal v-if="oneItem" :id="modelName" :title="'Update Property '" size="md"
-        @hidden="cancelItem">
-
+          @hidden="cancelItem">
                 <div class="form-row">
                       <input name="agent_name" id="examplePassword"
                        placeholder="John Doe" type="text"
                         class="form-control" v-model="oneItem.meta.title" readonly>
                 </div>
                 <br/>
-
                <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
-
-                    <span v-if="oneItem.meta.source" class="w-100">
-                      <MyVSelect class="w-100"
-                        :options="oneItem.meta.source" 
+                    <span v-if="oneItem.meta.optionsSource" class="w-100">
+                      <BaseVSelect class="w-100"
+                        :optionKey="oneItem.meta.optionsKey"
+                        :options="oneItem.meta.optionsSource" 
                         v-model="oneItem.config.value">
-                      </MyVSelect>
+                      </BaseVSelect>
                     </span>
                     <span v-else>
                         <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
@@ -187,13 +185,13 @@
                   <template #modal-footer>
                       <div class="position-relative form-group">
                         <button @click="saveItem"
-                          name="password" id="examplePassword" :disabled="!(isChanged)"
+                          name="password" id="examplePassword" :disabled="!(isChanged) || invalid"
                           class="form-control btn btn-primary">Save</button>
                         </div>
                   </template>
 
         </b-modal>
-
+        </ValidationObserver>
 
     </div>
 </template>
@@ -220,7 +218,7 @@
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-            heading: 'Agent Panel Setup',
+            heading: 'Configuration Setup',
             subheading: 'Control Agent Panel setting',
             icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-tools',
             actions : [],

@@ -40,9 +40,9 @@
         </div>
 
 
+        <ValidationObserver ref="form" class="template-form">
         <b-modal v-if="oneItem" :id="modelName" :title="'Client App Details'" size="md"
         @hidden="cancelItem">
-            <ValidationObserver ref="form" class="template-form">
                 <base-input class="mb-0" size="sm" autocomplete="off"
                     label="App Name" placeholder="My API Key 1 or Slack Connector"
                     v-model="oneItem.name" :textLimit="60" required
@@ -64,7 +64,6 @@
                     v-model="oneItem.webhook" required
                     rules="required|URL" >
                 </base-input>
-            </ValidationObserver>
             <template #modal-footer>
                 <div class="position-relative">
                     <button @click="deleteItem(oneItem)" v-if="oneItem.id"
@@ -76,6 +75,7 @@
                   </div>
             </template>
         </b-modal>
+        </ValidationObserver>
         <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Details : ${lastItem.name}`" size="md">
             <b-input-group class="mt-3" size="sm">
               <b-input-group-prepend>

@@ -2,26 +2,33 @@
     <div class="x-form">
         <span v-for="input in inputs" v-bind:key="input.key">
             <span v-if="!input.meta.hidden">
-                <b-form-group  v-if="input.meta.inputType=='OPTIONS'" 
-                    class=""
-                    :label="input.meta.title || input.meta.key" 
-                    v-slot="{ ariaDescribedby }">
-                        <b-form-radio-group
-                            id="btn-radios-2"
-                            v-model="input.config.value"
-                            :options="input.meta.options"
-                            html-field="label"
-                            text-field="value"
-
-                            :readonly="input.meta.readonly || (input.meta.createonly && !empty(input.config.value))"
-                            :aria-describedby="ariaDescribedby"
-                            button-variant="outline-primary"
-                            size="sm"
-                            name="radio-btn-outline"
-                            buttons
-                        ></b-form-radio-group>
-                </b-form-group>   
-                <b-form-group v-else
+                <BaseVSelect 
+                    v-if=" input.meta.inputType=='OPTIONS' && (input.meta.optionsSource || input.meta.options.length > 5)" 
+                    :size="size" :clearable="false"
+                    :name="(input.meta.title || input.meta.key)"
+                    :optionKey="input.meta.optionsKey"
+                    :options="input.meta.optionsSource || input.meta.options" 
+                    v-model="input.config.value"
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                    placeholder="Select"
+                    >
+                </BaseVSelect>
+                <ButtonRadioGroup v-else-if="input.meta.inputType=='OPTIONS'"
+                    :name="(input.meta.title || input.meta.key)"
+                        v-model="input.config.value" size="sm"
+                        :options="input.meta.options"
+                        :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                />
+                <base-input v-else  class="mb-0" :size="size"
+                    :label="(input.meta.title || input.meta.key)"
+                    v-model="input.config.value" 
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                    :value="input.meta.defaultValue"
+                    :required="!input.meta.optional "
+                    @change="onChange(input.meta,input.config)"
+                >
+                </base-input>
+                <!-- <b-form-group v-else
                     class=""
                     :label="input.meta.title || input.meta.key">
                     <b-form-input id="input-1"
@@ -30,7 +37,7 @@
                         :value="input.meta.defaultValue"
                         @change="onChange(input.meta,input.config)"
                         trim></b-form-input>
-                </b-form-group>
+                </b-form-group> -->
             </span>
         </span>
     </div>
@@ -49,6 +56,12 @@
                 default : function () {
                     return [{}];
                 }
+            },
+            isnew : {
+                type : Boolean,
+                default : false
+            },
+            size : {
             }
         },
         data() {

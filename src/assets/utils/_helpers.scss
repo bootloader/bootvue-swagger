@@ -168,6 +168,27 @@
   align-content: center;
 }
 
+.center-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+}
+.center-box {
+  display: flex;
+  flex-direction: column;
+  min-height: 50vh;
+  text-align: center;
+  justify-content: space-around;
+  // align-content: space-around;
+  // align-items: stretch;
+  .center-item {
+    display: inline-block;
+    min-height: 50%;
+  }
+}
+
+
 .flex2 {
   flex: 2;
 }
@@ -294,12 +315,6 @@ body {
 
 .fa-rotate-45 {
   transform: rotate(45deg);
-}
-
-.center-wrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }
 
 .px-1px {

@@ -297,61 +297,60 @@
             </template>
         </master-view>
 
+        <ValidationObserver ref="form" v-slot="{ invalid }">
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' WABA Template '"
+            body-class="my-normalize-v2">
+            <div class="form-group">
+                <label for="examplePassword" class="">From HSM Template</label>
+                <MyHSMTmplSelect
+                    placeholder="Select HSM Template"
+                    class="text-lg text-grey"
+                    v-model="newItem.hsmTemplateId" 
+                    @option="onHSMCloneOption"/> 
+            </div>  
 
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' WABA Template '">
+            <div class="form-group">
+                <ValidationProvider v-slot="v" rules="required">
+                    <label for="examplePassword" class="">Message Category</label>
+                        <my-v-select  class="text-lg text-grey"
+                        options="data:hsm/message_category_types" placeholder="Select Message Category"
+                        v-model="newItem.category" filterable searchable
+                        style="min-width: 200px;width:100%;"/>
+                        <span class="v-input-error">{{ v.errors[0] }}</span>
+                </ValidationProvider>
+            </div>
 
-                  <ValidationObserver ref="form" class="my-normalize-v2">
-                            <div class="form-group">
-                                <label for="examplePassword" class="">From HSM Template</label>
-                                <MyHSMTmplSelect
-                                    placeholder="Select HSM Template"
-                                    class="text-lg text-grey"
-                                    v-model="newItem.hsmTemplateId" 
-                                    @option="onHSMCloneOption"/> 
-                            </div>  
+            <base-input :disabled="nonEditable" class="mb-0"
+                label="Template Name"
+                v-model="newItem.name" :textLimit="512" required
+                rules="required|min:4|max:512" >
+            </base-input>
 
-                            <div class="form-group">
-                              <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Message Category</label>
-                                     <my-v-select  class="text-lg text-grey"
-                                        options="data:hsm/message_category_types" placeholder="Select Message Category"
-                                        v-model="newItem.category" filterable searchable
-                                        style="min-width: 200px;width:100%;"/>
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+            <div class="form-group">
+                <ValidationProvider v-slot="v" rules="required">
+                        <label for="examplePassword" class="">Message Language</label>
+                            <my-v-select  class="text-lg text-grey"
+                                options="data:languages" placeholder="Select Message Language"
+                                v-model="newItem.lang" optionKey="waba" filterable searchable
+                                :filter="{
+                                    waba  : true
+                                }"
+                            style="min-width: 50px;width:100%;"/>
+                        <span class="v-input-error">{{ v.errors[0] }}</span>
+                </ValidationProvider>
+            </div>
 
-                            <base-input :disabled="nonEditable" class="mb-0"
-                                label="Template Name"
-                                v-model="newItem.name" :textLimit="512" required
-                                rules="required|min:4|max:512" >
-                            </base-input>
-
-                            <div class="form-group">
-                                <ValidationProvider v-slot="v" rules="required">
-                                        <label for="examplePassword" class="">Message Language</label>
-                                            <my-v-select  class="text-lg text-grey"
-                                                options="data:languages" placeholder="Select Message Language"
-                                                v-model="newItem.lang" optionKey="waba" filterable searchable
-                                                :filter="{
-                                                    waba  : true
-                                                }"
-                                            style="min-width: 50px;width:100%;"/>
-                                        <span class="v-input-error">{{ v.errors[0] }}</span>
-                                </ValidationProvider>
-                            </div>
-
-                </ValidationObserver>
-
-                 <template #modal-footer>
-                      <div class="position-relative form-group">
-                        <button @click="createItem"
-                            :disabled="!isValidNewItem"
-                          class="form-control btn btn-primary">Create</button>
-                        </div>
-                  </template>
+            <template #modal-footer>
+                <div class="position-relative form-group">
+                <button @click="createItem"
+                    :disabled="!isValidNewItem || invalid"
+                    class="form-control btn btn-primary">Create</button>
+                </div>
+            </template>
 
         </b-modal>
+        </ValidationObserver>
+
         <b-modal v-if="templatePreview" :id="modelNameSamples" size="lg"
             :title="'Add Sample Content'">
             <b-row>
@@ -604,8 +603,12 @@
                 }
             },
             async deleteItem(item) {
-                await this.$service.delete(this.table.api, item);
-                this.$refs.templatesView.apply();
+                if(item.id){
+                    await this.$service.delete(this.table.api, item);
+                    this.$refs.templatesView.apply();
+                } else {
+                    this.onDelete(item);
+                }
             }, 
             async createItem () {
                 let success = await this.$refs.form.validate();
