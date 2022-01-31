@@ -41,6 +41,7 @@
 
           <template #cell(actions)="row">
             <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
+                :disabled="row.item.readOnly"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-edit"></i>
             </b-button>&nbsp;
@@ -50,12 +51,14 @@
             </b-button>&nbsp;
             <b-button size="sm" @click="disableItem(row.item, row.index, $event.target)"  
                 v-tooltip="row.item.disabled ? 'Connect' : 'Disconnect'"
+                :disabled="row.item.readOnly"
                  variant="outline-primary">
                 <i class="fas fa-plug" :class="{
                   'fa-x' : row.item.disabled
                   }"></i>
             </b-button>&nbsp;
             <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)"  
+              :disabled="row.item.readOnly"
                 v-tooltip="'Delete'" variant="outline-primary">
                 <i class="fas fa-trash"/>
             </b-button>
@@ -81,7 +84,7 @@
                   </b-input-group-append>
                 </b-input-group>
 
-                <b-input-group class="mt-3">
+                <b-input-group v-if="oneItemView.webhookManual" class="mt-3">
                  <b-input-group-prepend>
                       <b-button variant="outline-dark" class="text-sm w-120px">
                          Webhook URL</b-button>
@@ -200,15 +203,16 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
           },
           async viewItem(item) {
             let resp = await this.$service.get('api/config/channel/'+item.channelId);
-            this.oneItemView = resp.results[0];
+            this.oneItemView = resp.results[0] || { channelId : item.channelId };
             this.$bvModal.show(this.modelName + "_VIEW")
           },
           async disableItem(item) {
-            await this.$service.post('api/config/channel/'+item.channelType + "?disabled="+ !item.disabled, item );
+            await this.$service.get('api/config/channel/'+item.channelId + "/" + 
+            (item.disabled ? "enable" : "disable") , {});
             this.loadItems();
           },
           async deleteItem(item) {
-            await this.$service.delete('api/config/channel/'+item.channelId + "?disabled="+ !item.disabled, item );
+            await this.$service.get('api/config/channel/'+item.channelId + "/remove",{});
             this.loadItems();
           },
           async addItem(channelType) {
