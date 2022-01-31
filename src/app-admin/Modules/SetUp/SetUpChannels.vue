@@ -32,7 +32,8 @@
           </template>
        
           <template #cell(status)="row">
-            <my-status :value="!row.item.disabled" icon="fa fa-wave-square" v-tooltip="'Connected'" />
+            <my-status :value="!row.item.disabled" icon="fa fa-wave-square" 
+            v-tooltip="!row.item.disabled ? 'Connected' : 'Disconnected'" />
             <my-status 
                   v-if="row.item.sandbox"
                   :value="row.item.sandbox" icon="fa fa-box-open" v-tooltip="'Sandbox'" 
