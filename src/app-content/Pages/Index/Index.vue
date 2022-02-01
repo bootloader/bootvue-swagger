@@ -8,43 +8,53 @@
         <div class="content-container">
             <div class="content" id="c1">
                 <h3>
-                    Smart Messaging is for Organizations which need a full function Solution, with BOT interactions, Agent dashboards with quick action elements to enhance Agent productivity, downstream application linkages, eCommerce hooks and more.
+                    Smart Messaging is for Organizations which need a full
+                    function Solution, with BOT interactions, Agent dashboards
+                    with quick action elements to enhance Agent productivity,
+                    downstream application linkages, eCommerce hooks and more.
                 </h3>
                 <SmartConversationsMobile v-if="isMobile()" />
                 <SmartConversations v-else />
             </div>
             <div class="content" id="c2">
                 <h3>
-                    Mehery API solution, is for organizations, who have omnichannel solutions from Call Center Application Vendors or CRM vendors and want to plug in social media messengers
+                    Mehery API solution, is for organizations, who have
+                    omnichannel solutions from Call Center Application Vendors
+                    or CRM vendors and want to plug in social media messengers
                 </h3>
-                <ApiMobile v-if="isMobile()"  />
-                <Api v-else  />
+                <ApiMobile v-if="isMobile()" />
+                <Api v-else />
             </div>
         </div>
     </div>
 </template>
 <script>
-    import jslocator from '../../../services/jslocator'
-    import countryToCurrency from 'country-to-currency'
     import SmartConversations from '../Pricing/SmartConversations.vue'
     import ApiMobile from '../Pricing/ApiMobile.vue'
-import SmartConversationsMobile from '../Pricing/SmartConversationsMobile.vue'
-import Api from '../Pricing/Api.vue'
+    import SmartConversationsMobile from '../Pricing/SmartConversationsMobile.vue'
+    import Api from '../Pricing/Api.vue'
     export default {
         data() {
             return {}
         },
         computed: {},
-        mounted: function () {
-           
-        },
+        mounted: function () {},
         methods: {
             isMobile() {
-                if ('maxTouchPoints' in navigator) return navigator.maxTouchPoints > 0 ? true : false
-                else return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-            }
+                if ('maxTouchPoints' in navigator)
+                    return navigator.maxTouchPoints > 0 ? true : false
+                else
+                    return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                        navigator.userAgent
+                    )
+            },
         },
-        components: { SmartConversations, ApiMobile, SmartConversationsMobile, Api },
+        components: {
+            SmartConversations,
+            ApiMobile,
+            SmartConversationsMobile,
+            Api,
+        },
     }
 </script>
 <style lang="scss" scoped>
@@ -127,7 +137,7 @@ import Api from '../Pricing/Api.vue'
     }
 </style>
 <style lang="scss">
-  @import "@/assets/app-content.scss";
+    @import '@/assets/app-content.scss';
 
     .my-tooltip {
         display: block !important;
@@ -150,63 +160,63 @@ import Api from '../Pricing/Api.vue'
             z-index: 1;
         }
 
-        &[x-placement^="top"] {
+        &[x-placement^='top'] {
             margin-bottom: 5px;
 
             .tooltip-arrow {
-            border-width: 5px 5px 0 5px;
-            border-left-color: transparent !important;
-            border-right-color: transparent !important;
-            border-bottom-color: transparent !important;
-            bottom: -5px;
-            left: calc(50% - 5px);
-            margin-top: 0;
-            margin-bottom: 0;
+                border-width: 5px 5px 0 5px;
+                border-left-color: transparent !important;
+                border-right-color: transparent !important;
+                border-bottom-color: transparent !important;
+                bottom: -5px;
+                left: calc(50% - 5px);
+                margin-top: 0;
+                margin-bottom: 0;
             }
         }
 
-        &[x-placement^="bottom"] {
+        &[x-placement^='bottom'] {
             margin-top: 5px;
 
             .tooltip-arrow {
-            border-width: 0 5px 5px 5px;
-            border-left-color: transparent !important;
-            border-right-color: transparent !important;
-            border-top-color: transparent !important;
-            top: -5px;
-            left: calc(50% - 5px);
-            margin-top: 0;
-            margin-bottom: 0;
+                border-width: 0 5px 5px 5px;
+                border-left-color: transparent !important;
+                border-right-color: transparent !important;
+                border-top-color: transparent !important;
+                top: -5px;
+                left: calc(50% - 5px);
+                margin-top: 0;
+                margin-bottom: 0;
             }
         }
 
-        &[x-placement^="right"] {
+        &[x-placement^='right'] {
             margin-left: 5px;
 
             .tooltip-arrow {
-            border-width: 5px 5px 5px 0;
-            border-left-color: transparent !important;
-            border-top-color: transparent !important;
-            border-bottom-color: transparent !important;
-            left: -5px;
-            top: calc(50% - 5px);
-            margin-left: 0;
-            margin-right: 0;
+                border-width: 5px 5px 5px 0;
+                border-left-color: transparent !important;
+                border-top-color: transparent !important;
+                border-bottom-color: transparent !important;
+                left: -5px;
+                top: calc(50% - 5px);
+                margin-left: 0;
+                margin-right: 0;
             }
         }
 
-        &[x-placement^="left"] {
+        &[x-placement^='left'] {
             margin-right: 5px;
 
             .tooltip-arrow {
-            border-width: 5px 0 5px 5px;
-            border-top-color: transparent !important;
-            border-right-color: transparent !important;
-            border-bottom-color: transparent !important;
-            right: -5px;
-            top: calc(50% - 5px);
-            margin-left: 0;
-            margin-right: 0;
+                border-width: 5px 0 5px 5px;
+                border-top-color: transparent !important;
+                border-right-color: transparent !important;
+                border-bottom-color: transparent !important;
+                right: -5px;
+                top: calc(50% - 5px);
+                margin-left: 0;
+                margin-right: 0;
             }
         }
 
@@ -214,28 +224,28 @@ import Api from '../Pricing/Api.vue'
             $color: #f9f9f9;
 
             .popover-inner {
-            background: $color;
-            color: black;
-            padding: 24px;
-            border-radius: 5px;
-            box-shadow: 0 5px 30px rgba(black, .1);
+                background: $color;
+                color: black;
+                padding: 24px;
+                border-radius: 5px;
+                box-shadow: 0 5px 30px rgba(black, 0.1);
             }
 
             .popover-arrow {
-            border-color: $color;
+                border-color: $color;
             }
         }
 
         &[aria-hidden='true'] {
             visibility: hidden;
             opacity: 0;
-            transition: opacity .15s, visibility .15s;
+            transition: opacity 0.15s, visibility 0.15s;
         }
 
         &[aria-hidden='false'] {
             visibility: visible;
             opacity: 1;
-            transition: opacity .15s;
+            transition: opacity 0.15s;
         }
-}
+    }
 </style>

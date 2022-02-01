@@ -224,7 +224,7 @@
                         emailWhatsAppSupport: true,
                     }
                 ],
-                currency: 'INR',
+                currency: 'USD',
             }
         },
         computed: {},

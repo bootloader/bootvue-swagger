@@ -364,7 +364,7 @@
                         emailWhatsAppSupport: true,
                     },
                 ],
-                currency: 'IND',
+                currency: 'USD',
             }
         },
         computed: {},
