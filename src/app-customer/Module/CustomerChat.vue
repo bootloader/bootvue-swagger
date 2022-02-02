@@ -32,14 +32,16 @@
         <p class="sc-message--text-content" v-html="messageText"></p>
 
         <p  class="sc-message--text-content"
-            v-if="message.data.attachments && message.data.attachments.length>0" 
-            v-for="atch in message.data.attachments">
-              <img v-if="atch.mediaType == 'IMAGE'"  
-                  :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https">
-              <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
-              <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
-              </a>
-              <br/>
+            v-if="message.data.attachments && message.data.attachments.length>0">
+            <span  v-for="atch in message.data.attachments" :key="atch.mediaURL">
+                <img v-if="atch.mediaType == 'IMAGE'"  
+                    :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https">
+                <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
+                <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
+                </a>
+                <br/>
+            </span>  
+
 
         </p>
         <ul v-if="message.data.inputs && message.data.inputs.length>0">
@@ -65,6 +67,7 @@
 
     import { required, email,regex } from 'vee-validate/dist/rules';
     import formatters from './../../services/formatters';
+    import tunnel from './../../services/tunnel';
 
 
     function toMessage(msg) {
@@ -112,11 +115,17 @@
               }
             },
           },
+          options : {
+            domain : null,
+            channelId : null,
+            channelKey : null
+          },
 
           messageList: [
               // { type: 'text', author: `me`, data: { text: `Say yes!` } },
               // { type: 'text', author: `user1`, data: { text: `No.` } }
           ], // the list of the messages to show, can be paginated and adjusted dynamically
+          messageMap : {},
           newMessagesCount: 0,
           isChatOpen: false, // to determine whether the chat window should be open or closed
           showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
@@ -162,9 +171,14 @@
         },
         addMessage : function (message) {
           //message.type = message.data.file ? "file" : message.type; 
-          this.messageList = [ ...this.messageList, message ].sort(function(a,b) {
-            return a.data.timestamp - b.data.timestamp;
-          })
+          if(this.messageMap[message.id]){
+            this.messageMap[message.id].data = message.data;
+          } else {
+             this.messageMap[message.id] = message.id;
+            this.messageList = [ ...this.messageList, message ].sort(function(a,b) {
+              return a.data.timestamp - b.data.timestamp;
+            })
+          }
         },
         async onMessageWasSentAsync (message, form) {
           // called when the user sends a message
@@ -173,14 +187,32 @@
           message.data.timestamp = Date.now();
           this.addMessage(message);
 
-          let resp = await this.$service.post("/ext/inbound/web/callback",{
-             message : (message.data.text || message.data.emoji || "") , from : this.csid,
-             form : form
-          });
-          var _msg = toMessage(resp);
-          message.id = _msg.id;
-          message.data.timestamp = _msg.data.timestamp;
-          message.data.attachments = _msg.data.attachments;
+        if(this.options.channelId){
+                let resp = await this.$service.post(
+                `ext/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`,
+                {
+                  message : (message.data.text || message.data.emoji || "") , from : this.csid,
+                  form : form
+                });
+              var _msg = toMessage(resp.results[0]);
+              message.id = _msg.id;
+              message.data.timestamp = _msg.data.timestamp;
+              message.data.attachments = _msg.data.attachments;
+          } else { 
+            ///{@Deprecated
+              let resp = await this.$service.post(
+                "/ext/inbound/web/callback",
+              {
+                message : (message.data.text || message.data.emoji || "") , from : this.csid,
+                form : form
+              });
+              var _msg = toMessage(resp);
+              message.id = _msg.id;
+              message.data.timestamp = _msg.data.timestamp;
+              message.data.attachments = _msg.data.attachments;
+            ///}@Deprecated
+          }
+
         },
         onMessageWasSent (message) {
           var form = {};
@@ -225,15 +257,29 @@
         },
         async loadChats(){
           let rsp = await this.$service.get("../" + window.CONST.POSTMAN + "/ext/outbound/web/auth/v2",{
-            number : this.csid
+            number : this.csid,
+            csid : this.csid,
+            user : window.CONST.APP_USER,
+            channelId : this.options.channelId,
+            channelKey : this.options.channelKey
           });
           console.log(rsp);
           var results =  rsp.results;
           for(var i in results){
               this.addMessage(toMessage(rsp.results[i]));
           }
-          this.pollMessage();
+          //this.pollMessage();
+          this.subscibeMessage();
           this.closeLoading();
+        },
+        async subscibeMessage(){
+            var THAT =  this;
+            console.log("TUNNEL")
+            this.tunnel = tunnel.init().instance()
+            .on("/message/receive/new", function(msg){
+                  console.log("/message/receive/new",msg);
+                  THAT.addMessage(toMessage(msg));
+            });
         },
         async pollMessage (){
           try {
@@ -307,18 +353,23 @@
             var config = myChatEvent.options.config || {};
             var thisConfig = this.config;
             for(var key in config){
-              var keys = key.split(".");
-              if(keys[keys.length-1] == 'color'){
-                this.colors[keys[0]][keys[1]] = config[key] || this.colors[keys[0]][keys[1]];
-                console.log(`${keys[0]}.${keys[1]} == `,this.colors[keys[0]][keys[1]])
-              } else if(thisConfig[keys[0]] && thisConfig[keys[0]][keys[1]] ){
-                console.log(`${keys[0]}.${keys[1]}.${keys[2]} =`,thisConfig[keys[0]][keys[1]][keys[2]])
-                thisConfig[keys[0]][keys[1]][keys[2]] =  config[key];
-              } else {
-                console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]][keys[1]])
-              }
-              this.isConfigSet = true;
+                  var keys = key.split(".");
+                  if(keys[keys.length-1] == 'color'){
+                    this.colors[keys[0]][keys[1]] = config[key] || this.colors[keys[0]][keys[1]];
+                    console.log(`${keys[0]}.${keys[1]} == `,this.colors[keys[0]][keys[1]])
+                  } else if(thisConfig[keys[0]] && thisConfig[keys[0]][keys[1]] ){
+                    console.log(`${keys[0]}.${keys[1]}.${keys[2]} =`,thisConfig[keys[0]][keys[1]][keys[2]])
+                    thisConfig[keys[0]][keys[1]][keys[2]] =  config[key];
+                  } else {
+                    console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]][keys[1]])
+                  }
+                  this.isConfigSet = true;
             }
+
+            myChatEvent.options.config = null;
+            delete myChatEvent.options.config;
+            this.options = Object.assign({},this.options,myChatEvent.options);
+
 
         }
 

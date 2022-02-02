@@ -203,7 +203,7 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
           async viewItem(item) {
-            let resp = await this.$service.get('api/config/channel/'+item.channelId);
+            let resp = await this.$service.get('api/config/channel/'+item.channelId+"/");
             this.oneItemView = resp.results[0] || { channelId : item.channelId };
             this.$bvModal.show(this.modelName + "_VIEW")
           },

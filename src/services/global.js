@@ -14,6 +14,7 @@ export const MyConst = {
 	user : window.CONST.APP_USER, dept : window.CONST.APP_DEPT,
 	userName : window.CONST.APP_USER_NAME,
 	agent : window.CONST.APP_USER,
+	nounce : window.CONST.NOUNCE,
 	config : (function(config){
 		//Derived Constants
 		config.chatRefreshInterval = config.chatIdleTimeout/5; //Chats/sessions should be refreshed after this interval

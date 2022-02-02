@@ -43,6 +43,7 @@ var tunnelClient = (function(win) {
 		if(!TUNNEL_DEBUG){
 			stompClient.debug = () => {};
 		}
+
 		stompClient.connect({
 			user : config.user,
 			token : config.token
