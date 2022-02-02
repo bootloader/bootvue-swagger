@@ -17,7 +17,7 @@
                 <a v-if="c.contactType == 'TELEGRAM'"  :href="`https://telegram.me/${c.telegram.lane}`">
                 <i class="fab fa-telegram-plane"/><span class="bg-telegram">{{c.telegram.handler || c.lane || c.name}}</span>
                 </a>
-                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}`">
+                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+$global.MyConst.appDomain) : ''}`">
                     <i class="fab fa-whatsapp"/><span class="bg-whatsapp-dull">{{c.lane}}</span>
                 </a>
             </span>
@@ -31,7 +31,7 @@
                 <a v-if="c.contactType == 'TWITTER'" :href="`https://twitter.com/${c.twitter.handler}`"
                 class="btn twitter bg-twitter:before">
                 <i class="icon fab fa-twitter text-twitter"></i></a>
-                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}`"
+                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+$global.MyConst.appDomain) : ''}`"
                 class="btn whatsapp bg-whatsapp:before">
                 <i class="icon fab fa-whatsapp text-whatsapp"></i></a>
                 <a v-if="c.contactType == 'TELEGRAM'"  :href="`https://telegram.me/${c.telegram.lane}`"
