@@ -15,7 +15,7 @@
             OPTIONS = options;
 
             options.domain =  options.domain || [options.entity,".mehery.com"].join("");
-            options.path = ["https://", options.domain ,"/postman/plugin/customer/app/chat/"].join("");
+            options.path = ["https://", options.domain ,"/postman/ext/plugin/customer/app/chat/"].join("");
 
             if(options.local){
                 options.path = [options.local, "/plugin/customer/app/chat/"].join("");

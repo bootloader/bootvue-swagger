@@ -212,8 +212,8 @@ export default {
       recaptchaScript.setAttribute('src', this.$global.MyConst.cdn + '/plugins/customer.js?theme=bubble');
       recaptchaScript.innerHTML = JSON.stringify({
           "domain" : [this.$global.MyConst.appDomain,this.$global.MyConst.config.PROP_SERVICE_DOMAIN].join("."),
-          "channelId" : "MeheryProfile",
-          "channelToken" : "<channelToken>",
+          "channelId" : "web:page",
+          "channelKey" : "1gdmxikhbf5fz56SR5JRDFY",
           "config" : {
                 "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",

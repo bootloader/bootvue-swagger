@@ -71,6 +71,7 @@
 
 
     function toMessage(msg) {
+      if(!msg) return;
       return { 
         author: msg.type == "I" ? 'me' : "support", 
         type: 'text', 
@@ -171,10 +172,11 @@
         },
         addMessage : function (message) {
           //message.type = message.data.file ? "file" : message.type; 
-          if(this.messageMap[message.id]){
+          console.log("addMessage",message)
+          if(message.id && this.messageMap[message.id]){
             this.messageMap[message.id].data = message.data;
           } else {
-             this.messageMap[message.id] = message.id;
+            this.messageMap[message.id] = message;
             this.messageList = [ ...this.messageList, message ].sort(function(a,b) {
               return a.data.timestamp - b.data.timestamp;
             })
@@ -189,7 +191,7 @@
 
         if(this.options.channelId){
                 let resp = await this.$service.post(
-                `ext/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`,
+                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`,
                 {
                   message : (message.data.text || message.data.emoji || "") , from : this.csid,
                   form : form
@@ -256,7 +258,7 @@
           m.data.text = message.data.text;
         },
         async loadChats(){
-          let rsp = await this.$service.get("../" + window.CONST.POSTMAN + "/ext/outbound/web/auth/v2",{
+          let rsp = await this.$service.get("../" + window.CONST.POSTMAN + "/ext/plugin/outbound/web/auth/v2",{
             number : this.csid,
             csid : this.csid,
             user : window.CONST.APP_USER,
@@ -268,8 +270,11 @@
           for(var i in results){
               this.addMessage(toMessage(rsp.results[i]));
           }
-          //this.pollMessage();
-          this.subscibeMessage();
+          if(window.CONST.STOMP_ENABLED){
+              this.subscibeMessage();
+          } else {
+              this.pollMessage();
+          }
           this.closeLoading();
         },
         async subscibeMessage(){
@@ -283,8 +288,10 @@
         },
         async pollMessage (){
           try {
-              let rsp = await this.$service.get("/ext/outbound/web/callback",{
-                number : this.csid
+              let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
+                number : this.csid,  csid : this.csid,
+                user : window.CONST.APP_USER,
+                channelId : this.options.channelId,
               });
               if(rsp)
                 this.onMessageRecvd(toMessage(rsp));

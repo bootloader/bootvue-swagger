@@ -12,11 +12,15 @@
           footer-classes="mt--1">
         <template slot="icon">
           <a class="btn btn-sm btn-primary" target="_blank"
-            :href="`/partner/app/goto/${model.domain}/admin`" > Open</a>
+            :href="`/partner/app/goto/${model.domain}/admin`" > Setup</a>
         </template>
         <template slot="footer">
+          <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
+            :href="`https://${model.domain}.${$config.PROP_SERVICE_DOMAIN}`" target="_blank">
           <span class="text-success">https://</span>
-          <span class="text-nowrap">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
+          <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
+          &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
+          </a>
           <button class="btn btn-link btn-sm text-nowrap float-right" @click="isEditDetail=true">Edit</button>
         </template>
       </stats-card>
