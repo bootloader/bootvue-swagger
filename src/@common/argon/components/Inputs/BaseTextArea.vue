@@ -1,6 +1,6 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout]">
+  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
@@ -15,6 +15,7 @@
           {'is-invalid': invalid && validated},
           {'has-value': value != ''},
           {'is-disabled' : disabled},
+          'text-'+size,
           labelClasses
         ]">
           {{label || name}}
@@ -22,6 +23,7 @@
       </slot>
       <div :class="[
        {'input-group': hasIcon || (feedback)},
+         size ? 'input-group-'+size : '',
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},
@@ -45,7 +47,8 @@
               :placeholder="$attrs.placeholder"
               :required="required"
               class=""
-              :areaClass="[ 'form-control',
+              :areaClass="[ 
+                size ? 'form-control-'+size : '',
                 (valid && validated && successMessage) ? 'is-valid' : '',
                 (invalid && validated) ? 'is-invalid' : '',
                 inputClasses].join(' ')"
@@ -75,6 +78,10 @@
                 { 'fa-check-circle text-success' : valid && validated }
                ]"></i>
             </span>
+        </div>
+        <div v-if="copy" class="input-group-append input-group-append-copy">
+            <b-button v-clipboard:copy="value" 
+                variant="outline-success fa fa-clipboard"></b-button>
         </div>
         <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
           <span class="input-group-text">
@@ -119,14 +126,18 @@
     inheritAttrs: false,
     name: "base-text-area",
     props: {
-      required: {
-        type: Boolean,
-        description: "Whether input is required (adds an asterix *)"
-      },
       layout : {
         type : String,
         default : "default",
         description: "ex : flushed"
+      },
+      size: {
+        type: String,
+        description: 'size sm/md/lg/xl',
+      },
+      required: {
+        type: Boolean,
+        description: "Whether input is required (adds an asterix *)"
       },
       question: {
         type: Boolean,
@@ -225,6 +236,10 @@
       disabled : {
         type: Boolean,
         description: 'Disabled',
+        default : false
+      },
+      copy : {
+        type : Boolean,
         default : false
       }
     },

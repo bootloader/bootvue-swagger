@@ -38,6 +38,10 @@
                   v-if="row.item.sandbox"
                   :value="row.item.sandbox" icon="fa fa-box-open" v-tooltip="'Sandbox'" 
                     class="ml-1"/>
+           <my-status 
+                  v-if="row.item.shared"
+                  :value="row.item.shared" icon="far fa-address-card" v-tooltip="'Default Page'" 
+                    class="ml-1"/>
           </template>
 
           <template #cell(actions)="row">
@@ -64,46 +68,44 @@
                 <i class="fas fa-trash"/>
             </b-button>
           </template>
+           <template #cell(inboundQueue)="row">
+              <MyText v-if="row.item.readOnly"
+                  options="getx:/api/config/inbound_queue" optionKey="code"
+                  :value="row.item.inboundQueue">
+              </MyText>
+                <BaseVSelect v-else
+                    @change="inboundQueueUpdate(row.item)"
+                    :disabled="row.item.readOnly" :readonly="row.item.readOnly"
+                    options="getx:/api/config/inbound_queue" optionKey="code"
+                    :value="row.item.inboundQueue"
+                    class="text-sm float-left mx-1"/>
+           </template>
 
       </master-view >
 
         <b-modal v-if="oneItem" :id="modelName+'_VIEW'" :title="'View Details '" size="md"
             @hidden="cancelItem">
-            
-                <b-input-group class="mt-3">
-                  <b-input-group-prepend>
-                      <b-button variant="outline-dark"  class="text-sm w-120px">
-                        Channel Id</b-button>
-                  </b-input-group-prepend>
-                  <b-form-input readonly
-                    :value="oneItemView.channelId"
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-button
-                      v-clipboard:copy="oneItemView.channelId" 
-                      variant="outline-success">Copy</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-
-                <b-input-group v-if="oneItemView.webhookManual" class="mt-3">
-                 <b-input-group-prepend>
-                      <b-button variant="outline-dark" class="text-sm w-120px">
-                         Webhook URL</b-button>
-                  </b-input-group-prepend>
-                  <b-form-input readonly
-                    :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath"
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-button class="w-20"
-                      v-clipboard:copy="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
-                      variant="outline-success">Copy</b-button>
-                  </b-input-group-append>
-                </b-input-group>
+                <base-input size="sm" readonly prelabel copy
+                  label="Channel Id" :value="oneItemView.channelId">
+                </base-input>
+                <base-text-area
+                    v-if="oneItemView.channelType == 'web'"
+                    size="sm" :rows="12" layout="flushed" readonly copy
+                    label="Script" 
+                    :value="createWebScript(oneItemView.webhookUrl , oneItemView.callbackPath)">
+                    <template #infoBlock>
+                      To customize widget <a target="_blank"
+                        :href="`${$global.MyConst.config.PROP_SERVICE_DOCS_LINK}/guide/channel-connect/webchat/`" >
+                        read documentation</a>
+                    </template>  
+                </base-text-area>
+                <base-input v-else-if="oneItemView.webhookManual" size="sm" readonly prelabel copy
+                  label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
+                  >
+                </base-input>
                 <template #modal-footer="{ok}">
-                      <div class="position-relative form-group">
-                        <button @click="ok()"
-                          class="form-control btn btn-primary">OK</button>
-                        </div>
+                  <button @click="ok()"
+                          class="btn btn-sm btn-primary">OK</button>
                 </template>
         </b-modal>
         <ValidationObserver ref="form" class="modal-form" v-slot="{ invalid }">
@@ -135,7 +137,7 @@
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
-import MyStatus from '../../../@common/custom/components/MyStatus.vue';
+    import MyStatus from '../../../@common/custom/components/MyStatus.vue';
 
     function newItem(channelType) {
       return {
@@ -157,7 +159,9 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
                 { key : 'details', label : "Channel" },
                 { key : 'name', label : "Desc" },
                 { key : 'status', label : "Status" },
-                { key : 'actions', label : "Action" }],
+                { key : 'actions', label : "Action" },
+                { key : 'inboundQueue', label : "Inbound Queue" }
+                ],
               items : [],
               perPage: 25,
               currentPage: 1,
@@ -183,10 +187,11 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
             let resp = await this.$service.get('api/options/channels');
             this.table.items = resp.results;
           },
-          async saveItem () {
+          async saveItem (silent) {
               let resp = await this.$service.post('api/config/channel/'+this.oneItem.channelType, this.oneItem );
               await this.onAction({name : "CANCEL"});
-              this.viewItem(resp.results[0]);
+              if(!silent)
+                this.viewItem(resp.results[0]);
               this.loadItems();
           },
           async cancelItem(item) {
@@ -211,6 +216,13 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
             await this.$service.get('api/config/channel/'+item.channelId + "/" + 
             (item.disabled ? "enable" : "disable") , {});
             this.loadItems();
+          },
+          async inboundQueueUpdate(item){
+              this.oneItem = newItem();
+              for(var i in item){
+                this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
+              }
+              this.saveItem(true);
           },
           async deleteItem(item) {
             await this.$service.get('api/config/channel/'+item.channelId + "/remove",{});
@@ -266,8 +278,22 @@ import MyStatus from '../../../@common/custom/components/MyStatus.vue';
                 value : config.value
               });
               this.oneItem.__ob__.dep.notify()
+          },
+          createWebScript(callback,path){
+            //https://demo.mehery.io/postman/ext/inbound/v2/fb/callback/PK79UY4KUP/fb:181412048587363/1g2kbqar1qmufVW0LJ2C7WS
+            let paths = (path||"").split("/");
+            let script =  (
+`<!-- Add this snippt as last tag in body -->
+<script src='https://cdn.jsdelivr.net/gh/cherrybase/cherrybase.github.io@gh-pages/plugins/customer.js?theme=bubble'>
+{
+  'domain' : '${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_DOMAIN}',
+  "channelId" : "${paths[6]}",
+  "channelKey" : "${paths[7]}",
+  "config" : {}
+}
+</` +`script>`);
+            return script;
           }
-
         }
 
 

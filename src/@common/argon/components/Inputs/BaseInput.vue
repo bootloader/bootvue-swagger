@@ -59,6 +59,10 @@
                ]"></i>
             </span>
         </div>
+        <div v-if="copy" class="input-group-append input-group-append-copy">
+            <b-button v-clipboard:copy="value" 
+                variant="outline-success fa fa-clipboard"></b-button>
+        </div> 
         <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
           <span class="input-group-text">
               <slot name="append">
@@ -101,6 +105,15 @@
     inheritAttrs: false,
     name: "base-input",
     props: {
+      layout : {
+        type : String,
+        default : "default",
+        description: "ex : flushed"
+      },
+      size: {
+        type: String,
+        description: 'size sm/md/lg/xl',
+      },
       required: {
         type: Boolean,
         description: "Whether input is required (adds an asterix *)"
@@ -200,13 +213,9 @@
         description: 'Input name (used for validation)',
         default: ''
       },
-      size: {
-        type: String,
-        description: 'size sm/md/lg/xl',
-      },
-      layout : {
-        type : String,
-        default : "default"
+      copy : {
+        type : Boolean,
+        default : false
       }
     },
     data() {

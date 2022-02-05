@@ -32,10 +32,12 @@
 
   Vue.component('MyModalBox', () => import('./@common/custom/components/MyModalBox.vue'));
   Vue.component('MySource', () => import('./@common/custom/components/MySource.vue'));
+  Vue.component('MyText', () => import('./@common/custom/components/MyText.vue'));
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
   Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
   Vue.component('MyAxon', () => import('./@common/custom/components/MyAxon.vue'));
+
 
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)

@@ -9,8 +9,10 @@
                     :optionKey="input.meta.optionsKey"
                     :options="input.meta.optionsSource || input.meta.options" 
                     v-model="input.config.value"
+                    :value="input.meta.defaultValue"
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                     placeholder="Select"
+                    @change="onChange(input.meta,input.config)"
                     >
                 </BaseVSelect>
                 <ButtonRadioGroup v-else-if="input.meta.inputType=='OPTIONS'"
@@ -18,6 +20,7 @@
                         v-model="input.config.value" size="sm"
                         :options="input.meta.options"
                         :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                        @change="onChange(input.meta,input.config)"
                 />
                 <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)"
