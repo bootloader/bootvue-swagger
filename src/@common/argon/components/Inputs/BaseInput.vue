@@ -59,6 +59,9 @@
                ]"></i>
             </span>
         </div>
+        <div v-if="link" class="input-group-append input-group-append-link">
+            <a target="_blank" :href="value" class="btn btn-outline-success fa fa-external-link"></a>
+        </div> 
         <div v-if="copy" class="input-group-append input-group-append-copy">
             <b-button v-clipboard:copy="value" 
                 variant="outline-success fa fa-clipboard"></b-button>
@@ -214,6 +217,10 @@
         default: ''
       },
       copy : {
+        type : Boolean,
+        default : false
+      },
+      link : {
         type : Boolean,
         default : false
       }

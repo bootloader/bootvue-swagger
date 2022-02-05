@@ -95,6 +95,20 @@ export const MyDict = {
 		}
 		return this.social.WEBSITE;
 	},
+	c2cUrl : function(c){
+		if(c.contactType == 'FACEBOOK'){
+			return `https://m.me/${c.facebook.handler}`;
+		} else if(c.contactType == 'TWITTER'){
+			return `https://twitter.com/${c.twitter.handler}`;
+		} else if(c.contactType == 'WHATSAPP'){
+			return `https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+$global.MyConst.appDomain) : ''}`;
+		} else if(c.contactType == 'TELEGRAM'){
+			return `https://telegram.me/${c.telegram.lane}`;
+		} else if(c.contactType == 'INSTAGRAM'){
+			return `https://instagram.com/${c.instagram.handler}`;
+		}
+		return `https://${MyConst.tenant}.${MyConst.config.PROP_SERVICE_DOMAIN}`;
+	},
 	profilePic : require('./../assets/agent/images/profile.png')
 }
 
