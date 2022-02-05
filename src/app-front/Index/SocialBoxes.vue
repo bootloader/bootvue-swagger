@@ -5,19 +5,19 @@
             <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId" v-if="!c.disabled"
                 class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white social-link"
             >
-                <a v-if="c.contactType == 'TWITTER'" :href="`https://twitter.com/${c.twitter.handler}`">
+                <a v-if="c.contactType == 'TWITTER'" :href="$global.MyDict.c2cUrl(c)">
                 <i class="fab fa-twitter"/><span class="bg-twitter ">{{c.twitter.handler}}</span>
                 </a>
-                <a v-if="c.contactType == 'FACEBOOK'" :href="`https://m.me/${c.facebook.handler}`">
+                <a v-if="c.contactType == 'FACEBOOK'" :href="$global.MyDict.c2cUrl(c)">
                 <i class="fab fa-facebook-f"/><span class="bg-facebook"> {{c.facebook.page || c.facebook.handler || c.lane}}</span>
                 </a>
-                <a v-if="c.contactType == 'INSTAGRAM'"  :href="`https://instagram.com/${c.instagram.handler}`">
+                <a v-if="c.contactType == 'INSTAGRAM'"  :href="$global.MyDict.c2cUrl(c)">
                 <i class="fab fa-instagram"/><span class="bg-instagram" >{{c.instagram.handler || c.name}}</span>
                 </a>
-                <a v-if="c.contactType == 'TELEGRAM'"  :href="`https://telegram.me/${c.telegram.lane}`">
+                <a v-if="c.contactType == 'TELEGRAM'"  :href="$global.MyDict.c2cUrl(c)">
                 <i class="fab fa-telegram-plane"/><span class="bg-telegram">{{c.telegram.handler || c.lane || c.name}}</span>
                 </a>
-                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+$global.MyConst.appDomain) : ''}`">
+                <a v-if="c.contactType == 'WHATSAPP'" :href="$global.MyDict.c2cUrl(c)">
                     <i class="fab fa-whatsapp"/><span class="bg-whatsapp-dull">{{c.lane}}</span>
                 </a>
             </span>
@@ -25,19 +25,19 @@
 
         <div v-else class="social-btns">
             <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"  v-if="!c.disabled"> 
-                <a  v-if="c.contactType == 'FACEBOOK'" :href="`https://m.me/${c.facebook.handler}`" 
+                <a  v-if="c.contactType == 'FACEBOOK'" :href="$global.MyDict.c2cUrl(c)" 
                     class="btn facebook bg-facebook:before">
                 <i class="icon fab fa-facebook-f text-facebook"></i></a>
-                <a v-if="c.contactType == 'TWITTER'" :href="`https://twitter.com/${c.twitter.handler}`"
+                <a v-if="c.contactType == 'TWITTER'" :href="$global.MyDict.c2cUrl(c)"
                 class="btn twitter bg-twitter:before">
                 <i class="icon fab fa-twitter text-twitter"></i></a>
-                <a v-if="c.contactType == 'WHATSAPP'" :href="`https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+$global.MyConst.appDomain) : ''}`"
+                <a v-if="c.contactType == 'WHATSAPP'" :href="$global.MyDict.c2cUrl(c)"
                 class="btn whatsapp bg-whatsapp:before">
                 <i class="icon fab fa-whatsapp text-whatsapp"></i></a>
-                <a v-if="c.contactType == 'TELEGRAM'"  :href="`https://telegram.me/${c.telegram.lane}`"
+                <a v-if="c.contactType == 'TELEGRAM'"  :href="$global.MyDict.c2cUrl(c)"
                 class="btn telegram bg-telegram:before">
                 <i class="icon fab fa-telegram-plane text-telegram"></i></a>
-                <a v-if="c.contactType == 'INSTAGRAM'"  :href="`https://instagram.com/${c.instagram.handler}`"
+                <a v-if="c.contactType == 'INSTAGRAM'"  :href="$global.MyDict.c2cUrl(c)"
                 class="btn instagram bg-instagram:before">
                 <i class="icon fab fa-instagram text-instagram"></i>
                 </a>
