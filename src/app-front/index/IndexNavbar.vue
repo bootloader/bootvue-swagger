@@ -30,7 +30,7 @@
       </div>
       <div
         class="lg:flex flex-grow items-center"
-        :class="[navbarOpen ? 'block' : 'hidden']"
+        :class="[navbarOpen ? 'block' : 'hidden d-none']"
         id="example-navbar-warning"
       >
         <ul class="flex flex-col lg:flex-row list-none mr-auto">

@@ -2,20 +2,23 @@
     <div>
 
         <div v-if="isStrip" class="social-links text-center">
-            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId" v-if="!c.disabled"
-                class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white social-link"
-            >
+            <span v-for="(c,index) in channelsEnabled" v-bind:key="c.channelId+'_'+ index"
+                class="lg:w-4/12 font-bold uppercase px-4 py-4 rounded text-white social-link">
                 <a v-if="c.contactType == 'TWITTER'" :href="$global.MyDict.c2cUrl(c)">
-                <i class="fab fa-twitter"/><span class="bg-twitter ">{{c.twitter.handler}}</span>
+                    <i class="fab fa-twitter"/>
+                    <span class="bg-twitter ">{{c.twitter.handler}}</span>
                 </a>
                 <a v-if="c.contactType == 'FACEBOOK'" :href="$global.MyDict.c2cUrl(c)">
-                <i class="fab fa-facebook-f"/><span class="bg-facebook"> {{c.facebook.page || c.facebook.handler || c.lane}}</span>
+                    <i class="fab fa-facebook-f"/>
+                    <span class="bg-facebook"> {{c.facebook.page || c.facebook.handler || c.lane}}</span>
                 </a>
                 <a v-if="c.contactType == 'INSTAGRAM'"  :href="$global.MyDict.c2cUrl(c)">
-                <i class="fab fa-instagram"/><span class="bg-instagram" >{{c.instagram.handler || c.name}}</span>
+                    <i class="fab fa-instagram"/>
+                    <span class="bg-instagram" >{{c.instagram.handler || c.name}}</span>
                 </a>
                 <a v-if="c.contactType == 'TELEGRAM'"  :href="$global.MyDict.c2cUrl(c)">
-                <i class="fab fa-telegram-plane"/><span class="bg-telegram">{{c.telegram.handler || c.lane || c.name}}</span>
+                    <i class="fab fa-telegram-plane"/>
+                    <span class="bg-telegram">{{c.telegram.handler || c.lane || c.name}}</span>
                 </a>
                 <a v-if="c.contactType == 'WHATSAPP'" :href="$global.MyDict.c2cUrl(c)">
                     <i class="fab fa-whatsapp"/><span class="bg-whatsapp-dull">{{c.lane}}</span>
@@ -24,22 +27,22 @@
         </div>
 
         <div v-else class="social-btns">
-            <span v-for="c in channels" v-bind:key="c.channelId" :id="c.channelId"  v-if="!c.disabled"> 
+            <span v-for="(c,index) in channelsEnabled" v-bind:key="c.channelId+'_'+ index"> 
                 <a  v-if="c.contactType == 'FACEBOOK'" :href="$global.MyDict.c2cUrl(c)" 
                     class="btn facebook bg-facebook:before">
-                <i class="icon fab fa-facebook-f text-facebook"></i></a>
+                    <i class="icon fab fa-facebook-f text-facebook"></i></a>
                 <a v-if="c.contactType == 'TWITTER'" :href="$global.MyDict.c2cUrl(c)"
-                class="btn twitter bg-twitter:before">
-                <i class="icon fab fa-twitter text-twitter"></i></a>
+                    class="btn twitter bg-twitter:before">
+                    <i class="icon fab fa-twitter text-twitter"></i></a>
                 <a v-if="c.contactType == 'WHATSAPP'" :href="$global.MyDict.c2cUrl(c)"
-                class="btn whatsapp bg-whatsapp:before">
-                <i class="icon fab fa-whatsapp text-whatsapp"></i></a>
+                    class="btn whatsapp bg-whatsapp:before">
+                    <i class="icon fab fa-whatsapp text-whatsapp"></i></a>
                 <a v-if="c.contactType == 'TELEGRAM'"  :href="$global.MyDict.c2cUrl(c)"
-                class="btn telegram bg-telegram:before">
-                <i class="icon fab fa-telegram-plane text-telegram"></i></a>
+                    class="btn telegram bg-telegram:before">
+                    <i class="icon fab fa-telegram-plane text-telegram"></i></a>
                 <a v-if="c.contactType == 'INSTAGRAM'"  :href="$global.MyDict.c2cUrl(c)"
-                class="btn instagram bg-instagram:before">
-                <i class="icon fab fa-instagram text-instagram"></i>
+                    class="btn instagram bg-instagram:before">
+                    <i class="icon fab fa-instagram text-instagram"></i>
                 </a>
             </span>
         </div>
@@ -67,6 +70,9 @@ export default {
         isStrip : function (params) {
             //return this.strips ? true : (Math.round(Math.random()*1) == 0)
             return true;
+        },
+        channelsEnabled(){
+          return this.channels.filter((c)=>!c.disabled && c.contactType!='WEBSITE');
         }
     }
 

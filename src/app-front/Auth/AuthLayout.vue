@@ -41,8 +41,9 @@ export default {
 </script>
 <style scoped>
 .bg-cover-lg {
-  background-position: bottom center;
-  height: calc( 100% - 75px);
+    background-position: bottom right;
+    height: calc( 100% - 75px);
+    background-size: 50%;
 }
 .bg-cover-sm {
   background-position: bottom center;

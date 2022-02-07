@@ -1,10 +1,10 @@
 <template>
   <div>
       <a :class="['',btnClass]"
-          href="#pablo"
+          :href="href || '#pablo'"
           ref="btnDropdownRef"
           v-on:click="toggleDropdown($event)">   
-        <slot name="button">
+        <slot>
             Login
         </slot>
       </a>
@@ -57,6 +57,8 @@ export default {
       type: String,
       default: 'hover:text-blueGray-500 text-blueGray-700 px-3 py-2 flex items-center text-xs uppercase font-bold',
     },
+    href : {
+    }
   },
   data() {
     return {
@@ -65,6 +67,7 @@ export default {
   },
   methods: {
     toggleDropdown: function (event) {
+      if(this.href) return;
       event.preventDefault();
       if (this.dropdownPopoverShow) {
         this.dropdownPopoverShow = false;
