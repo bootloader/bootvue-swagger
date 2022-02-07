@@ -283,7 +283,7 @@
             this.tunnel = tunnel.init().instance()
             .on("/message/receive/new", function(msg){
                   console.log("/message/receive/new",msg);
-                  THAT.addMessage(toMessage(msg));
+                  THAT.onMessageRecvd(toMessage(msg));
             });
         },
         async pollMessage (){
