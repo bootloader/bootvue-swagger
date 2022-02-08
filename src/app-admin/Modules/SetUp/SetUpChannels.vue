@@ -286,10 +286,10 @@
             //https://demo.mehery.io/postman/ext/inbound/v2/fb/callback/PK79UY4KUP/fb:181412048587363/1g2kbqar1qmufVW0LJ2C7WS
             let paths = (path||"").split("/");
             let script =  (
-`<!-- Add this snippt as last tag in body -->
+`       <!-- Add this snippt as last tag in body -->
 <script src='https://cdn.jsdelivr.net/gh/cherrybase/cherrybase.github.io@gh-pages/plugins/customer.js?theme=bubble'>
 {
-  'domain' : '${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_DOMAIN}',
+  "domain" : "${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_DOMAIN}",
   "channelId" : "${paths[6]}",
   "channelKey" : "${paths[7]}",
   "config" : {}
