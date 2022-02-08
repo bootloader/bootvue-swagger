@@ -132,11 +132,11 @@
           showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
           colors: {
             header: {
-              bg: '#4e8cff',
+              bg: '#000',
               text: '#ffffff'
             },
             launcher: {
-              bg: '#4e8cff'
+              bg: '#000'
             },
             messageList: {
               bg: '#ffffff'
@@ -358,6 +358,7 @@
         SET_OPTIONS : function (myChatEvent) {
             console.log("SET_OPTIONS",myChatEvent);
             var config = myChatEvent.options.config || {};
+            config.dummy = 'dummy.dummy';
             var thisConfig = this.config;
             for(var key in config){
                   var keys = key.split(".");
@@ -368,7 +369,7 @@
                     console.log(`${keys[0]}.${keys[1]}.${keys[2]} =`,thisConfig[keys[0]][keys[1]][keys[2]])
                     thisConfig[keys[0]][keys[1]][keys[2]] =  config[key];
                   } else {
-                    console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]][keys[1]])
+                    console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]])
                   }
                   this.isConfigSet = true;
             }
