@@ -77,7 +77,7 @@
                     @change="inboundQueueUpdate(row.item)"
                     :disabled="row.item.readOnly" :readonly="row.item.readOnly"
                     options="getx:/api/config/inbound_queue" optionKey="code"
-                    :value="row.item.inboundQueue"
+                    v-model="row.item.inboundQueue"
                     class="text-sm float-left mx-1 w-50"/>
            </template>
 
