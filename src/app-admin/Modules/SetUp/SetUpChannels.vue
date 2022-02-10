@@ -70,19 +70,19 @@
           </template>
            <template #cell(inboundQueue)="row">
               <MyText v-if="row.item.readOnly"
-                  options="getx:/api/config/inbound_queue" optionKey="code"
+                  options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
                   :value="row.item.inboundQueue">
               </MyText>
                 <BaseVSelect v-else size="sm"
                     @change="inboundQueueUpdate(row.item)"
                     :disabled="row.item.readOnly" :readonly="row.item.readOnly"
-                    options="getx:/api/config/inbound_queue" optionKey="code"
+                    options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
                     v-model="row.item.inboundQueue"
                     class="text-sm float-left mx-1 w-50"/>
 
               <span v-if="!row.item.inboundQueue" class="text-sm">
                 &nbsp;Defaults to : <MyText
-                    options="getx:/api/config/inbound_queue" optionKey="code"
+                    options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
                     :value="$global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE">
                 </MyText>
               </span>      
@@ -170,7 +170,7 @@
                 { key : 'name', label : "Desc" },
                 { key : 'status', label : "Status" },
                 { key : 'actions', label : "Action" },
-                { key : 'inboundQueue', label : "Default Inbound Forward Queue" }
+                { key : 'inboundQueue', label : "Default Inbound App Queue" }
                 ],
               items : [],
               perPage: 25, size : 'sm',

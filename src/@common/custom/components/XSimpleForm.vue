@@ -7,6 +7,7 @@
                     :size="size" :clearable="false"
                     :name="(input.meta.title || input.meta.key)"
                     :optionKey="input.meta.optionsKey"
+                    :optionlabel="input.meta.optionsLabel"
                     :options="input.meta.optionsSource || input.meta.options" 
                     v-model="input.config.value"
                     :value="input.meta.defaultValue"
