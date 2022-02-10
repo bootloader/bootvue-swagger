@@ -79,6 +79,13 @@
                     options="getx:/api/config/inbound_queue" optionKey="code"
                     v-model="row.item.inboundQueue"
                     class="text-sm float-left mx-1 w-50"/>
+
+              <span v-if="!row.item.inboundQueue" class="text-sm">
+                &nbsp;Defaults to : <MyText
+                    options="getx:/api/config/inbound_queue" optionKey="code"
+                    :value="$global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE">
+                </MyText>
+              </span>      
            </template>
 
       </master-view >
@@ -163,7 +170,7 @@
                 { key : 'name', label : "Desc" },
                 { key : 'status', label : "Status" },
                 { key : 'actions', label : "Action" },
-                { key : 'inboundQueue', label : "Inbound Queue" }
+                { key : 'inboundQueue', label : "Default Inbound Forward Queue" }
                 ],
               items : [],
               perPage: 25, size : 'sm',

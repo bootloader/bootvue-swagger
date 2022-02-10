@@ -14,6 +14,13 @@
           <template #cell(changelog)="row">
               <small>Modified on {{row.item.updatedStamp | formatStamp}} by {{row.item.updatedBy}}</small>
           </template>
+          <template #cell(code)="row">
+              {{row.item.code}} <span 
+              v-if="$global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE == row.item.code"
+              v-tooltip="'This is set as default inbound queue'"
+              class="btn mg-1 fa fa-star text-primary">
+            </span>  
+          </template>
           <template #cell(actions)="row">
             <b-button size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
