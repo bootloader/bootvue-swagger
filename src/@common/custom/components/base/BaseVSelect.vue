@@ -44,6 +44,7 @@
             :emptyDisplay="emptyDisplay"
             :valid="valid" 
             :required="required"
+            :autoPosition="autoPosition"
             :class="['text-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
@@ -207,7 +208,11 @@
       },
       options : {
       },
-      emptyDisplay :{}
+      emptyDisplay :{},
+      autoPosition : {
+          type : Boolean,
+          default : false
+      }
     },
     data() {
       return {

@@ -50,6 +50,22 @@
                 </div>
 
                 <div class="card-footer">
+                    <b-row>
+                        <b-col cols="6">
+                            <span class="btn btn-primary" v-if="activeChat.local && activeChat.local.open"
+                            @click="closeChat">
+                            Close Chat
+                            </span>
+                        </b-col>
+                        <b-col cols="6">
+                            <BaseVSelect size="sm" v-if="activeChat.local && activeChat.local.open"
+                            @change="inboundQueueUpdate" auto-position
+                            options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
+                            v-model="activeChat.assignedToQueue"
+                            class="text-sm w-100 float-left"/>
+                        </b-col>
+                    </b-row>    
+ 
 
                 </div>
             </div>
@@ -57,27 +73,14 @@
 
 <script>
 
-    import Vue from 'vue';
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faTrashAlt,
-        faCheck,
-        faCalendarAlt,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faWhatsapp
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import Loading from 'vue-loading-overlay';
-    import mustache from 'mustache';
     import SlideUpDown from 'vue-slide-up-down';
     import ChatMessages from "@/app-agent/Module/ChatMessages";
+    import DataProcessor from './../../services/DataProcessor';
 
     export default {
         components: {
-            'font-awesome-icon': FontAwesomeIcon,
             Loading: Loading,SlideUpDown,ChatMessages
         },
         props: {
@@ -119,11 +122,27 @@
                 //this.session.contactType = "TELEGRAM";
                 var resp = await this.$store.dispatch('GetSessionChats',this.session);
                 console.log("resp",resp)
-                this.activeChat = resp;
+                this.activeChat = DataProcessor.session(resp);
                 this.isLoading = false;
             },
             closeBox : function (argument) {
                 this.$emit('close');
+            },
+            async closeChat(){
+                await this.$service.submit('/api/message/session/close',{
+                   sessionId :  this.activeChat.sessionId
+                });
+                this.loadMessages();
+                this.$emit('update');
+            },
+            async inboundQueueUpdate(){
+                console.log("this.activeChat.assignedToQueue",this.activeChat.assignedToQueue)
+                await this.$service.submit('/api/message/session/route',{
+                    sessionId :  this.activeChat.sessionId,
+                    queue :  this.activeChat.assignedToQueue || ""
+                });
+                this.loadMessages();
+                this.$emit('update');
             },
             async loadQuickLabels(){
                 return await this.$store.dispatch('LoadQuickLabels');

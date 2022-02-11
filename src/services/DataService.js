@@ -143,7 +143,7 @@ const DataService = {
     url = slashUrl(url);
     let SubmitForm = new URLSearchParams();
     for (var key in params) {
-       SubmitForm.append(key, params[key]);
+        SubmitForm.append(key, params[key]);
     }
     try{
       let response = await axios.post(url, SubmitForm,config);

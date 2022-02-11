@@ -1,23 +1,21 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon
-        :daterange=input.daterange v-on:dateRangeOnUpdate="dateRangeOnUpdate" ></page-title>
+       <master-view id="agent-session-list" 
+            :header="{
+                heading: heading,
+                subheading: subheading,
+                icon: icon,
+            }"
+            :filters="[{ label : 'Date Range', name : 'daterange'}]" 
+            :table="{...sessions,items :filtered}">
 
+                <template #filter(daterange)>
+                    <MyDatePicker 
+                      :daterange="input.daterange"
+                      v-on:dateRangeOnUpdate="dateRangeOnUpdate"
+                    > </MyDatePicker>
+                </template>
 
-       <b-table id="agent-session-list" :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :sort-by.sync="sessions.sortBy"
-                     :sort-desc.sync="sessions.sortDesc"
-                     :per-page="sessions.perPage"
-                     :current-page="sessions.currentPage"
-                     :items="filtered"
-                     :fields="sessions.fields">
                 <template #top-row="row">
                       <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
                       <b-th><input type="text" v-model="filters.contactName"  class="form-control form-control-sm" /></b-th>
@@ -37,9 +35,20 @@
                       </b-th>
                 </template>
                 <template #cell(assignedToAgent)="row">
-                    <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
-                    <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
+                    <span class="fa"
+                      :class="{
+                        'fa-robot' : row.item.mode=='BOT',
+                        'fa-user' : row.item.mode=='AGENT',
+                        'fa-forward-fast' : row.item.mode=='WEBHOOK',
+                      }"
+                     />
                     &nbsp;{{ row.item.assignedToAgent}}
+                    <span v-if="row.item.assignedToDept">
+                      ({{row.item.assignedToDept}})
+                    </span>
+                     <span v-if="row.item.assignedToQueue">
+                      | {{row.item.assignedToQueue}}
+                    </span>
                 </template>
                 <template #cell(contactId)="row">
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
@@ -72,12 +81,11 @@
                       {{ row.item.closeSessionStamp| formatDate}}
                 </template>   
                 <template #cell(actions)="row">
-                    <span style="cursor: pointer;" class="far fa-comment-alt"  @click="showChat(row.item, row.index, $event.target)" ></span>
-                    &nbsp;
+                    <span class="far fa-comment-alt mg-1 pointer"  @click="showChat(row.item, row.index, $event.target)" ></span>
                 </template>
 
 
-        </b-table>
+        </master-view>
 
           <b-pagination
               v-model="sessions.currentPage"
@@ -88,7 +96,8 @@
 
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
           <agent-chat v-if="session" :session="session" :key="session.sessionId"
-          @close="hideChat">
+          @close="hideChat"
+          @update="updateChat">
           </agent-chat>
       </div>        
     </div>
@@ -106,33 +115,9 @@
     //import chart2 from './Analytics/chart2';
     //import chart3 from './Analytics/chart3';
 
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faTrashAlt,
-        faCheck,
-        faCalendarAlt,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faCircle,
-        faRobot,faUser
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-
-    library.add(
-        faTrashAlt,
-        faCheck,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faCalendarAlt,
-        faCircle,faRobot,faUser
-    );
-
     export default {
         components: {
             PageTitle,
-            'font-awesome-icon': FontAwesomeIcon,
             AgentChat
            // chart1,chart2,chart3,
         },
@@ -244,15 +229,16 @@
           },
           dateRangeOnUpdate : function (r) {
                console.log("dateRangeOnUpdate",r);
-               this.input.daterange.startDate = this.input.daterange.startDate.getTime();
-               this.input.daterange.endDate = this.input.daterange.endDate.getTime();
-               this.getSessions();
+               if(this.input.daterange){
+                  this.input.daterange.startDate = this.input.daterange?.startDate?.getTime();
+                  this.input.daterange.endDate = this.input.daterange?.endDate?.getTime();
+                  this.getSessions();
+               }
           },
           async deleteChat (r,index) {
              var resp = await this.$store.dispatch('DeleteSessionChats',r);
              this.sessions.items.splice(index, 1);
           },
-
           hideChat : function (argument) {
             this.session = null;
           },
@@ -263,6 +249,9 @@
               this.session = r;
             }
           },
+          updateChat : function (params) {
+            this.getSessions();
+          }
 
         },
 

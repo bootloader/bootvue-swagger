@@ -22,7 +22,7 @@
             <span>
                 <b-button class="btn-icon btn-icon-only" variant="primary" size="sm" v-bind:class="{ 'active' : isOpenMobileMenu }" @click="toggleMobile2('header-menu-open')">
                     <div class="btn-icon-wrapper">
-                        <font-awesome-icon icon="ellipsis-v"/>
+                        <i class="fa fa-ellipsis-v"/>
                     </div>
                 </b-button>
             </span>
@@ -35,21 +35,11 @@
     import SearchBox from './Header/SearchBox';
     import UserArea from './Header/HeaderUserArea';
 
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faEllipsisV,
-    } from '@fortawesome/free-solid-svg-icons'
-    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-
-    library.add(
-        faEllipsisV,
-    );
     export default {
         name: "Header",
         components: {
             SearchBox,
             UserArea,
-            'font-awesome-icon': FontAwesomeIcon,
         },
 
         data() {

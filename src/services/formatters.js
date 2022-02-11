@@ -127,6 +127,11 @@ var formatter = {
       return null;
     } return argument;
   },
+  undify : function (argument) {
+    if(argument === null ||argument === undefined || argument === "" || argument === "null"){
+      return undefined;
+    } return argument;
+  },
   guid : function() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16)

@@ -66,7 +66,7 @@
                    <span class="no-item-text"> No {{header.heading}} </span>
                 </div>
             </div>
-            <b-pagination  v-if="table && table.items.length>table.perPage"
+            <b-pagination  v-if="table && table.items && table.items.length>table.perPage"
                   v-model="table.currentPage"
                   :total-rows="table.rows"
                   :per-page="table.perPage"

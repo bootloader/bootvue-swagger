@@ -16,8 +16,8 @@ module.exports = {
   		config.output.filename =  'app-[name].js';
   	},
 	 devServer: {
-        proxy: 'http://127.0.0.1:8080/',
-        public: 'http://127.0.0.1:8080/',
+        proxy: 'http://127.0.0.1:8080',
+        public: 'http://127.0.0.1:8080',
         host : '0.0.0.0',
         disableHostCheck: true,
         allowedHosts: [
@@ -25,8 +25,11 @@ module.exports = {
           'api.lalittanwar.com',
           'subdomain.host.com',
           'subdomain2.host.com',
-          'host2.com',
+          'host2.com'
         ],
+        watchOptions: {
+            poll: true
+        }
         //historyApiFallback: false,
         // historyApiFallback: {
         //   rewrites: [
