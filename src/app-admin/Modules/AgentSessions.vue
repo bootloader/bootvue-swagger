@@ -125,7 +125,7 @@
         },
         computed:{
           filtered() {
-                if(!this.sessions.items.length) return;
+                if(!this.sessions.items.length) return [];
                 const filtered = this.sessions.items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
                     if(key === "closeSessionStamp"){
@@ -159,10 +159,6 @@
                 return filtered.length > 0
                   ? filtered
                   : [
-                      Object.keys(this.sessions.items[0]).reduce(function(obj, value) {
-                        obj[value] = '';
-                        return obj;
-                      }, {})
                     ];
               }
         },

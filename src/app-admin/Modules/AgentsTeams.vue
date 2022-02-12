@@ -17,9 +17,10 @@
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary"
-                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'" class="fa-stack fa-1x">
-                      <i class="fas fa-users fa-stack-1x"></i>
-                      <i v-if="row.item.isactive != 'Y'" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
+                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
+                        <i class="fas fa-users" :class="{
+                          'fa-x' : (row.item.isactive != 'Y')
+                        }"></i>
                   </b-button>&nbsp;
                   <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
                     v-tooltip="'Make Default Assignee'">

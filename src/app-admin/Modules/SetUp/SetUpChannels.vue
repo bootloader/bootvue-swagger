@@ -80,7 +80,7 @@
                     v-model="row.item.inboundQueue"
                     class="text-sm float-left mx-1 w-50"/>
 
-              <span v-if="!row.item.inboundQueue" class="text-sm">
+              <span v-if="!row.item.inboundQueue && $global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE" class="text-sm">
                 &nbsp;Defaults to : <MyText
                     options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
                     :value="$global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE">

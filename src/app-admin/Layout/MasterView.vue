@@ -15,7 +15,6 @@
 
       <slot name="body">
 
- 
         <vue-good-table v-if="goodTable && table"
           :columns="table.fields"
           :rows="table.items"
@@ -35,7 +34,7 @@
         </vue-good-table>  
         <div v-else-if="table" >
 
-          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items && table.items.length>0"
+          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items"
                         empty-filtered-text="No Records"
                         :bordered="table.bordered || true"
                         :outlined="table.outlined || false"
@@ -50,24 +49,42 @@
                         :fields="table.fields"
                         :sort-by="table.sortBy"
                         :busy.sync="isbusy"
+                        show-empty
                         filter>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
                   <slot :name="slotName" v-bind="slotScope"></slot>
                 </template>
-                <template #empty="scope">
-                  <h4> --- {{ scope.emptyText }}  ---- </h4>
+                <template #empty>
+                    <div class="center-box">
+                        <div class="center-item">
+                          <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                          <span class="no-item-text"> No {{header.heading}} </span>
+                        </div>
+                    </div>
                 </template>
                 <template #emptyfiltered="scope">
-                  <h4> --- {{ scope.emptyFilteredText }} ---- </h4>
+                    <div class="center-box">
+                        <div class="center-item">
+                          <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                          <span class="no-item-text"> --- {{ scope.emptyFilteredText }} ---- </span>
+                        </div>
+                    </div>
                 </template>
                 <template #table-busy>
-                    <div class="text-center text-success my-2">
-                      <b-spinner class="align-middle"></b-spinner>
+                    <div class="center-box">
+                        <div class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
+                              <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
+                              </b-spinner>
+                           <span class="no-item-text text-success"> Loading {{header.heading}} </span>
+                        </div>
                     </div>
                 </template>
             </b-table>
             <div v-else class="center-box">
-                <div class="center-item">
+                <div v-if="isbusy" class="text-center text-success my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                </div>
+                <div v-else class="center-item">
                   <div> <i :class="[header.icon,'no-item-icon dull']"/></div>
                    <span class="no-item-text"> No {{header.heading}} </span>
                 </div>
@@ -230,7 +247,7 @@
 <style lang="scss">
 .m-master-view {
   .center-box {
-    .center-item > div {
+    .center-item > div.icon-wrapper {
       height: 10em;
       width: 10em;
       opacity: 0.05;
