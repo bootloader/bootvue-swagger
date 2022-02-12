@@ -35,7 +35,7 @@
         </vue-good-table>  
         <div v-else-if="table" >
 
-          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items.length>0"
+          <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items && table.items.length>0"
                         empty-filtered-text="No Records"
                         :bordered="table.bordered || true"
                         :outlined="table.outlined || false"
@@ -173,7 +173,7 @@
             if(this.table && this.table.api){
               var resp = await this.$service.get(this.table.api,params);
               this.table.items = resp.results;
-              this.table.rows = this.table.items.length;
+              this.table.rows = this.table?.items?.length;
               this.session = resp.meta;
             }
             if(this.table?.items){

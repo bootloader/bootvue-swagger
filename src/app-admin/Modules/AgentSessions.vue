@@ -6,13 +6,20 @@
                 subheading: subheading,
                 icon: icon,
             }"
-            :filters="[{ label : 'Date Range', name : 'daterange'}]" 
+            :filters="[{ label : 'Date Range', name : 'daterange'},{ label : 'Refresh', name : 'sync'}]" 
             :table="{...sessions,items :filtered}">
+
+                <template #filter(sync)>
+                    <span class="btn btn-success" @click="loadSessions">
+                      <i class="fa fa-sync"/>
+                    </span>
+                </template>
 
                 <template #filter(daterange)>
                     <MyDatePicker 
                       :daterange="input.daterange"
-                      v-on:dateRangeOnUpdate="dateRangeOnUpdate"
+                      @dateRangeOninit="dateRangeOnUpdate"
+                      @dateRangeOnUpdate="dateRangeOnUpdate"
                     > </MyDatePicker>
                 </template>
 
@@ -39,7 +46,7 @@
                       :class="{
                         'fa-robot' : row.item.mode=='BOT',
                         'fa-user' : row.item.mode=='AGENT',
-                        'fa-forward-fast' : row.item.mode=='WEBHOOK',
+                        'fas fa-fast-forward' : row.item.mode=='WEBHOOK',
                       }"
                      />
                     &nbsp;{{ row.item.assignedToAgent}}
@@ -86,13 +93,6 @@
 
 
         </master-view>
-
-          <b-pagination
-              v-model="sessions.currentPage"
-              :total-rows="sessions.rows"
-              :per-page="sessions.perPage"
-              aria-controls="agent-session-list"
-            ></b-pagination>
 
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
           <agent-chat v-if="session" :session="session" :key="session.sessionId"
@@ -206,15 +206,20 @@
                 daterange : {
                     startDate : null,
                     endDate : null,
+                    span : "Today"
                 }
             },
             session : null,
         }),
         mounted : function (argument) {
-          this.dateRangeOnUpdate();
+          //this.dateRangeOnUpdate();
         },
         methods: {
-          async getSessions (){
+          async loadSessions (){
+            if(!this.input.daterange.startDate){
+              console.error("No Data Range Specified")
+              return 
+            }
             var resp = await this.$store.dispatch('GetSessions',{
               "agent": "TEAM",
               "contactType": "MESSAGE_TWITTER",
@@ -228,12 +233,10 @@
             console.log("sessions",resp,this.sessions )
           },
           dateRangeOnUpdate : function (r) {
-               console.log("dateRangeOnUpdate",r);
-               if(this.input.daterange){
-                  this.input.daterange.startDate = this.input.daterange?.startDate?.getTime();
-                  this.input.daterange.endDate = this.input.daterange?.endDate?.getTime();
-                  this.getSessions();
-               }
+              console.log("dateRangeOnUpdate",r);
+              this.input.daterange.startDate = r.startDate;
+              this.input.daterange.endDate = r.endDate;
+              this.loadSessions();
           },
           async deleteChat (r,index) {
              var resp = await this.$store.dispatch('DeleteSessionChats',r);
@@ -250,7 +253,7 @@
             }
           },
           updateChat : function (params) {
-            this.getSessions();
+            this.loadSessions();
           }
 
         },

@@ -32,6 +32,10 @@
         return mmt.hour(23).minute(59).seconds(59).milliseconds(999)
     }
 
+    function getTime(d){
+        return new Date(d).getTime();
+    }
+
     export default {
         props: {
             options: {},
@@ -48,12 +52,12 @@
                     if (!this.daterange) return null
 
                     var startDate =
-                            this.daterange.startDate ||
+                            this.daterange?.startDate ||
                             hour0(moment().subtract(7, 'day')).toDate(),
                         endDate =
-                            this.daterange.endDate || hour24(moment()).toDate()
+                            this.daterange?.endDate || hour24(moment()).toDate()
 
-                    return {
+                    let dateranegeinput =  {
                         range: { startDate: startDate, endDate: endDate },
                         ranges: {
                             Today: [
@@ -93,7 +97,13 @@
                                 hour24(moment().month(0).date(0)).toDate(),
                             ],
                         },
+                    };
+
+                    if((typeof this.daterange.span == 'string') && dateranegeinput.ranges[this.daterange.span ]){
+                        dateranegeinput.range.startDate = dateranegeinput.ranges[this.daterange.span][0];
+                        dateranegeinput.range.endDate = dateranegeinput.ranges[this.daterange.span][1];
                     }
+                    return dateranegeinput;
                 })(),
             }
         },
@@ -101,6 +111,15 @@
           date(val) {   
             return val ? val.toLocaleString() : ''
           }
+        },
+        created : function (argument) {
+            if(this.daterange){
+                //this.sanitizeDateRange(this.dateranegeinput.range);
+                this.$emit('dateRangeOninit', {
+                    startDate : getTime(this.dateranegeinput.range.startDate),
+                    endDate :   getTime(this.dateranegeinput.range.endDate)
+                });
+            }
         },
         methods : {
             sanitizeDateRange : function (daterange) {
@@ -118,11 +137,10 @@
             },
             onDateRangeUpdate : function (r) {
                 console.log("c_update",r);
-                if(this.daterange){
-                    this.daterange.startDate = r.startDate;
-                    this.daterange.endDate = r.endDate;
-                    this.$emit('dateRangeOnUpdate', r);
-                }
+                this.$emit('dateRangeOnUpdate', {
+                    startDate : getTime(r.startDate),
+                    endDate : getTime(r.endDate)
+                });
             }
         },
     }
