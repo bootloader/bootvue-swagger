@@ -49,6 +49,7 @@
                         :items="table.items"
                         :fields="table.fields"
                         :sort-by="table.sortBy"
+                        :busy.sync="isbusy"
                         filter>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
                   <slot :name="slotName" v-bind="slotScope"></slot>
@@ -58,6 +59,11 @@
                 </template>
                 <template #emptyfiltered="scope">
                   <h4> --- {{ scope.emptyFilteredText }} ---- </h4>
+                </template>
+                <template #table-busy>
+                    <div class="text-center text-success my-2">
+                      <b-spinner class="align-middle"></b-spinner>
+                    </div>
                 </template>
             </b-table>
             <div v-else class="center-box">
@@ -72,6 +78,7 @@
                   :per-page="table.perPage"
                   aria-controls="agent-session-list">        
             </b-pagination>
+
         </div> 
 
       </slot>  
@@ -128,6 +135,10 @@
               }
           },
           size : {
+          },
+          busy : {
+              type: Boolean,
+              default : false
           }
         },
         data: () => ({
@@ -140,7 +151,13 @@
                 }
             },
             session : null,
+            busyintenral : false
         }),
+        computed : {
+          isbusy(){
+            return this.busy || this.busyintenral;
+          }
+        },
         mounted : function (argument) {
           if(this.goodTable)
             this.convertToGoodTable();
@@ -171,10 +188,15 @@
               params[key] = additionalParams[key];
             }
             if(this.table && this.table.api){
-              var resp = await this.$service.get(this.table.api,params);
-              this.table.items = resp.results;
-              this.table.rows = this.table?.items?.length;
-              this.session = resp.meta;
+              try {
+                this.busyintenral  = true;
+                var resp = await this.$service.get(this.table.api,params);
+                this.table.items = resp.results;
+                this.table.rows = this.table?.items?.length;
+                this.session = resp.meta;
+              } finally {
+                  this.busyintenral = false;
+              }
             }
             if(this.table?.items){
               this.$emit("rows", this.table.items);

@@ -7,7 +7,9 @@
                 icon: icon,
             }"
             :filters="[{ label : 'Date Range', name : 'daterange'},{ label : 'Refresh', name : 'sync'}]" 
-            :table="{...sessions,items :filtered}">
+            :table="{...sessions,items :filtered}"
+            :busy="sessions.busy"
+            >
 
                 <template #filter(sync)>
                     <span class="btn btn-success" @click="loadSessions">
@@ -184,7 +186,8 @@
                 items : [],
                 perPage: 25,
                 currentPage: 1,
-                rows : 0
+                rows : 0,
+                busy : false
             },
             closeSessionOptions: [
               {label : "Closed", value:"closed"},
@@ -220,17 +223,22 @@
               console.error("No Data Range Specified")
               return 
             }
-            var resp = await this.$store.dispatch('GetSessions',{
-              "agent": "TEAM",
-              "contactType": "MESSAGE_TWITTER",
-              "startStamp": this.input.daterange.startDate,
-              "endStamp": this.input.daterange.endDate
-            });
-            this.sessions.items = resp.results.map(function(session){
-              return DataProcessor.session(session);
-            });
-            this.sessions.rows = this.sessions.items.length;
-            console.log("sessions",resp,this.sessions )
+            this.sessions.busy=true
+            try{
+              var resp = await this.$store.dispatch('GetSessions',{
+                "agent": "TEAM",
+                "contactType": "MESSAGE_TWITTER",
+                "startStamp": this.input.daterange.startDate,
+                "endStamp": this.input.daterange.endDate
+              });
+              this.sessions.items = resp.results.map(function(session){
+                return DataProcessor.session(session);
+              });
+              this.sessions.rows = this.sessions.items.length;
+              console.log("sessions",resp,this.sessions )
+            } finally {
+              this.sessions.busy=false
+            }
           },
           dateRangeOnUpdate : function (r) {
               console.log("dateRangeOnUpdate",r);
