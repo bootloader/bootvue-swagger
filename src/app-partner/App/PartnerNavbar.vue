@@ -69,7 +69,7 @@
             <span>Support</span>
           </b-dropdown-item>
           <div class="dropdown-divider"></div>
-          <b-dropdown-item href="/common/auth/logout">
+          <b-dropdown-item :href="'/common/auth/logout?_'+Date.now()">
             <i class="ni ni-user-run"></i>
             <span>Logout</span>
           </b-dropdown-item>

@@ -3,7 +3,7 @@
     <button v-if="!isDomainSet && !isEditDetail" href="#" class="btn btn-info" @click="isEditDetail=true">Add domain</button>
 
     <b-row  v-if="isDomainSet && !isEditDetail" align-v="center" slot="header" >
-      <b-col cols="6">
+      <b-col v-for="(model,index) in models" :key="'domain-'+index" cols="6">
       <stats-card :title="'@'+model.domain"
           types="gradient-red"
           :sub-title="model.company.businessName"
@@ -21,7 +21,8 @@
           <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
           &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
           </a>
-          <button class="btn btn-link btn-sm text-nowrap float-right" @click="isEditDetail=true">Edit</button>
+          <button class="btn btn-link btn-sm text-nowrap float-right" 
+            @click="isEditDetail=true;selectedIndex=index">Edit</button>
         </template>
       </stats-card>
       </b-col>
@@ -325,7 +326,7 @@ import formatters from '@/services/formatters';
 export default {
   data() {
     return {
-      model :{
+      defModel :{
         domain: '',
         company : {
           businessName : "",
@@ -349,8 +350,10 @@ export default {
           customerSupportPhone : null
         }
       },
+      models : [],
       isDomainSet : false,
       isEditDetail : false,
+      selectedIndex : 0,
 
       domainPlaceholder : "yourdomain",
       domainWidth : 0,
@@ -374,6 +377,9 @@ export default {
     },
     domainSize : function () {
         return Math.max(this.domainWidth || (this.model.domain || "").length || this.domainPlaceholder.length,22) +6;
+    },
+    model(){
+      return this.models[this.selectedIndex] || this.defModel;
     }
   },
   created() {
@@ -394,9 +400,13 @@ export default {
   methods: {
     async loadDetails(){
       let resp = await this.$service.get("/partner/api/domain");
-      this.model.company = resp.results[0].company;
-      this.model.social = resp.results[0].social || {};
-      this.model.domain = resp.results[0].domain;
+      this.models = resp.results.map(function(result){
+        return {
+          company : result.company,
+          social : result.social || {},
+          domain : result.domain
+        }
+      });
       this.isDomainSet = !!this.model.domain;
     },
     async updateProfile() {
