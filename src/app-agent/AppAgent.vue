@@ -42,6 +42,7 @@
   const default_layout = "default";
 
   Vue.component('default-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
+  Vue.component('plug-agent-layout', () => import('./Layout/DefaultAgentLayoutPlug.vue'));
 
   var LOADED_JS = {};
 

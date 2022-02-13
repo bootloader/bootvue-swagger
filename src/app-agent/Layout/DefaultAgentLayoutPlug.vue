@@ -1,25 +1,16 @@
 <template>
     <div class="main-content-wrapper">
-        <Sidebar/>
         <div class="container-fluid h-100">
             <div class="row h-100">
 
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat"
                     v-bind:class="{
-                        'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CONTACTS'
+                        'd-none d-sm-none d-md-none' : MyFlags.agent.mvu!='CONTACTS'
                     }">
 
-                    <div id="my-contact-search"
-                        class="chat hSlider-wrapper"
-                         v-bind:class="{
-                            'open' : MyFlags.agent.showSessionSearch,
-                        }">
-                        <SessionSearch/>                     
-                    </div>
-                      
                     <Contacts v-on:loaded="closeLoading"/>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6  chat"
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12  chat"
                     v-bind:class="{
                         'col-lg-6' : (MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
                         'col-lg-9' : !(MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed),
@@ -28,18 +19,8 @@
                         'd-none d-sm-none d-md-block' : ($route.params.mvu!='CHATBOX' && $route.params.mvu!='COMPOSE'),
                     }" >
                     <ChatBoxCompose v-if="$route.params.mvu=='COMPOSE'"/>
-                     <Chatbox :plug="false" v-else />
+                    <Chatbox :plug="true" v-else />
                 </div>
-                
-                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 chat" 
-                        v-if="MyFlags.agent.showProfile && MyFlags.agent.showProfileAllowed"
-                       v-bind:class="{
-                            'd-none d-sm-none d-md-block' : MyFlags.agent.mvu!='CPROFILE',
-                        }">
-                    <ContactProfile/>
-                </div>
-                
-                
             </div>
         </div>
 
@@ -74,7 +55,7 @@
             style() {
                 return `
                     :root {
-                        --scheme-color: ${MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR};
+                        --scheme-color: #002856;
                         --scheme-color-rgb : ${this.hex2rgb(MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR).rgb};
                         --scheme-color-rgba : ${this.hex2rgb(MyConst.config.SETUP.POSTMAN_AGENT_SCHEME_COLOR).rgba};
                     }

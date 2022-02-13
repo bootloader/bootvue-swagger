@@ -9,160 +9,33 @@
             v-touch:swipe.right="onSwipeRight"
             v-touch:swipe.left="onSwipeLeft"
         >
-                <div class="card-header msg_head chat-head">   
-                    <div class="d-block clear-both">               
-                        <div class="d-flex bd-highlight card-header-left">
-                            <div class="card-header-left-left d-sm-block d-md-none">
-                                <router-link tag="i" class="fa fa-arrow-left" 
-                                    :to="{ 
-                                        name: 'defAgentView', 
-                                        params: { 
-                                            mvu : 'CONTACTS'
-                                    }}"
-                                >&nbsp;&nbsp;</router-link >
-                            </div>
-                            <div class="img_cont" 
-                                @click="showContactProfile">
-                                <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
-                                <span class="online_icon" hidden ></span>
-                            </div>
-                            <div class="user_info"
-                                v-if="activeChat">
-                                <span class="user_name" @click="showContactProfile" >{{contactName}}</span>
-                                <div v-if="assignedToAgent" class="user_assignment">
-                                    <v-select v-if="chatLocal.active" :options="agentOptions" v-model="assignedToAgent"
-                                    @option:selected="onAssignedToAgent" label="code"
-                                    :components="{Deselect}">
-                                        <template #selected-option="option">
-                                          <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
-                                        </template>
-                                        <template #open-indicator="{ attributes }">
-                                          <span v-bind="attributes" class="fa fa-caret-down"></span>
-                                        </template>
-                                        <template #option="{ code, name, session}">
-                                        <i v-if="!session || !session.isEnabled || !session.isLoggedIn" class="fa fa-times-circle"/>
-                                        <i v-else-if="session.isAway" class="fa fa-question-circle"/>
-                                        <i v-else-if="session.isOnline" class="fa fa-check-circle"/> 
-                                        <i v-else-if="!session.isOnline" class="fa fa-minus-circle"/>
+                <ChatHeaderPlug
+                    :showContactProfile="showContactProfile"
+                    :activeChat="activeChat"
+                    :chatLocal="chatLocal"
+                    :agentOptions="agentOptions"
+                    :onAssignedToAgent="onAssignedToAgent"
+                    :isActionable="isActionable"
+                    :assignedToAgent="assignedToAgent"
+                    :closSession="closSession"
+                    ref="chatHeader"
+                    :plug="plug"
+                    v-if="plug"
+                 />
 
-                                        {{ code }}<em>  - {{ name }}</em>
-                                        </template>
-                                    </v-select>
-                                    <span v-if="!chatLocal.active" class="vs__selected">
-                                        Assigned to {{assignedToAgent.code}}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="chat_actions" hidden>
-                                <button  @click="closSession" title="Close Chat"
-                                class="btn"><i class="fa fa-check-circle"></i></button>                            
-                            </div>
-                        </div>
-
-                        <div  class="card-header-right">
-                            <div v-if="activeChat" class="quick-options">
-                                <b-dropdown id="dropdown-offset" offset="10"
-                                    class="float-right quick_option_menu d-sm-block d-md-none"
-                                    ref="quick_option_menu" no-caret  variant="link" block right
-                                    toggle-tag="span" toggle-class="quick-option float-right">
-                                    <template #button-content>
-                                       <i class="fas fa-ellipsis-v"></i>
-                                    </template>
-                                    <b-dropdown-item @click="showContactProfile('info')">
-                                        <i class="fa fa-user"></i>&nbsp;&nbsp;Profile Info
-                                    </b-dropdown-item>
-                                    <b-dropdown-item  @click="showContactProfile('history')">
-                                         <i class="fa fa-history"></i>&nbsp;&nbsp;Chat History
-                                    </b-dropdown-item>
-                                    <b-dropdown-item class="chat_tags dropdown-tags">
-                                        <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
-                                        v-b-modal.chattags >
-                                            {{activeChat.status}}
-                                        </span>
-                                         <span   span v-if="activeChat && activeChat.tagId &&  activeChat.tagId.length"
-                                        class="tag-chat-status tag-lighter"
-                                        v-b-modal.chattags>
-                                            {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
-                                        </span>
-                                        <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
-                                    </b-dropdown-item>
-                                </b-dropdown>
-                                <span class="float-right quick-option d-none d-md-block" 
-                                     v-bind:class="{'my-selected' : profileViewInfo }"
-                                    @click="showContactProfile('info')" v-tooltip="'Profile Info'" >
-                                    <i class="fa fa-user"></i>
-                                </span> 
-                                <span class="float-right quick-option d-none d-md-block"
-                                     v-bind:class="{'my-selected' : profileViewHistory }"
-                                     @click="showContactProfile('history')" v-tooltip="'Chat History'" >
-                                    <i class="fa fa-history"></i>
-                                </span> 
-                            </div>
-                        </div>
-
-                        <div  class="card-header-right"  @mouseover="showChatOptions = true"
-                                @mouseleave="showChatOptions = false">
-                        </div>
-
-                    </div> 
-                    
-                    <div class="clear-both card-header-lower d-none d-md-block"> 
-
-                        <div class="chat_tags text-align-right float-right ">
-
-                            <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
-                                v-b-modal.chattags >
-                                {{activeChat.status}}
-                            </span>
-                            <span v-if="activeChat && activeChat.tagId &&  activeChat.tagId.length"
-                                  class="tag-chat-status tag-lighter"
-                                  v-b-modal.chattags
-                               >
-                                {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
-                            </span>
-                            <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
-                          
-
-                        </div>
-                         
-
-                        <div class="chat-actions float-right">
-                            
-                        </div>
-
-                    </div>
-                    <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
-                                content-class="card"
-                                footer-class="card-footer"
-                                header-class="card-header"
-                                header-text-variant="white"
-                                body-class="card-body"
-                                dialog-class="card-dialog modal-dialog-sm"
-                                button-size="sm"
-                                @ok="updateStatus"
-                                >  
-                            <span class="cat-title">Chat Status</span><br/>
-                            <span v-for="(status,s) in MyDict.chatStatus" v-if="status.editable"
-                                class="tag-chat-status-lg" @click="selectStatus(s)"
-                                :class="'tag-chat-status-'+ s + ( s== selectedStatus ? ' tag-chat-status-active' : '')">
-                                {{status.label}}
-                            </span>
-                            <div v-for="(category, categoryName) in sortedQuickTags">
-                                <hr />
-                                <span class="cat-title">{{categoryName}}</span><br/>
-                                <span v-for="tag in sortedQuickTags[categoryName]" 
-                                    @click="selectTag(tag)"
-                                    :class="'tag-chat-status-lg tag ' + 
-                                    (tag.selected  ? ' tag-chat-status-active' : '')"
-                                    v-bind:style="{'border-color': '#' + tag.color, 'color': '#' + tag.color}">
-                                    {{tag.title}}
-                                </span>
-                                
-                            </div>
-                            </b-modal>
-
-                </div>
+                <ChatHeader
+                    :showContactProfile="showContactProfile"
+                    :activeChat="activeChat"
+                    :chatLocal="chatLocal"
+                    :agentOptions="agentOptions"
+                    :onAssignedToAgent="onAssignedToAgent"
+                    :isActionable="isActionable"
+                    :assignedToAgent="assignedToAgent"
+                    :closSession="closSession"
+                    ref="chatHeader"
+                    v-else
+                 />
+                 
 
                 <div class="card-body msg_card_body" v-show="is_CHAT_BOX">
 
@@ -427,8 +300,6 @@
     import throttle from 'throttleit';
     import pebounce from 'pebounce';
 
-    import vSelect from 'vue-select'
-    import 'vue-select/dist/vue-select.css';
 
     import { Textcomplete } from "@textcomplete/core";
     import { TextareaEditor } from "@textcomplete/textarea";
@@ -437,6 +308,8 @@
 
     import getUserMedia from "get-user-media-promise";
     import AudioVisual from 'vue-audio-visual'
+import ChatHeader from './ChatHeader.vue';
+import ChatHeaderPlug from './ChatHeaderPlug.vue';
     Vue.use(AudioVisual);
 
     var sampleJson = {
@@ -447,12 +320,19 @@
     var sampleJsonKeys = formatters.keys(sampleJson);
 
     export default {
-        components: {
-            Loading: Loading,SlideUpDown,vueDropzone: vue2Dropzone, vSelect :vSelect,
-            ChatMessages,
-            ForEachOption,
-            getUserMedia
+        props: {
+            plug: Boolean,
         },
+        components: {
+    Loading: Loading,
+    SlideUpDown,
+    vueDropzone: vue2Dropzone,
+    ChatMessages,
+    ForEachOption,
+    getUserMedia,
+    ChatHeader,
+    ChatHeaderPlug
+},
         computed : {
             chatLocal: function () {
                 return (this.activeChat ? this.activeChat.local : null) || {};
@@ -504,24 +384,13 @@
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
             },
-            profileViewInfo : function (argument) {
-                return MyFlags.agent.profileView =='info' && MyFlags.agent.showProfile
-            }, profileViewHistory : function (argument) {
-                return MyFlags.agent.profileView =='history' && MyFlags.agent.showProfile
-            },
-            sortedQuickTags  : function () {
-                return this.$store.getters.StateQuickTagsSorted;
-            },
-            contactName (){
-                return (this.activeChat?.contact?.name 
-                            || this.activeChat?.contact?.phone
-                            || this.activeChat?.contact?.email ) || this.activeChat?.name;
-            }
+           
+            
+            
         },
         data: () => ({
             message_text : "",quickReplies : null,sticky_note : null, 
             selectedMedia : null,
-            showChatOptions : false,
             lastMessageId : null,ilastMessageId :  null,
             MyDict,MyFlags,MyConst, MyFunc,
             isLoading : false,
@@ -567,21 +436,7 @@
                 dragstart : null, dragend :  null, dragenter :  null, dragover : null, dragleave : null,
                 mouseleave : null, mouseenter : null
             },
-            Deselect: {
-                render: function(createElement) {
-                    var elm = createElement('span',{
-                        domProps : {
-                            className : "fa fa-times"
-                        }
-                    });
-                    //elm.className = "fa fa-times";
-                    //elm.elm.class = "fa fa-times";
-                    console.log("RENDER",elm)
-                    //elm.setAttribute('class','fa');
-                    return null;
-                   // return ("<span>S</span>");
-                }
-            },
+            
             formatters : formatters,
 
             strategies: [{
@@ -598,7 +453,6 @@
                 return '' + value + ''
               },
             }],
-            selectedStatus : null,
             media: null,
             mediaRecorder : null
         }),
@@ -743,28 +597,9 @@
                         } 
                 }).catch(err => { console.error("Already ON Same Path") });
             },
-            updateStatus : function (status) {
-                let tags = [];
-                for(var category in this.sortedQuickTags){
-                    this.sortedQuickTags[category].map(v=>{
-                        v.selected ? tags.push(v) : ""
-                    }) 
-                }
-                this.$store.dispatch('UpdateSessionTags', {
-                    status : this.selectedStatus,
-                    tags,
-                    sessionId : this.activeChat.sessionId
-                });
-                this.$refs.chattags.hide();
-            },
-            selectTag : function (tag) {
-                this.sortedQuickTags[tag.category].map((v,i)=>{
-                     this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id && !v.selected);
-                })
-            },
-            selectStatus : function (status) {
-                this.selectedStatus = status;
-            },
+            
+            
+            
             addStickNote :  function (argument) {
                 this.sendText(this.sticky_note,null,"/add_stick_note");
                 this.sticky_note = null;
@@ -953,7 +788,7 @@
                 } else {
                     this.loadArchiveMessages(true);
                 }
-                this.defaultSelectedStatusTag();
+                this.$refs.chatHeader && typeof this.$refs.chatHeader.defaultSelectedStatusTag == "function"  ? this.$refs.chatHeader?.defaultSelectedStatusTag() : "";
             },200),
             async loadChats(){
                 await this.$store.dispatch('GetChats');
@@ -1028,17 +863,7 @@
                 }
                 this.scrollToBottom(true);
             },
-            defaultSelectedStatusTag(){
-                if(this.activeChat){
-                    this.selectStatus(this.activeChat.status);
-                    let tagId = this.activeChat.tagId || [];
-                    for(var category in this.sortedQuickTags){
-                        this.sortedQuickTags[category].map((v,i)=>{
-                            this.sortedQuickTags[v.category][i].selected = (tagId.indexOf(v.id)!== -1);
-                        })
-                    }
-                }
-            },
+            
             async onAssignedToAgent (argument) {
                 console.log("onAssignedToAgent",argument);
                 var resp = await this.$store.dispatch('AssingToAgent',{
@@ -1389,40 +1214,10 @@
     }
 
 
-/* User Info Panel */    
-  .user_info{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 15px;
-  }
-  .user_info .user_name{
-    font-size: 15px;
-    color: white;
-    line-height: 15px;
-    margin-bottom: 9px;
-    display: block;
-  }
-  .user_info .font-name{
-      text-overflow: ellipsis;
-      max-width: 187px;
-      display: inline-block;
-      overflow: hidden;
-  }
-  .user_info .font-preview{
-    text-overflow: ellipsis;
-      max-width: 187px;
-      overflow: hidden;
-  }
-  .user_info .user_stamp{
-    font-size: 10px;
-    color: rgba(255,255,255,0.6);
-  }
   .my-input-section .input-group-text:hover {
     background-color: #00000069!important;
   }
-  .tag-chat-status-lg {
-    margin: 3px;
-  }
+  
 
     .type_msg{
       background-color: rgba(0,0,0,0.3) !important;
@@ -1461,82 +1256,4 @@
         max-height: 200px;
         height: 100%;
     }
-  .user_info .user_assignment .vs__selected {
-    font-size: 13px !important;
-    color: rgb(255 255 255);
-    background: transparent;
-    border: none;
-  }
-  .user_assignment .vs__dropdown-toggle {
-    border : none;
-    color: #fff;
-    background-color: #0000002e;
-    border-radius: 6px;
-  }
-  .user_assignment .vs__selected-options{
-    /*min-width: 200px;*/
-  }
-  .user_assignment .v-select:not(.vs--open) .vs__search {
-    /*display: none;*/
-    visibility: none;
-    width: 0px;
-    padding: 0px;
-    color: #FFF;
-  }
- .user_assignment .vs__clear {
-    display: none;;
- }
-  .user_assignment .vs__search, .vs__search:focus{
-    width: 100%;
-  }
-  .user_assignment .vs__dropdown-option {
-    padding: 3px 7px;
-    max-width: 250px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .user_assignment .vs__dropdown-option--highlight {
-     background: #ddd;
-     color: #000;
-  }
-  .user_assignment .vs__dropdown-option em {
-    color: #929292;
-    font-size: smaller;
-    text-overflow: ellipsis;
-  }
-  .user_assignment .vs__dropdown-option .fa-check-circle {
-    color: #3aa233;
-    font-size: smaller;
-  }
-  .user_assignment .vs__dropdown-option .fa-minus-circle {
-    color: #c10505;
-    font-size: smaller;
-  }
-  .user_assignment .vs__dropdown-option .fa-question-circle {
-    color: #f1993c;
-    font-size: smaller;
-  }
-  .user_assignment .vs__dropdown-option .fa-times-circle {
-    color: #929292;
-    font-size: smaller;
-  }
-  .tag{
-      background-color: #fff;
-      text-transform: uppercase;
-  }
-  .tag-lighter{
-      background-color: #fff;
-      text-transform: uppercase;
-      color:#000;
-  }
-  .tag-chat-status-active {
-    background-color: #000 !important;
-    border-color: #000 !important;
-    color: #fff !important;
-    font-weight: normal !important;
-    border-width: 1px !important;
-  }
-  .dropdown-tags .tag-lighter{
-      border: 1px solid #000;
-  }
 </style>
