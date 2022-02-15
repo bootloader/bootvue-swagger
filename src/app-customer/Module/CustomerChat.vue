@@ -55,6 +55,18 @@
           </span>
         </p>
       </template>
+      <template v-slot:suggestion-button="{suggestion,button,sendSuggestion}">
+          <button v-if="suggestion.type=='QUICK_REPLY'" 
+              :style="button.style" :class="button.class"
+              @click="sendSuggestion(suggestion.label)" >
+              {{suggestion.label}}
+          </button>
+          <a v-else-if="suggestion.type=='URL'" 
+              :style="button.style" :class="['btn',button.class]"
+              :href="suggestion.url" target="_blank" >
+              <i class="fa fa-external-link"/>&nbsp;{{suggestion.label}}
+          </a>
+      </template>
     </beautiful-chat>
 
   </div>
@@ -62,8 +74,10 @@
 
 <script>
     import Vue from 'vue';
-    import Chat from 'vue-beautiful-chat'
+    //import Chat from 'vue-beautiful-chat'
+    import Chat from '@cherrybase/cherry-webchat';
     Vue.use(Chat);
+
 
     import { required, email,regex } from 'vee-validate/dist/rules';
     import formatters from './../../services/formatters';
@@ -90,7 +104,7 @@
           inputs : msg.options ? msg.options.inputs : null,
         } ,
         suggestions: (msg.options && msg.options.buttons) ? msg.options.buttons.map(function (button) {
-            return button.label;
+            return button;
         }) : null
       };
     }
@@ -373,14 +387,10 @@
                   }
                   this.isConfigSet = true;
             }
-
             myChatEvent.options.config = null;
             delete myChatEvent.options.config;
             this.options = Object.assign({},this.options,myChatEvent.options);
-
-
         }
-
       },
       //Component Events
       mounted () {
