@@ -66,6 +66,11 @@
               :href="suggestion.url" target="_blank" >
               <i class="fa fa-external-link"/>&nbsp;{{suggestion.label}}
           </a>
+          <button v-else 
+              :style="button.style" :class="button.class"
+              @click="sendSuggestion(suggestion.label)" >
+              {{suggestion.label}}
+          </button>
       </template>
     </beautiful-chat>
 
