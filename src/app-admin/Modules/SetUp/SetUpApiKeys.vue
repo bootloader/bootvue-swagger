@@ -68,7 +68,7 @@
                 </BaseVSelect>
                 <base-input v-if="oneItem.appType == 'WEBHOOK'" class="mb-0" size="sm" autocomplete="off"
                     label="Webhook Url" placeholder="http://yourerver.com/callback_path"
-                    v-model="oneItem.webhook" required
+                    v-model="oneItem.webhook"
                     rules="required|URL" >
                 </base-input>
             <template #modal-footer>
