@@ -45,10 +45,15 @@
             :valid="valid" 
             :required="required"
             :autoPosition="autoPosition"
+            :filter="filter"
             :class="['text-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
-            />
+            >
+            <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="slotScope"></slot>
+            </template>
+        </my-v-select>
 
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
@@ -207,6 +212,8 @@
         default : "default"
       },
       options : {
+      },
+      filter : {
       },
       emptyDisplay :{},
       autoPosition : {

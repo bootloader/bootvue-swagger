@@ -161,8 +161,14 @@
                                           name="Message Language"
                                           filterable searchable
                                           options="data:languages"
+                                          :filter="{
+                                              waba  : true
+                                          }"
                                           v-model="newItem.lang"
                                           placeholder="Select Language">
+                                          <template #selected-option="option">
+                                             {{option.item.code}}
+                                          </template>
                                         </BaseVSelect>
 
                                         <BaseVSelect class="col-md-3" size="sm"
