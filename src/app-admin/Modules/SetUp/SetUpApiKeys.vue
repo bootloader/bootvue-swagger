@@ -11,6 +11,9 @@
           :actions=actions
           @action="onAction"      
        >
+          <template #cell(appType)="row">
+              <my-icon type="chatmode" :value="row.item.appType">&nbsp;<small>{{row.item.appType}}</small></my-icon>
+          </template>
           <template #cell(changelog)="row">
               <small>Modified on {{row.item.updatedStamp | formatStamp}} by {{row.item.updatedBy}}</small>
           </template>
