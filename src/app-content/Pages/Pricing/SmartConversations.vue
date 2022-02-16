@@ -112,13 +112,12 @@
     </div>
 </template>
 <script>
-    import jslocator from '../../../services/jslocator'
-    import countryToCurrency from 'country-to-currency'
     export default {
+        props:{
+            currency:String
+        },
         data() {
             return {
-                supportedCur:["INR","USD","EUR","IDR","GBP","NZD","AUD"],
-                defaultCur:"USD",
                 text: {},
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
@@ -143,7 +142,7 @@
                     nlpMachineLearning: {label:'NLP and Machine Learning',type:'boolean',hintText:''},
                     addOn: {label:'Add Ons',type:'header',hintText:''} ,
                     eachAdditionalAgent: {label:'Per Additional Agent, per month',type:'price',hintText:''},
-                    apiSetup: {label:'CRM, Call Centers - Set-Up Fee',type:'price',hintText:'We will integrate with any Call Center or CRM Solution of your choice.'},
+                    apiSetup: {label:'CRM, Call Centers - Set-Up Fee per API',type:'price',hintText:'We will integrate with any Call Center or CRM Solution of your choice.'},
                     perWhatsappNum: {label:'Per Additional WhatsApp number',type:'price',hintText:'Within the same FB Business Manager ID'},
                     setupFee: {label:'Set-up Fees',type:'price',hintText:'Only if Mehery Support is required'},
                     support:  {label:'Support',type:'header',hintText:''},
@@ -287,16 +286,16 @@
                         emailWhatsAppSupport: true,
                     },
                     {
-                        planName: 'ADVANCE',
+                        planName: 'ADVANCED',
                         channel: 'All Channels',
                         price: {
-                            INR: '₹34,999',
-                            USD: '$449.99',
-                            EUR: '€415.99',
-                            IDR: 'IDR 6.75mio',
-                            GBP: '£349.99',
-                            NZD: 'A$649.99',
-                            AUD: 'A$649.99',
+                            INR: '₹ 79,999',
+                            USD: '$ 999.99',
+                            EUR: '€ 919.99',
+                            IDR: 'IDR 15mio',
+                            GBP: '£ 799.99',
+                            NZD: 'A$ 1,499.99',
+                            AUD: 'A$ 1,499.99',
                         },
                         sessionTemplateFees: 'As per Table',
                         perWASessionTemplate: 'WA Fees + 20%',
@@ -421,17 +420,11 @@
                         emailWhatsAppSupport: true,
                     },
                 ],
-                currency: 'USD',
             }
         },
         computed: {},
         mounted: function () {
-            jslocator.get().then((resp) => {
-                let country = resp.country_code2
-                this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
-                                countryToCurrency[country] : this.defaultCur;
-                console.log("Nagendra this line ===>resp",resp,"this.currency", this.currency, "country",country, "countryToCurrency[country]",countryToCurrency["GB"], this.supportedCur.indexOf(countryToCurrency["GB"]) != -1)
-            })
+            
         },
         methods: {},
     }

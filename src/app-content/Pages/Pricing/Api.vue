@@ -50,14 +50,13 @@
     </div>
 </template>
 <script>
-    import jslocator from '../../../services/jslocator'
-    import countryToCurrency from 'country-to-currency'
     export default {
+        props:{
+            currency:String
+        },
         data() {
             return {
                 text: {},
-                supportedCur:["INR","USD","EUR","IDR","GBP","NZD","AUD"],
-                defaultCur:"USD",
                 labels: {
                     planName: {label:'',type:'text',hintText:''},
                     channel: {label:'',type:'text',hintText:''},
@@ -224,17 +223,11 @@
                         emailWhatsAppSupport: true,
                     }
                 ],
-                currency: 'USD',
             }
         },
         computed: {},
         mounted: function () {
-            jslocator.get().then((resp) => {
-                let country = resp.country_code2
-                this.currency = this.supportedCur.indexOf(countryToCurrency[country]) != -1 ? 
-                                countryToCurrency[country] : this.defaultCur;
-                console.log('this.currency', this.currency)
-            })
+            
         },
         methods: {},
     }

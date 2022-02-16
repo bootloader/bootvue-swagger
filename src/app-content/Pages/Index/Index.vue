@@ -13,8 +13,8 @@
                     with quick action elements to enhance Agent productivity,
                     downstream application linkages, eCommerce hooks and more.
                 </h3>
-                <SmartConversationsMobile v-if="isMobile()" />
-                <SmartConversations v-else />
+                <SmartConversationsMobile :currency="currency" v-if="isMobile()" />
+                <SmartConversations :currency="currency" v-else />
             </div>
             <div class="content" id="c2">
                 <h3>
@@ -22,8 +22,8 @@
                     omnichannel solutions from Call Center Application Vendors
                     or CRM vendors and want to plug in social media messengers
                 </h3>
-                <ApiMobile v-if="isMobile()" />
-                <Api v-else />
+                <ApiMobile :currency="currency" v-if="isMobile()" />
+                <Api :currency="currency" v-else />
             </div>
         </div>
     </div>
@@ -33,12 +33,26 @@
     import ApiMobile from '../Pricing/ApiMobile.vue'
     import SmartConversationsMobile from '../Pricing/SmartConversationsMobile.vue'
     import Api from '../Pricing/Api.vue'
+    import jslocator from '../../../services/jslocator'
+    import countryToCurrency from 'country-to-currency'
     export default {
         data() {
-            return {}
+            return {
+                currency:"USD",
+                defaultCur:"USD",
+                supportedCur:["INR","USD","EUR","IDR","GBP","NZD","AUD"]
+            }
         },
         computed: {},
-        mounted: function () {},
+        mounted: function () {
+            jslocator.get().then((resp) => {
+                let country = resp.country_code2;
+                let currency = countryToCurrency[country]
+                this.currency = this.supportedCur.indexOf(currency) != -1 ? 
+                                currency : this.defaultCur;
+                console.log('this.currency', this.currency);
+            })
+        },
         methods: {
             isMobile() {
                 if ('maxTouchPoints' in navigator)
