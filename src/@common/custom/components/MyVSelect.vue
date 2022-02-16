@@ -196,15 +196,22 @@
                     this.model.options  = this.model.options.filter(function(option){
                         return filters.some(function(filter){
                             for(var key in filter){
+                                let filterValue = filter[key];
+                                let existsQuery = false;
+                                if(key.indexOf("!!") === 0){
+                                    key = key.substr(2);
+                                    existsQuery = true;
+                                }
                                 let meta = key.split(".");
                                 let value = meta[1] 
                                         ? (option.item[meta[0]] ? option.item[meta[0]][meta[1]] : undefined) 
                                         : option.item[key];
-                                if(filter[key] === true){
-                                    if(!value){
-                                        return false;
-                                    }
-                                } else if(filter[key] !== value){
+                                if(existsQuery){
+                                    if(filterValue){
+                                        return value !== undefined && value !== null;
+                                    } 
+                                    return value === undefined || value === null;
+                                } else if(filterValue !== value){
                                     return false;
                                 }
                             }

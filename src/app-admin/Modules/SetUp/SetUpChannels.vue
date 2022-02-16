@@ -127,7 +127,7 @@
                 @change="onConfigChange">
                 </x-simple-form>
                 <template #modal-footer>
-                  <button @click="saveItem"
+                  <button @click="saveItem()"
                     name="password" id="examplePassword" :disabled="!(isChanged) || invalid"
                     class="btn btn-primary btn-sm">Save</button>
                 </template>
@@ -218,9 +218,11 @@
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
           async viewItem(item) {
-            let resp = await this.$service.get('api/config/channel/'+item.channelId+"/");
-            this.oneItemView = resp.results[0] || { channelId : item.channelId };
-            this.$bvModal.show(this.modelName + "_VIEW")
+            if(item){
+              let resp = await this.$service.get('api/config/channel/'+item.channelId+"/");
+              this.oneItemView = resp.results[0] || { channelId : item.channelId };
+              this.$bvModal.show(this.modelName + "_VIEW")
+            }
           },
           async disableItem(item) {
             await this.$service.get('api/config/channel/'+item.channelId + "/" + 

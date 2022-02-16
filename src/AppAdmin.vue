@@ -44,7 +44,6 @@
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
 
-
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'
   Vue.use(Viewer)

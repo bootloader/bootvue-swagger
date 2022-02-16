@@ -65,7 +65,6 @@
                           <div class="message-text">Name : {{row.item.contactName}}</div>
                           <div class="message-text">Id : {{row.item.contactId}}</div>
                           <div class="message-text">Session : {{row.item.sessionId}}</div>
-                          <div class="message-text">_searchText : {{row.item._searchText}}</div>
                       </template>
                     </b-popover>
 

@@ -94,7 +94,7 @@
                                 options="data:languages" placeholder="Add language"
                                 v-model="newLanguage" optionKey="waba" filterable searchable
                                 :filter="{
-                                    waba  : true
+                                    '!!waba'  : true
                                 }"
                                 style="min-width: 50px;width:100%;"/>
                             </b-list-group-item> 
@@ -333,7 +333,7 @@
                                 options="data:languages" placeholder="Select Message Language"
                                 v-model="newItem.lang" optionKey="waba" filterable searchable
                                 :filter="{
-                                    waba  : true
+                                    '!!waba'  : true
                                 }"
                             style="min-width: 50px;width:100%;"/>
                         <span class="v-input-error">{{ v.errors[0] }}</span>

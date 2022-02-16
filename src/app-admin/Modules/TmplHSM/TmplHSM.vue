@@ -43,38 +43,21 @@
                   <b-button size="sm" cursor-pointer  :id="'template-info-'+ row.item.id " variant="outline-primary">
                     <span class="fa fa-info-circle" title="View" /> 
                   </b-button> 
+                  <base-input size="sm" hidden>
+                  </base-input>
                   <b-popover triggers="hover focus" :target="'template-info-'+ row.item.id"
                       custom-class="message-preview">
                       <template #default class="message-preview"> 
-                         <b-input-group class="mt-3">
-                          <b-input-group-prepend>
-                              <b-button variant="outline-dark" size="sm" class="text-sm w-25px">
-                               Code</b-button>
-                          </b-input-group-prepend>
-                          <b-form-input readonly size="sm"
-                            :value="row.item.code"
-                          ></b-form-input>
-                          <b-input-group-append>
-                            <b-button size="sm"
-                              v-clipboard:copy="row.item.code" class="far fa-copy"
-                              variant="outline-success"></b-button>
-                          </b-input-group-append>
-                        </b-input-group>
-
-                        <b-input-group class="mt-3">
-                          <b-input-group-prepend>
-                              <b-button variant="outline-dark" size="sm" class="text-sm w-25px">
-                               ID</b-button>
-                          </b-input-group-prepend>
-                          <b-form-input readonly size="sm"
-                            :value="row.item.id"
-                          ></b-form-input>
-                          <b-input-group-append>
-                            <b-button size="sm"
-                              v-clipboard:copy="row.item.id" class="far fa-copy"
-                              variant="outline-success"></b-button>
-                          </b-input-group-append>
-                        </b-input-group>
+                          
+                          <base-input size="sm" readonly prelabel copy popoverfix
+                              label="Id" :value="row.item.id">
+                          </base-input>
+                          <base-input size="sm" readonly prelabel copy popoverfix
+                              label="Code" :value="row.item.code">
+                          </base-input>
+                          <base-input size="sm" readonly prelabel copy popoverfix
+                              label="Lang" :value="row.item.lang">
+                          </base-input>
 
                       </template>
                   </b-popover> 
@@ -97,7 +80,6 @@
                   </router-link>
 
                 </template>
-
         </master-view>    
 
         <master-view v-if="mode=='edit' && newItem"  ref="templatesEdit"
@@ -162,12 +144,13 @@
                                           filterable searchable
                                           options="data:languages"
                                           :filter="{
-                                              waba  : true
+                                              '!!waba'  : true
                                           }"
+                                          optionKey="waba"
                                           v-model="newItem.lang"
                                           placeholder="Select Language">
                                           <template #selected-option="option">
-                                             {{option.item.code}}
+                                             {{option.item.name}} - {{option.item.waba}}
                                           </template>
                                         </BaseVSelect>
 
@@ -489,7 +472,6 @@
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
-          
           async loadOptions (argument) {
           },
           async loadItems (){

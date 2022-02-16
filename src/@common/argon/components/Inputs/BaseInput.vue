@@ -29,9 +29,11 @@
        ]">
         <div v-if="prependIcon || prelabel || $slots.prepend" class="input-group-prepend">
           <slot name="prepend">
-            <span :class="prependClass">
+            <b-button  v-if="prelabel" variant="outline-success">
+              {{label || name}}
+            </b-button>
+            <span v-else :class="prependClass">
               <i v-if="prependIcon" :class="prependIcon"></i>
-              <span v-if="prelabel">{{label || name}}</span>
             </span>
           </slot>
         </div>
@@ -98,10 +100,10 @@
   </validation-provider>
 </template>
 <script>
- 
- import passwordMeter from "vue-simple-password-meter";
 
- var ID_COUNTER = 0;
+  import passwordMeter from "vue-simple-password-meter";
+ 
+  var ID_COUNTER = 0;
 
   export default {
     components: { passwordMeter },
@@ -203,7 +205,7 @@
       },
       prependClass: {
         type: String,
-        default : "input-group-text",
+        default : "btn btn-sm",//"input-group-text",
         description: "Prepend Class (left)"
       },
       rules: {
