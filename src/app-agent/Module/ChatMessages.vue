@@ -19,7 +19,15 @@
                     </div>    
                     <ChatMessageContent :message="m"></ChatMessageContent>    
                 </div>
-                <span class="msg_time"><span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}</span>
+                <span class="msg_time">
+                    <span class="msg_user">{{m.name ||'---'}}</span>&nbsp;&nbsp;{{m.timestamp|formatDate}}
+                    <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
+                        &nbsp;
+                        <b-icon v-if="m.stamps.FORWARDED" icon="skip-forward-fill" variant="dark" class="msg_status"
+                            v-tooltip="'Forwarded @ ' + $formatters.formatStamp(m.stamps.FORWARDED)"
+                        ></b-icon>
+                    </span>  
+                </span>
             </div>
 
             <div v-else-if="$global.MyFunc.isOutbound(m.type)" class="d-flex justify-content-end mb-4 chat-bubble" data-local-id="m.localId" :data-message-id="m.messageId">

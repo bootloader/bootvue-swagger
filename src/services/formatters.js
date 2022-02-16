@@ -109,7 +109,7 @@ var formatter = {
       CONTACT_TAGS_DICT[tags[i].id] = tags[i];
     }
   },
-  timespan : timespan,
+  timespan : timespan,formatStamp : formatStamp,
   hexacode : function (str) {
     return intToRGB(hashCode(str));
   },

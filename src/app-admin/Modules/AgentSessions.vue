@@ -44,13 +44,7 @@
                       </b-th>
                 </template>
                 <template #cell(assignedToAgent)="row">
-                    <span class="fa"
-                      :class="{
-                        'fa-robot' : row.item.mode=='BOT',
-                        'fa-user' : row.item.mode=='AGENT',
-                        'openwebicons-webhooks' : row.item.mode=='WEBHOOK',
-                      }"
-                     />
+                    <my-icon type="chatmode" :value="row.item.mode" />
                     {{ row.item.assignedToAgent}}
                     <span v-if="row.item.assignedToDept">
                       ({{row.item.assignedToDept}})
@@ -71,6 +65,7 @@
                           <div class="message-text">Name : {{row.item.contactName}}</div>
                           <div class="message-text">Id : {{row.item.contactId}}</div>
                           <div class="message-text">Session : {{row.item.sessionId}}</div>
+                          <div class="message-text">_searchText : {{row.item._searchText}}</div>
                       </template>
                     </b-popover>
 
@@ -141,7 +136,7 @@
                         default:
                           return true;
                       }
-                    }else if(key === "fistResponseStamp"){
+                    } else if(key === "fistResponseStamp"){
                        switch (this.filters[key]) {
                         case 0: 
                           return item[key] == 0;
@@ -150,6 +145,8 @@
                         default:
                           return true;
                        }
+                    } else if(key === "contactName"){ 
+                        return String(item._searchText).toLowerCase().includes(this.filters[key].toLowerCase())
                     } else{
                       return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
                     }
@@ -170,7 +167,9 @@
             sessions : {
                 sortBy: 'assignedToAgent',
                 sortDesc: false,
-                fields: [ { key : 'assignedToAgent', label : "Assigned", sortable: true},{ key : 'contactId', label : "Contact", sortable: false},
+                fields: [ 
+                    { key : 'assignedToAgent', label : "Assigned", sortable: true},
+                    { key : 'contactId', label : "Contact", sortable: false},
                     { key : 'actions', label : "Action", sortable: false },
                     { key : 'startSessionStamp', label : "Start@", sortable: true},
                     { key : 'fistResponseStamp', label : "Agent@", sortable: false },
