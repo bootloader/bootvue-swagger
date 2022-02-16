@@ -48,10 +48,10 @@
                       :class="{
                         'fa-robot' : row.item.mode=='BOT',
                         'fa-user' : row.item.mode=='AGENT',
-                        'fas fa-fast-forward' : row.item.mode=='WEBHOOK',
+                        'openwebicons-webhooks' : row.item.mode=='WEBHOOK',
                       }"
                      />
-                    &nbsp;{{ row.item.assignedToAgent}}
+                    {{ row.item.assignedToAgent}}
                     <span v-if="row.item.assignedToDept">
                       ({{row.item.assignedToDept}})
                     </span>

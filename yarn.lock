@@ -748,10 +748,10 @@
     "lodash" "^4.2.0"
     "to-fast-properties" "^2.0.0"
 
-"@cherrybase/cherry-webchat@^2.5.3":
-  "integrity" "sha512-j5/9glB/7s4vCqdodgwhgti36EjMruh/4C8IoC+YyO31xtdticAhbckMyxWBTKiyqROweQ/nmSLX9U1+u6bH+A=="
-  "resolved" "https://registry.npmjs.org/@cherrybase/cherry-webchat/-/cherry-webchat-2.5.3.tgz"
-  "version" "2.5.3"
+"@cherrybase/cherry-webchat@^2.5.4":
+  "integrity" "sha512-Y2uH35AF0mx74BN9PbNKqUFbIan+rEocockeDO9Ps5RgxB7djXbE7tWO701Y9BQKjKOxcuQ0DFcsNCcq+5JEgQ=="
+  "resolved" "https://registry.npmjs.org/@cherrybase/cherry-webchat/-/cherry-webchat-2.5.4.tgz"
+  "version" "2.5.4"
   dependencies:
     "autolinker" "^1.8.3"
     "emoji-js" "^3.4.0"
@@ -7530,6 +7530,11 @@
   "integrity" "sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A=="
   "resolved" "https://registry.npmjs.org/opener/-/opener-1.5.2.tgz"
   "version" "1.5.2"
+
+"openwebicons@^1.6.3":
+  "integrity" "sha512-9rYiD6d6a052JB4llsJLWNwcoEUxsmUrQZ/MT6jqGGCwfvQ4sjIoBsg4w11+c1ZTqi/3Dc/MGXpYKE6V9A1E2w=="
+  "resolved" "https://registry.npmjs.org/openwebicons/-/openwebicons-1.6.3.tgz"
+  "version" "1.6.3"
 
 "opn@^5.5.0":
   "integrity" "sha512-PqHpggC9bLV0VeWcdKhkpxY+3JTzetLSqTCWL/z/tFIbI6G8JCjondXklT1JinczLz2Xib62sSp0T/gKT4KksA=="

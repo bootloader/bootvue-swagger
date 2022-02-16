@@ -85,6 +85,7 @@
 <style lang="scss">
   @import "./assets/base.scss";
   @import '@/assets/utils/_popular.scss';
+  @import "./assets/fonts/openweb/css/openwebicons.css";
   .v-input-error {
     color : red;
   }
