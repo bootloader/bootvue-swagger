@@ -58,7 +58,7 @@
                     v-model="oneItem.name" :textLimit="60" required
                     rules="required|min:4|max:512" >
                 </base-input>
-                <base-input class="mb-0" size="sm" autocomplete="off"
+                <base-input class="mb-0" size="sm" autocomplete="off" :readonly="oneItem.id && oneItem.code"
                     label="Queue Code" placeholder="my_api_connector"
                     v-model="oneItem.code" :textLimit="60" required
                     rules="required|min:4|max:512" >
@@ -226,6 +226,7 @@
         },
         watch : {
             "oneItem.name" : function(newVal,oldVal){
+              if(this.oneItem.id) return;
               let oldCode = (oldVal || "").toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
               if(!this.oneItem.code || this.oneItem.code == oldCode){
                   this.oneItem.code = newVal.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
