@@ -10575,20 +10575,6 @@
     "core-js" "^3.7.0"
     "vue" "^2.6.12"
 
-"vue-beautiful-chat@^2.5.0":
-  "integrity" "sha512-P/XnjgvqD7bdss9wL+88ukaXVhRAYAgNg990G1U3K3sIy7ijkvvuzP2qnLge8Ce01iqRT61OY/f25gjFIOU22g=="
-  "resolved" "https://registry.npmjs.org/vue-beautiful-chat/-/vue-beautiful-chat-2.5.0.tgz"
-  "version" "2.5.0"
-  dependencies:
-    "autolinker" "^1.8.3"
-    "emoji-js" "^3.4.0"
-    "escape-goat" "^1.3.0"
-    "imagemin" "^6.1.0"
-    "kind-of" "6.0.3"
-    "minimist" "1.2.3"
-    "msgdown" "^1.0.2"
-    "v-tooltip" "^2.0.1"
-
 "vue-chartjs@^3.4.2":
   "integrity" "sha512-foocQbJ7FtveICxb4EV5QuVpo6d8CmZFmAopBppDIGKY+esJV8IJgwmEW0RexQhxqXaL/E1xNURsgFFYyKzS/g=="
   "resolved" "https://registry.npmjs.org/vue-chartjs/-/vue-chartjs-3.5.1.tgz"
@@ -10654,11 +10640,6 @@
   "integrity" "sha512-SX35iJHL5PJ4Gfh0Mo/q0shyHiI2V6Zkh51c+k8E9O1RKv5BQyYrCxRzpvPrsIOJEnLaeiovet3dsUB0e/kDzw=="
   "resolved" "https://registry.npmjs.org/vue-i18n/-/vue-i18n-8.27.0.tgz"
   "version" "8.27.0"
-
-"vue-js-popover@^1.2.1":
-  "integrity" "sha512-kcnbv2qIJ26fCWtaDgzBq7A+K8/+w78fr0sQhmqLv66NewggwbsbFX4yqN9KeL4PwHrLfqr1QTBgaR+/TKZWyQ=="
-  "resolved" "https://registry.npmjs.org/vue-js-popover/-/vue-js-popover-1.2.1.tgz"
-  "version" "1.2.1"
 
 "vue-lazyload@^1.3.3":
   "integrity" "sha512-uHnq0FTEeNmqnbBC2aRKlmtd9LofMZ6Q3mWvgfLa+i9vhxU8fDK+nGs9c1iVT85axSua/AUnMttIq3xPaU9G3A=="

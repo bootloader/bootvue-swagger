@@ -17,9 +17,6 @@
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
 
-  import Chat from 'vue-beautiful-chat'
-  Vue.use(Chat)
-
 
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
