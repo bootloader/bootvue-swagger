@@ -11,38 +11,38 @@ export default AppRouter.route({
             name : "app"
         },
         {
-            path: '/app/home',
+            path: '/:app/home',
             redirect: '/app/home/CHATBOX',
             name: 'agent-home',
            // component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/home/:mvu',
+            path: '/:app/home/:mvu',
             name: 'agent-action',
             component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/chat/:contactId/:sessionId',
+            path: '/:app/chat/:contactId/:sessionId',
             name: 'agent-chat',
             component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/chat/:contactId/:sessionId/:profileId',
+            path: '/:app/chat/:contactId/:sessionId/:profileId',
             name: 'agent-chat-profile',
             component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/chat/:contactId/:sessionId/:profileId/:profileView',
+            path: '/:app/chat/:contactId/:sessionId/:profileId/:profileView',
             name: 'agent-chat-profile-view',
             component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/chat/:contactId/:sessionId/:profileId/:profileView/:mvu',
+            path: '/:app/chat/:contactId/:sessionId/:profileId/:profileView/:mvu',
             name: 'defAgentView',
             component: () => import('./Module/Home.vue'),
         },
         {
-            path: '/app/chistory/:contactId/:sessionId',
+            path: '/:app/chistory/:contactId/:sessionId',
             name: 'agent-chat-session',
             component: () => import('./Module/Home.vue'),
         },

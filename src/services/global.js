@@ -101,7 +101,8 @@ export const MyDict = {
 		} else if(c.contactType == 'TWITTER'){
 			return `https://twitter.com/${c.twitter.handler}`;
 		} else if(c.contactType == 'WHATSAPP'){
-			return `https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+MyConst.appDomain) : ''}`;
+			return `https://api.whatsapp.com/send/?phone=${c.lane}${c.sandbox? ('&text=/proxy '+
+			(MyConst.appDomain || MyConst.tenant )) : ''}`;
 		} else if(c.contactType == 'TELEGRAM'){
 			return `https://telegram.me/${c.telegram.lane}`;
 		} else if(c.contactType == 'INSTAGRAM'){

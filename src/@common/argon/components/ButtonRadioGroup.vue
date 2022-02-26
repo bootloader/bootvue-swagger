@@ -6,7 +6,7 @@
       data-toggle="buttons" tag="div"
       v-model="model"> 
       <template #data="{options}">
-       <b-form-group :label="name"
+       <b-form-group :label="name" :size="size" :class="['text-'+size]"
               v-slot="{ ariaDescribedby }" label-for="'fmg-' + inputId">
               <b-form-radio-group
                 id="btn-radios-2"

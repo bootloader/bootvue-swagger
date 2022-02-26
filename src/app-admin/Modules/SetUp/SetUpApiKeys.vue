@@ -65,7 +65,7 @@
                 </base-input>
                 <BaseVSelect class="mb-0" size="sm"
                   name="App Type" :clearable="false"
-                  :options="['WEBHOOK','AGENT','BOT']"
+                  :options="['WEBHOOK','AGENT','BOT','MITEL']"
                   v-model="oneItem.appType"
                   placeholder="Select App Type">
                 </BaseVSelect>
@@ -74,6 +74,38 @@
                     v-model="oneItem.webhook"
                     rules="required|URL" >
                 </base-input>
+                <span v-if="oneItem.appType == 'MITEL'">
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Mitel End Point" placeholder="http://yourerver.com/callback_path"
+                      v-model="oneItem.props.end_point"
+                      rules="required|URL" >
+                  </base-input>
+                  <ButtonRadioGroup size="sm" name="Grant Type"
+                            v-model="oneItem.props.grant_type" 
+                            :options="['client_credentials','password']"
+                  />
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Client Id" placeholder="ProfessionalServices"
+                      v-model="oneItem.props.client_id" rules="required" >
+                  </base-input>
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Client Secret" placeholder="B5B7194D-8C47-4E04-912D-39A003AE052C"
+                      v-model="oneItem.secret.client_secret" rules="required" >
+                  </base-input>
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Mitel Queue" placeholder="6106ee72-81a1-49a7-9e10-df591d5194f3"
+                      v-model="oneItem.props.queue" rules="required" >
+                  </base-input>
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="To" placeholder="OM Queue"
+                      v-model="oneItem.props.to" >
+                  </base-input>
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Default From" placeholder="Mehery Contact"
+                      v-model="oneItem.props.from" >
+                  </base-input>
+                </span>
+
             <template #modal-footer>
                 <div class="position-relative">
                     <button @click="deleteItem(oneItem)" v-if="oneItem.id"
@@ -156,14 +188,14 @@
               </b-input-group-append>
             </b-input-group>
             <template #modal-footer="{cancel}">
-                    <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
-                      target="_blank"
-                      class="btn btn-outline-greyer btn-sm mg-1 float-start ml-0 mr-auto"
-                      name="generate" 
-                      >View Docs</a>
-                    <button @click="cancel()"
-                      name="save" id="saveitem"
-                      class="btn btn-primary btn-sm mg-1">OK</button>
+                <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
+                  target="_blank"
+                  class="btn btn-outline-greyer btn-sm mg-1 float-start ml-0 mr-auto"
+                  name="generate" 
+                  >View Docs</a>
+                <button @click="cancel()"
+                  name="save" id="saveitem"
+                  class="btn btn-primary btn-sm mg-1">OK</button>
             </template>
         </b-modal>
 
@@ -180,10 +212,15 @@
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
 
-    function newItem() {
+    function newItem(_item) {
+      let item = _item || {};
       return {
-          id : null,
-          name : "", code : "", appType : "WEBHOOK", webhook : null,key : null,
+          id : item?.id || null,
+          name : item?.name || "",
+          code : item?.code ||  "", 
+          appType : item?.appType ||  "WEBHOOK", 
+          webhook : item?.webhook || null, key : item?.key || null,
+          props : item?.props || {}, secret : item?.secret || {}
       };
     }
     export default {
@@ -233,7 +270,7 @@
               }
             },
             "oneItem.code" : function(newVal,oldVal){
-              this.oneItem.code = this.oneItem.code.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
+              this.oneItem.code = this.oneItem?.code.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
             },
         },
         created : function (argument) {
@@ -252,7 +289,9 @@
                 code : this.oneItem.code,
                 key : (reset==true) ? '' : "**********",
                 appType : this.oneItem.appType,
-                webhook : this.oneItem.webhook
+                webhook : this.oneItem.webhook,
+                props : this.oneItem.props,
+                secret : this.oneItem.secret,
               });
               this.lastItem = resp.data;
               this.oneItem = newItem();
@@ -278,9 +317,10 @@
             this.cancelItem();
           },
           async editItem(item) {
-              this.oneItem = newItem();
+              this.oneItem = newItem(item);
+              console.log("this.oneItem",this.oneItem);
               for(var i in item){
-                this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
+                this.oneItem[i] = JSON.parse(JSON.stringify(item[i])) || this.oneItem[i];
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);

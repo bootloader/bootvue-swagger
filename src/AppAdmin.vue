@@ -30,6 +30,7 @@
   import globalDirectives from '@/@common/argon/plugins/globalDirectives';
   Vue.use(globalDirectives);
 
+  Vue.component('XSimpleForm', () => import('./@common/custom/components/XSimpleForm.vue'));
   Vue.component('MyModalBox', () => import('./@common/custom/components/MyModalBox.vue'));
   Vue.component('MySource', () => import('./@common/custom/components/MySource.vue'));
   Vue.component('MyText', () => import('./@common/custom/components/MyText.vue'));

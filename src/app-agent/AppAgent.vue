@@ -39,9 +39,9 @@
     throttleWait : 1000
   })
 
-  const default_layout = "default";
+  const default_layout = "plug";
 
-  Vue.component('default-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
+  Vue.component('app-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
   Vue.component('plug-agent-layout', () => import('./Layout/DefaultAgentLayoutPlug.vue'));
 
   var LOADED_JS = {};
@@ -50,7 +50,7 @@
     name:"AppAgent",
     computed: {
       layout() {
-        return (this.$route.meta.layout || default_layout) + '-agent-layout';
+        return (this.$route.meta.layout || this.$route.params.app) + '-agent-layout';
       }
     },
     data: () => ({

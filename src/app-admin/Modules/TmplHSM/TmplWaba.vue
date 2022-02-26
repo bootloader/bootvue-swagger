@@ -300,52 +300,42 @@
         <ValidationObserver ref="form" v-slot="{ invalid }">
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' WABA Template '"
             body-class="my-normalize-v2">
-            <div class="form-group">
-                <label for="examplePassword" class="">From HSM Template</label>
-                <MyHSMTmplSelect
-                    placeholder="Select HSM Template"
-                    class="text-lg text-grey"
-                    v-model="newItem.hsmTemplateId" 
-                    @option="onHSMCloneOption"/> 
-            </div>  
 
-            <div class="form-group">
-                <ValidationProvider v-slot="v" rules="required">
-                    <label for="examplePassword" class="">Message Category</label>
-                        <my-v-select  class="text-lg text-grey"
-                        options="data:hsm/message_category_types" placeholder="Select Message Category"
-                        v-model="newItem.category" filterable searchable
-                        style="min-width: 200px;width:100%;"/>
-                        <span class="v-input-error">{{ v.errors[0] }}</span>
-                </ValidationProvider>
-            </div>
+            <BaseVSelect size="sm" label="Select WABA Channel"
+                options="getx:/api/options/channels"
+                v-model="newItem.channelId"  required rules="required"
+                :filter="{
+                    'channelType' : 'wa360', sandbox : false
+                }"
+                class="mb-0"/>
 
-            <base-input :disabled="nonEditable" class="mb-0"
+            <BaseVSelect size="sm" label="From HSM Template"
+                options="getx:/api/tmpl/hsm"
+                v-model="newItem.hsmTemplateId" @option="onHSMCloneOption"  required rules="required"
+                class="mb-0"/>
+
+            <BaseVSelect size="sm" label="Message Category"  placeholder="Select Message Category"
+                options="data:hsm/message_category_types"
+                v-model="newItem.category"  filterable searchable required rules="required"
+                class="mb-0"/>
+                
+            <base-input  size="sm"  :disabled="nonEditable" class="mb-0"
                 label="Template Name"
-                v-model="newItem.name" :textLimit="512" required
-                rules="required|min:4|max:512" >
+                v-model="newItem.name" :textLimit="512" required rules="required|min:4|max:512" >
             </base-input>
 
-            <div class="form-group">
-                <ValidationProvider v-slot="v" rules="required">
-                        <label for="examplePassword" class="">Message Language</label>
-                            <my-v-select  class="text-lg text-grey"
-                                options="data:languages" placeholder="Select Message Language"
-                                v-model="newItem.lang" optionKey="waba" filterable searchable
-                                :filter="{
-                                    '!!waba'  : true
-                                }"
-                            style="min-width: 50px;width:100%;"/>
-                        <span class="v-input-error">{{ v.errors[0] }}</span>
-                </ValidationProvider>
-            </div>
+           <BaseVSelect size="sm" label="Message Language"  placeholder="Select Message Language"
+                options="data:languages"
+                v-model="newItem.lang" optionKey="waba" filterable searchable required rules="required"
+                :filter="{
+                    '!!waba'  : true
+                }"
+                class="mb-0"/>
 
             <template #modal-footer>
-                <div class="position-relative form-group">
-                <button @click="createItem"
+                <button @click="createItem" 
                     :disabled="!isValidNewItem || invalid"
-                    class="form-control btn btn-primary">Create</button>
-                </div>
+                    class="btn btn-sm btn-primary">Create</button>
             </template>
 
         </b-modal>
@@ -593,6 +583,7 @@
             },
             async onHSMCloneOption(option){
                 if(option && option.item){
+                    this.newItem.channelId = this.filters[1].value;
                     this.newItem.name = option.item.code;
                     console.log("option",option.item)
                     this.newItem.category = (option.item.categoryType || option.item?.meta?.messageType || "").toUpperCase();
@@ -614,7 +605,7 @@
                 let success = await this.$refs.form.validate();
                 if(success === true){
                     this.selectTemplate({
-                        channelId : this.filters[1].value,
+                        channelId : this.newItem.channelId || this.filters[1].value,
                         code : this.newItem.name,
                         category : this.newItem.category,
                         lang : this.newItem.lang

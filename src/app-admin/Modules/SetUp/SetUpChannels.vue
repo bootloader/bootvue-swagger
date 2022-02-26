@@ -99,7 +99,7 @@
                   label="Click2Chat" :value="$global.MyDict.c2cUrl(oneItemView)">
                 </base-input>
                 <base-text-area
-                    v-if="oneItemView.channelType == 'web'"
+                    v-if="oneItemView.channelType == 'web' && oneItemView.callbackPath"
                     size="sm" :rows="12" layout="flushed" readonly copy
                     label="Script" 
                     :value="createWebScript(oneItemView.webhookUrl , oneItemView.callbackPath)">
@@ -220,7 +220,10 @@
           async viewItem(item) {
             if(item){
               let resp = await this.$service.get('api/config/channel/'+item.channelId+"/");
-              this.oneItemView = resp.results[0] || { channelId : item.channelId };
+              this.oneItemView = resp.results[0] || item || { 
+                channelId : item.channelId,
+                contactType : item.contactType
+              };
               this.$bvModal.show(this.modelName + "_VIEW")
             }
           },
