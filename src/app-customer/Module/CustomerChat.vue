@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div dir="auto">
     <beautiful-chat
       v-if="isConfigSet"
       :participants="participants"
@@ -19,7 +19,8 @@
       :disableUserListToggle="false"
       :messageStyling="messageStyling"
       @onType="handleOnType"
-      @edit="editMessage">
+      @edit="editMessage" 
+      >
 
       <template v-slot:header>
         <img v-if="config.header.icon.url" class="sc-header--img" :src="config.header.icon.url" alt="" 

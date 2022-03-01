@@ -160,7 +160,7 @@
                     {
                         planName: 'BASIC',
                         channel: 'WA Only',
-                        popular:true,
+                        popular:false,
                         price: {
                             INR: '₹ 8,999',
                             USD: '$ 109.99',
@@ -229,7 +229,7 @@
                     {
                         planName: 'ADVANCED',
                         channel: 'All Channels',
-                        popular:false,
+                        popular:true,
                         price: {
                             INR: '₹34,999',
                             USD: '$449.99',

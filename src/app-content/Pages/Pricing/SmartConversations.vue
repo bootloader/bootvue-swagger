@@ -9,8 +9,8 @@
                         <tr>
                             <td class="price-blank"></td>
                             <td class="price-blank"></td>
-                            <td class="price-table-popular">Most popular</td>
                             <td class="price-blank"></td>
+                            <td class="price-table-popular">Most popular</td>
                         </tr>
                         <tr
                             v-for="(row, labelID, index, key) in labels"
