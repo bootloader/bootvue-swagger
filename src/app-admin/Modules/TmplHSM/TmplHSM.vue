@@ -225,6 +225,7 @@
                                                     <i class="fa fa-plus pointer" pointer @click="addButton"/>
                                                 </template>  
                                             </base-input>
+                                            <button @click="buttonSetting" class="btn btn-info" v-tooltip="'Options Setting'"><i class="fa fa-gear"/></button>
                                         </div>
                                       </div>
                                       <div class="position-relative form-group col-md-4">
@@ -298,8 +299,34 @@
                 v-model="modalEditButton.item.url" :textLimit="2000"
                   rules="required|max:2000|HBNumVar:end,0,1" >
             </base-input>
+            <base-input
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="Button Code" 
+                v-model="modalEditButton.item.code" :textLimit="20" required
+                rules="required|max:20" >
+            </base-input>
             </span>
 
+            <template #modal-footer="{ok}">
+                  <button @click="ok"
+                    class="btn btn-primary">Ok</button>
+            </template>
+        </b-modal> 
+
+        <b-modal id="buttonSetting" size="md"
+              title="Button Setting">
+            <base-input
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="Option Title" 
+                v-model="newItem.options.list_option_title" :textLimit="20" required
+                rules="required|max:20" >
+            </base-input>
+            <base-input
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="More Option Title" 
+                v-model="newItem.options.more_option_title" :textLimit="20" required
+                rules="required|max:20" >
+            </base-input>
             <template #modal-footer="{ok}">
                   <button @click="ok"
                     class="btn btn-primary">Ok</button>
@@ -347,7 +374,7 @@
               "footer" : "",
               "template" : "" ,
               "code" : "" ,"contactType" : "", lang : 'en_US',
-              options : { buttons : [] },
+              options : { buttons : [], list_option_title:"", more_option_title:"" },
               categoryType : "",  formatType : "",
               model : TmplUtils.sampleModel(), meta : {}       
       };
@@ -375,6 +402,8 @@
                         value : ""
                       }
                   },
+                  list_option_title:"",
+                  more_option_title:"",
                   table : {
                     fields: [ 
                               { key : 'category', label : "Grouping Category" }, 
@@ -618,6 +647,9 @@
                 }
             });
             this.newItem.__ob__.dep.notify()
+          },
+          buttonSetting(){
+            this.$bvModal.show("buttonSetting");
           }
         }
 
