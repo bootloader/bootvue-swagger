@@ -100,7 +100,8 @@
                <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
                     <span v-if="oneItem.meta.optionsSource" class="w-100">
                       <BaseVSelect class="w-100"
-                        :optionKey="oneItem.meta.optionsKey"
+                        :optionKey="oneItem.meta.optionsKey" 
+                        optionLabel="desc"
                         :options="oneItem.meta.optionsSource" 
                         v-model="oneItem.config.value">
                       </BaseVSelect>
