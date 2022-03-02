@@ -317,7 +317,7 @@
               title="Button Setting">
             <base-input
                 class="mb-0" prependClass="btn btn-outline-primary"
-                prelabel label="Option Title" 
+                prelabel label="List Option Title" 
                 v-model="newItem.options.list_option_title" :textLimit="20" required
                 rules="required|max:20" >
             </base-input>
