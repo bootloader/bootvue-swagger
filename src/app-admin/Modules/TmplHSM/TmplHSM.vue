@@ -302,7 +302,7 @@
             <base-input
                 class="mb-0" prependClass="btn btn-outline-primary"
                 prelabel label="Button Code" 
-                v-model="modalEditButton.item.code" :textLimit="20" required
+                v-model="modalEditButton.item.key" :textLimit="20" required
                 rules="required|max:20" >
             </base-input>
             </span>
