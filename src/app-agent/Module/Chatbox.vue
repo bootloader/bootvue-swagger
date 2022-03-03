@@ -736,7 +736,7 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                 var ilastmsg = activeChat.ilastmsg;
                 if(ilastmsg && ilastmsg.tags){
                     categories = ilastmsg.tags.categories;
-                } else if(!force){
+                } else if(!force || !ilastmsg){
                     return;
                 }
 
