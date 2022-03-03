@@ -101,7 +101,7 @@
                     <span v-if="oneItem.meta.optionsSource" class="w-100">
                       <BaseVSelect class="w-100"
                         :optionKey="oneItem.meta.optionsKey" 
-                        optionLabel="desc"
+                        :optionLabel="oneItem.meta.optionsLabel"
                         :options="oneItem.meta.optionsSource" 
                         v-model="oneItem.config.value">
                       </BaseVSelect>
