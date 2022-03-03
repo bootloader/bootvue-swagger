@@ -11,10 +11,16 @@ export default AppRouter.route({
             name : "app"
         },
         {
+            path: '/:app/chat',
+            redirect: '/app/home/CHATBOX',
+            name: 'agent-home',
+            //component: () => import('./Module/Home.vue'),
+        },
+        {
             path: '/:app/home',
             redirect: '/app/home/CHATBOX',
             name: 'agent-home',
-           // component: () => import('./Module/Home.vue'),
+            //component: () => import('./Module/Home.vue'),
         },
         {
             path: '/:app/home/:mvu',
