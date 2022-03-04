@@ -59,7 +59,7 @@
       <template v-slot:suggestion-button="{suggestion,button,sendSuggestion}">
           <button v-if="suggestion.type=='QUICK_REPLY'" 
               :style="button.style" :class="button.class"
-              @click="sendSuggestion(suggestion.label)" >
+              @click="sendSuggestion(suggestion)" >
               {{suggestion.label}}
           </button>
           <a v-else-if="suggestion.type=='URL'" 
