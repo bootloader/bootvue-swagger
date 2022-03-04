@@ -69,7 +69,7 @@
           </a>
           <button v-else 
               :style="button.style" :class="button.class"
-              @click="sendSuggestion(suggestion.label)" >
+              @click="sendSuggestion(suggestion)" >
               {{suggestion.label}}
           </button>
       </template>
@@ -186,7 +186,7 @@
       methods: {
         sendMessage (text) {
           if (text.length > 0) {
-            this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
+            this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1;
             this.onMessageWasSent({ author: 'support', type: 'text', data: { text } })
           }
         },
@@ -238,6 +238,11 @@
         },
         onMessageWasSent (message) {
           var form = {};
+          if(message.data.text && typeof message.data.text === "object"){
+              form.reply_id = message.data.text.name;
+              form.reply_title = message.data.text.label;
+              message.data.text =  message.data.text.label;
+          }
           if(this.form_input){
               if(this.form_input.type == "EMAIL" && !email.validate(message.data.text)){
                 this.addMessage({ type : "system", data : { text : "Invalid Input" }});
@@ -246,8 +251,10 @@
               form[this.form_input.name] = message.data.text;
               this.form_input = null;
           }
-          if(message.data.text || message.data.emoji )
+          
+          if(message.data.text || message.data.emoji ){
               this.onMessageWasSentAsync(message,form);
+          }
         },
         onMessageRecvd (message) {
           this.form_input = message.data.inputs ? message.data.inputs[0] : null;
