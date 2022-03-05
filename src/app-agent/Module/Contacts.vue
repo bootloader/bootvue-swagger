@@ -63,14 +63,15 @@
         </div>
         <div class="card-body contacts_body">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
-                <router-link tag="li" v-for="(chat,index) in activeChats"  :key="index"
+                <li v-for="(chat,index) in activeChats"  :key="index"
                     v-bind:class="{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
                         active_contact : (contactId == chat.contactId),
                         contact_attention : chat._attention && (chat._tab == 'TEAM' ),
                         contact_waiting : chat._waiting
-                    }"
+                    }">
+                <router-link tag="span" 
                     :id="chat.contactId"
                     :to="{ 
                         name: 'defAgentView', 
@@ -119,7 +120,7 @@
                         </div>
                         <div class="contact-flags">
                             <span class="contact-time" :title="chat.lastInComingStamp | formatStamp"
-                                :id="'time-details'+ chat.contactId" >{{(chat.lastInComingStamp || chat.updatedStamp) | formatDate}} </span>
+                                :id="'time-details'+ chat.contactId" >{{(chat.lastInComingStamp || chat.lastActivityStamp || chat.updatedStamp) | formatDate}} </span>
 
                             <div id="'nm' + c.contactId" class="chat_flags">
                                 <span>
@@ -145,6 +146,7 @@
                         </div>
                     </div>
                 </router-link>
+                </li>  
             </ul>
             <ul class="contacts contact-list" v-if="activeChats.length==0">
                <center><small>No session </small></center>
@@ -437,8 +439,25 @@
                 }
             }
         }
+        li.data_unassigned {
+            &::before {
+                content: "Un-Assigned";
+                display: block;
+                font-size: .8em;
+                padding: 0px 10px;
+                color: #000000cc;
+                background-color :  rgba(var(--scheme-color-rgba), 0.2);
+                border-left: 5px solid rgba(var(--scheme-color-rgba), 0.6);
+            }
+        }
+        li.data_unassigned ~ .data_unassigned::before{
+            content: "";
+            display: none;
+        }
+
     }
 </style>
+
 <style type="text/css" scoped="">
     .contacts_body{
         padding:  0 0 !important;
@@ -464,8 +483,12 @@
         list-style: none;
         max-width: calc(100% - 0px);
     }
-    .contacts li{
+    .contacts li {
         width: 100% !important;
+    }
+    .contacts li > span{
+        width: 100% !important;
+        display: list-item;
         padding: 5px 10px;
         /*margin-bottom: 3px !important;*/
         /*box-shadow: inset 0 0 52px #0000000d;*/
@@ -474,14 +497,14 @@
         border-left: 5px solid #0000;
         border-right: 5px solid #0000;
     }
-    .contacts li:hover{
+    .contacts li > span:hover{
         border-left: 5px solid #1d375273;
     }
-    .contacts li.router-link-exact-active{
+    .contacts li > span.router-link-exact-active{
       border-left: 5px solid #1d3752;
       background-color: rgba(0,0,0,0.3);
     }
-    .contacts li.router-link-exact-active, .contacts li.active_contact {
+    .contacts li > span.router-link-exact-active, .contacts li.active_contact>span {
         background-color: rgb(0 0 0 / 6%)
     }
     /* .contact-preview .contact_type{
@@ -611,7 +634,7 @@
         text-align: right;
         float: right;
     }
-    .contacts li.router-link-exact-active .new_message {
+    .contacts li > span.router-link-exact-active .new_message {
         display: none;
     }
     .contacts li .assigned_to_agent {
@@ -623,7 +646,6 @@
         color : #000 !important;
         opacity: 0.8;
         /* background: #000; */
-
     }
     ul.contacts li.data_assigned {
         /* background: #ffffff75; */
