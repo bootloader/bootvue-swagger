@@ -156,7 +156,7 @@ export default {
 					this.$refs.audio.currentTime = 0;
 					return this.playing = this.autoPlay;
 				}
-				throw new Error('Failed to load sound file.');
+				console.error('Failed to load sound file.');
 			}
 		},
 		mute() {
