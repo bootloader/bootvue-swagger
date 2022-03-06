@@ -145,18 +145,19 @@ export default {
 			window.open(this.file, 'download');
 		},
 		async load() {
-			if (this.$refs.audio.readyState >= 2) {
-				this.loaded = true;
-                while(this.$refs.audio.duration === Infinity) {
-                    await new Promise(r => setTimeout(r, 1000));
-                    this.$refs.audio.currentTime = 10000000*Math.random();
-                }
-                this.durationSeconds = parseInt(this.$refs.audio.duration);
-                this.$refs.audio.currentTime = 0;
-				return this.playing = this.autoPlay;
+			if(this.$refs.audio){
+				if (this.$refs.audio.readyState >= 2) {
+					this.loaded = true;
+					while(this.$refs.audio.duration === Infinity) {
+						await new Promise(r => setTimeout(r, 1000));
+						this.$refs.audio.currentTime = 10000000*Math.random();
+					}
+					this.durationSeconds = parseInt(this.$refs.audio.duration);
+					this.$refs.audio.currentTime = 0;
+					return this.playing = this.autoPlay;
+				}
+				throw new Error('Failed to load sound file.');
 			}
-
-			throw new Error('Failed to load sound file.');
 		},
 		mute() {
 			if (this.muted) {
