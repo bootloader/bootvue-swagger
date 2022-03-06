@@ -194,6 +194,8 @@
         return c.code.toLowerCase();
     })];
 
+    var allTabs = ['ME','TEAM','HISTORY'];
+
     export default {
         components: {
             'font-awesome-icon': FontAwesomeIcon,
@@ -308,7 +310,7 @@
                 }
             },
             "$global.MyFlags.agent.contactsTab" : function(newVal,oldVal){
-                if(newVal == "HISTORY"){
+                if(allTabs.indexOf(newVal) > allTabs.indexOf(oldVal)){
                     this.$store.dispatch("RefeshSession",true);
                 }
             },
