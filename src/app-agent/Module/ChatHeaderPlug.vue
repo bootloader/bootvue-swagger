@@ -2,15 +2,6 @@
         <div class="card-header msg_head chat-head">   
                     <div class="d-block clear-both">               
                         <div class="d-flex bd-highlight card-header-left">
-                            <div class="card-header-left-left d-sm-block d-md-none">
-                                <router-link tag="i" class="fa fa-arrow-left" 
-                                    :to="{ 
-                                        name: 'defAgentView', 
-                                        params: { 
-                                            mvu : 'CONTACTS'
-                                    }}"
-                                >&nbsp;&nbsp;</router-link >
-                            </div>
                             <div class="img_cont" 
                                 @click="showContactProfile">
                                 <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
