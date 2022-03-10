@@ -15,7 +15,8 @@ let myRespInterceptor = axios.interceptors.response.use(
   	  //https://app.mehery.com/admin/auth/login
       var nextURL = new URL(response.request.responseURL);
       nextURL.searchParams.append("referer",encodeURIComponent(window.location.href))
-  	  window.location.href = nextURL.toString();
+      window.location.reload();
+  	  //window.location.href = nextURL.toString();
   	}
 
     if(config.toast!==false && response.data && response.data.message){
