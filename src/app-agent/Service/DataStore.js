@@ -29,7 +29,7 @@ const state = {
   contacts : null,
   chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
   chatsCounter : 1, 
-  meta : { isOnline : undefined, isAway : false },
+  meta : { isOnline : undefined, isAway : false, isLoadingChats : false },
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
@@ -126,10 +126,12 @@ const actions = {
       if(!isUpdate && UPDATE_TIME<then){
         return;
       }
+      state.meta.isLoadingChats =  true;
       let response = await cache._RefeshSession({
         isOnline : state.meta.isOnline,isUpdate,
         isAway : state.meta.isAway
       });
+      state.meta.isLoadingChats =  false;
       if(response.data && response.data.details){
           dispatch("SetAgentOptionsStatus", response.data.details);
       }

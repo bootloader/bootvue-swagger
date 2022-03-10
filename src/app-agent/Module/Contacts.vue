@@ -146,10 +146,18 @@
                         </div>
                     </div>
                 </router-link>
-                </li>  
+                </li>    
             </ul>
-            <ul class="contacts contact-list" v-if="activeChats.length==0">
-               <center><small>No session </small></center>
+            <ul class="contacts contact-list">
+                <div style="height:40px;width:100%;position:relative;line-height:40px;">
+                        <center v-if="activeChats.length==0 && !isLoading">
+                            <small>No session </small>
+                        </center>
+                        <loading :active.sync="isLoading" 
+                            :can-cancel="false"  
+                            :loader="'dots'"
+                            :is-full-page="false"></loading>
+                </div>  
             </ul>
             <ul class="contacts contact-list-unassigned">
                 
@@ -253,6 +261,9 @@
             },
             isSearch(){
                 return !!this.search.text.trim();
+            },
+            isLoading(){
+                return this.$store.getters.StateMeta.isLoadingChats;
             }
         },
         data:() => ({
@@ -310,7 +321,9 @@
                 }
             },
             "$global.MyFlags.agent.contactsTab" : function(newVal,oldVal){
-                if(allTabs.indexOf(newVal) > allTabs.indexOf(oldVal)){
+                if(
+                    this.$global.MyConst.config.SETUP.POSTMAN_AGENT_TAB_HISTORY_LAZY
+                    || (allTabs.indexOf(newVal) > allTabs.indexOf(oldVal))){
                     this.$store.dispatch("RefeshSession",true);
                 }
             },

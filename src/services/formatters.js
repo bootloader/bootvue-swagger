@@ -132,6 +132,14 @@ var formatter = {
       return undefined;
     } return argument;
   },
+  any : function(){
+    for(var i in arguments){
+      if(arguments[i] !== undefined && arguments[i] !== null ){
+        return arguments[i];
+      }
+    }
+    return arguments[arguments.length-1];
+  },
   guid : function() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16)

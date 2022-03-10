@@ -45,7 +45,6 @@
         description: 'Radio options. Should be an array of objects {value: "", label: ""}'
       },
       value: {
-        type: String,
         description: 'Radio value'
       },
       name: {

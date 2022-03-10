@@ -104,7 +104,9 @@
                                 item : option
                             };
                         };
-                        let value = option[THIS.optionKey] || option.id || option.key || option.code || option.value || option.label || option.name;
+                        let value = THIS.$formatters.any(
+                            option[THIS.optionKey], option.id, option.key , option.code , option.value , option.label , option.name
+                        );
                         let label = option[THIS.optionLabel] || option.name || option.label || option.value || option.code || option.key || option.id;
                         return {
                             value : value,
