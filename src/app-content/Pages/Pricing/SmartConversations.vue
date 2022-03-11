@@ -143,7 +143,7 @@
                     addOn: {label:'Add Ons',type:'header',hintText:''} ,
                     eachAdditionalAgent: {label:'Per Additional Agent, per month',type:'price',hintText:''},
                     apiSetup: {label:'CRM, Call Centers - Set-Up Fee per API',type:'price',hintText:'We will integrate with any Call Center or CRM Solution of your choice.'},
-                    perWhatsappNum: {label:'Per Additional WhatsApp number',type:'price',hintText:'Within the same FB Business Manager ID'},
+                    perWhatsappNum: {label:'Per Additional WhatsApp number per month',type:'price',hintText:'Within the same FB Business Manager ID'},
                     setupFee: {label:'Set-up Fees',type:'price',hintText:'Only if Mehery Support is required'},
                     support:  {label:'Support',type:'header',hintText:''},
                     emailWhatsAppSupport: {label: 'Email & WhatsApp Support', type:'boolean', hintText:''},
@@ -197,15 +197,7 @@
                             NZD: 'A$150',
                             AUD: 'A$150',
                         },
-                        perWhatsappNum:{
-                            INR: '₹ 8,000',
-                            USD: '$	100',
-                            EUR: '€ 92',
-                            IDR: 'IDR 1.50mio',
-                            GBP: '£	80',
-                            NZD: 'A$150',
-                            AUD: 'A$150',
-                        },
+                        perWhatsappNum:'NA',
                         setupFee:{
                             INR: '₹ 79,996',
                             USD: '$	1,000',
@@ -474,15 +466,15 @@
     }
 
     /* Highlighted column */
-    .price-table tr:nth-child(2n) td:nth-child(3) {
+    .price-table tr:nth-child(2n) td:nth-child(4) {
         background-color: rgba(216, 214, 227, 0.25);
     }
-    .price-table tr td:nth-child(3) {
+    .price-table tr td:nth-child(4) {
         background-color: rgba(216, 214, 227, 0.15);
         padding: 8px 48px;
     }
-    .price-table tr td:nth-child(3) .fa-check,
-    .price-table tr:nth-child(2n) td:nth-child(3) .fa-check {
+    .price-table tr td:nth-child(4) .fa-check,
+    .price-table tr:nth-child(2n) td:nth-child(4) .fa-check {
         /* color: #ffffff; */
     }
     /**/
