@@ -21,6 +21,7 @@
                     ref="chatHeader"
                     :plug="plug"
                     v-if="plug"
+                    hidden
                  />
 
                 <ChatHeader
@@ -227,6 +228,7 @@
                                     @click="openAudioRecord" v-tooltip="'Send Voice Message'"
                                     class="input-group-text attach_btn input-group-text-right"><i class="fa fa-microphone"></i></span>
                                 </div>
+                                
                         </div>
                         <!-- If chat is NOT Actionable -->
                         <div v-else class="control-panel text-center"> 
@@ -236,13 +238,22 @@
                                     @click="goToChat()"> 
                                     Send New Message
                                 </b-button>
+                                
                                 <b-button 
                                     class="btn btn-sm text-white:hover" variant="outline-white-dirty" pill
                                         v-b-modal.stickynote v-tooltip="'Add Sticky Note'">
                                                 <i class="fas fa-sticky-note"></i> 
                                 </b-button>
                         </div>
-                    </div> 
+                        
+                    </div>
+                    <div v-if="isSendNewMessage" class="control-panel text-center"> 
+                        <b-button 
+                            class="btn-sm text-white:hover" variant="outline-white-dirty" pill
+                            @click="goToBack()"> 
+                            Cancel
+                        </b-button>
+                    </div>
                     <!-- If chat is NOT ACTIVE -->
                     <div v-else-if="!chatLocal.active"> 
                         <div v-if="!is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
@@ -409,7 +420,7 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
             },
             chatsVersionLocal : 0,
             isSendNewMessage : false,
-
+            isSendNewMessageMode : false,
             winMode : null,
 
             //Locla Dirty Flags
@@ -630,6 +641,7 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                 }
             },
             async goToChat(){
+                this.isSendNewMessageMode = true;
                 if(this.$route.params.profileId == this.$route.params.contactId){
                     return this.initNewMessage(true);
                 } else {
@@ -643,6 +655,21 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                         });
                 }
  
+            },
+            goToBack(){
+                this.isSendNewMessageMode = false;
+                if(this.$route.params.profileId == this.$route.params.contactId){
+                    return this.initNewMessage(false);
+                } else {
+                    this.$router.push({
+                            name: 'defAgentView', 
+                                params: { 
+                                    sessionId : this.$route.params.sessionId,
+                                    contactId : this.$route.params.contactId,
+                                    profileId : this.$route.params.contactId
+                                } 
+                        });
+                }
             },
             showContactProfile : function (type, type2) {
                 if(typeof type !='string'){

@@ -113,7 +113,11 @@
         }
     }
 </script>
-
+<style scoped>
+.chat{
+    padding: 5px 5px 0 !important;
+}
+</style>
 <style lang="css">
     @import './../../assets/agent/css/dashboard.agent.css';
     @import 'https://fonts.googleapis.com/css?family=Reenie+Beanie|Lato:700';
