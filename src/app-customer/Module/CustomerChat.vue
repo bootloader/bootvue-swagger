@@ -1,5 +1,5 @@
 <template>
-  <div dir="auto">
+  <div>
     <beautiful-chat
       v-if="isConfigSet"
       :participants="participants"
@@ -30,9 +30,10 @@
 
 
       <template v-slot:text-message-body="{ message,messageText, messageColors}">
-        <p class="sc-message--text-content" v-html="messageText"></p>
+        <p class="sc-message--text-content" v-html="messageText" dir="auto"></p>
 
         <p  class="sc-message--text-content"
+            dir="auto"
             v-if="message.data.attachments && message.data.attachments.length>0">
             <span  v-for="atch in message.data.attachments" :key="atch.mediaURL">
                 <img v-if="atch.mediaType == 'IMAGE'"  
