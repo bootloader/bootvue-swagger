@@ -40,14 +40,15 @@ function eq(a,b) {
 		  session.local.closed = session.local.expired || !session.local.active;
 
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
-		  if((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent){
+		  if(session.assignedToDept !== MyConst.dept){
+			session._tab = "ORG";
+		  }	 else if((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent){
 		    session._tab = "ME";
 		  } else if(!((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent)){
 		     session._tab = "TEAM";
 		  }
-		  
 		  if(!session.local.active){
-			session._tab = "HISTORY";
+			//session._tab = "HISTORY";
 		  }
 		  if(session.lastmsg){
 		      if(session.lastmsg.type == "I"){

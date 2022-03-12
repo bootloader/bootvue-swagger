@@ -106,6 +106,7 @@
 
   .nav-link {
     border: 0;
+    border-radius: 0px !important;
   }
 }
 
@@ -121,6 +122,9 @@
 
     &.active {
       color: $white !important;
+    }
+    &.rounded-pill {
+      
     }
   }
 }

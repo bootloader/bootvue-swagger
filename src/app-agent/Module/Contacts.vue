@@ -46,10 +46,38 @@
                     'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
                     <span class="fa fa-user-friends"/> Team</span>
               </li>
-              <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000"
+              <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_ORG || $config.SETUP.POSTMAN_AGENT_TAB_ORG === undefined"
                     class="nav-item" >
-                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'HISTORY')}" @click="MyFlags.agent.contactsTab = 'HISTORY'">
-                    <span class="fa fa-stopwatch"/> History</span>
+                <span class="nav-link btn-xs" 
+                    v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ORG')}" 
+                    @click="MyFlags.agent.contactsTab = 'ORG'">
+                    <span class="fa fa-landmark"/> Org.</span>
+              </li>
+             </ul>
+             <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="!isSearch">
+                <li class="nav-item bg-white">
+                    <span class="text-grey text-xs">
+                        Show only
+                    </span>
+                </li>
+              <li class="nav-item chat_tags">
+                <span class="tag-chat-status" 
+                    v-bind:class="[searchStatus == 'ACTIVE' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.status = 'ACTIVE'">
+                     Active</span>
+              </li>
+              <li class="nav-item chat_tags">
+                <span class="tag-chat-status" 
+                     v-bind:class="[searchStatus == 'CLOSED' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.status = 'CLOSED'">
+                    Closed</span>
+              </li>
+              <li class="nav-item chat_tags">
+                <span class="tag-chat-status" 
+                    v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000"
+                    v-bind:class="[searchStatus == 'STALED' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.status = 'STALED'">
+                    Expired</span>
               </li>
              </ul>
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="isSearch">  
@@ -223,24 +251,33 @@
             activeChats : function(){ 
                 console.log("activeChats",this.$store.getters.StateChats.length); 
                 let searchText = this.search.text.trim();
-                let searchTags = this.$store.getters.SearchChat;
+                let searchTokens = this.$store.getters.SearchChat.tokens;
                 var tab = MyFlags.agent.contactsTab;
-                //console.log("searchTags",searchTags)
+                var status = this.$store.getters.SearchChat.status;
+                //console.log("searchTokens",searchTokens)
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
                     return (chat._tab == tab) || searchText;
                 }).filter(function(chat){
-                    var _searchTags = searchTags.filter(function (searchTag) {
-                        console.log(chat.name,searchTag._text);
-                        if(searchTag.isTag){
+                    var _searchTokens = searchTokens.filter(function (searchToken) {
+                        console.log(chat.name,searchToken._text);
+                        if(searchToken.isTag){
                             return (
-                                (chat.contactType || "").toLowerCase().indexOf(searchTag._text) == 0
-                                || (chat.status || "").toLowerCase().indexOf(searchTag._text) == 0
+                                (chat.contactType || "").toLowerCase().indexOf(searchToken._text) == 0
+                                || (chat.status || "").toLowerCase().indexOf(searchToken._text) == 0
                             );
                         } else {
-                            return ((chat._searchText || "").toLowerCase().indexOf(searchTag._text) > -1);
+                            return ((chat._searchText || "").toLowerCase().indexOf(searchToken._text) > -1);
                         }
                     });
-                    return (_searchTags.length == searchTags.length);// && chat.active;
+                    return (_searchTokens.length == searchTokens.length);// && chat.active;
+                }).filter(function(chat){
+                    if(searchText){
+                        return true
+                    } else if(status == 'STALED')
+                        return chat.local.expired;
+                    else if(status == 'CLOSED')
+                        return chat.local.resolved;    
+                    return chat.local.active;
                 }).sort(function(a, b){
                     if(a._assignedToMe && !b._assignedToMe){
                         return -1;
@@ -264,11 +301,15 @@
             },
             isLoading(){
                 return this.$store.getters.StateMeta.isLoadingChats;
+            },
+            searchStatus(){
+                return this.$store.getters.SearchChat.status;
             }
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: {
+                status : 'ACTIVE',
                 contactType : null,
                 text : "",
                 active : false
@@ -328,9 +369,13 @@
                 }
             },
             "search.text" :  function (searchText) {
-                this.$store.commit("setSessionSearch",this.search.text);
+                this.$store.commit("setSessionSearch",this.search);
                 this.searchChat();
-            }
+            },
+            "search.status" :  function (searchText) {
+                this.$store.commit("setSessionSearch",this.search);
+                this.searchChat();
+            },
         },
         methods: {
             async searchChat(){
@@ -587,16 +632,32 @@
     }
     .contact-tabs .nav-link {
         background-color: #00000021;
-        border-radius: 0px !important;
         color: rgba(255, 255, 255, 0.822);
-        font-size: 13px;
+        font-size: 12px;
         cursor: pointer;
     }
     .contact-tabs .nav-link.active {
         background-color: #0000006b;
-        border-radius: 0px !important;
         color: #fff;
         font-weight: 500;
+    }
+     .contact-tabs .chat_tags{
+         background-color: rgb(255, 255, 255);
+         padding: 0px 0px 3px;
+         margin-top: 0px;
+     }
+    .contact-tabs .tag-chat-status{
+        font-size: 9px;
+        cursor: pointer;
+        line-height: 14px!important;
+    }
+    .contact-tabs .tag-chat-status.tag-lighter {
+        background-color: rgba(var(--scheme-color-rgba), 0.1)!important;
+         text-transform: none;
+    }
+    .contact-tabs .tag-chat-status.tag-darker {
+        background-color: rgba(var(--scheme-color-rgba), 0.9)!important;
+        text-transform: uppercase;
     }
     .online-toggle {
         float: right;

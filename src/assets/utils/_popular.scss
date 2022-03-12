@@ -29,7 +29,7 @@ $popular-list:(
 
 @each $key,$val in $popular-list{
     .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
-        background-color: #{$val};
+        background-color: #{$val}!important;
     }
     .text-#{$key} {
         color: #{$val};

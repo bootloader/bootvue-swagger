@@ -29,12 +29,12 @@ const state = {
   contacts : null,
   chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
   chatsCounter : 1, 
-  meta : { isOnline : undefined, isAway : false, isLoadingChats : false },
+  meta : { isOnline : undefined, isAway : false, isLoadingChats : false},
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null},
-  searchChat : []
+  searchChat : { tokens : [],  status : 'ACTIVE' }
 };
 var tagFormat = function (argument) {
     return {
@@ -82,7 +82,8 @@ const cache = {
           away : isAway,
           isUpdate : isUpdate,
           tab : MyFlags.agent.contactsTab,
-          search : state.searchChat.filter(function(tag){
+          searchStatus : state.searchChat.status,
+          search : state.searchChat.tokens.filter(function(tag){
             return !tag.isTag && tag.text;
           }).map(function(tag){
             return tag.text
@@ -559,12 +560,12 @@ const mutations = {
     state.agents = agents;
     updateTimer();
   },
-  setSessionSearch(state,searchText){
-      searchText = (searchText || "").trim();  
+  setSessionSearch(state,search){
+      let searchText = (search.text || "").trim();  
       if(searchText){
         searchText = searchText+ "*";
       }   
-      state.searchChat = (searchText).split(/(:[\w]+)/).filter(function (argument) {
+      state.searchChat.tokens = (searchText).split(/(:[\w]+)/).filter(function (argument) {
           return !!argument;
       }).map(function (argument) {
           var tags = argument.split(":");
@@ -574,6 +575,9 @@ const mutations = {
               _text : (tags[0] || tags[1]).toLowerCase().replaceAll("*","").trim()
           }
       });
+      console.log(" state.searchChat.status",search.status)
+      state.searchChat.status = search.status;
+      state.searchChat = Object.assign({},state.searchChat)
   },
   setUser(state, username) {
     state.user = username;
