@@ -22,19 +22,26 @@
               v-if="$global.MyConst.config.SETUP.POSTMAN_CHAT_INBOUND_QUEUE == row.item.code"
               v-tooltip="'This is set as default inbound queue'"
               class="btn mg-1 fa fa-star text-primary">
-            </span>  
+            </span>  <span  v-if="row.item.readOnly && row.item.shared"
+              v-tooltip="'This App is part default setup'"
+              class="btn mg-1 fa fa-info-circle text-primary">
+            </span> 
           </template>
           <template #cell(actions)="row">
-            <b-button size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
+            <b-button :disabled="row.item.readOnly" 
+                size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-eye"></i>
             </b-button>
-            <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  class="mg-1"
+            <b-button :disabled="row.item.readOnly"
+                size="sm" @click="editItem(row.item, row.index, $event.target)"  class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-edit"></i>
             </b-button>
-            <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)"   class="mg-1"
-                v-tooltip="row.item.message" variant="outline-primary">
+            <b-button :disabled="row.item.readOnly"
+                size="sm" class="mg-1" variant="outline-primary"
+                @click="deleteItem(row.item, row.index, $event.target)"
+                v-tooltip="row.item.message" >
                 <i class="fas fa-trash"></i>
             </b-button>
           </template>
