@@ -23,7 +23,7 @@
               v-tooltip="'This is set as default inbound queue'"
               class="btn mg-1 fa fa-star text-primary">
             </span>  <span  v-if="row.item.readOnly && row.item.shared"
-              v-tooltip="'This App is part default setup'"
+              v-tooltip="'This App is part of default setup'"
               class="btn mg-1 fa fa-info-circle text-primary">
             </span> 
           </template>

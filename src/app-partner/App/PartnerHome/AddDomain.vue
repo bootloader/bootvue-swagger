@@ -96,7 +96,7 @@
                   type="email"
                   name="Contact Email"
                   rules="required|email" required
-                  v-model="model.company.conactEmail"
+                  v-model="model.company.email.email"
                   helpMessage="For business communications"
                 >
                 </base-input>
@@ -106,7 +106,7 @@
                   type="mobile"
                   name="Contact Number"
                   rules="phone"
-                  v-model="model.company.conactPhone"
+                  v-model="model.company.phone.phone"
                   helpMessage="For business communications"
                 >
                 </base-input>
@@ -179,7 +179,7 @@
                 <base-input alternative question feedback
                   type="text"
                   label="Address"
-                  v-model="model.company.conactAddress"
+                  v-model="model.company.address.street"
                   placeholder="Ex : Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
                 >
                 </base-input>
@@ -190,7 +190,7 @@
                 <base-input alternative question feedback
                   type="text"
                   label="City"
-                  v-model="model.company.conactCity"
+                  v-model="model.company.address.city"
                   placeholder="Ex: New York"
                 >
                 </base-input>
@@ -199,7 +199,7 @@
                 <base-select alternative question feedback
                   type="text"
                   label="Country"
-                  v-model="model.company.conactCountry"
+                  v-model="model.company.address.country"
                   placeholder="Ex: USA"
                   options="data:countries"
                 >
@@ -209,7 +209,7 @@
                 <base-input alternative question feedback
                   label="Postal Code"
                   placeholder="ZIP Code Ex : 144001"
-                  v-model="model.company.conactPostalCode"
+                  v-model="model.company.address.zip"
                 >
                 </base-input>
               </b-col>
