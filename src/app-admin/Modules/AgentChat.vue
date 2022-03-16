@@ -60,7 +60,7 @@
                         <b-col cols="6">
                             <BaseVSelect size="sm" v-if="activeChat.local && activeChat.local.open"
                             @change="inboundQueueUpdate" auto-position
-                            options="getx:/api/config/inbound_queue" optionKey="code" optionLabel="code"
+                            options="getx:/api/options/inbound_queue" optionKey="code" optionLabel="code"
                             v-model="activeChat.assignedToQueue"
                             class="text-sm w-100 float-left"/>
                         </b-col>

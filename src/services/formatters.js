@@ -330,10 +330,10 @@ var formatter = {
         return html_str.trim() ;//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
     });
     Vue.filter('lowercase', function (html_str) {
-        return html_str.toLowerCase()
+        return (html_str || '').toLowerCase()
     });
     Vue.filter('uppercase', function (html_str) {
-      return html_str.toUpperCase();
+      return (html_str || '').toUpperCase();
   });
     Vue.filter('number', function (value,format) {
         var _format = format || "0,0a"

@@ -160,7 +160,7 @@ const DataService = {
     url = slashUrl(url);
     let _config = config || {};
     _config.params = query;
-    _config.data = query;
+    //_config.data = query;
     let response = await axios.delete(url,_config);
     return processor(query,response.data);
   },

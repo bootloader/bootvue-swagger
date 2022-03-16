@@ -10,7 +10,7 @@
                     <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
                             :file="atch.mediaURL"
                         ></audio-player>    
-                    <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right"></a>
+                    <a v-else :href="atch.mediaURL | https" target="_blank" class="fa fa-file-alt float-right" download></a>
                     <br/>
                     <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
                 </span>
