@@ -81,7 +81,13 @@
                     v-model="oneItem.webhook"
                     rules="required|URL" >
                 </base-input>
-                <span v-if="oneItem.appType == 'MITEL'">
+                <span v-if="oneItem.appType == 'BOT'">
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="Bot Flow" placeholder="complaint_flow"
+                      v-model="oneItem.props.flow" >
+                  </base-input>
+                </span> 
+                <span v-else-if="oneItem.appType == 'MITEL'">
                   <base-input class="mb-0" size="sm" autocomplete="off"
                       label="Mitel End Point" placeholder="http://yourerver.com/callback_path"
                       v-model="oneItem.props.end_point"
