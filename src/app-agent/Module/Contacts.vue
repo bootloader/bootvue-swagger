@@ -68,6 +68,12 @@
               </li>
               <li class="nav-item chat_tags">
                 <span class="tag-chat-status" 
+                    v-bind:class="[searchStatus == 'OUTBOUND' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.status = 'OUTBOUND'">
+                     Outbox</span>
+              </li>
+              <li class="nav-item chat_tags">
+                <span class="tag-chat-status" 
                      v-bind:class="[searchStatus == 'CLOSED' ? 'tag-darker' : 'tag-lighter']"
                     @click="search.status = 'CLOSED'">
                     Closed</span>
@@ -277,7 +283,9 @@
                         return chat.local.expired;
                     else if(status == 'CLOSED')
                         return chat.local.resolved;    
-                    return chat.local.active;
+                     else if(status == 'OUTBOUND')
+                        return !chat?.msg?.lastInBoundMsg; 
+                    return chat.local.active && !!chat?.msg?.lastInBoundMsg;
                 }).sort(function(a, b){
                     if(a._assignedToMe && !b._assignedToMe){
                         return -1;

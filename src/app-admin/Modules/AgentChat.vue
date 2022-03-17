@@ -52,7 +52,8 @@
                 <div class="card-footer">
                     <b-row>
                         <b-col cols="6">
-                            <span class="btn btn-primary" v-if="activeChat.local && activeChat.local.open"
+                            <span class="btn btn-primary" 
+                            v-if="activeChat.local && (activeChat.local.open || activeChat.local.active)"
                             @click="closeChat">
                             Close Chat
                             </span>

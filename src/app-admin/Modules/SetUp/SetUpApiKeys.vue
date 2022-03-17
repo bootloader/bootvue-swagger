@@ -87,6 +87,14 @@
                       v-model="oneItem.props.flow" >
                   </base-input>
                 </span> 
+                <span v-else-if="oneItem.appType == 'AGENT'">
+                  <BaseVSelect class="mb-0" size="sm"
+                    name="Default Agent Team" :clearable="true"
+                    options="api:/api/admins/dept"
+                    v-model="oneItem.props.agentCode"
+                    placeholder="Select Team">
+                  </BaseVSelect>
+                </span> 
                 <span v-else-if="oneItem.appType == 'MITEL'">
                   <base-input class="mb-0" size="sm" autocomplete="off"
                       label="Mitel End Point" placeholder="http://yourerver.com/callback_path"

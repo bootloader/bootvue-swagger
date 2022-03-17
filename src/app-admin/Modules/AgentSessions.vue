@@ -55,7 +55,7 @@
                 </template>
                 <template #cell(contactId)="row">
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
-                    {{ row.item.contactName || row.item.contactId}}
+                    {{ row.item | contactName}}
 
                     <span cursor-pointer class="fa fa-info-circle" :id="'template-details-'+ row.index ">
                     </span>
@@ -159,6 +159,11 @@
                   : [
                     ];
               }
+        },
+        filters : {
+          contactName(session){
+            return session.contactName || session.contact.name || session.contactId;
+          }
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
