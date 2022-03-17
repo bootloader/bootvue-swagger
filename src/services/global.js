@@ -92,6 +92,8 @@ export const MyDict = {
 			return this.social.FACEBOOK
 		} else if(argument.indexOf('wa')==0){
 			return this.social.WHATSAPP
+		} else if(argument.indexOf('ig')==0){
+			return this.social.INSTAGRAM
 		}
 		return this.social.WEBSITE;
 	},

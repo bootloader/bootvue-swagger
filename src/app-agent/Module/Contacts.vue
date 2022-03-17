@@ -44,14 +44,14 @@
                 <span class="nav-link btn-xs" v-bind:class="{ 
                     contact_attention : urgentChat, 
                     'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
-                    <span class="fa fa-user-friends"/> Team</span>
+                    <span class="fa fa-user-friends"/> My Team</span>
               </li>
               <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_ORG || $config.SETUP.POSTMAN_AGENT_TAB_ORG === undefined"
                     class="nav-item" >
                 <span class="nav-link btn-xs" 
                     v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ORG')}" 
                     @click="MyFlags.agent.contactsTab = 'ORG'">
-                    <span class="fa fa-landmark"/> Org.</span>
+                    <span class="fa fa-landmark"/> Others</span>
               </li>
              </ul>
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="!isSearch">

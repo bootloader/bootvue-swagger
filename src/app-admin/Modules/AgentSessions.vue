@@ -76,10 +76,12 @@
                     {{ row.item.fistResponseStamp | formatDate}} 
                 </template>
                 <template #cell(closeSessionStamp)="row">
-                    <span class="fa fa-circle text-xs" :class="{
+                    <span class="fa text-xs" :class="{
                         'text-success' : row.item.local.open,
                         'text-danger' : row.item.local.expired,
                         'text-info' : row.item.local.resolved,
+                        'fa-dot-circle' : row.item.primary,
+                        'fa-circle' : !row.item.primary
                       }" />
                       {{ row.item.closeSessionStamp| formatDate}}
                 </template>   
