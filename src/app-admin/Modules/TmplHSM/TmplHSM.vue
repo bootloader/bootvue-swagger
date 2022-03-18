@@ -74,7 +74,7 @@
                   &nbsp;
                   <router-link tag="span" :to="'/app/admins/tmpl/wabatemplate/view/all?hsm=' + row.item.id">
                     <b-button size="sm" 
-                          v-tooltip="'Submit to WhatsApp for apporval, required to push template message out of session'" variant="outline-primary">
+                          v-tooltip="'Submit to WABA'" variant="outline-primary">
                          <span class="fa fa-whatsapp" title="Submit"/>
                     </b-button>   
                   </router-link>
