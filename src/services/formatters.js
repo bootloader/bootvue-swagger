@@ -373,7 +373,7 @@ var formatter = {
         var map = formatter.map_from_string(options);
         return map[value];
       }
-      var option = ((options||[]).filter((option)=> (option.value == value))[0])||{};
+      var option = ((options||[]).filter((option) => (option.value == value))[0])||{};
       if(option && option.label !== undefined && option.label !== null){
         return option.label;
       }

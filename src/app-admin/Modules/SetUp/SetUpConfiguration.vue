@@ -26,7 +26,7 @@
                       </MySource>  
                     </span>
                     <span v-else>
-                        {{row.item.config.value|display(row.item.meta.options)}}
+                       [ {{row.item.config.value|display(row.item.meta.options)}} ]
                     </span>
                   
                   </span>
