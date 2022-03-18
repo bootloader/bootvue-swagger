@@ -90,7 +90,7 @@
                 <span v-else-if="oneItem.appType == 'AGENT'">
                   <BaseVSelect class="mb-0" size="sm"
                     name="Default Agent Team" :clearable="true"
-                    options="api:/api/admins/dept"
+                    options="getx:/api/admins/dept"
                     v-model="oneItem.props.agentCode"
                     placeholder="Select Team">
                   </BaseVSelect>
