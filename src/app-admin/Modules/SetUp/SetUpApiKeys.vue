@@ -333,7 +333,7 @@
              this.onAction({name : "CANCEL"});
           }, 
           async deleteItem(item) {
-            await this.$service.delete('api/config/clientapikey/',{id : item.id});
+            await this.$service.delete('api/config/clientapikey/'+item.id,{id : item.id});
             this.loadItems();
             this.cancelItem();
           },
