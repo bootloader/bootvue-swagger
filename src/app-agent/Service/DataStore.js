@@ -268,6 +268,7 @@ const actions = {
   async UpdateChatMessageStatus({ commit,dispatch },msgStatus) {
     for(var c in state.chats){
       var chat = state.chats[c];
+     
       if(chat.messages){
         for (var m  in chat.messages) {
           var msg = chat.messages[m];
@@ -277,6 +278,7 @@ const actions = {
               msg.stamps = msg.stamps || {};
               msg.stamps[msgStatus.status] = msgStatus.changeStamp;
               msg.stamps = Object.assign({},msg.stamps);
+              msg.status = msgStatus.status;
               console.log("msg.stamps",msg.stamps)
               dispatch("updateChats", state.chats);
               return;

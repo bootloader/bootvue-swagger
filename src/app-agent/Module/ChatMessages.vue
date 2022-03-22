@@ -85,17 +85,25 @@
         components: {
             ChatMessageLog,ChatMessageContent
         },
+         watch: {
+            '$store.getters.StateChatsVersion' : function(){
+                this.refreshKey = !this.refreshKey;
+            },
+        },
         computed : {
             messages(){
+                this.refreshKey;
                 let sessionId = this.activeChat.sessionId;
                 return (this.activeChat.messages || []).filter(function(m){
-                    return sessionId == m.sessionId;
+                    console.log("m.status",m.status);
+                    return sessionId == m.sessionId && m.status  !=='DELTD';
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
             }
         },
         data: () => ({
+             refreshKey: false
         }),
         methods: {
             async onReplyShow(m) {
