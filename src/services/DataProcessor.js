@@ -33,11 +33,15 @@ function eq(a,b) {
 			&& !session.resolved;
 		  session.local.active = session.active && !session.local.expired;
 		  session.local.lastActivityStamp = session.lastInComingStamp || session.updatedStamp;
+		  session.local.channelId = session.contact.channelId || (session.contact.channelType + ":" + session.contact.lane);
 
 		 	//Extra Derived 
 		  session.local.resolved = !!session.resolved;
 		  session.local.open = session.local.active && !session.local.expired && session.local.activeInbound;
 		  session.local.closed = session.local.expired || !session.local.active;
+		  session.local.isModeAgent = session.mode=='AGENT';
+		  session.local.isModeBot = session.mode=='BOT';
+		  session.local.isShowAgentPush = (session.local.closed || !session.local.isModeAgent);
 
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
 		  if(session.assignedToDept !== MyConst.dept){
@@ -50,6 +54,7 @@ function eq(a,b) {
 		  if(!session.local.active){
 			//session._tab = "HISTORY";
 		  }
+
 		  if(session.lastmsg){
 		      if(session.lastmsg.type == "I"){
 		        session.lastInComingStamp = Math.max(session.lastInComingStamp,session.lastmsg.timestamp);

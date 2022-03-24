@@ -117,10 +117,22 @@
                             mvu : 'CHATBOX'
                         }}">
                     <div class="d-flex bd-highlight contact-preview">
-                        <div class="img_cont">
-                            <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
+
+                        <div>
+                            <div class="img_cont">
+                                <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="contact_type fab fac-bg"
                                 v-bind:class="MyDict.socialPrefix(chat.contactType)"></span>
+                            </div>
+                            <div class="chat_tags text-center">
+                                <span class="chat-channel-code">
+                                    <MyText
+                                        options="getx:/api/options/channels"
+                                        v-model="chat.local.channelId"
+                                        optionLabel="channelCode"
+                                    />
+                                </span>
+                            </div>    
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.contact.name || chat.contact.phone || chat.contact.email || chat.contactId}}</span>
@@ -148,6 +160,11 @@
                                     <span data-v-5dda926d="" class="tag-chat-status-sm" :class="'tag-chat-status-' + chat.status">
                                         {{chat.status+''}}
                                     </span>
+                                    <span v-if="chat.tagId &&  chat.tagId.length"
+                                        class="tag-chat-status-sm btn-outline-grey text-grey"
+                                        v-b-modal.chattags>
+                                        {{$formatters.contactTags(chat.tagId[0]).title}}
+                                    </span>
                                 </div>
                             </div>
 
@@ -158,23 +175,28 @@
 
                             <div id="'nm' + c.contactId" class="chat_flags">
                                 <span>
-                                    <b-icon v-if="chat._new" icon="circle-fill" class="new_message" variant="red"
+                                    <b-icon v-if="chat._new" icon="circle-fill" class="new_message text-md" variant="red"
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
-                                <span>
-                                    <b-icon v-if="chat._attention"  class="icon_attention" variant="red"
+                                <span class="">
+                                    <b-icon v-if="chat._attention"  class="icon_attention text-md" variant="red"
                                             icon="alarm-fill" 
                                             v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
                                     ></b-icon>
-                                    <b-icon v-else-if="chat._waiting"  class="icon_attention" variant="red"
-                                            icon="phone-vibrate" 
+                                    <b-icon v-else-if="chat._waiting"  class="icon_attention text-md" variant="red"
+                                            icon="phone-vibrate"
                                             v-tooltip="(chat.name || chat.contactId) + ' has replied \n& is waiting for response'"
                                     ></b-icon>
                                 </span>
-                                <span>
-                                    <span v-if="chat.assignedToAgent" class="fa fa-user-secret text-success assigned_to_agent"
-                                        v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}`"
-                                    ></span>
+                                <span class="">
+                                    <span v-if="chat.mode == 'AGENT' && chat.assignedToAgent" class="fa fa-user-secret text-success assigned_to_agent text-md"
+                                        v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}`"></span>
+                                     <span v-else-if="chat.mode == 'AGENT' && !chat.assignedToAgent" class="fa fa-user-secret text-grey assigned_to_agent text-md"
+                                        v-tooltip="`Ticket is assigned to None`"></span>
+                                     <span v-else-if="chat.mode == 'BOT'" class="fa fa-robot text-success assigned_to_agent text-md"
+                                        v-tooltip="`Ticket is assigned to ${chat.assignedToBot || chat.assignedToQueue}`"></span>
+                                     <span v-else class="openwebicons-webhooks text-success assigned_to_agent text-md"
+                                        v-tooltip="`Ticket is assigned to ${chat.assignedToBot || chat.assignedToQueue || 'None'}`"></span>
                                 </span>
                             </div>  
                         </div>
@@ -765,6 +787,20 @@
             height: 40px;
             flex-grow: 0;
         }
+        .chat-channel-code {
+            margin: 2px 0px 0px 0px;
+            border-radius: 3px;
+            padding: 1px 4px 1px 4px;
+            font-size: 9px;
+            text-align: center;
+            background-color: #00000083;
+            color: #FFF;
+            max-width: 40px;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
         .contact-text {
             flex-grow: 1;
             margin-left: 15px;
@@ -781,7 +817,7 @@
                 overflow: hidden;
             }
             .chat_tags {
-                line-height: 13px;
+                line-height: 12px;
                 .tag-chat-status-sm {
                     background: rgba(255, 255, 255, 0.274)!important;
                 }

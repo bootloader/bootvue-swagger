@@ -4,13 +4,23 @@
 $threshold: 55%;
 $dark: #000;
 $light: #FFF;
+$scheme : var(--scheme-color);
 
 @function set-color($color) {
-    @if (lightness($color) > $threshold) {
+    @if ( $scheme!=$color AND lightness($color) > $threshold) {
       @return $dark;
     }
     @else {
       @return $light;
+    }
+}
+
+@function set-darken($color,$pr) {
+    @if ( $scheme!=$color) {
+      @return darken($color,$pr)
+    }
+    @else {
+      @return $color;
     }
 }
 
@@ -25,6 +35,7 @@ $popular-list:(
     white : #FFF,
     white-dirty : rgb(226, 226, 226),
     teal-100 : #d2f4ea,
+    scheme :  var(--scheme-color)
 );
 
 @each $key,$val in $popular-list{
@@ -44,8 +55,8 @@ $popular-list:(
     .btn-#{$key}:not(:disabled):not(.disabled):hover,
     .show > .btn-#{$key}.dropdown-toggle {
         color: set-color($val);
-        background-color: darken($val,10%);
-        border-color: darken($val,10%);
+        background-color: set-darken($val,10%);
+        border-color: set-darken($val,10%);
     }
 
     .btn-outline-#{$key} {

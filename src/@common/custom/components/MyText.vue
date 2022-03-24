@@ -1,27 +1,27 @@
 <template>
-    <my-v-select v-if="options"
-        :options="options"
-        :value="value"
-        type="text"
-        v-bind="$attrs"
-    >
-    </my-v-select>
-    <span v-else>
-        {{value}}
-    </span>   
+    <MySource :options="options" 
+        :filter="filter" v-bind="$attrs"
+        :optionLabel="optionLabel"
+        :value="value">
+    </MySource> 
 </template>
 
 <script>
-    import MyVSelect from './MyVSelect.vue';
+    import MySource from './MySource.vue';
     export default {
+        inheritAttrs: false,
         props : {
             options : {
             },
             value : {
+            },
+            filter : {
+            },
+            optionLabel : {
             }
         },
         components: {
-            MyVSelect
+            MySource
         }
     }
 </script>

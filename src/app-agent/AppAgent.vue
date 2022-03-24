@@ -44,6 +44,10 @@
   Vue.component('app-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
   Vue.component('plug-agent-layout', () => import('./Layout/DefaultAgentLayoutPlug.vue'));
 
+
+  Vue.component('MySource', () => import('@/@common/custom/components/MySource.vue'));
+  Vue.component('MyText', () => import('@/@common/custom/components/MyText.vue'));
+
   var LOADED_JS = {};
 
   export default {
@@ -138,4 +142,8 @@
     @import "@/assets/base.scss";
     @import '@/assets/utils/_popular.scss';
     @import "@/assets/demo-ui/_agent-panel.scss";
+    @import "./../assets/fonts/openweb/css/openwebicons.css";
+    .v-input-error {
+      color : red;
+    }
 </style>

@@ -13,7 +13,7 @@
         props: {
             options: {
                 default: '/options',
-                 description: "examples;- getx:RelativeGetXUrl,dispatch:DispatchableEventName,data:PathNameIn@data"
+                description: "examples;- getx:RelativeGetXUrl,dispatch:DispatchableEventName,data:PathNameIn@data"
             },
             emptyDisplay : {
                 type: String,

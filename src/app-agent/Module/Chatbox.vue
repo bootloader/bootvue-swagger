@@ -62,18 +62,30 @@
     </div>  
 
     <div v-if="is_SEND_NEW" class="text-center">
-        <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
-        <br/>
-        <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
-        <br/>
-        <ForEachOption options="getx:/api/options/tmpl/hsm" 
-                 :filter="{ 'meta.agentAllowed' : true }"> 
-            <template #data={option}>
-                <span  @click="sendNewMessage(option.item)" class="msg_cotainer_smart">
-                    {{option.item.desc}} ({{option.item.lang}})
-                </span>
-            </template>
-        </ForEachOption>
+        <span v-if="chatLocal.isModeAgent || chatLocal.closed">
+            <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
+            <br/>
+                <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
+            <br/>
+            <ForEachOption options="getx:/api/options/tmpl/hsm" 
+                    :filter="{ 'meta.agentAllowed' : true }"> 
+                <template #data={option}>
+                    <span  @click="sendNewMessage(option.item)" class="msg_cotainer_smart">
+                        {{option.item.desc}} ({{option.item.lang}})
+                    </span>
+                </template>
+            </ForEachOption>
+        </span>
+         <span v-else-if="chatLocal.open">
+            <span class="fa fa-5x text-white-dirty"
+                :class="{
+                    'fa-robot' : chatLocal.isModeBot,
+                    'openwebicons-webhooks' : !chatLocal.isModeBot
+                }" />
+            <br/>
+                <small>This conersation is ACTIVE and in {{activeChat.mode}} Mode</small>
+            <br/>
+         </span>   
     </div> 
     <ChatMessages v-else
         :activeChat="activeChat"
@@ -194,7 +206,7 @@
                     </slide-up-down>
 
                     <!-- If chat is ACTIVE -->
-                    <div v-if="chatLocal.active && !is_SEND_NEW"> 
+                    <div v-if="chatLocal.active && chatLocal.isModeAgent"> 
                         <!-- If chat is NOT Actionable -->
                         <div  v-if="isActionable" class="input-group my-input-section" 
                             v-bind:class="{ invisible : !isActionable}"> 
@@ -245,17 +257,9 @@
                                                 <i class="fas fa-sticky-note"></i> 
                                 </b-button>
                         </div>
-                        
-                    </div>
-                    <div v-if="isSendNewMessage" class="control-panel text-center"> 
-                        <b-button 
-                            class="btn-sm text-white:hover" variant="outline-white-dirty" pill
-                            @click="goToBack()"> 
-                            Cancel
-                        </b-button>
                     </div>
                     <!-- If chat is NOT ACTIVE -->
-                    <div v-else-if="!chatLocal.active"> 
+                    <div v-else> 
                         <div v-if="!is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
                                 class="control-panel text-center">
                                 <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
@@ -263,6 +267,13 @@
                                     Send New Message
                                 </b-button>
                         </div> 
+                         <div v-else-if="is_SEND_NEW" class="control-panel text-center"> 
+                            <b-button 
+                                class="btn-sm text-white:hover" variant="outline-white-dirty" pill
+                                @click="goToBack()"> 
+                                Cancel
+                            </b-button>
+                        </div>
                     </div>    
  
                 </div>
@@ -319,8 +330,8 @@
 
     import getUserMedia from "get-user-media-promise";
     import AudioVisual from 'vue-audio-visual'
-import ChatHeader from './ChatHeader.vue';
-import ChatHeaderPlug from './ChatHeaderPlug.vue';
+    import ChatHeader from './ChatHeader.vue';
+    import ChatHeaderPlug from './ChatHeaderPlug.vue';
     Vue.use(AudioVisual);
 
     var sampleJson = {
@@ -355,11 +366,10 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                return (!!this.$route.params.contactId && this.chatLocal.active)
                && (this.$route.params.profileId == this.$route.params.contactId)
                && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
-               && this.chatLocal.open;
+               && this.chatLocal.open && this.chatLocal.isModeAgent;
             },
             isAssignedToMe : function () {
-               return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
-               ;
+               return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent);
             },
             agentOptions : function(){ 
                 return this.$store.getters.StateAgentOptions;
@@ -390,7 +400,7 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
             },
             is_SEND_NEW : function () {
                 return (this.activeChat?.contact?.sessionId == this.$route.params.sessionId)
-                    && this.isSendNewMessage && !this.activeChat?.local?.open;
+                    && this.isSendNewMessage;
             },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
@@ -420,7 +430,6 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
             },
             chatsVersionLocal : 0,
             isSendNewMessage : false,
-            isSendNewMessageMode : false,
             winMode : null,
 
             //Locla Dirty Flags
@@ -633,7 +642,7 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                                     sessionId : this.activeChat.contact.sessionId,
                                     profileId : this.$route.params.contactId,
                                     sendNewMessage : true
-                                } 
+                                }
                         });
                     } else {
                         this.isSendNewMessage = true;
@@ -641,7 +650,6 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                 }
             },
             async goToChat(){
-                this.isSendNewMessageMode = true;
                 if(this.$route.params.profileId == this.$route.params.contactId){
                     return this.initNewMessage(true);
                 } else {
@@ -654,22 +662,10 @@ import ChatHeaderPlug from './ChatHeaderPlug.vue';
                                 } 
                         });
                 }
- 
             },
             goToBack(){
-                this.isSendNewMessageMode = false;
-                if(this.$route.params.profileId == this.$route.params.contactId){
-                    return this.initNewMessage(false);
-                } else {
-                    this.$router.push({
-                            name: 'defAgentView', 
-                                params: { 
-                                    sessionId : this.$route.params.sessionId,
-                                    contactId : this.$route.params.contactId,
-                                    profileId : this.$route.params.contactId
-                                } 
-                        });
-                }
+                this.initNewMessage(false);
+                this.isSendNewMessage = false;
             },
             showContactProfile : function (type, type2) {
                 if(typeof type !='string'){
