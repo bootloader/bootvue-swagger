@@ -16,6 +16,15 @@
               <i class="fas fa-trash text-danger pointer mx-2" 
                 @click="removeItem(row.item, row.index, $event.target)"></i>
             </template>
+            <template #cell(value)="row">
+                <span v-if="row.item.type=='SWITCH'">
+                      [{{row.item.value|display(onOffOptions)}}]
+                </span>
+                <span v-else>
+                  {{row.item.value}}
+                </span>  
+            </template>
+                                            
 
         </master-view >
           
@@ -34,7 +43,24 @@
                       v-model="oneItem.key">
                 </base-input>
 
-                <base-input class="" size="sm"
+                <base-v-select class="" size="sm" :disabled="!!oneItem.id && !!oneItem.type"
+                      :clearable="false"
+                      name="Variable Type" placeholder="TEXT"
+                      :options="['TEXT','NUMBER','SWITCH']"
+                      v-model="oneItem.type">
+                </base-v-select>
+
+                <ButtonRadioGroup class="" size="sm" v-if="oneItem.type == 'SWITCH'"
+                      name="Variable Value" placeholder="ABC Pvt Ltd"
+                      rules="required" required  :options="onOffOptions"
+                      v-model="oneItem.value">
+                </ButtonRadioGroup>
+                <base-input class="" size="sm" v-else-if="oneItem.type == 'NUMBER'"
+                      name="Variable Value" placeholder="786"
+                      rules="required|numeric" required
+                      v-model="oneItem.value">
+                </base-input>
+                 <base-input class="" size="sm" v-else
                       name="Variable Value" placeholder="ABC Pvt Ltd"
                       rules="required" required
                       v-model="oneItem.value">
@@ -61,7 +87,9 @@
           key : null,
           value : null,
           id : null,
-          description : null
+          description : null,
+          type : null,
+          grouping : null
       };
     }
     export default {
@@ -71,6 +99,7 @@
             actions : [],
             table : {
               fields: [ 
+                { key : 'group', label : "Group" },
                 { key : 'key', label : "Key" },
                 { key : 'description', label : "Desc" },
                 //{ key : 'config.value', label : "Value" },
@@ -84,6 +113,10 @@
             },
             oneItem : newItem(),
             modelName :  "MODAL_ADD_ITEM",
+            onOffOptions : [
+                {value : true, label : 'ON' },
+                {value : false, label : 'OFF'}
+            ]
         }),
         computed : {
             isChanged :  function (argument) {
