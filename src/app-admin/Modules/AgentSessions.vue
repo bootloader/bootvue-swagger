@@ -54,6 +54,10 @@
                     </span>
                 </template>
                 <template #cell(contactId)="row">
+                     <MyText options="getx:/api/options/channels" class="mr-2 btn btn-xs btn-outline-grey text-xs text-uppercase"
+                          v-model="row.item.local.channelId" invalidDisplay="DEMO"
+                          optionLabel="channelCode"/>
+
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
                     {{ row.item | contactName}}
 
@@ -86,7 +90,9 @@
                       {{ row.item.closeSessionStamp| formatDate}}
                 </template>   
                 <template #cell(actions)="row">
-                    <span class="far fa-comment-alt mg-1 pointer"  @click="showChat(row.item, row.index, $event.target)" ></span>
+                    <span class="far fa-comment-alt mg-1 pointer text-primary text-bold" 
+                      v-tooltip="'View Chat'"
+                     @click="showChat(row.item, row.index, $event.target)" ></span>
                 </template>
 
 

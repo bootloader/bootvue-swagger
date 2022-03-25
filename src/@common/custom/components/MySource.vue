@@ -19,6 +19,10 @@
                 type: String,
                 default: null
             },
+            invalidDisplay : {
+                type: String,
+                default: null
+            },
             optionKey : {
                 type : String,
                 default : "key"
@@ -74,11 +78,17 @@
                 }
                 let oldOption = this.model.selected;
                  console.log("selectModelValue1",this.selectDefault,this.model.selected)
-                if(this.selectDefault && (this.model.selected === undefined || this.model.selected === null)){
-                    if(this.selectDefault==true && this.model.options[0]){
+                if((this.model.selected === undefined || this.model.selected === null)){
+                    if(this.selectDefault && this.selectDefault==true && this.model.options[0]){
                         this.model.selected = this.model.options[0];
                         this.onChange(this.model.selected,oldOption);
-                    }
+                    } else if(this.invalidDisplay){
+                        this.model.selected = {
+                            label : this.invalidDisplay,
+                            value : this.value
+                        };
+                        this.onChange(this.model.selected,oldOption);
+                    } 
                 }
                 console.log("selectModelValue2",this.selectDefault,this.model.selected)
                 this.$emit("option", this.model.selected);

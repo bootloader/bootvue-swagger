@@ -1,7 +1,7 @@
 <template>
     <MySource :options="options" 
         :filter="filter" v-bind="$attrs"
-        :optionLabel="optionLabel"
+        :optionLabel="optionLabel" :emptyDisplay="emptyDisplay" :invalidDisplay="invalidDisplay"
         :value="value">
     </MySource> 
 </template>
@@ -18,7 +18,9 @@
             filter : {
             },
             optionLabel : {
-            }
+            },
+            emptyDisplay :{},
+            invalidDisplay : {}
         },
         components: {
             MySource

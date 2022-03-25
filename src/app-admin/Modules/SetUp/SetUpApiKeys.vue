@@ -83,8 +83,8 @@
                 </base-input>
                 <span v-if="oneItem.appType == 'BOT'">
                   <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Bot Flow" placeholder="complaint_flow"
-                      v-model="oneItem.props.flow" >
+                      label="Bot Code" placeholder="complaint_flow"
+                      v-model="oneItem.props.botCode" >
                   </base-input>
                 </span> 
                 <span v-else-if="oneItem.appType == 'AGENT'">
