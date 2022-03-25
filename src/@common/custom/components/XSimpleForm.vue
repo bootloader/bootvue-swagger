@@ -4,7 +4,7 @@
             <span v-if="!input.meta.hidden">
                 <BaseVSelect 
                     v-if=" input.meta.inputType=='OPTIONS' && (input.meta.optionsSource || input.meta.options.length > 5)" 
-                    :size="size" :clearable="false"
+                    :size="size" 
                     :name="(input.meta.title || input.meta.key)"
                     :optionKey="input.meta.optionsKey"
                     :optionlabel="input.meta.optionsLabel"
@@ -13,6 +13,7 @@
                     :value="input.meta.defaultValue"
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                     placeholder="Select"
+                    searchable clearable="false"
                     @change="onChange(input.meta,input.config)"
                     >
                 </BaseVSelect>

@@ -45,7 +45,7 @@
             :valid="valid" 
             :required="required"
             :autoPosition="autoPosition"
-            :filter="filter"
+            :filter="filter" :searchable="searchable" :clearable="clearable"
             :class="['text-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
@@ -219,6 +219,14 @@
       autoPosition : {
           type : Boolean,
           default : false
+      },
+      clearable : {
+        type: Boolean,
+        default: false
+      },
+      searchable : {
+        type: Boolean,
+        default: false
       }
     },
     data() {

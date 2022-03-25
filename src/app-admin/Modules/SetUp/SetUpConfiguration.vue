@@ -103,7 +103,9 @@
                         :optionKey="oneItem.meta.optionsKey" 
                         :optionLabel="oneItem.meta.optionsLabel"
                         :options="oneItem.meta.optionsSource" 
-                        v-model="oneItem.config.value">
+                        v-model="oneItem.config.value"
+                        clearable searchable filterable
+                        >
                       </BaseVSelect>
                     </span>
                     <span v-else>
