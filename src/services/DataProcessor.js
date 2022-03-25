@@ -33,7 +33,7 @@ function eq(a,b) {
 			&& !session.resolved;
 		  session.local.active = session.active && !session.local.expired;
 		  session.local.lastActivityStamp = session.lastInComingStamp || session.updatedStamp;
-		  session.local.channelId = session.contact.channelId || (session.contact.channelType + ":" + session.contact.lane);
+		  session.local.channelId = session?.contact?.channelId || (session?.contact?.channelType + ":" + session?.contact?.lane);
 
 		 	//Extra Derived 
 		  session.local.resolved = !!session.resolved;

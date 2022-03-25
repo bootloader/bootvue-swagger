@@ -162,7 +162,7 @@
         },
         filters : {
           contactName(session){
-            return session.contactName || session.contact.name || session.contactId;
+            return session.contactName || session?.contact?.name || session.contactId;
           }
         },
         data: () => ({
