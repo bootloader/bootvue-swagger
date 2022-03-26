@@ -119,7 +119,7 @@
           <div  class="pl-lg-4">
             <b-row class="justify-content-center">
                 <b-col  v-if="!isDomainSet" lg="12" class="domain-wrapper text-center">   
-                  <validation-provider rules="required|alphanum" :name="name" v-bind="$attrs" v-slot="{errors}">             
+                  <validation-provider rules="required|alphanum" name="name" v-bind="$attrs" v-slot="{errors}">             
                   <div class="domain-box d-inline-block input-group-alternative">
                     <input id="domain"
                       type="text" v-model="model.domain" autocomplete="off" @keypress="domainClean" @keyup="domainClean"
@@ -332,9 +332,9 @@ export default {
           businessName : "",
           businessType : "", 
           websiteUrl  : "", 
-          conactEmail  : "", 
-          conactAddress  : "", 
-          conactPhone : "",
+          email  : {}, 
+          phone  : {},  
+          address : {},
           conactCity  : "", 
           onactCountry  : "", 
           conactPostalCode  : "", 
