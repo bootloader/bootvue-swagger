@@ -90,6 +90,11 @@ import AppWrapper from './AppWrapper';
 		},
 		component : () => import('./app-partner/AppPartner.vue')
 	},
+    "cpanel" : { //Partner App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-cpanel/AppCpanel.vue')
+	},
 	"front" : { //Account App
 		component : () => import('./app-front/AppFront.vue')
 	},

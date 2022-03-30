@@ -8,7 +8,7 @@
 
         <sidebar-item
                   :link="{
-                    name: 'Domains',
+                    name: 'Dashboard',
                     path: '/app/home',
                     icon: 'ni ni-planet text-blue'
                   }">
@@ -91,9 +91,9 @@
               <i class="ni ni-chart-bar-32"></i>
               <b-nav-text class="p-0">Admin Panel</b-nav-text>
           </b-nav-item>
-          <b-nav-item :href="'/cpanel/app'" target="_blank">
+          <b-nav-item :href="'/partner/app/home'" target="_blank">
               <i class="ni ni-chart-bar-32"></i>
-              <b-nav-text class="p-0">CPanel</b-nav-text>
+              <b-nav-text class="p-0">Domains</b-nav-text>
           </b-nav-item>
         </b-nav>
       </template>
@@ -133,8 +133,8 @@ console.log("This is AppPartnerAuth")
     }
   }
 
-  import DashboardNavbar from './PartnerNavbar.vue';
-  import ContentFooter from './PartnerFooter.vue';
+  import DashboardNavbar from './CpanelNavbar.vue';
+  import ContentFooter from './CpanelFooter.vue';
   //import DashboardContent from '../Layout/Content.vue';
   import { FadeTransition } from 'vue2-transitions';
 

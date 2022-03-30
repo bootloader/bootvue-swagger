@@ -67,6 +67,13 @@ module.exports = {
         title: 'Partner Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'partner']
       },
+      'cpanel' : {
+        entry: './src/main.js',
+        template: 'public/app-cpanel.html',
+        filename: 'app-cpanel.html',
+        title: 'Cpanel Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'cpanel']
+      },
       'admin' : {
         entry: './src/main.js',
         template: 'public/app-admin.html',

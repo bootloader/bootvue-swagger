@@ -180,6 +180,11 @@
         selectOptions : null
       };
     },
+    watch:{
+        'options':function(){
+            this.loadOptions();
+        }
+    },
     computed: {
       listeners() {
         return {
