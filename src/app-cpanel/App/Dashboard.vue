@@ -37,9 +37,9 @@
                 </b-row>
             </div>
             <div class="pl-lg-12" v-for="channel in dateWiseSummaryCount">
-                <h2>{{channel.label}}</h2>
-                <b-row>
-                    <b-col xl="3" md="6" v-for="mode in channel.mode">
+                <h2 v-if="channel.total">{{ channel.label }}</h2>
+                <b-row v-if="channel.total">
+                    <b-col xl="3" md="6" v-for="mode in channel.mode" v-if="mode.count">
                         <stats-card
                             :title="mode.label"
                             :type="mode.type"
@@ -63,105 +63,118 @@
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
 
-    const MODE = {
-        I: {
+   function initialModeState (){
+       return { 
+           I: {
             label: 'Inbound',
             icon: 'ni ni-active-40',
             type: 'gradient-red',
             count: 0,
-        },
-        Ii: {
-            label: 'Inbound Imp',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-orange',
-            count: 0,
-        },
-        O: {
-            label: 'Outbound',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-green',
-            count: 0,
-        },
-        Oi: {
-            label: 'Outbound Imp',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-info',
-            count: 0,
-        },
-        L: {
-            label: 'L',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-red',
-            count: 0,
-        },
-        A: {
-            label: 'A',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-orange',
-            count: 0,
-        },
-        N: {
-            label: 'N',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-green',
-            count: 0,
-        },
+            },
+            Ii: {
+                label: 'Inbound Imp',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-orange',
+                count: 0,
+            },
+            O: {
+                label: 'Outbound',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-green',
+                count: 0,
+            },
+            Oi: {
+                label: 'Outbound Imp',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-info',
+                count: 0,
+            },
+            L: {
+                label: 'L',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-red',
+                count: 0,
+            },
+            A: {
+                label: 'A',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-orange',
+                count: 0,
+            },
+            N: {
+                label: 'N',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-green',
+                count: 0,
+            },
+        }
     }
-    const CHANNEL = {
-        GUPSHUPW: {
-            label: 'WA_GUPSHUP_LEGACY',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-info',
-            mode: { ...MODE },
-        },
-        tg: {
-            label: 'TELEGRAM',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-red',
-            mode: { ...MODE },
-        },
-        tw: {
-            label: 'TWITTER',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-orange',
-            mode: { ...MODE },
-        },
-        fb: {
-            label: 'FACEBOOK',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-green',
-            mode: { ...MODE },
-        },
-        wa: {
-            label: 'WA',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-info',
-            mode: { ...MODE },
-        },
-        wags: {
-            label: 'WA_GUPSHUP',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-info',
-            mode: { ...MODE },
-        },
-        wa360: {
-            label: 'WA_360D',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-red',
-            mode: { ...MODE },
-        },
-        web: {
-            label: 'WEB',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-orange',
-            mode: { ...MODE },
-        },
-        ig: {
-            label: 'INSTAGRAM',
-            icon: 'ni ni-chart-pie-35',
-            type: 'gradient-green',
-            mode: { ...MODE },
-        },
+    function initialChannelState (){
+       return { 
+            GUPSHUPW: {
+                label: 'WA_GUPSHUP_LEGACY',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-info',
+                total:0,
+                mode: initialModeState(),
+            },
+            tg: {
+                label: 'TELEGRAM',
+                icon: 'ni ni-chart-pie-35',
+                total:0,
+                type: 'gradient-red',
+                mode: initialModeState(),
+            },
+            tw: {
+                label: 'TWITTER',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-orange',
+                total:0,
+                mode: initialModeState(),
+            },
+            fb: {
+                label: 'FACEBOOK',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-green',
+                total:0,
+                mode: initialModeState(),
+            },
+            wa: {
+                label: 'WA',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-info',
+                total:0,
+                mode: initialModeState(),
+            },
+            wags: {
+                label: 'WA_GUPSHUP',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-info',
+                total:0,
+                mode: initialModeState(),
+            },
+            wa360: {
+                label: 'WA_360D',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-red',
+                total:0,
+                mode: initialModeState(),
+            },
+            web: {
+                label: 'WEB',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-orange',
+                total:0,
+                mode: initialModeState(),
+            },
+            ig: {
+                label: 'INSTAGRAM',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-green',
+                total:0,
+                mode: initialModeState(),
+            },
+        }
     }
     export default {
         components: {
@@ -175,7 +188,7 @@
                     tnt: '',
                     timestamp: '',
                 },
-                dateWiseSummaryCount: { ...CHANNEL },
+                dateWiseSummaryCount: initialChannelState(),
                 channelWiseSummaryCount: {},
                 summaryCount: {},
             }
@@ -209,26 +222,23 @@
                 this.loadData()
             },
             async loadData() {
-                let _THAT = this
+                let _THAT = this;
                 let resp = await this.$service.get(
                     '/partnerdashboard/pub/monthwise-summary-save',
                     { ...this.model }
                 )
+                this.dateWiseSummaryCount = initialChannelState();
                 Object.entries(resp.results[0].dateWiseSummaryCount).map(
                     (v) => {
                         let channel = v[0].split('_')[2]
                         Object.entries(v[1]).map((w) => {
                             let mode = w[0]
-                            console.log(
-                                'his.dateWiseSummaryCount[channel][mode]',
-                                _THAT.dateWiseSummaryCount[channel].mode[mode],
-                                channel
-                            )
                             _THAT.dateWiseSummaryCount[channel].mode[
                                 mode
                             ].count =
                                 _THAT.dateWiseSummaryCount[channel].mode[mode]
-                                    .count + w[1]
+                                    .count + w[1];
+                            _THAT.dateWiseSummaryCount[channel].total = _THAT.dateWiseSummaryCount[channel].total +  + w[1];
                         })
                     }
                 )
@@ -247,8 +257,8 @@
     }
 </script>
 <style>
-    .el-table .cell {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
+.el-table .cell {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 </style>
