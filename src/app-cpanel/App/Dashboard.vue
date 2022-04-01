@@ -44,14 +44,7 @@
                             :title="mode.label"
                             :type="mode.type"
                             :sub-title="mode.count.toString()"
-                            :icon="mode.icon"
                             class="mb-4">
-                            <template slot="footer">
-                                <span class="text-danger mr-2">5.72%</span>
-                                <span class="text-nowrap"
-                                    >Since last month</span
-                                >
-                            </template>
                         </stats-card>
                     </b-col>
                 </b-row>
@@ -191,6 +184,7 @@
                 dateWiseSummaryCount: initialChannelState(),
                 channelWiseSummaryCount: {},
                 summaryCount: {},
+                modes:["I","O"]
             }
         },
         methods: {
@@ -212,10 +206,10 @@
                     '/partnerdashboard/pub/admin/fetch-month',
                     { tnt: this.model.tnt.value }
                 )
-                this.monthOptions = Object.entries(resp.results[0]).map((v) => {
+                this.monthOptions = resp.results.map((v) => {
                     return {
-                        name: v[1],
-                        value: v[0],
+                        name: v.monthStr,
+                        value: v.timestamp,
                     }
                 })
                 this.model.timestamp = this.monthOptions[0].value
@@ -228,11 +222,12 @@
                     { ...this.model }
                 )
                 this.dateWiseSummaryCount = initialChannelState();
-                Object.entries(resp.results[0].dateWiseSummaryCount).map(
+                Object.entries(resp.results[0].dateWiseCountMap).map(
                     (v) => {
                         let channel = v[0].split('_')[2]
                         Object.entries(v[1]).map((w) => {
-                            let mode = w[0]
+                            let mode = w[0];
+                            if(this.modes.indexOf(mode) < 0) return;
                             _THAT.dateWiseSummaryCount[channel].mode[
                                 mode
                             ].count =
