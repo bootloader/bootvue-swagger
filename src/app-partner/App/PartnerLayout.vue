@@ -91,7 +91,7 @@
               <i class="ni ni-chart-bar-32"></i>
               <b-nav-text class="p-0">Admin Panel</b-nav-text>
           </b-nav-item>
-          <b-nav-item :href="'/cpanel/app'" target="_blank">
+          <b-nav-item :href="'/cpanel/app'" target="_blank" v-if="showLink('SUPER_DEV')">
               <i class="ni ni-chart-bar-32"></i>
               <b-nav-text class="p-0">CPanel</b-nav-text>
           </b-nav-item>
@@ -151,6 +151,9 @@ console.log("This is AppPartnerAuth")
         if (isWindows) {
           initScrollbar('sidenav');
         }
+      },
+      showLink(role){
+        return !window.CONST.APP_USER_ROLE.indexOf(role) < 0
       }
     },
     mounted() {

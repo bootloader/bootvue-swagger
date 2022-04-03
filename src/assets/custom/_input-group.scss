@@ -23,20 +23,21 @@
     .form-control-label:focus,
     .form-control-label:active,
     .form-control-label.focused {
-      transform: translateY(-125%);
+      transform: translateY(-190%);
       font-size: .75em;
       left: 5px;
       margin-bottom: 0px;
       margin: 5px 0px;
       padding: 0px 7px;
-      background-color: #ffffff5e;
+      background-color: transparent;
       font-weight: 400;
     }
   
     .input-group {
       border-radius: 0px;
+      border-bottom: 1px solid #b8b2b2;
       &.focused {
-        border-bottom: 1px solid #b8b2b2;
+        border-bottom: 1px solid #067aff;
         border-radius: 0px;
       }
     }
@@ -90,7 +91,9 @@
         border-color:#8d8f91;
       }
     }
-
+    .form-group {
+      margin-bottom: 2rem;
+    }
     &.bc-size-sm {
       .form-group {
         margin-bottom: .5rem;

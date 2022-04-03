@@ -171,9 +171,9 @@
           </div>
           <hr class="my-4">
           <!-- Address -->
-          <h6 class="heading-small text-muted mb-4">Address</h6>
+          <h6 class="heading-small text-muted mb-4" hidden>Address</h6>
 
-          <div class="pl-lg-4">
+          <div class="pl-lg-4" hidden>
             <b-row>
               <b-col md="12">
                 <base-input alternative question feedback
@@ -216,11 +216,11 @@
             </b-row>
           </div>
 
-     <hr class="my-4">
+     <hr class="my-4"hidden>
           <!-- Address -->
-          <h6 class="heading-small text-muted mb-4"> Customer Contact</h6>
+          <h6 class="heading-small text-muted mb-4" hidden> Customer Contact</h6>
 
-          <div class="pl-lg-4">
+          <div class="pl-lg-4" hidden>
             <b-row>
               <b-col md="4">
                 <base-input alternative question feedback
@@ -297,7 +297,7 @@
             </b-row>
           </div>
 
-          <hr class="my-4">
+          <hr class="my-4" hidden>
           <!-- Description -->
           <h6 class="heading-small text-muted mb-4">About Company</h6>
           <div class="pl-lg-4">
@@ -440,7 +440,7 @@ export default {
 </script>
 <style scoped>
   .add-domain {
-    background-color: #f7fafc;
+    background-color: #fff;
   }
   .domain-wrapper, .domain-box,.domain-box input {
     font-size: 20px;

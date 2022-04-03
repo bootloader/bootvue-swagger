@@ -182,7 +182,7 @@
               type="button"
               @click="loginSubmit"
             >
-               Business Manager Login
+               Domain Manager Login
             </a>
           </div>
         </div>  

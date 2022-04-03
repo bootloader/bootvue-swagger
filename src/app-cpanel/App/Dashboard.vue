@@ -8,7 +8,6 @@
                         <base-select
                             alternative
                             question
-                            feedback
                             type="text"
                             name="Domain"
                             placeholder="Domain"
@@ -23,7 +22,6 @@
                         <base-select
                             alternative
                             question
-                            feedback
                             type="text"
                             name="Month"
                             placeholder="Month"
@@ -251,9 +249,15 @@
         },
     }
 </script>
-<style>
+<style lang="scss">
 .el-table .cell {
     padding-left: 0px;
     padding-right: 0px;
+}
+
+.form-group.is-question {
+    .form-control-label{
+      color: #fff !important;
+    }
 }
 </style>

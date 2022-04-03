@@ -87,7 +87,14 @@
                         v-model="model.country"
                         options="data:countries">
                   </base-select>
-
+                  <h4>Product Interested In</h4>
+                  <div v-for="(product,key) in products">
+                    <base-checkbox v-model="products[key].checked">
+                      <i :class="product.icon"></i>
+                      {{product.label}}
+                    </base-checkbox>
+                  </div>
+                  
                   <b-row class=" my-4">
                     <b-col cols="12">
                       <base-input :rules="{ required: { allowFalse: false } }" name=Privacy Policy>
@@ -139,8 +146,10 @@
 <script>
 
   import "@fortawesome/fontawesome-free/css/all.css";
+import BaseCheckbox from '../../@common/argon/components/Inputs/BaseCheckbox.vue';
 
   export default {
+  components: { BaseCheckbox },
     name: 'register',
     data() {
       return {
@@ -152,6 +161,14 @@
           country: '',
           agree: false
         },
+         products:[
+          {label:"Web Chat",value:"web_chat",icon:"fas fa-globe-americas",checked:false},
+          {label:"WhatsApp Chat",value:"whatsapp",icon:"fab fa-whatsapp",checked:false},
+          {label:"Facebook Chat",value:"facebook",icon:"fab fa-facebook",checked:false},
+          {label:"Twitter Chat",value:"twitter",icon:"fab fa-twitter",checked:false},
+          {label:"Telegram Chat",value:"telegram",icon:"fab fa-telegram",checked:false},
+          {label:"Instagram Chat",value:"instagram",icon:"fab fa-instagram",checked:false}
+        ],
         view : {
           screen : null // NULL, MAILSENT
         }
@@ -170,7 +187,9 @@
         // this will be called only after form is valid. You can do an api call here to register users
         try {
           //this.model.email = "sds"
-          let resp = await this.$service.post("/partner/pub/register",this.model);
+          let interestedProduct = this.products.filter(v=>v.checked);
+            interestedProduct = interestedProduct.map(v=>v.value);
+          let resp = await this.$service.post("/partner/pub/register",{...this.model,product:interestedProduct});
           console.log("resp",resp)
           this.view.screen = 'MAILSENT';
           // this.$router.push({ 
