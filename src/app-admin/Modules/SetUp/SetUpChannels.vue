@@ -12,18 +12,19 @@
        >
 
           <template #action(add_channel)="{action}">
-                <base-dropdown class="nav-item" menu-on-right title-tag="a">
-                    <a slot="title-container" class="btn btn-primary" href="#" role="button"
-                        aria-haspopup="true" aria-expanded="false">
-                        {{action.label}}
-                    </a>
-                    <a class="dropdown-item" @click="addItem('wa360')">WhatsApp</a>
-                    <a class="dropdown-item" @click="addItem('tg')">Telegram</a>
-                    <a class="dropdown-item" @click="addItem('fb')">Facebook</a>
-                    <a class="dropdown-item" @click="addItem('tw')">Twitter</a>
-                    <a class="dropdown-item" @click="addItem('ig')">Instagram</a>
-                    <a class="dropdown-item" @click="addItem('web')">WebChat</a>
-                </base-dropdown>
+                  <my-source options="@data/contact_types">
+                      <template #data="{options}">
+                        <base-dropdown class="nav-item" menu-on-right title-tag="a">
+                          <a slot="title-container" class="btn btn-primary" href="#" role="button"
+                              aria-haspopup="true" aria-expanded="false">
+                              {{action.label}}
+                          </a>
+                          <a v-for="option in options" 
+                            v-bind:key="option.id" class="dropdown-item" :hidden="!option.item.enabled"
+                            @click="addItem(option.item.channelType)">{{option.label}}</a>
+                        </base-dropdown>
+                      </template>  
+                  </my-source>  
           </template>
 
           <template #cell(details)="row">

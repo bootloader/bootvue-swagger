@@ -1,28 +1,46 @@
 {
     "options": [
         {
-         "code": "WHATSAPP",
-         "name": "WhatsApp"
+            "enabled" : true,
+            "code": "WHATSAPP",
+            "name": "WhatsApp",
+            "channelType" : "wa360"
         },
         {
-         "code": "TELEGRAM",
-         "name": "Telegram"
+            "enabled" : true,
+            "code": "TELEGRAM",
+            "name": "Telegram",
+            "channelType" : "tg"
         },
         {
-         "code": "TWITTER",
-         "name": "Twitter"
+            "enabled" : true,
+            "code": "TWITTER",
+            "name": "Twitter",
+            "channelType" : "tw"
         },
         {
+            "enabled" : true,
             "code": "FACEBOOK",
-            "name": "Facebook"
+            "name": "Facebook",
+            "channelType" : "fb"
         },
         {
+            "enabled" : true,
             "code": "INSTAGRAM",
-            "name": "Instagram"
+            "name": "Instagram",
+            "channelType" : "ig"
         },
         {
             "code": "WEBSITE",
-            "name": "WebChat"
+            "name": "WebChat",
+            "channelType" : "web",
+            "enabled" : true
+        },
+        {
+            "code": "EMAIL",
+            "name": "Email",
+            "channelType" : "mailto",
+            "enabled" : false
         }
     ]
  }

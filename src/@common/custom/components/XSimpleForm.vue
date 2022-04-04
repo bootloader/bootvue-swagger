@@ -13,7 +13,7 @@
                     :value="input.meta.defaultValue"
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                     placeholder="Select"
-                    searchable clearable="false"
+                    searchable :clearable="false"
                     @change="onChange(input.meta,input.config)"
                     >
                 </BaseVSelect>
