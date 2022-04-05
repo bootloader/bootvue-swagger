@@ -20,7 +20,7 @@
                                 v-if="activeChat">
                                 <span class="user_name" @click="showContactProfile" >{{contactName}}</span>
                                 <div v-if="assignedToAgent" class="user_assignment">
-                                    <v-select v-if="chatLocal.active" :options="agentOptions" v-model="assignedToAgent"
+                                    <v-select v-if="chatLocal.active && chatLocal.isModeAgent" :options="agentOptions" v-model="assignedToAgent"
                                     @option:selected="onAssignedToAgent" label="code"
                                     :components="{Deselect}">
                                         <template #selected-option="option">
@@ -38,9 +38,12 @@
                                         {{ code }}<em>  - {{ name }}</em>
                                         </template>
                                     </v-select>
-                                    <span v-if="!chatLocal.active" class="vs__selected">
-                                        Assigned to {{assignedToAgent.code}}
+                                    <span v-else-if="!chatLocal.active" class="vs__selected">
+                                        Assigned to {{assignedToAgent.code  || 'NONE'}}
                                     </span>
+                                      <span v-else-if="!chatLocal.isModeAgent" class="vs__selected">
+                                        Mode : {{activeChat.mode || 'NONE'}}
+                                    </span>    
                                 </div>
                             </div>
 
