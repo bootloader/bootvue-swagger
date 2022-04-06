@@ -153,7 +153,7 @@ console.log("This is AppPartnerAuth")
         }
       },
       showLink(role){
-        return !window.CONST.APP_USER_ROLE.indexOf(role) < 0
+        return window.CONST.APP_USER_ROLE.indexOf(role) > -1
       }
     },
     mounted() {
