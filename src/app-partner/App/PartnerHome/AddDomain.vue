@@ -42,14 +42,14 @@
                 <button class="btn btn-link btn-sm text-nowrap fa fa-edit" v-tooltip="'Edit Domain Details'"
                   @click="editDomain(index)">&nbsp;Edit Domain Details</button>
                 <button 
-                  v-if=" $global.User.isDuperUser || $global.User.isSuperUser"
+                  v-if=" $global.User.isMultiDomainUser"
                   class="btn btn-link btn-sm text-nowrap fa fa-user-plus" v-tooltip="'Add Domain Owner'"
                   @click="domainUsersIndex = index"> Add Domain Owner</button>
             </template>
           </stats-card>
         </b-col>
         <b-col cols="6">
-            <button v-if="(!isDomainSet && !isEditDetail) || $global.User.isDuperUser || $global.User.isSuperUser" 
+            <button v-if="(!isDomainSet && !isEditDetail) || $global.User.isMultiDomainUser" 
               href="#" class="btn btn-info" @click="addDomain">Add domain</button>
         </b-col>  
     </b-row>
@@ -409,7 +409,7 @@ export default {
     },
     modelValid(){
       return this.models.filter(function(m){
-        return !!m.domein;
+        return !!m.domain;
       });
     },
     isDomainSet(){

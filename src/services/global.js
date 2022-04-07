@@ -43,10 +43,14 @@ export const MyConst = {
 	sessionLoadStamp : new Date().getTime()
 }
 
-export const User = {
-	isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
-	isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0
-}
+export const User = (function(){
+	let user = {
+		isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
+		isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0
+	}
+	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev);
+	return user;
+})();
 
 export const MyFlags = {
   showSidebar: false,
