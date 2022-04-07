@@ -42,6 +42,12 @@ export const MyConst = {
 	},
 	sessionLoadStamp : new Date().getTime()
 }
+
+export const User = {
+	isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
+	isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0
+}
+
 export const MyFlags = {
   showSidebar: false,
   showContactProfile : true,
@@ -126,5 +132,5 @@ export const MyFunc  = {
 
 Vue.prototype.$config = MyConst.config;
 Vue.prototype.$global = {
-	MyConst,MyFlags,MyDict,MyFunc
+	MyConst,MyFlags,MyDict,MyFunc,User
 };

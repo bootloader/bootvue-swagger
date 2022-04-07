@@ -1,33 +1,58 @@
 <template>
   <div>
-    <button v-if="!isDomainSet && !isEditDetail" href="#" class="btn btn-info" @click="isEditDetail=true">Add domain</button>
 
-    <b-row  v-if="isDomainSet && !isEditDetail" align-v="center" slot="header" >
-      <b-col v-for="(model,index) in models" :key="'domain-'+index" cols="6">
-      <stats-card :title="'@'+model.domain"
-          types="gradient-red"
-          :sub-title="model.company.businessName"
-          icon="fa fa-arrow-right"
-          class="mb-4"
-          footer-classes="mt--1">
-        <template slot="icon">
-          <a class="btn btn-sm btn-primary" target="_blank"
-            :href="`/partner/app/goto/${model.domain}/admin`" > Setup</a>
-        </template>
-        <template slot="footer">
-          <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
-            :href="`https://${model.domain}.${$config.PROP_SERVICE_DOMAIN}`" target="_blank">
-          <span class="text-success">https://</span>
-          <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
-          &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
-          </a>
-          <button class="btn btn-link btn-sm text-nowrap float-right" 
-            @click="isEditDetail=true;selectedIndex=index">Edit</button>
-        </template>
-      </stats-card>
-      </b-col>
+    <b-card v-if="domainUsersIndex>-1"  no-body class="shadow">
+        <b-card-header class="bg-transparent border-0">
+          <b-row align-v="center" slot="header" >
+            <b-col cols="8">
+              <h3 class="mb-0">Domain Owners for <i class="text-blue"> {{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}} </i></h3>
+            </b-col>
+            <b-col cols="4" class="text-right" >
+              <span target="_blank" @click="domainUsersIndex=-1"
+                class="btn btn-sm btn-primary">
+                  Back
+              </span>
+            </b-col>
+          </b-row>
+        </b-card-header>
+        <partner-users :domain="model.domain">
+        </partner-users> 
+    </b-card>
+
+    <b-row  v-else-if="isDomainSet && !isEditDetail" align-v="center" slot="header" >
+        <b-col v-for="(model,index) in models" :key="'domain-'+index" cols="6">
+          <stats-card :title="'@'+model.domain"
+              types="gradient-red"
+              :sub-title="model.company.businessName"
+              icon="fa fa-arrow-right"
+              class="mb-4"
+              footer-classes="mt--1">
+            <template slot="icon">
+              <a class="btn btn-sm btn-primary" target="_blank"
+                :href="`/partner/app/goto/${model.domain}/admin`" > Setup</a>
+            </template>
+            <template slot="footer">
+              <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
+                :href="`https://${model.domain}.${$config.PROP_SERVICE_DOMAIN}`" target="_blank">
+              <span class="text-success">https://</span>
+              <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
+              &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
+              </a>
+                <hr style="margin:0.5em 0;"/>
+                <button class="btn btn-link btn-sm text-nowrap fa fa-edit" v-tooltip="'Edit Domain Details'"
+                  @click="editDomain(index)">&nbsp;Edit Domain Details</button>
+                <button 
+                  v-if=" $global.User.isDuperUser || $global.User.isSuperUser"
+                  class="btn btn-link btn-sm text-nowrap fa fa-user-plus" v-tooltip="'Add Domain Owner'"
+                  @click="domainUsersIndex = index"> Add Domain Owner</button>
+            </template>
+          </stats-card>
+        </b-col>
+        <b-col cols="6">
+            <button v-if="(!isDomainSet && !isEditDetail) || $global.User.isDuperUser || $global.User.isSuperUser" 
+              href="#" class="btn btn-info" @click="addDomain">Add domain</button>
+        </b-col>  
     </b-row>
-
 
     <card v-if="isEditDetail" class="add-domain">
         <b-row align-v="center" slot="header" >
@@ -322,6 +347,7 @@
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import formatters from '@/services/formatters';
+import PartnerUsers from './PartnerUsers.vue';
 
 export default {
   data() {
@@ -354,6 +380,7 @@ export default {
       isDomainSet : false,
       isEditDetail : false,
       selectedIndex : 0,
+      domainUsersIndex : -1,
 
       domainPlaceholder : "yourdomain",
       domainWidth : 0,
@@ -398,6 +425,14 @@ export default {
     });
   },
   methods: {
+    addDomain(){
+        this.isEditDetail=true;
+        this.selectedIndex=(this.models || []).length;
+    },
+    editDomain(index){
+        this.isEditDetail=true;
+        this.selectedIndex=index;
+    },
     async loadDetails(){
       let resp = await this.$service.get("/partner/api/domain");
       this.models = resp.results.map(function(result){
@@ -434,7 +469,8 @@ export default {
     }
   },
   components : {
-    vueDropzone : vue2Dropzone
+    vueDropzone : vue2Dropzone,
+    PartnerUsers
   }
 };
 </script>
