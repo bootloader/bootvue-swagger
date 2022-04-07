@@ -34,70 +34,36 @@
                     </b-col>
                 </b-row>
             </div>
-            <div class="pl-lg-12" v-for="channel in dateWiseSummaryCount">
-                <h2 v-if="channel.total">{{ channel.label }}</h2>
-                <b-row v-if="channel.total">
-                    <b-col xl="3" md="6" v-for="mode in channel.mode" v-if="mode.count">
-                        <stats-card
-                            :title="mode.label"
-                            :type="mode.type"
-                            :sub-title="mode.count.toString()"
-                            class="mb-4">
-                        </stats-card>
-                    </b-col>
-                </b-row>
-            </div>
         </base-header>
+    <b-container fluid class="mt--9">
+        <!--Tables-->
+      <b-row class="mt-5">
+        <b-col xl="12" class="mb-5 mb-xl-0">
+            <social-traffic-table :tableData="getDataTable"></social-traffic-table>
+        </b-col>
+      </b-row>
+      <!--End tables-->
+    </b-container>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
     </div>
 </template>
 <script>
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
+    import SocialTrafficTable from './Dashboard/SocialTrafficTable';
 
    function initialModeState (){
        return { 
-           I: {
-            label: 'Inbound',
-            icon: 'ni ni-active-40',
-            type: 'gradient-red',
-            count: 0,
-            },
-            Ii: {
-                label: 'Inbound Imp',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-orange',
-                count: 0,
-            },
-            O: {
-                label: 'Outbound',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-green',
-                count: 0,
-            },
-            Oi: {
-                label: 'Outbound Imp',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-info',
-                count: 0,
-            },
-            L: {
-                label: 'L',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-red',
-                count: 0,
-            },
-            A: {
-                label: 'A',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-orange',
-                count: 0,
-            },
-            N: {
-                label: 'N',
-                icon: 'ni ni-chart-pie-35',
-                type: 'gradient-green',
-                count: 0,
-            },
+            I: 0,
+            Ii:0,
+            O:0,
+            Oi:0,
+            L:0,
+            A: 0,
+            N:0
         }
     }
     function initialChannelState (){
@@ -170,6 +136,7 @@
     export default {
         components: {
             StatsCard,
+            SocialTrafficTable
         },
         data() {
             return {
@@ -182,7 +149,60 @@
                 dateWiseSummaryCount: initialChannelState(),
                 channelWiseSummaryCount: {},
                 summaryCount: {},
-                modes:["I","O"]
+                modes:["I","O"],
+                tableData: [
+                    {
+                        name: 'Facebook',
+                        visitors: '1,480',
+                        progress: 60,
+                        progressType: 'gradient-danger',
+                    },
+                    {
+                        name: 'LinkedIn',
+                        visitors: '5,480',
+                        progress: 70,
+                        progressType: 'gradient-success',
+                    },
+                    {
+                        name: 'Google',
+                        visitors: '4,807',
+                        progress: 80,
+                        progressType: 'gradient-primary',
+                    },
+                    {
+                        name: 'Instagram',
+                        visitors: '3,678',
+                        progress: 75,
+                        progressType: 'gradient-info',
+                    },
+                    {
+                        name: 'Twitter',
+                        visitors: '2,645',
+                        progress: 30,
+                        progressType: 'gradient-warning',
+                    }
+                    ]
+            }
+        },
+        computed:{
+            getDataTable(){
+                let data = [];
+                Object.entries(this.dateWiseSummaryCount).map(v=>{
+                    if(v[1].total){
+                        console.log("v",v);                        
+                        let row =  {
+                            name: v[1].label,
+                            visitors: '1, 480',
+                            progress: 60,
+                            progressType: 'gradient-danger',
+                            ...v[1].mode
+                        }
+                        data.push(row)
+                    }
+                    
+                })
+                console.log("data",data);
+                return data;
             }
         },
         methods: {
@@ -228,9 +248,8 @@
                             if(this.modes.indexOf(mode) < 0) return;
                             _THAT.dateWiseSummaryCount[channel].mode[
                                 mode
-                            ].count =
-                                _THAT.dateWiseSummaryCount[channel].mode[mode]
-                                    .count + w[1];
+                            ] =
+                                _THAT.dateWiseSummaryCount[channel].mode[mode] + w[1];
                             _THAT.dateWiseSummaryCount[channel].total = _THAT.dateWiseSummaryCount[channel].total +  + w[1];
                         })
                     }
@@ -259,5 +278,23 @@
     .form-control-label{
       color: #fff !important;
     }
+}
+.el-table.table-dark{
+  background-color: #172b4d;
+  color: #f8f9fe;
+}
+
+.el-table.table-dark th,
+.el-table.table-dark tr{
+  background-color: #172b4d;
+}
+
+.el-table.table-dark td,
+.el-table.table-dark th.is-leaf{
+  border-bottom: none;
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+    color:#172b4d
 }
 </style>

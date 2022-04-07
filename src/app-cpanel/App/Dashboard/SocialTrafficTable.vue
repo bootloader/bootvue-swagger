@@ -1,92 +1,51 @@
 <template>
-  <b-card body-class="p-0" header-class="border-0">
-    <template v-slot:header>
-      <b-row align-v="center">
-        <b-col>
-          <h3 class="mb-0">Social traffic</h3>
-        </b-col>
-        <b-col class="text-right">
-          <base-button size="sm" type="primary">See all</base-button>
-        </b-col>
-      </b-row>
-    </template>
+    <b-card no-body class="bg-default shadow">
+        <b-card-header class="bg-transparent border-0">
+            <h3 class="mb-0 text-white">Uses Data</h3>
+        </b-card-header>
 
+        <el-table class="table-responsive table table-dark"
+                  header-row-class-name="thead-dark"
+                  :data="tableData">
+            <el-table-column label="Channel"
+                             min-width="310px"
+                             prop="name">
+                <template v-slot="{row}">
+                    <b-media no-body class="align-items-center">
+                        <b-media-body>
+                            <span class="font-weight-600 name mb-0 text-sm">{{row.name}}</span>
+                        </b-media-body>
+                    </b-media>
+                </template>
+            </el-table-column>
+            <el-table-column label="Inbound Message"
+                             prop="I"
+                             min-width="140px">
+            </el-table-column>
 
-    <el-table
-      class="table-responsive table"
-      :data="tableData"
-      header-row-class-name="thead-light">
-      <el-table-column label="Referral" min-width="115px" prop="name">
-        <template v-slot="{row}">
-          <div class="font-weight-600">{{row.name}}</div>
-        </template>
-      </el-table-column>
+            <el-table-column label="Outbound Message"
+                             min-width="170px"
+                             prop="O">
+            </el-table-column>
+        </el-table>
 
-      <el-table-column label="Visitors" min-width="110px" prop="visitors">
-      </el-table-column>
-
-      <el-table-column min-width="220px" prop="progress">
-        <template v-slot="{row}">
-          <div class="d-flex align-items-center">
-            <span class="mr-2">{{row.progress}}%</span>
-            <base-progress :type="row.progressType" :value="row.progress" />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-  </b-card>
+    </b-card>
 </template>
 <script>
-  import { BaseProgress } from '@/@common/argon/components';
-  import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown} from 'element-ui'
+  import { Table, TableColumn} from 'element-ui'
   export default {
     name: 'social-traffic-table',
     components: {
-      BaseProgress,
       [Table.name]: Table,
-      [TableColumn.name]: TableColumn,
-      [Dropdown.name]: Dropdown,
-      [DropdownItem.name]: DropdownItem,
-      [DropdownMenu.name]: DropdownMenu,
+      [TableColumn.name]: TableColumn
+    },
+    props:{
+      tableData:Object
     },
     data() {
       return {
-        tableData: [
-          {
-            name: 'Facebook',
-            visitors: '1,480',
-            progress: 60,
-            progressType: 'gradient-danger',
-          },
-          {
-            name: 'LinkedIn',
-            visitors: '5,480',
-            progress: 70,
-            progressType: 'gradient-success',
-          },
-          {
-            name: 'Google',
-            visitors: '4,807',
-            progress: 80,
-            progressType: 'gradient-primary',
-          },
-          {
-            name: 'Instagram',
-            visitors: '3,678',
-            progress: 75,
-            progressType: 'gradient-info',
-          },
-          {
-            name: 'Twitter',
-            visitors: '2,645',
-            progress: 30,
-            progressType: 'gradient-warning',
-          }
-        ]
-      }
+        currentPage: 1
+      };
     }
-
   }
 </script>
-<style>
-</style>
