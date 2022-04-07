@@ -34,13 +34,13 @@
         Login to workspace
       </span>
       <a
-        href="/front/auth/?app=admin"
+        :href="`/front/auth/?app=admin&domain=${front_domain}`"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Admin panel
       </a>
       <a
-        href="/front/auth/?app=agent"
+        :href="`/front/auth/?app=agent&domain=${front_domain}`"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Agent panel

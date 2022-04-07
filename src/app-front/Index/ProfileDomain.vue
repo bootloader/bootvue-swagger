@@ -240,10 +240,12 @@ export default {
     this.loadDomainProfile();
     this.loadChannels();
   },
+  computed : {
+  },
   methods : {
     async loadDomainProfile (){
       var resp = await this.$service.get('/partner/pub/domain',{
-        domain : this.$route.params.domain || this.$global.MyConst.tenant,
+        domain : this.front_domain,
         tnt : "app"
       });
       this.domainProfile = resp.results[0];

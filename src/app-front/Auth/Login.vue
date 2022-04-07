@@ -63,7 +63,7 @@
 
             <form v-else-if="domain">
               <div class="btn-wrapper text-center">
-                <a href="/front/auth/?app=agent"
+                <a :href="`/front/auth/?app=agent&domain=${front_domain}`"
                   class="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 
                   rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md 
                   inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
@@ -72,7 +72,7 @@
                   <i class="w-5 mr-1 fa fa-user-secret" />
                   Agent
                 </a>
-                <a href="/front/auth/?app=admin"
+                <a :href="`/front/auth/?app=admin&domain=${front_domain}`"
                   class="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2
                   rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md 
                   inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
@@ -84,7 +84,7 @@
               </div>
 
               <div class="relative w-full mb-3">
-                 <validation-provider rules="required|emailz" 
+                 <validation-provider rules="required" 
                  vid="login.username" v-slot="{errors}"> 
                 <label
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -93,7 +93,7 @@
                   Email
                 </label>
                 <input
-                  type="email" name="email"
+                   name="email"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white 
                   rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   placeholder="Email"
@@ -162,9 +162,9 @@
 
           <div class="flex flex-wrap mt-1 mb-3 relative justify-center text-bold" v-if="domain">
             <div class="w-1/2 text-center font-bold">
-              <a href="javascript:void(0)" class="text-blueGray-600" @click="domain=''">
-                <small>Switch domain?</small>
-              </a>
+              <span pointer class="text-blueGray-600 cursor-pointer" @click="domain=''">
+                <small >Switch domain?</small>
+              </span>
             </div>
             <div class="w-1/2 text-center font-bold hidden">
               <router-link to="/auth/register" class="text-blueGray-600">
