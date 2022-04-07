@@ -17,7 +17,8 @@
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id" class=" btn-outline-primary-link pointer">
                          <span class="fa fa-edit" title="Edit"/>
                     {{row.item.desc}}  
-                  </router-link>
+                  </router-link><br/>
+                  <span>{{row.item.code}}</span>
                 </template>
                 <template #cell(actions)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">

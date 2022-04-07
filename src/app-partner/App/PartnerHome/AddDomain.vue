@@ -19,8 +19,8 @@
         </partner-users> 
     </b-card>
 
-    <b-row  v-else-if="isDomainSet && !isEditDetail" align-v="center" slot="header" >
-        <b-col v-for="(model,index) in models" :key="'domain-'+index" cols="6">
+    <b-row  v-else-if="!isEditDetail" align-v="center" slot="header" >
+        <b-col v-for="(model,index) in modelValid" :key="'domain-'+index" cols="6">
           <stats-card :title="'@'+model.domain"
               types="gradient-red"
               :sub-title="model.company.businessName"
@@ -377,7 +377,6 @@ export default {
         }
       },
       models : [],
-      isDomainSet : false,
       isEditDetail : false,
       selectedIndex : 0,
       domainUsersIndex : -1,
@@ -407,6 +406,14 @@ export default {
     },
     model(){
       return this.models[this.selectedIndex] || this.defModel;
+    },
+    modelValid(){
+      return this.models.filter(function(m){
+        return !!m.domein;
+      });
+    },
+    isDomainSet(){
+      return !!this.model.domain;
     }
   },
   created() {
@@ -442,7 +449,6 @@ export default {
           domain : result.domain
         }
       });
-      this.isDomainSet = !!this.model.domain;
     },
     async updateProfile() {
        let resp = await this.$service.post("/partner/api/domain",this.model,{
