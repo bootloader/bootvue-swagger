@@ -44,7 +44,7 @@
                 <button 
                   v-if=" $global.User.isMultiDomainUser"
                   class="btn btn-link btn-sm text-nowrap fa fa-user-plus" v-tooltip="'Add Domain Owner'"
-                  @click="domainUsersIndex = index"> Add Domain Owner</button>
+                  @click="showDomainOwners(index)"> Add Domain Owner</button>
             </template>
           </stats-card>
         </b-col>
@@ -353,7 +353,7 @@ export default {
   data() {
     return {
       defModel :{
-        domain: '',
+        domain: '', id : null,
         company : {
           businessName : "",
           businessType : "", 
@@ -413,7 +413,7 @@ export default {
       });
     },
     isDomainSet(){
-      return !!this.model.domain;
+      return !!this.model.domain && !!this.model.id;
     }
   },
   created() {
@@ -440,13 +440,18 @@ export default {
         this.isEditDetail=true;
         this.selectedIndex=index;
     },
+    showDomainOwners(index){
+      this.domainUsersIndex = index;
+      this.selectedIndex=index;
+    },
     async loadDetails(){
       let resp = await this.$service.get("/partner/api/domain");
       this.models = resp.results.map(function(result){
         return {
           company : result.company,
           social : result.social || {},
-          domain : result.domain
+          domain : result.domain,
+          id : result.id
         }
       });
     },
