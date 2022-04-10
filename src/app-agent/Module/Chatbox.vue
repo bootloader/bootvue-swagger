@@ -130,7 +130,8 @@
                         </div>
 
                         <slide-up-down :active="showQuickReplies && !!quickReplies" :duration="200" class="quick-replies-more"> 
-                                <span v-for="(quickReply, index) in quickReplies"  v-if="(index >= countQuickReplies)"
+                                <span v-for="(quickReply, index) in quickReplies" 
+                                    v-if="(index >= countQuickReplies)"
                                     v-bind:key="index"
                                 @click="sendQuickReply(quickReply._message)" v-tooltip="quickReply._message"
                                 class="msg_cotainer_smart">  {{quickReply.title}}</span>
@@ -617,9 +618,6 @@
                         } 
                 }).catch(err => { console.error("Already ON Same Path") });
             },
-            
-            
-            
             addStickNote :  function (argument) {
                 this.sendText(this.sticky_note,null,"/add_stick_note");
                 this.sticky_note = null;

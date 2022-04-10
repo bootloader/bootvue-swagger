@@ -34,7 +34,7 @@ const state = {
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null},
-  searchChat : { tokens : [],  status : 'ACTIVE' }
+  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME'}
 };
 var tagFormat = function (argument) {
     return {
@@ -68,28 +68,36 @@ const getters = {
   StateChatHistory: (state) => state.chatHistory.sessions,
   SearchChat :(state) => state.searchChat,
 };
-
 const cache = {
+  __RefeshSessionRequest : function({isOnline,isUpdate,isAway}){
+    return axios.get("/api/sessions/assignments",{
+      params : {
+        status : isOnline,
+        away : isAway,
+        isUpdate : isUpdate,
+        tab : MyFlags.agent.contactsTab,
+        searchStatus : state.searchChat.status,
+        limit : state.searchChat.limit,
+        search : state.searchChat.tokens.filter(function(tag){
+          return !tag.isTag && tag.text;
+        }).map(function(tag){
+          return tag.text
+        }).join("*")
+      //  withMessage : false
+      }
+    });
+  },
   _RefeshSession : (function () {
     let x = null,lastTime=0; 
+    let y = null,resolveY,paramY; 
     return async function ({isOnline,isUpdate,isAway}) {
       let then = Date.now()-500; 
       isUpdate = isUpdate && (lastTime < then);
       if(isUpdate) lastTime = Date.now();
-      x =  (isUpdate ? null : x) || (axios.get("/api/sessions/assignments",{
-        params : {
-          status : isOnline,
-          away : isAway,
-          isUpdate : isUpdate,
-          tab : MyFlags.agent.contactsTab,
-          searchStatus : state.searchChat.status,
-          search : state.searchChat.tokens.filter(function(tag){
-            return !tag.isTag && tag.text;
-          }).map(function(tag){
-            return tag.text
-          }).join("*")
-        //  withMessage : false
-        }
+      //if(y) return y; //???
+      if(x && !isUpdate) return x;
+      x = (cache.__RefeshSessionRequest({
+        isOnline,isUpdate,isAway
       })).then(function (response) {
         console.log("_UpdateChats:success");
         return response;
@@ -97,7 +105,9 @@ const cache = {
         console.log("_UpdateChats:error");
       }).then(function (response) {
         console.log("_UpdateChats:always");
-        setTimeout(()=> x = null,MyConst.config.chatRefreshInterval);
+        setTimeout(function(){
+          x = null;
+        },MyConst.config.chatRefreshInterval);
         return response;
       });;
       return x;
@@ -121,10 +131,9 @@ const cache = {
 }
 
 const actions = {
-
   async RefeshSession({ commit,dispatch },isUpdate) {
       let then = Date.now() - MyConst.config.chatRefreshInterval;
-      if(!isUpdate && UPDATE_TIME<then){
+      if(!isUpdate && UPDATE_TIME>then){
         return;
       }
       state.meta.isLoadingChats =  true;
@@ -579,6 +588,8 @@ const mutations = {
       });
       console.log(" state.searchChat.status",search.status)
       state.searchChat.status = search.status;
+      state.searchChat.limit = search.limit;
+      state.searchChat.tab = search.tab;
       state.searchChat = Object.assign({},state.searchChat)
   },
   setUser(state, username) {

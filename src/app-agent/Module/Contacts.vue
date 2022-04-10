@@ -95,7 +95,7 @@
               </li>
             </ul>
         </div>
-        <div class="card-body contacts_body">
+        <div class="card-body contacts_body" ref="scrollable">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <li v-for="(chat,index) in activeChats"  :key="index"
                     v-bind:class="{
@@ -143,7 +143,11 @@
                                 }"
                             >
                                 <span v-if="chat.lastmsg.type=='O'" class="fa fa-reply fa-rotate-45s"></span>&nbsp;
-                                <span v-if="chat.lastmsg.attachments && chat.lastmsg.attachments[0]" class="fw-normal text-capitalize">
+                                <span v-if="chat.lastmsg.status == 'DELTD'" class="fw-normal text-capitalize">
+                                    <span class="fa fa-ban"></span>&nbsp;
+                                    <i>message deleted</i>
+                                </span>
+                                <span v-else-if="chat.lastmsg.attachments && chat.lastmsg.attachments[0]" class="fw-normal text-capitalize">
                                     <span  :class="[{
                                             'fa fa-camera' : chat.lastmsg.attachments[0].mediaType == 'IMAGE',
                                             'fa fa-video' : chat.lastmsg.attachments[0].mediaType == 'VIDEO',
@@ -277,6 +281,7 @@
                 return false;
             },
             activeChats : function(){ 
+                let unique = {};
                 console.log("activeChats",this.$store.getters.StateChats.length); 
                 let searchText = this.search.text.trim();
                 let searchTokens = this.$store.getters.SearchChat.tokens;
@@ -299,6 +304,8 @@
                     });
                     return (_searchTokens.length == searchTokens.length);// && chat.active;
                 }).filter(function(chat){
+                    if(unique[chat.contactId]) return false;
+                    unique[chat.contactId] = true;
                     if(searchText){
                         return true
                     } else if(status == 'STALED')
@@ -342,7 +349,8 @@
                 status : 'ACTIVE',
                 contactType : null,
                 text : "",
-                active : false
+                active : false,
+                limit : 0,
             }, 
             strategies: [{
                 match: /(^|\s)\:([a-z0-9+\-\_\.]*)$/,
@@ -363,6 +371,7 @@
                     return '$1:' + start + suffix
                 },
             }],
+            scheduleUpdate : false,
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
         }),
@@ -371,10 +380,9 @@
             // already being observed
             this.loadChats();
             //MyFlags.agent.contactsTab = this.$route.params.contactsTab
-        this.searchChat = debounce(this.searchChat,500)
-        },
-        beforeUnmount (){
-            //this.tunnel.off();
+            this.searchChat = debounce(this.searchChat,500);
+            this.handleScroll = debounce(this.handleScroll,200);
+            this.$refs.scrollable.addEventListener('scroll', this.handleScroll);
         },
         watch: {
             '$route.params.sessionId': function (sessionId, sessionIdFrom) {
@@ -395,21 +403,39 @@
                 if(
                     this.$global.MyConst.config.SETUP.POSTMAN_AGENT_TAB_HISTORY_LAZY
                     || (allTabs.indexOf(newVal) > allTabs.indexOf(oldVal))){
-                    this.$store.dispatch("RefeshSession",true);
+                    this.changeSearchFilter();
                 }
             },
             "search.text" :  function (searchText) {
-                this.$store.commit("setSessionSearch",this.search);
-                this.searchChat();
+                  this.changeSearchFilter();
             },
             "search.status" :  function (searchText) {
-                this.$store.commit("setSessionSearch",this.search);
-                this.searchChat();
+                this.changeSearchFilter();
             },
         },
         methods: {
+            async changeSearchFilter(){
+                this.search.limit = 0;
+                this.loadSearchFilter();
+            },
+            async loadSearchFilter(){
+                this.$store.commit("setSessionSearch",this.search);
+                this.searchChat();
+            },
             async searchChat(){
-                this.$store.dispatch("RefeshSession",true);
+                if(this.isLoadingChats || this.scheduleUpdate){
+                    this.scheduleUpdate = true;
+                    return;
+                }
+                try {
+                    await this.$store.dispatch("RefeshSession",true);
+                    if(this.scheduleUpdate){
+                        await this.$store.dispatch("RefeshSession",true);
+                        this.scheduleUpdate = false;
+                    }
+                } catch(e){
+                     this.scheduleUpdate = false;
+                }
             },
             searchInActive(e){
                 this.search.active = e.active;
@@ -475,11 +501,24 @@
                         MyFlags.agent.contactsTab = "ME"
                         break;
                 }
-            }
+            },
+            async handleScroll (event){
+                if(event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight){
+                    this.search.limit = this.$formatters.toNum(this.search.limit,20)+30;
+                    this.loadSearchFilter();
+                } else if(event.target.scrollTop == 0){
+                    this.search.limit = 0;
+                }
+            },
         },
         beforeUnmount : function (argument) {
-          //clearInterval(this.intervalid1);  
-        }
+            //this.tunnel.off();
+          //clearInterval(this.intervalid1); 
+            if(this.$refs?.scrollable)
+                this.$refs.scrollable.removeEventListener('scroll', this.handleScroll); 
+        },
+        destroyed () {
+        },
     }
 </script>
 

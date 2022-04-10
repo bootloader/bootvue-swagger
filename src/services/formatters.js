@@ -140,6 +140,10 @@ var formatter = {
     }
     return arguments[arguments.length-1];
   },
+  toNum : function(num,def){
+    let _def = def || 0;
+    return ((isNaN(num) || !num) ? _def :  num)-0;
+  },
   guid : function() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16)

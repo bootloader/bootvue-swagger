@@ -96,7 +96,7 @@
                 let sessionId = this.activeChat.sessionId;
                 return (this.activeChat.messages || []).filter(function(m){
                     console.log("m.status",m.status);
-                    return sessionId == m.sessionId && m.status  !=='DELTD';
+                    return sessionId == m.sessionId;
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
