@@ -95,7 +95,7 @@
                 this.refreshKey;
                 let sessionId = this.activeChat.sessionId;
                 return (this.activeChat.messages || []).filter(function(m){
-                    return sessionId == m.sessionId && (m.status != 'DELTD');
+                    return sessionId == m.sessionId && (m.status != 'DELTD') && (m.text || m.attachments);
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
