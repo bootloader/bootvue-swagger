@@ -2,7 +2,7 @@
     <div v-if="activeChat">
         <div v-for="(m,mindex) in messages"  v-bind:key="mindex" ><!-- LOOP Start --><span v-if="m">
             
-            <div v-if="$global.MyFunc.isInbound(m.type) && (m.text || m.attachments)" 
+            <div v-if="$global.MyFunc.isInbound(m.type)" 
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="msg_cotainer">
                     <div v-if="m.replyIdExt || m.replyMessage">
@@ -95,8 +95,7 @@
                 this.refreshKey;
                 let sessionId = this.activeChat.sessionId;
                 return (this.activeChat.messages || []).filter(function(m){
-                    console.log("m.status",m.status);
-                    return sessionId == m.sessionId;
+                    return sessionId == m.sessionId && (m.status != 'DELTD');
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
