@@ -9,7 +9,15 @@
           goodTable
           :table=table
           :actions=actions
+          :filters="[{ label : 'Refresh', name : 'sync'}]"
+          :busy="table.busy"
           @action="onAction">
+
+          <template #filter(sync)>
+              <span class="btn btn-success" @click="loadItems">
+                <i class="fa fa-sync"/>
+              </span>
+          </template>
 
            <template #groupBy="group">
               <span class="text-successs badge btn btn-xs btn-dark">
@@ -227,7 +235,8 @@
               perPage: 25,
               currentPage: 1,
               rows : 0,
-              groupBy : 'meta.group'
+              groupBy : 'meta.group',
+              busy : false
             },
             swatch : {
               style : { margin: '5px', width : '25px',height : '25px','border-radius' : '8px'},
@@ -257,13 +266,19 @@
         },
         methods : {
           async loadItems (){
-            let resp = await this.$store.dispatch('GetConfigs');
-            this.table.items = resp.results.map(function(item){
-              if(item.config.value  === null || item.config.value  === undefined){
-                  item.config.value  = item.meta.defaultValue;
-              }
-              return item;
-            });
+            try {
+              this.table.busy = true;
+              this.table.items = [];
+              let resp = await this.$store.dispatch('GetConfigs');
+              this.table.items = resp.results.map(function(item){
+                if(item.config.value  === null || item.config.value  === undefined){
+                    item.config.value  = item.meta.defaultValue;
+                }
+                return item;
+              });
+            } finally {
+              this.table.busy=false
+            }
           },
           async saveItem () {
               await this.$store.dispatch('SetConfigs', {

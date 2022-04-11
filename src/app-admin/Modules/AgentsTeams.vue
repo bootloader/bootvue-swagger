@@ -1,21 +1,22 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-        @action="onAction"></page-title>
-
-          <b-card title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="teams"
-                     :fields="fields">
-
-                <template #cell(actions)="row">
+      <master-view id="agent-session-list" 
+      :header="{
+          heading: heading,
+          subheading: subheading,
+          icon: icon,
+      }"
+      :filters="[{ label : 'Date Range', name : 'daterange'},{ label : 'Refresh', name : 'sync'}]" 
+      :table="{
+        ...table,
+        items :teams
+      }"
+      :actions=actions
+      :busy="table.busy"
+      @action="onAction"
+      >
+      
+              <template #cell(actions)="row">
                   <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary"
                     v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
                         <i class="fas fa-users" :class="{
@@ -29,18 +30,7 @@
                   </button>
                 </template>
 
-            </b-table>
-        </b-card>
-          
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-
-                </div>
-            </div>
-
-        </div>
+      </master-view>
 
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Team '"
@@ -115,9 +105,11 @@
             actions : [{
               label : "Add Team", icon : "plus", name : "ADD_ITEM"
             }],
-            fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
-              //{ key : 'dept_email', label : "Email" },
-              { key: 'actions', label: 'Actions' }],
+            table : {
+              fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
+                //{ key : 'dept_email', label : "Email" },
+                { key: 'actions', label: 'Actions' }],
+            },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
         }),

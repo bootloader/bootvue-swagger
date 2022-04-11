@@ -22,6 +22,7 @@
           :group-options="{
             enabled: !!table.groupBy
           }"
+          :isLoading.sync="isbusy"
           :styleClass="'vgt-table condensed striped ' + table.tableClass"
         >
           <template slot="table-row" slot-scope="props">
@@ -36,6 +37,23 @@
           <template slot="table-header-row" slot-scope="props">
               <slot :name="'groupBy'" v-bind="{props, item : props.row}">
               </slot>
+          </template>
+          <template slot="emptystate">
+              <div class="center-box">
+                  <div v-if="!isbusy" class="center-item">
+                    <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                    <span class="no-item-text"> No {{header.heading}} </span>
+                  </div>
+              </div>
+          </template>
+          <template slot="loadingContent">
+              <div class="center-box">
+                    <div class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
+                          <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
+                          </b-spinner>
+                        <span class="no-item-text text-success"> Loading {{header.heading}} </span>
+                    </div>
+                </div>
           </template>
         </vue-good-table>  
         <div v-else-if="table" >
@@ -175,11 +193,16 @@
                 }
             },
             session : null,
-            busyintenral : false
+            busyintenral : false,
         }),
         computed : {
-          isbusy(){
-            return this.busy || this.busyintenral;
+          isbusy : {
+            get(){
+              return this.busy || this.busyintenral;
+            },
+            set(newName){
+              return newName;
+            }
           },
           rowItems(){
             if(this.goodTable &&  this.table.groupBy){
