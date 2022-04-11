@@ -6,65 +6,58 @@
           subheading: subheading,
           icon: icon,
       }"
-      :filters="[{ label : 'Date Range', name : 'daterange'},{ label : 'Refresh', name : 'sync'}]" 
       :table="{
         ...table,
         items :teams
       }"
       :actions=actions
       :busy="table.busy"
-      @action="onAction"
-      >
-      
-              <template #cell(actions)="row">
-                  <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary"
-                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
-                        <i class="fas fa-users" :class="{
-                          'fa-x' : (row.item.isactive != 'Y')
-                        }"></i>
-                  </b-button>&nbsp;
-                  <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
-                    v-tooltip="'Make Default Assignee'">
-                    <span v-if="!row.item.defaultValue" class="far fa-star"/>
-                    <span v-if="row.item.defaultValue" class="fas fa-star"/>
-                  </button>
-                </template>
+      @action="onAction">
+        <template #cell(actions)="row">
+            <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary"
+              v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
+                  <i class="fas fa-users" :class="{
+                    'fa-x' : (row.item.isactive != 'Y')
+                  }"></i>
+            </b-button>&nbsp;
+            <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
+              v-tooltip="'Make Default Assignee'">
+              <span v-if="!row.item.defaultValue" class="far fa-star"/>
+              <span v-if="row.item.defaultValue" class="fas fa-star"/>
+            </button>
+          </template>
 
       </master-view>
 
-
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Team '"
         @hidden="cancelReps">
-                  <ValidationObserver ref="form">
-                            <div class="position-relative form-group">
-                              <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Name</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="Online Team" type="text"
-                                      class="form-control" v-model="newItem.name">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+            <ValidationObserver ref="form">
+                <div class="position-relative form-group">
+                  <ValidationProvider v-slot="v" rules="required">
+                        <label for="examplePassword" class="">Name</label>
+                        <input name="agent_name" id="examplePassword"
+                          placeholder="Online Team" type="text"
+                          class="form-control" v-model="newItem.name">
+                          <span class="v-input-error">{{ v.errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
 
-                            <div class="position-relative form-group">
-                                <label for="exampleEmail" class="">Code</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                    <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.code">
-                                </div>
-                            </div>
- 
+                <div class="position-relative form-group">
+                    <label for="exampleEmail" class="">Code</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">@</span></div>
+                        <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.code">
+                    </div>
+                </div>
+            </ValidationObserver>
 
-
-                  </ValidationObserver>
-
-                  <template #modal-footer>
-                      <div class="position-relative form-group">
-                        <button @click="createTeam"
-                          name="password" id="examplePassword" :disabled="!isChanged"
-                          class="form-control btn btn-primary">Create</button>
-                        </div>
-                  </template>
+            <template #modal-footer>
+                <div class="position-relative form-group">
+                  <button @click="createTeam"
+                    name="password" id="examplePassword" :disabled="!isChanged"
+                    class="form-control btn btn-primary">Create</button>
+                  </div>
+            </template>
 
         </b-modal>
 
@@ -109,6 +102,7 @@
               fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
                 //{ key : 'dept_email', label : "Email" },
                 { key: 'actions', label: 'Actions' }],
+              busy : false,
             },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
@@ -126,7 +120,12 @@
         },
         methods : {
           async loadAgentTeams (){
-            await this.$store.dispatch('GetTeams');
+            try {
+              this.table.busy = true;
+              await this.$store.dispatch('GetTeams');
+            } finally {
+              this.table.busy = false;
+            }
           },
           async createTeam () {
             await this.$store.dispatch('CreatTeam', this.newItem);

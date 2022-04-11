@@ -8,55 +8,57 @@
             </template>
           <template #subheading>
               <slot name="header-subheading">
-                  {{header.subheading}}      
+                  {{header.subheading}}
               </slot>
           </template>
         </page-title>
 
       <slot name="body">
 
-        <vue-good-table v-if="goodTable && table"
-          :columns="table.fields"
-          :rows="rowItems"
-          compactMode
-          :group-options="{
-            enabled: !!table.groupBy
-          }"
-          :isLoading.sync="isbusy"
-          :styleClass="'vgt-table condensed striped ' + table.tableClass"
-        >
-          <template slot="table-row" slot-scope="props">
-              <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
-                <slot :name="'cell('+ props.column.field  + ')'" v-bind="{props,item : props.row}">
-                </slot>
-              </span>  
-              <span v-else>
-                {{props.formattedRow[props.column.field]}}
-              </span>
-          </template>
-          <template slot="table-header-row" slot-scope="props">
-              <slot :name="'groupBy'" v-bind="{props, item : props.row}">
-              </slot>
-          </template>
-          <template slot="emptystate">
-              <div class="center-box">
-                  <div v-if="!isbusy" class="center-item">
-                    <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
-                    <span class="no-item-text"> No {{header.heading}} </span>
+        <div v-if="goodTable && table" class="bg-white" >
+            <vue-good-table 
+              :columns="table.fields"
+              :rows="rowItems"
+              compactMode
+              :group-options="{
+                enabled: !!table.groupBy
+              }"
+              :isLoading.sync="isbusy"
+              :styleClass="'vgt-table condensed striped ' + table.tableClass"
+            >
+              <template slot="table-row" slot-scope="props">
+                  <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
+                    <slot :name="'cell('+ props.column.field  + ')'" v-bind="{props,item : props.row}">
+                    </slot>
+                  </span>  
+                  <span v-else>
+                    {{props.formattedRow[props.column.field]}}
+                  </span>
+              </template>
+              <template slot="table-header-row" slot-scope="props">
+                  <slot :name="'groupBy'" v-bind="{props, item : props.row}">
+                  </slot>
+              </template>
+              <template slot="emptystate">
+                  <div class="center-box">
+                      <div v-if="!isbusy" class="center-item">
+                        <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                        <span class="no-item-text"> No {{header.heading}} </span>
+                      </div>
                   </div>
-              </div>
-          </template>
-          <template slot="loadingContent">
-              <div class="center-box">
-                    <div class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
-                          <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
-                          </b-spinner>
-                        <span class="no-item-text text-success"> Loading {{header.heading}} </span>
+              </template>
+              <template slot="loadingContent">
+                  <div class="center-box">
+                        <div class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
+                              <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
+                              </b-spinner>
+                            <span class="no-item-text text-success"> Loading {{header.heading}} </span>
+                        </div>
                     </div>
-                </div>
-          </template>
-        </vue-good-table>  
-        <div v-else-if="table" >
+              </template>
+            </vue-good-table> 
+        </div> 
+        <div v-else-if="table" class="bg-white p-0">
 
           <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items"
                         empty-filtered-text="No Records"
@@ -68,7 +70,7 @@
                         :fixed="table.fixed || false"
                         :foot-clone="table.footClone || false"
                         :per-page="table.perPage"
-                        :current-page="table.currentPage"
+                        :current-page="table_current_page"
                         :items="table.items"
                         :fields="table.fields"
                         :sort-by="table.sortBy"
@@ -114,7 +116,8 @@
                 </div>
             </div>
             <b-pagination  v-if="table && table.items && table.items.length>table.perPage"
-                  v-model="table.currentPage"
+                  class="pb-3 pt-0 px-4"
+                  v-model="table_current_page"
                   :total-rows="table.rows"
                   :per-page="table.perPage"
                   aria-controls="agent-session-list">        
@@ -192,6 +195,7 @@
                     endDate : null,
                 }
             },
+            table_current_page : 1,
             session : null,
             busyintenral : false,
         }),

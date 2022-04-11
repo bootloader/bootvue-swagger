@@ -32,7 +32,7 @@
                 <my-status v-model="item.template.status">&nbsp;{{item.template.status}}</my-status>
             </template>
             <template #cell(row_actions)="{item}">
-                <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')"
+                <MyHSMTmplSelect v-model="item.hsmTemplateId" @change="onChange(item,'hsmTemplateId')" size="sm"
                     class="text-sm float-left mx-1" style="max-width:100px"
                 />
                 <b-button size="sm" @click="toHSM(item)" class="mx-1"
@@ -428,7 +428,6 @@
                 perPage: 25,
                 currentPage: 1,
                 rows: 0,
-                small : true,
                 api: 'api/tmpl/hsm/waba_templates',
             },
             modelName: 'MODAL_WABA_TEMPLATE',

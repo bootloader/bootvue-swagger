@@ -1,73 +1,57 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-        @action="onAction"></page-title>
+      <master-view id="agent-session-list" 
+      :header="{
+          heading: heading,
+          subheading: subheading,
+          icon: icon,
+      }"
+      :table="{
+        ...table,
+        items :filtered
+      }"
+      :actions=actions
+      :busy="table.busy"
+      @action="onAction"
+      >
+        <template #top-row="row">
+              <b-th><input type="text" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="text" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="text" v-model="filters.code"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="text" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
+              <b-th>&nbsp;</b-th>
+        </template>
+        <template #cell(actions)="row">
+          <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
+            v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'" class="fa-stack fa-1x">
+              <i class="fas fa-user fa-stack-1x"></i>
+              <i v-if="row.item.isactive != 'Y'" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
+          </b-button>&nbsp;
+          <b-button size="sm" @click="enableItemAdmin(row.item, row.index, $event.target)" 
+          variant="outline-primary"
+          v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false class="fa-stack fa-1x"> 
+              <i class="fas fa-user-cog fa-stack-1x"></i>
+              <i v-if="!row.item.admin" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
+          </b-button>&nbsp;
+          <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
+          v-tooltip="'Make Default Assignee'" >
+            <span v-if="!row.item.defaultValue" class="far fa-star" />
+            <span v-if="row.item.defaultValue" class="fas fa-star" />
+          </button>&nbsp;
+          <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
+              v-tooltip="row.item.message" variant="outline-primary">
+              <font-awesome-icon icon="eye" title="View"/>
+          </b-button>&nbsp;
+          <b-button size="sm" @click="sendReset(row.item, row.index, $event.target)"  
+              v-tooltip="'Send Reset Password Email'" variant="outline-primary"  class="fa-stack fa-1x">
+              <span style="font-size: .5rem;">
+                <i class="fa fa-sync fa-stack-1x fa-2x"></i>
+                <i class="fas fa-lock fa-stack-1x fa-sm fa-inverse text-secondary"></i>
+              </span>
+          </b-button>
+        </template>
 
-          <b-card title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="filtered"
-                     :fields="fields">
-                <template #top-row="row">
-                      <b-th><input type="text" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
-                      <b-th><input type="text" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
-                      <b-th><input type="text" v-model="filters.code"  class="form-control form-control-sm" /></b-th>
-                      <b-th><input type="text" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
-                      <b-th>&nbsp;</b-th>
-                </template>
-
-                <template #cell(channels)="row">
-                  <span v-for="c in row.item.channels" v-if="c" class="fab" v-bind:class="MyDict.socialPrefix(c)">&nbsp;</span>
-                </template>
-                <template #cell(actions)="row">
-                  <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
-                    v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'" class="fa-stack fa-1x">
-                      <i class="fas fa-user fa-stack-1x"></i>
-                      <i v-if="row.item.isactive != 'Y'" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
-                  </b-button>&nbsp;
-                  <b-button size="sm" @click="enableItemAdmin(row.item, row.index, $event.target)" 
-                  variant="outline-primary"
-                  v-tooltip="!row.item.admin ? 'Make Admin' : 'Remove Admin Access'" acitve=false class="fa-stack fa-1x"> 
-                      <i class="fas fa-user-cog fa-stack-1x"></i>
-                      <i v-if="!row.item.admin" class="fas fa-slash fa-stack-1x" style="color:Tomato"></i>
-                  </b-button>&nbsp;
-                 <button type="button" class="btn btn-outline-primary btn-sm" @click="setItemDefault(row.item, row.index, $event.target)"
-                  v-tooltip="'Make Default Assignee'" >
-                    <span v-if="!row.item.defaultValue" class="far fa-star" />
-                    <span v-if="row.item.defaultValue" class="fas fa-star" />
-                  </button>&nbsp;
-                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
-                     v-tooltip="row.item.message" variant="outline-primary">
-                     <font-awesome-icon icon="eye" title="View"/>
-                  </b-button>&nbsp;
-                  <b-button size="sm" @click="sendReset(row.item, row.index, $event.target)"  
-                     v-tooltip="'Send Reset Password Email'" variant="outline-primary"  class="fa-stack fa-1x">
-                     <span style="font-size: .5rem;">
-                        <i class="fa fa-sync fa-stack-1x fa-2x"></i>
-                        <i class="fas fa-lock fa-stack-1x fa-sm fa-inverse text-secondary"></i>
-                     </span>
-                  </b-button>
-                </template>
-
-
-            </b-table>
-        </b-card>
-          
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-
-                </div>
-            </div>
-
-        </div>
+      </master-view>
 
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' User '" size="lg"
@@ -147,15 +131,7 @@
                                 </div>
                                </div>
 
-
-                              
-
                             </div>
-
-
-         
-
-
  
                   </ValidationObserver>
 
@@ -208,10 +184,16 @@
             actions : [{
               label : "Add User", icon : "fa fa-plus", name : "ADD_ITEM"
             }],
-          fields: [ { key : 'dept.name', label : "Team", sortable: true },{ key : 'name', label : "Name" , sortable: true},
-           { key : 'code', label : "Username", sortable: true }, { key : 'agent_email', label : "Email" , sortable: true},
-        //    { key : 'channels', label : "Channels", class : "upper-case" },
-           { key : 'actions', label : "Action" }],
+            table : {
+              fields: [ 
+                { key : 'dept.name', label : "Team", sortable: true },
+                { key : 'name', label : "Name" , sortable: true},
+                { key : 'code', label : "Username", sortable: true }, 
+                { key : 'agent_email', label : "Email" , sortable: true},
+              //    { key : 'channels', label : "Channels", class : "upper-case" },
+                { key : 'actions', label : "Action" }],
+              busy : false,
+            },
            filters:{
                deptname:"",
                name:"",

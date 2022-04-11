@@ -95,7 +95,6 @@
                      @click="showChat(row.item, row.index, $event.target)" ></span>
                 </template>
 
-
         </master-view>
 
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
@@ -191,10 +190,9 @@
                     //{ key : 'actions', label : "Action" }
                 ],
                 items : [],
-                perPage: 25,
-                currentPage: 1,
+                perPage: 25, currentPage: 1,
                 rows : 0,
-                busy : false
+                busy : false,
             },
             closeSessionOptions: [
               {label : "Closed", value:"closed"},
