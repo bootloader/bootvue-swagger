@@ -17,8 +17,11 @@
 
         <vue-good-table v-if="goodTable && table"
           :columns="table.fields"
-          :rows="table.items"
+          :rows="rowItems"
           compactMode
+          :group-options="{
+            enabled: !!table.groupBy
+          }"
           :styleClass="'vgt-table condensed striped ' + table.tableClass"
         >
           <template slot="table-row" slot-scope="props">
@@ -30,7 +33,10 @@
                 {{props.formattedRow[props.column.field]}}
               </span>
           </template>
-
+          <template slot="table-header-row" slot-scope="props">
+              <slot :name="'groupBy'" v-bind="{props, item : props.row}">
+              </slot>
+          </template>
         </vue-good-table>  
         <div v-else-if="table" >
 
@@ -110,6 +116,7 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
+    import JsonXPath from "@/@common/utils/JsonXPath";
 
     export default {
         components: {
@@ -173,6 +180,24 @@
         computed : {
           isbusy(){
             return this.busy || this.busyintenral;
+          },
+          rowItems(){
+            if(this.goodTable &&  this.table.groupBy){
+                let map = {};
+                let groupBy = this.table.groupBy;
+                this.table.items.map(function(item){
+                  let groupByValue = JsonXPath({ path : '$.'+groupBy,json : item})[0] || " DEFAULT ";
+                  map[groupByValue] = map[groupByValue] || { 
+                    mode : 'span',html: false, 
+                    label : groupByValue,
+                    children : []
+                  };
+                  map[groupByValue].children.push(item);
+                },[]);
+                return Object.values(map);
+            } else {
+              return this.table.items;
+            }
           }
         },
         mounted : function (argument) {

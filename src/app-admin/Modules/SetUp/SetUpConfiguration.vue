@@ -1,94 +1,84 @@
 <template>
     <div class="">
-        <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-        @action="onAction"></page-title>
+        <master-view 
+          :header="{
+            heading : heading,
+            subheading : subheading,
+            icon : icon,
+          }"
+          goodTable
+          :table=table
+          :actions=actions
+          @action="onAction">
 
-          <b-card title="" class="main-card mb-4">
-            <b-table :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :items="table.items"
-                     :fields="table.fields">
+           <template #groupBy="group">
+              <span class="text-successs badge btn btn-xs btn-dark">
+                {{ group.item.label }}
+              </span>
+          </template>
 
-                <template #cell(value)="row">
-                  <span v-if="row.item.meta.inputType=='OPTIONS'">
+          <template #cell(value)="row">
+            <span v-if="row.item.meta.inputType=='OPTIONS'">
 
-                    <span v-if="row.item.meta.optionsSource">
-                      <MySource
-                        :value="row.item.config.value"
-                        :options="row.item.meta.optionsSource"
-                        :optionKey="row.item.meta.optionsKey">
-                      </MySource>  
-                    </span>
-                    <span v-else>
-                       [ {{row.item.config.value|display(row.item.meta.options)}} ]
-                    </span>
-                  
-                  </span>
-                  <span v-else-if="row.item.meta.inputType=='COLOR'">
-                     <v-swatches
-                        :value="row.item.config.value"
-                        show-fallback
-                        popover-x="left"
-                        disabled
-                        swatch-size="10"
-                        :trigger-style="swatch.style"
-                      ></v-swatches>
-                  </span>
-                  <span v-else-if="row.item.meta.inputType=='COLOR_PALLETE'">
-                     <v-swatches
-                        :value="row.item.config.value.primary"
-                        show-fallback
-                        popover-x="left"
-                        disabled
-                        swatch-size="10"
-                        :trigger-style="swatch.style"
-                      ></v-swatches>
-                     <v-swatches
-                        :value="row.item.config.value.secondary"
-                        show-fallback
-                        popover-x="left"
-                        disabled
-                        swatch-size="10"
-                        :trigger-style="swatch.style"
-                      ></v-swatches>
-                      <v-swatches
-                        :value="row.item.config.value.accent"
-                        show-fallback
-                        popover-x="left"
-                        disabled
-                        swatch-size="10"
-                        :trigger-style="swatch.style"
-                      ></v-swatches>
-                  </span>
-                  <span v-else>{{row.item.config.value}}</span>
-                </template>
-                <template #cell(actions)="row">
-                  <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"  
-                     v-tooltip="row.item.message" variant="outline-primary">
-                     <i class="fas fa-edit"></i>
-                  </b-button>
-                </template>
+              <span v-if="row.item.meta.optionsSource">
+                <MySource
+                  :value="row.item.config.value"
+                  :options="row.item.meta.optionsSource"
+                  :optionKey="row.item.meta.optionsKey">
+                </MySource>  
+              </span>
+              <span v-else>
+                  [ {{row.item.config.value|display(row.item.meta.options)}} ]
+              </span>
+            
+            </span>
+            <span v-else-if="row.item.meta.inputType=='COLOR'">
+                <v-swatches
+                  :value="row.item.config.value"
+                  show-fallback
+                  popover-x="left"
+                  disabled
+                  swatch-size="10"
+                  :trigger-style="swatch.style"
+                ></v-swatches>
+            </span>
+            <span v-else-if="row.item.meta.inputType=='COLOR_PALLETE'">
+                <v-swatches
+                  :value="row.item.config.value.primary"
+                  show-fallback
+                  popover-x="left"
+                  disabled
+                  swatch-size="10"
+                  :trigger-style="swatch.style"
+                ></v-swatches>
+                <v-swatches
+                  :value="row.item.config.value.secondary"
+                  show-fallback
+                  popover-x="left"
+                  disabled
+                  swatch-size="10"
+                  :trigger-style="swatch.style"
+                ></v-swatches>
+                <v-swatches
+                  :value="row.item.config.value.accent"
+                  show-fallback
+                  popover-x="left"
+                  disabled
+                  swatch-size="10"
+                  :trigger-style="swatch.style"
+                ></v-swatches>
+            </span>
+            <span v-else>{{row.item.config.value}}</span>
+          </template>
+          <template #cell(actions)="row">
+            <b-button size="xs" @click="editItem(row.item, row.index, $event.target)"  
+                v-tooltip="row.item.message" variant="outline-primary" class="fas fa-edit text-sm">
+            </b-button>
+          </template>
 
+      </master-view>
 
-            </b-table>
-        </b-card>
-          
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-
-                </div>
-            </div>
-        </div>
-
-        <ValidationObserver ref="form" class="modal-form" v-slot="{ invalid }">
+      <ValidationObserver ref="form" class="modal-form" v-slot="{ invalid }">
         <b-modal v-if="oneItem" :id="modelName" :title="'Update Property '" size="md"
           @hidden="cancelItem">
                 <div class="form-row">
@@ -194,7 +184,7 @@
                   </template>
 
         </b-modal>
-        </ValidationObserver>
+      </ValidationObserver>
 
     </div>
 </template>
@@ -229,13 +219,15 @@
               fields: [ 
                 { key : 'meta.title', label : "Property" },
                 { key : 'value', label : "Value" },
+               // { key : 'meta.group', label : "Group" },
                 //{ key : 'config.value', label : "Value" },
                 { key : 'config.description', label : "Desc" },
                 { key : 'actions', label : "Action" }],
               items : [],
               perPage: 25,
               currentPage: 1,
-              rows : 0
+              rows : 0,
+              groupBy : 'meta.group'
             },
             swatch : {
               style : { margin: '5px', width : '25px',height : '25px','border-radius' : '8px'},

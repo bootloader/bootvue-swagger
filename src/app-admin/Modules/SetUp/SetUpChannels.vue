@@ -76,7 +76,7 @@
               </MyText>
                 <BaseVSelect v-else size="sm"
                     @change="inboundQueueUpdate(row.item)"
-                    :disabled="row.item.readOnly" :readonly="row.item.readOnly"
+                    :disabled="row.item.readOnly" :readonly="row.item.readOnly" clearable
                     options="getx:/api/options/inbound_queue" optionKey="code" optionLabel="code"
                     v-model="row.item.inboundQueue"
                     class="text-sm float-left mx-1 w-50"/>
