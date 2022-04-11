@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="dashboard">
         <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
             <!-- Card stats -->
             <div class="pl-lg-12">
@@ -269,32 +269,34 @@
     }
 </script>
 <style lang="scss">
-.el-table .cell {
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
-.form-group.is-question {
-    .form-control-label{
-      color: #fff !important;
+.dashboard{
+    .el-table .cell {
+        padding-left: 0px;
+        padding-right: 0px;
     }
-}
-.el-table.table-dark{
-  background-color: #172b4d;
-  color: #f8f9fe;
-}
 
-.el-table.table-dark th,
-.el-table.table-dark tr{
-  background-color: #172b4d;
-}
+    .form-group.is-question {
+        .form-control-label{
+        color: #fff !important;
+        }
+    }
+    .el-table.table-dark{
+    background-color: #172b4d;
+    color: #f8f9fe;
+    }
 
-.el-table.table-dark td,
-.el-table.table-dark th.is-leaf{
-  border-bottom: none;
-}
+    .el-table.table-dark th,
+    .el-table.table-dark tr{
+    background-color: #172b4d;
+    }
 
-.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
-    color:#172b4d
+    .el-table.table-dark td,
+    .el-table.table-dark th.is-leaf{
+    border-bottom: none;
+    }
+
+    .el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+        color:#172b4d
+    }
 }
 </style>
