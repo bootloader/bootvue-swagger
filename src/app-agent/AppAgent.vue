@@ -28,6 +28,9 @@
   import Viewer from 'v-viewer'
   Vue.use(Viewer)
 
+  import VueScrollTo from 'vue-scrollto';
+  Vue.use(VueScrollTo);
+
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'

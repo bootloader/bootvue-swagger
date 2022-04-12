@@ -69,6 +69,7 @@
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-read-more": "^1.1.1",
     "vue-router": "^3.0.5",
+    "vue-scrollto": "^2.20.0",
     "vue-select": "^3.13.2",
     "vue-sidebar-menu": "^3.7.0",
     "vue-simple-password-meter": "^0.1.0",
