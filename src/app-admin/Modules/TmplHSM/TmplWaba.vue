@@ -423,7 +423,7 @@
                     { key: 'template.language', label: 'Language' },
                     { key: 'row_actions', label: 'Linked HSM Template' },
                 ],
-                tableClass : 'text-sm',
+                tableClass : 'text-sm', sortBy : "code",
                 items: [],
                 perPage: 25,
                 currentPage: 1,
