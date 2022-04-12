@@ -31,6 +31,12 @@
             <i :class="[$global.MyDict.socialPrefix(row.item.contactType,'fa')]"></i>
             &nbsp;{{row.item.lane}}
           </template>
+
+          <template #cell(channelCode)="row">
+              <span class="mr-2 btn btn-xs btn-outline-grey text-xs text-uppercase">
+                {{row.item.channelCode || row.item.lane}}</span>
+          </template>
+                               
        
           <template #cell(status)="row">
             <my-status :value="!row.item.disabled" icon="fa fa-wave-square" 
@@ -168,13 +174,14 @@
             table : {
               fields: [ 
                 { key : 'details', label : "Channel" },
+                { key : 'channelCode', label : "Code" },
                 { key : 'name', label : "Desc" },
                 { key : 'status', label : "Status" },
                 { key : 'actions', label : "Action" },
                 { key : 'inboundQueue', label : "Default Inbound App Queue" }
                 ],
               items : [],
-              perPage: 25, size : 'sm',
+              perPage: 25, size : 'sm', sortBy: 'name',
               currentPage: 1,
               rows : 0,
               api : "api/options/channels"

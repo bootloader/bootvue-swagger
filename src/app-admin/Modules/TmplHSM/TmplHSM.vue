@@ -407,9 +407,9 @@
                   more_option_title:"",
                   table : {
                     fields: [ 
-                              { key : 'category', label : "Grouping Category" }, 
-                              { key : 'desc', label : "Description" }, 
-                              { key : 'categoryType', label : "Message Type" }, 
+                              { key : 'category', label : "Grouping Category", sortable : true }, 
+                              { key : 'desc', label : "Description",sortable : true  }, 
+                              { key : 'categoryType', label : "Message Type" , sortable : true }, 
                               { key: 'actions', label: 'Actions' }    ],
                     items : [],
                     perPage: 25,
@@ -417,7 +417,7 @@
                     rows : 0,
                     tableClass : 'text-sm',
                     api: 'api/tmpl/hsm',
-                    sortBy : "createdStamp"
+                    sortBy : "name"
                   },
                   newItem : newItem(),
                   modelName :  "MODAL_ADD_QUICK_REPLIES",

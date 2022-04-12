@@ -74,6 +74,7 @@
                         :items="table.items"
                         :fields="table.fields"
                         :sort-by="table.sortBy"
+                        :sort-desc="table.sortDesc"
                         :busy.sync="isbusy"
                         show-empty
                         filter>

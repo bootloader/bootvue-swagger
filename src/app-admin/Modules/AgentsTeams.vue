@@ -103,6 +103,7 @@
                 //{ key : 'dept_email', label : "Email" },
                 { key: 'actions', label: 'Actions' }],
               busy : false,
+              sortBy: 'name',
             },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",

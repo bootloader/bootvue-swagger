@@ -262,6 +262,7 @@
                 { key : 'actions', label : "Actions" },
                 { key : 'changelog', label : "Changelog" },
               ],
+              sortBy: 'name',
               items : [],
               perPage: 25,
               currentPage: 1,

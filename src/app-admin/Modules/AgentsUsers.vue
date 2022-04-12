@@ -193,6 +193,7 @@
               //    { key : 'channels', label : "Channels", class : "upper-case" },
                 { key : 'actions', label : "Action" }],
               busy : false,
+              sortBy: 'name',
             },
            filters:{
                deptname:"",
