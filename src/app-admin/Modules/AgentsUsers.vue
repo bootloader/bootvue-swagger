@@ -209,7 +209,7 @@
         computed : {
             filtered() {
                 let items = this.$store.getters.StateAgents;
-                if(!items?.length) return;
+                if(!items?.length) return [];
                 const filtered = items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
                         if(key === 'deptname'){
@@ -243,7 +243,12 @@
         },
         methods : {
           async loadAgents (){
-            await this.$store.dispatch('GetAgents');
+            try {
+              this.table.busy = true;
+              await this.$store.dispatch('GetAgents');
+            } finally {
+              this.table.busy = false;
+            }
           },
           async loadAgentTeams (){
             await this.$store.dispatch('GetTeams');

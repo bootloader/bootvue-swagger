@@ -108,12 +108,14 @@
                 </template>
             </b-table>
             <div v-else class="center-box">
-                <div v-if="isbusy" class="text-center text-success my-2">
-                  <b-spinner class="align-middle"></b-spinner>
+                <div v-if="isbusy" class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
+                    <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
+                    </b-spinner>
+                    <span class="no-item-text text-success"> Loading {{header.heading}} </span>
                 </div>
                 <div v-else class="center-item">
-                  <div> <i :class="[header.icon,'no-item-icon dull']"/></div>
-                   <span class="no-item-text"> No {{header.heading}} </span>
+                  <div class="icon-wrapper"> <i :class="[header.icon,'no-item-icon dull']"/></div>
+                  <span class="no-item-text"> No {{header.heading}} </span>
                 </div>
             </div>
             <b-pagination  v-if="table && table.items && table.items.length>table.perPage"
