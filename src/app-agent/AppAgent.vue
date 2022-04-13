@@ -57,7 +57,13 @@
     name:"AppAgent",
     computed: {
       layout() {
-        return (this.$route.meta.layout || this.$route.params.app) + '-agent-layout';
+        if(this.$route.params.app == 'plug'){
+            return 'plug-agent-layout';
+        }
+        if(this.$route.params.app == 'plug_mitel' || window.CONST.APP_PLUG == 'mitel'){
+          return 'plug-agent-layout';
+        }
+        return 'app-agent-layout';
       }
     },
     data: () => ({
