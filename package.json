@@ -16,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@johmun/vue-tags-input": "^2.1.0",
     "@popperjs/core": "^2.10.2",
+    "@revolist/revogrid": "^3.1.5",
     "@revolist/vue-datagrid": "^3.0.98",
     "@tailwindcss/forms": "0.2.1",
     "@textcomplete/core": "^0.1.10",

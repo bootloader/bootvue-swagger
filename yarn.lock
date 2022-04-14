@@ -1012,10 +1012,10 @@
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.2.tgz"
   "version" "2.11.2"
 
-"@revolist/revogrid@^3.0.98":
-  "integrity" "sha512-jtzNvqrINfUMXy/aNIVsQt99Y0vROaTFQLnpG9aQ8ojFx2bLvsv53qknAtwxiv4o0GfXUV6pzcMQnSkKQPLpHA=="
-  "resolved" "https://registry.npmjs.org/@revolist/revogrid/-/revogrid-3.0.98.tgz"
-  "version" "3.0.98"
+"@revolist/revogrid@^3.0.98", "@revolist/revogrid@^3.1.5":
+  "integrity" "sha512-KjoRIkK7KMT5kFIkhg3U3hJCB2S9Xcj7tQckhKxapRUu3SytzVChqx4syltSV3GDaRMLfejHrP/gE3WkFHgfRg=="
+  "resolved" "https://registry.npmjs.org/@revolist/revogrid/-/revogrid-3.1.5.tgz"
+  "version" "3.1.5"
 
 "@revolist/vue-datagrid@^3.0.98":
   "integrity" "sha512-QlCZrPLJadrwJSGfRKyEjRAExxftA/v144Z2t8fNCvDhygBclkt/XoBxQaHlpI4PCchxfoL9tf7eyRIjdO3Brw=="
