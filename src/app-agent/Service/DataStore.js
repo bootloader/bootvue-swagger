@@ -339,7 +339,8 @@ const actions = {
     dispatch("RefeshSession",force);
   },
 
-  async SetAgentOptionsStatus({ commit },agentSessons) {
+  async SetAgentOptionsStatus({ commit,dispatch },agentSessons) {
+    await dispatch('LoadAgentOptions');
     var awayStamp = new Date().getTime()-MyConst.config.agentSessionTimeout;
     var offlineStamp = awayStamp-MyConst.config.agentSessionTimeout*2;
     for(var i in agentSessons){
@@ -347,7 +348,6 @@ const actions = {
         var session = agentSessons[i];
         if(agent.code == session.agentCode){
           agent.session = session;
-
           session.isLoggedIn = (session.isLoggedIn && (session.lastOnlineStamp > offlineStamp))
           session.isAvailable = session.isLoggedIn && session.isOnline && (session.lastOnlineStamp > awayStamp);
           session.isAvailableNot = session.isLoggedIn && !session.isOnline;
@@ -381,6 +381,9 @@ const actions = {
   },
 
   async LoadAgentOptions({ commit,dispatch }) {
+    if(state.agents && state.agents.length){
+      return;
+    }
     let r1 = await axios.get("/api/options/agents");
     if(r1.data && r1.data.results){
        commit("setAgents", r1.data.results);
