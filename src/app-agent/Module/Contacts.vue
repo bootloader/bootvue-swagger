@@ -372,6 +372,7 @@
                 },
             }],
             scheduleUpdate : false,
+            scrollPosition : 0,
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
         }),
@@ -503,12 +504,14 @@
                 }
             },
             async handleScroll (event){
-                if(event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight){
+                let pos = (event.target.scrollTop + event.target.clientHeight)*100/event.target.scrollHeight;
+                if(pos > this.scrollPosition && pos >= 75){
                     this.search.limit = this.$formatters.toNum(this.search.limit,20)+30;
                     this.loadSearchFilter();
-                } else if(event.target.scrollTop == 0){
+                } else if(event.target.scrollTop == 0 || pos<25){
                     this.search.limit = 0;
                 }
+                this.scrollPosition = pos;
             },
         },
         beforeUnmount : function (argument) {

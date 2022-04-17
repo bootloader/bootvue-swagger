@@ -108,7 +108,8 @@
                 this.refreshKey;
                 let sessionId = this.activeChat.sessionId;
                 return (this.activeChat.messages || []).filter(function(m){
-                    return sessionId == m.sessionId && (m.status == 'DELTD' ||  m.text || m.attachments);
+                    return sessionId == m.sessionId && (m.status == 'DELTD' ||  m.text || m.attachments 
+                    || m.type=='A' || m.type=='L' || m.type=='N');
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
                 });
