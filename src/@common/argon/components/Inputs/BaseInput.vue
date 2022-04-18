@@ -27,9 +27,10 @@
        {'has-label': (label || name) || $slots.label},
        inputGroupClasses
        ]">
-        <div v-if="prependIcon || prelabel || $slots.prepend" class="input-group-prepend">
+        <div v-if="prependIcon || prelabel || $slots.prepend || prepend" class="input-group-prepend">
           <slot name="prepend">
-            <b-button  v-if="prelabel" variant="outline-success">
+            <span v-if="prepend" class="input-group-text">{{prepend}}</span>
+            <b-button  v-else-if="prelabel" variant="outline-success">
               {{label || name}}
             </b-button>
             <span v-else :class="prependClass">
@@ -40,7 +41,7 @@
         <slot v-bind="slotData">
           <input
             :id="'fmg-' + inputId"
-            :value="value"
+            v-model="displayValue"
             :type="type"
             v-on="listeners"
             v-bind="$attrs" 
@@ -199,6 +200,9 @@
         type: String,
         description: "Append icon (right)"
       },
+      prepend : {
+         type: String
+      },
       prependIcon: {
         type: String,
         description: "Prepend icon (left)"
@@ -225,12 +229,21 @@
       link : {
         type : Boolean,
         default : false
-      }
+      },
+      formatFilter : {
+         type: String
+      },
+      formatValue : {
+      },
+      formatLive : {
+        type : Boolean,
+        default : false
+      },
     },
     data() {
       return {
         focused: false,
-        inputId : ++ID_COUNTER,
+        inputId : ++ID_COUNTER
       };
     },
     computed: {
@@ -265,6 +278,38 @@
       showHelpMessage(){
         if((this.question && this.$attrs.placeholder)  || this.helpMessage){
           return true;
+        }
+      },
+      inputValue(){
+        if(this.value === null || this.value === undefined || this.value === ''){
+          return this.formatValue;
+        }
+        return this.value;
+      },
+      displayValue: {
+          get: function() {
+              if (
+                (this.formatLive || !this.focused) && this.formatFilter && this.$options.filters[this.formatFilter]) {
+                return this.$options.filters[this.formatFilter](this.inputValue);
+              } else {
+                return this.inputValue;
+              }
+          },
+          set: function(modifiedValue) {
+              if(this.formatFilter && this.$options.filters[this.formatFilter]){
+                let newValue = this.$options.filters[this.formatFilter](modifiedValue);
+                this.$emit('input', newValue);
+              } else this.$emit('input', modifiedValue);
+          }
+        }
+    },
+    watch : {
+      'formatValue' :  function(n,o){
+        if(this.formatFilter && this.$options.filters[this.formatFilter]){
+          let oldValue = this.$options.filters[this.formatFilter](o);
+          if(!this.value || this.value == oldValue){
+            this.displayValue = n;
+          }
         }
       }
     },

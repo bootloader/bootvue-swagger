@@ -64,13 +64,10 @@
                         </div>
 
                         <div class="position-relative form-group">
-                           <ValidationProvider v-slot="v" rules="required">
-                                <label for="examplePassword" class="">Action Code</label>
-                                <input name="agent_name" id="examplePassword"
-                                 placeholder="eg:- SEND_INVOICE" type="text"
-                                  class="form-control" v-model="newItem.code">
-                                  <span class="v-input-error">{{ v.errors[0] }}</span>
-                          </ValidationProvider>
+                            <base-input format-filter="item_code" :format-value="newItem.title" format-live
+                                  v-model="newItem.code" label="Action Code" autocomplete="off" rules="required"
+                                  placeholder="eg:- SEND_INVOICE">
+                            </base-input>
                         </div>
 
 

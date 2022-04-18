@@ -411,7 +411,7 @@
             
         },
         data: () => ({
-            message_text : "",quickReplies : null,sticky_note : null, 
+            message_text : "",quickReplies : null,sticky_note : null, caption_text : null,
             selectedMedia : null,
             lastMessageId : null,ilastMessageId :  null,
             MyDict,MyFlags,MyConst, MyFunc,
@@ -532,7 +532,8 @@
             }
         },
         methods: {
-            prepareMessage : function (text,media,action,empty) {
+            prepareMessage : function (text,media,action,empty,_options) {
+                let options = _options || {};
                 var activeChat = this.activeChat;
                 if(!activeChat){
                     return;
@@ -543,9 +544,10 @@
                 var sessionId = activeChat.sessionId;
                 //this.scrollToBottom();
                 var msg = {
-                    text : text, timestamp : new Date().getTime(),
+                    message : text, timestamp : new Date().getTime(),
                     sender : MyConst.agent, name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
+                    subject : options.subject,
                     attachments : media ? [{
                         mediaType : media.type,
                         mediaId : media.id,
@@ -560,8 +562,12 @@
                 this.showQuickReplies = false;
                 this.selectedMedia = null;
 
+                console.log("sendText:text",text);
                 if(this.winMode == "UPLOAD_MEDIA" && this.$refs.myVueDropzone.getQueuedFiles().length > 0){
+                    this.caption_text = text;
+                    console.log("sendText:caption_text",this.caption_text);
                     await this.$refs.myVueDropzone.processQueue();
+                    text =  this.caption_text;
                 } 
 
                 var msg = this.prepareMessage(text,media, action);
@@ -1013,10 +1019,13 @@
                  //this.dz.file_dropped = true;
             },
             async fileUploading(file, xhr, formData) {
-                var msg = this.prepareMessage(null, null,null,true);
+                var msg = this.prepareMessage(this.caption_text, null,null,true,{
+                    subject : null
+                });
                 this.$store.dispatch("SendChatPre",msg);
                 console.log("fileUploading2",msg)
-                formData.append('message', JSON.stringify(msg));
+                await formData.append('message', JSON.stringify(msg));
+                this.caption_text = null;
             },
             async fileUploaded(file,resp) {
                 if(resp){

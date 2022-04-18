@@ -16,7 +16,8 @@
                             ></audio-player>    
                         <a v-else :href="atch.mediaURL | https" target="_blank" class="fa fa-file-alt float-right" download></a>
                         <br/>
-                        <small v-if="atch.mediaCaption">{{atch.mediaCaption}}</small>
+                        <small v-if="atch.mediaCaption !== m.text">{{atch.mediaCaption}}</small>
+                        <small v-else-if="atch.mediaName">{{atch.mediaName}}</small>
                     </span>
                 </div>
             </div>
@@ -46,7 +47,7 @@
         computed : {
             m : function (params) {
                 return this.message;
-            },
+            }
         },
         data: () => ({
             viewerOptions : {

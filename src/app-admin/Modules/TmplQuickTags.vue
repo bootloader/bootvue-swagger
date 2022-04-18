@@ -36,35 +36,21 @@
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Session Tags '"
         @hidden="cancelReps">
                   <ValidationObserver ref="form">
-                            <div class="position-relative form-group">
-                              <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Category</label>
-                                    <input name="category" id="examplePassword"
-                                     placeholder="eg : country, customerType" type="text"
-                                      class="form-control" v-model="newItem.category">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+                            <base-input class="mx-0 px-0"
+                                  v-model="newItem.category" label="Category" autocomplete="off" rules="required"
+                                  placeholder="eg : country, customerType">
+                            </base-input>
 
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Title</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="eg: Platiinum, Verified, India" type="text"
-                                      class="form-control" v-model="newItem.title">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+                            <base-input class="mx-0 px-0"
+                                  v-model="newItem.title" label="Title" autocomplete="off" rules="required"
+                                  placeholder="eg: Platiinum, Verified, India">
+                            </base-input>
 
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Tag Code</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="eg:- PLATINUM, VERFD, IND" type="text"
-                                      class="form-control" v-model="newItem.code">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+                            <base-input class="mx-0 px-0" format-filter="item_code" :format-value="newItem.title" format-live
+                                  v-model="newItem.code" label="Tag Code" autocomplete="off" rules="required"
+                                  placeholder="eg:- PLATINUM, VERFD, IND">
+                            </base-input>
+
 
                   </ValidationObserver>
 

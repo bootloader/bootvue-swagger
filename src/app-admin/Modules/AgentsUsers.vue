@@ -63,7 +63,7 @@
                                 <ValidationProvider v-slot="v" rules="required">
                                       <label for="examplePassword" class="">Name</label>
                                       <input name="agent_name" id="examplePassword"
-                                       placeholder="John Doe" type="text"
+                                       placeholder="John Doe" type="text" autocomplete="off"
                                         class="form-control" v-model="newItem.name">
                                         <span class="v-input-error">{{ v.errors[0] }}</span>
                                 </ValidationProvider>
@@ -72,7 +72,7 @@
                               <div class="position-relative form-group col-md-6">
                                 <ValidationProvider v-slot="v" rules="required|email">
                                   <label for="exampleEmail" class="">Email</label>
-                                  <input name="email"
+                                  <input name="email" autocomplete="off"
                                           id="exampleEmail"
                                           placeholder="abc@xyz.com"
                                           type="email"
@@ -85,17 +85,16 @@
 
                             <div class="row">
                               <div class="position-relative form-group col-md-6">
-                                  <label for="exampleEmail" class="">Username</label>
-                                  <div class="input-group">
-                                      <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                      <input placeholder="john,sam2" type="text" class="form-control" v-model="newItem.code"
-                                      :readonly="newItem.id">
-                                  </div>
+                                  <base-input prepend="@" format-filter="item_code" :format-value="newItem.name" format-live
+                                    v-model="newItem.code" label="Username" :readonly="newItem.id"
+                                    placeholder="john,sam2" autocomplete="off">
+                                  </base-input>
                               </div>
 
                               <div class="position-relative form-group col-md-6">
                                 <label for="examplePassword" class="">Password</label><input
-                                  name="password" id="examplePassword" placeholder="password" type="password"
+                                  name="password" id="examplePassword" placeholder="password" :type="'password'"
+                                  autocomplete="new-password"
                                   class="form-control" v-model="newItem.agent_password">
                               </div>
                             </div>
@@ -167,7 +166,7 @@
     function newItem() {
       return {
               "name" : null,
-              "agent_email": "",
+              "agent_email": "", code : "",
               "dept_id" : null,
               "channels": [],"agent_channels" : "", admin : false
             };

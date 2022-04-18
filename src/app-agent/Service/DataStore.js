@@ -250,7 +250,7 @@ const actions = {
     }
     let response = await axios.post(url,{
                         id : msg.id,
-                        message : msg.text,
+                        message : msg.message || msg.text,
                         template : msg.template,
                         attachments : msg.attachments,
                         sessionId : msg.sessionId,

@@ -324,6 +324,9 @@ var formatter = {
     }
     return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
   },
+  item_code : function item_code (value) {
+    return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9_]+/g,'_').replace(/[_]+/g,'_');
+  },
 
   init : function () {
     var THAT = this;
@@ -404,6 +407,7 @@ var formatter = {
       return JSON.stringify(JsonUtils.deepParse(str), null, 2);
     });
 
+    Vue.filter('item_code', THAT.item_code);
   }
 }
 

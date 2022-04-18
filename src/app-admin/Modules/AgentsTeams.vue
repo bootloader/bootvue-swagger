@@ -36,19 +36,17 @@
                   <ValidationProvider v-slot="v" rules="required">
                         <label for="examplePassword" class="">Name</label>
                         <input name="agent_name" id="examplePassword"
-                          placeholder="Online Team" type="text"
+                          placeholder="Online Team" type="text" autocomplete="off"
                           class="form-control" v-model="newItem.name">
                           <span class="v-input-error">{{ v.errors[0] }}</span>
                   </ValidationProvider>
                 </div>
 
-                <div class="position-relative form-group">
-                    <label for="exampleEmail" class="">Code</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                        <input placeholder="ONLINE,BILLING" type="text" class="form-control" v-model="newItem.code">
-                    </div>
-                </div>
+                <base-input prepend="@" format-filter="item_code" :format-value="newItem.name" format-live
+                      v-model="newItem.code" label="Code" autocomplete="off"
+                      placeholder="ONLINE,BILLING">
+                </base-input>
+
             </ValidationObserver>
 
             <template #modal-footer>

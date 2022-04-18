@@ -39,7 +39,7 @@
                             <div class="position-relative form-group">
                               <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Category</label>
-                                    <input name="category" id="examplePassword"
+                                    <input name="category" id="examplePassword" 
                                      placeholder="eg : country, customerType" type="text"
                                       class="form-control" v-model="newItem.category">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
@@ -49,22 +49,17 @@
                             <div class="position-relative form-group">
                                <ValidationProvider v-slot="v" rules="required">
                                     <label for="examplePassword" class="">Title</label>
-                                    <input name="agent_name" id="examplePassword"
+                                    <input name="agent_name" id="examplePassword" autocomplete="off"
                                      placeholder="eg: Platiinum, Verified, India" type="text"
                                       class="form-control" v-model="newItem.title">
                                       <span class="v-input-error">{{ v.errors[0] }}</span>
                               </ValidationProvider>
                             </div>
 
-                            <div class="position-relative form-group">
-                               <ValidationProvider v-slot="v" rules="required">
-                                    <label for="examplePassword" class="">Label Code</label>
-                                    <input name="agent_name" id="examplePassword"
-                                     placeholder="eg:- PLATINUM, VERFD, IND" type="text"
-                                      class="form-control" v-model="newItem.code">
-                                      <span class="v-input-error">{{ v.errors[0] }}</span>
-                              </ValidationProvider>
-                            </div>
+                            <base-input format-filter="item_code" :format-value="newItem.title" format-live
+                                  v-model="newItem.code" label="Label Code" autocomplete="off" rules="required"
+                                  placeholder="eg:- PLATINUM, VERFD, IND">
+                            </base-input>
 
                   </ValidationObserver>
 
