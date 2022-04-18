@@ -148,37 +148,40 @@
                 console.log(e);
             });
 
-            fetch(new Request(
-                `/api/config/cdn?beta=false`, {
-                method: 'POST',
-            })).then(function(response) {
-                return response.text();
-            }).then(function(response) {
-                return JSON.parse(response);
-            }).then(function(response) {
-                THAT.deployed.version = response.results[0].value.split("@")[1];
-            }).catch(function(e){
-                console.log(e);
-            });
+            if(this.model.client == 'cherrybase.github.io'){
+                fetch(new Request(
+                    `/api/config/cdn?beta=false`, {
+                    method: 'POST',
+                })).then(function(response) {
+                    return response.text();
+                }).then(function(response) {
+                    return JSON.parse(response);
+                }).then(function(response) {
+                    THAT.deployed.version = response.results[0].value.split("@")[1];
+                }).catch(function(e){
+                    console.log(e);
+                });
+            }
         },
         async updateAlpha(version){
             let THAT = this;
-           const data = new URLSearchParams();
-           data.append('version', version);
-
-           fetch(new Request(
-                `/api/config/cdn?beta=false`, {
-                method: 'POST',
-                body : data
-            })).then(function(response) {
-                return response.text();
-            }).then(function(response) {
-                return JSON.parse(response);
-            }).then(function(response) {
-                THAT.deployed.version = response.results[0].value.split("@")[1];
-            }).catch(function(e){
-                console.log(e);
-            });
+            if(this.model.client == 'cherrybase.github.io'){
+                const data = new URLSearchParams();
+                data.append('version', version);
+                fetch(new Request(
+                        `/api/config/cdn?beta=false`, {
+                        method: 'POST',
+                        body : data
+                    })).then(function(response) {
+                        return response.text();
+                    }).then(function(response) {
+                        return JSON.parse(response);
+                    }).then(function(response) {
+                        THAT.deployed.version = response.results[0].value.split("@")[1];
+                    }).catch(function(e){
+                        console.log(e);
+                    });
+            }
         }
       }
   }
