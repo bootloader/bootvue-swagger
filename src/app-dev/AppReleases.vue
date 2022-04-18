@@ -34,6 +34,10 @@
                      <BaseCopy label="Beta Version" :value="model.betaVersion" size="sm" />
                     <BaseCopy label="Beta Url" :value="model.betaVersion" size="sm"/>
                 </b-form>
+                <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.betaVersion">
+                    <button @click="updateAlpha(model.betaVersion)"
+                    class="btn btn-sm btn-primary">Update Beta</button> 
+                </div>  
             </b-card-body>
             <b-card-body class="px-lg-5 py-lg-2">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
@@ -42,6 +46,10 @@
                         :value="`https://cdn.jsdelivr.net/gh/cherrybase/${model.client}@${model.alphaVersion}`" 
                         size="sm"/>
                 </b-form>
+                <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.alphaVersion">
+                        <button @click="updateAlpha(model.alphaVersion)"
+                            class="btn btn-sm btn-primary">Update Alpha</button> 
+                     </div>  
             </b-card-body>
           </b-card>
         </b-col>
@@ -82,7 +90,10 @@
                   ],
                    alpha : 'publish', beta : 'publish', release : 'publish'
               },
-          ]
+          ],
+          deployed : {
+              version : null,
+          }
       }),
       computed : {
           clientOption(){
@@ -133,6 +144,38 @@
                 return JSON.parse(response);
             }).then(function(response) {
                 THAT.model.releaseVersion = (response[0] || {}).name;
+            }).catch(function(e){
+                console.log(e);
+            });
+
+            fetch(new Request(
+                `/api/config/cdn?beta=false`, {
+                method: 'POST',
+            })).then(function(response) {
+                return response.text();
+            }).then(function(response) {
+                return JSON.parse(response);
+            }).then(function(response) {
+                THAT.deployed.version = response.results[0].value.split("@")[1];
+            }).catch(function(e){
+                console.log(e);
+            });
+        },
+        async updateAlpha(version){
+            let THAT = this;
+           const data = new URLSearchParams();
+           data.append('version', version);
+
+           fetch(new Request(
+                `/api/config/cdn?beta=false`, {
+                method: 'POST',
+                body : data
+            })).then(function(response) {
+                return response.text();
+            }).then(function(response) {
+                return JSON.parse(response);
+            }).then(function(response) {
+                THAT.deployed.version = response.results[0].value.split("@")[1];
             }).catch(function(e){
                 console.log(e);
             });
