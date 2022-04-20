@@ -3,8 +3,13 @@
         <page-title :heading=header.heading :icon=header.icon
         :actions=actions :filters=filters :subheading=header.subheading @action="onActionINT" 
         ref="pageTitle">
+            <template #filter(apply)>
+                <span class="btn btn-success" @click="apply">
+                  <i class="fa fa-sync"/>
+                </span>
+            </template>
             <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
-              <slot :name="slotName" v-bind="{apply,...slotScope}"></slot>
+              <slot :name="slotName" v-bind="{apply,loadNext,loadPrev,...slotScope}"></slot>
             </template>
           <template #subheading>
               <slot name="header-subheading">
@@ -13,8 +18,8 @@
           </template>
         </page-title>
 
-      <slot name="body">
 
+      <slot name="body">
         <div v-if="goodTable && table" class="bg-white" >
             <vue-good-table 
               :columns="table.fields"
@@ -64,7 +69,7 @@
                         empty-filtered-text="No Records"
                         :bordered="table.bordered || true"
                         :outlined="table.outlined || false"
-                        :small="table.small || false"
+                        :small="smallTable"
                         :hover="table.hover || true"
                         :dark="table.dark || false"
                         :fixed="table.fixed || false"
@@ -74,12 +79,12 @@
                         :items="table.items"
                         :fields="table.fields"
                         :sort-by="table.sortBy"
-                        :sort-desc="table.sortDesc"
+                        :sort-desc="tableSortDesc"
                         :busy.sync="isbusy"
                         show-empty
                         filter>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
-                  <slot :name="slotName" v-bind="slotScope"></slot>
+                  <slot :name="slotName" v-bind="{openView:()=>openView(slotScope),...slotScope}"></slot>
                 </template>
                 <template #empty>
                     <div class="center-box">
@@ -118,7 +123,7 @@
                   <span class="no-item-text"> No {{header.heading}} </span>
                 </div>
             </div>
-            <b-pagination  v-if="table && table.items && table.items.length>table.perPage"
+            <b-pagination  v-if="table && table.items && table.items.length>table.perPage && tablePaging=='offline'"
                   class="pb-3 pt-0 px-4"
                   v-model="table_current_page"
                   :total-rows="table.rows"
@@ -126,9 +131,32 @@
                   aria-controls="agent-session-list">        
             </b-pagination>
 
+            <span  v-else-if="table && table.items && tablePaging=='lazy'">
+              <b-button-group 
+                size="sm" class="pb-3 pt-0 px-4" variant="outline-success">
+                <b-button variant="outline-success"
+                  @click="loadPrev" 
+                  :disabled="pageNo < 1"
+                  >Previous</b-button>
+                <b-button variant="outline-success">&nbsp;{{currentPage}}&nbsp;</b-button>
+                <b-button variant="outline-success" 
+                  @click="loadNext"
+                  :disabled="table.items.length<table.perPage">Next</b-button>
+              </b-button-group>
+              <span  class="pb-0 mt-0 px-0" >
+                &nbsp;Showing&nbsp;{{pageNo*table.perPage}}&nbsp;to&nbsp;{{pageNo*table.perPage+table.items.length}}
+              </span>
+            </span>  
+
         </div> 
 
       </slot>  
+
+      <b-modal :id="viewid+'_VIEW'" :title="'View'" size="lg">
+            <slot name="modal(view)" v-bind="selectedItem">
+               <pre v-if="selectedItem">{{selectedItem.item | json}}</pre>
+            </slot>  
+      </b-modal>
 
     </div>
 
@@ -199,8 +227,11 @@
                 }
             },
             table_current_page : 1,
+            pageNo : 0,
             session : null,
             busyintenral : false,
+            selectedItem : null,
+            viewid : 'v'+ Date.now()
         }),
         computed : {
           isbusy : {
@@ -210,6 +241,21 @@
             set(newName){
               return newName;
             }
+          },
+          smallTable(){
+            return this.table.small || (this.table.size == 'sm')
+          },
+          tableSortDesc(){
+            return this.table.sortDesc || (this.table.sortDir == 'desc')
+          },
+          tablePaging(){
+            return (this.table && this.table.paging) ? this.table.paging : 'offline';
+          },
+          currentPage(){
+            if(this.tablePaging == 'lazy'){
+              return this.pageNo + 1
+            }
+            return this.table_current_page;
           },
           rowItems(){
             if(this.goodTable &&  this.table.groupBy){
@@ -248,7 +294,6 @@
           async loadItems (additionalParams){
             var params = {};
             for(var i in this.actions){
-              console.log("actions",i,this.actions[i]);
               var name = this.actions[i].param || this.actions[i].type;
               params[name] = this.getInput(name);//?.lane;
             }
@@ -262,7 +307,11 @@
             if(this.table && this.table.api){
               try {
                 this.busyintenral  = true;
-                var resp = await this.$service.get(this.table.api,params);
+                var resp = await this.$service.get(this.table.api,{
+                  ...params,
+                  pageSize : this.table.perPage, pageNo: this.pageNo,
+                  sortBy : this.table.sortBy,sortDir : this.table.sortDir
+                });
                 this.table.items = resp.results;
                 this.table.rows = this.table?.items?.length;
                 this.session = resp.meta;
@@ -293,8 +342,27 @@
           },
           getItems : function () {
             return this.table.items;
+          },
+          loadNext(){
+              if(this.isbusy) return;
+              if(this.tablePaging == 'lazy'){
+                ++this.pageNo;
+                this.apply();
+              }
+          },
+          loadPrev(){
+              if(this.isbusy) return;
+              if(this.tablePaging == 'lazy'){
+                --this.pageNo;
+                this.apply();
+              }
+          },
+          openView(row){
+            this.selectedItem = row;
+            this.$bvModal.show(this.viewid + "_VIEW")
           }
-        },
+
+        }
     }
 
 

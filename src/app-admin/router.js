@@ -145,6 +145,14 @@ export default AppRouter.route({
             component: () => import('./Modules/SetUp/SetUpChannels.vue'),    
         },
 
+
+        {
+            path : "/app/console/logs",
+            name: 'ErrorLogs',
+            component: () => import('./Modules/Console/ErrorLogs.vue'),    
+        },
+
+
         {
             path: 'app/admins/components/modals',
             name: 'modals',

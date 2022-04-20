@@ -85,7 +85,6 @@
     import Chat from '@cherrybase/cherry-webchat';
     Vue.use(Chat);
 
-
     import { required, email,regex } from 'vee-validate/dist/rules';
     import formatters from './../../services/formatters';
     import tunnel from './../../services/tunnel';

@@ -176,8 +176,8 @@
                             sessionId : resp.meta.sessionId,
                             profileId : resp.meta.contactId,
                             mvu : "CHATBOX",
-                            sendNewMessage : false
-                        } 
+                            sendNewMessage : false,
+                        }
                 }).catch(err => { console.error("Already ON Same Path") });
             }
         },

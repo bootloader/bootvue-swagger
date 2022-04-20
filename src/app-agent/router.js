@@ -48,6 +48,11 @@ export default AppRouter.route({
             component: () => import('./Module/Home.vue'),
         },
         {
+            path: '/:app/chat/:contactId/:sessionId/:profileId/:profileView/:mvu/:mash',
+            name: 'defAgentView',
+            component: () => import('./Module/Home.vue'),
+        },
+        {
             path: '/:app/chistory/:contactId/:sessionId',
             name: 'agent-chat-session',
             component: () => import('./Module/Home.vue'),
