@@ -72,7 +72,7 @@
                 </base-input>
                 <BaseVSelect class="mb-0" size="sm"
                   name="App Type" :clearable="false"
-                  :options="['WEBHOOK','AGENT','BOT','MITEL']"
+                  options="getx:/api/meta/app_types"
                   v-model="oneItem.appType"
                   placeholder="Select App Type">
                 </BaseVSelect>
@@ -81,51 +81,11 @@
                     v-model="oneItem.webhook"
                     rules="required|URL" >
                 </base-input>
-                <span v-if="oneItem.appType == 'BOT'">
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Bot Code" placeholder="complaint_flow"
-                      v-model="oneItem.props.botCode" >
-                  </base-input>
-                </span> 
-                <span v-else-if="oneItem.appType == 'AGENT'">
-                  <BaseVSelect class="mb-0" size="sm"
-                    name="Default Agent Team" :clearable="true"
-                    options="getx:/api/admins/dept"
-                    v-model="oneItem.props.agentCode"
-                    placeholder="Select Team">
-                  </BaseVSelect>
-                </span> 
-                <span v-else-if="oneItem.appType == 'MITEL'">
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Mitel End Point" placeholder="http://yourerver.com/callback_path"
-                      v-model="oneItem.props.end_point"
-                      rules="required|URL" >
-                  </base-input>
-                  <ButtonRadioGroup size="sm" name="Grant Type"
-                            v-model="oneItem.props.grant_type" 
-                            :options="['client_credentials','password']"
-                  />
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Client Id" placeholder="ProfessionalServices"
-                      v-model="oneItem.props.client_id" rules="required" >
-                  </base-input>
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Client Secret" placeholder="B5B7194D-8C47-4E04-912D-39A003AE052C"
-                      v-model="oneItem.secret.client_secret" rules="required" >
-                  </base-input>
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Mitel Queue" placeholder="6106ee72-81a1-49a7-9e10-df591d5194f3"
-                      v-model="oneItem.props.queue" rules="required" >
-                  </base-input>
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="To" placeholder="OM Queue"
-                      v-model="oneItem.props.to" >
-                  </base-input>
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="Default From" placeholder="Mehery Contact"
-                      v-model="oneItem.props.from" >
-                  </base-input>
-                </span>
+
+                <my-model-form size="sm"
+                  :configs="`getx://api/meta/app_types/${oneItem.appType}/config`"
+                  :model="oneItem">
+                </my-model-form> 
 
             <template #modal-footer>
                 <div class="position-relative">
@@ -232,6 +192,8 @@
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
+    import MySource from '../../../@common/custom/components/MySource.vue';
+    import MyModelForm from '../../../@common/custom/components/MyModelForm.vue';
 
     function newItem(_item) {
       let item = _item || {};
@@ -246,7 +208,8 @@
     }
     export default {
         components: {
-            MasterView,VSwatches
+            MasterView,VSwatches,
+                MySource,MyModelForm
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,

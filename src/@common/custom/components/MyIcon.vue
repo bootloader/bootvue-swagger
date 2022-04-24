@@ -15,7 +15,7 @@ var MAP = {
         'false' : 'text-danger'
     },
     chatmode : {
-        '_' : '',
+        '_' : '',  '$' : 'fa fa-th-large',
         'BOT' : "fa fa-robot",
         'AGENT' : 'fa fa-user-secret',
         'WEBHOOK' : 'openwebicons-webhooks'
@@ -48,7 +48,7 @@ export default {
             return this.typeClass || this.myType._ ;
         },
         valueClass(){
-            return this.myType[this.value] || '';
+            return this.myType[this.value] || this.myType["$"] || "";
         },
     }
 }

@@ -12,8 +12,8 @@
                     v-model="input.config.value"
                     :value="input.meta.defaultValue"
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
-                    placeholder="Select"
-                    searchable :clearable="false"
+                    :placeholder="input.meta.example || 'Select'"
+                    searchable :clearable="!!input.meta.optional"
                     @change="onChange(input.meta,input.config)"
                     >
                 </BaseVSelect>
@@ -30,6 +30,7 @@
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                     :value="input.meta.defaultValue"
                     :required="!input.meta.optional "
+                    :placeholder="input.meta.example"
                     @change="onChange(input.meta,input.config)"
                 >
                 </base-input>
