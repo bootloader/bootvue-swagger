@@ -17,6 +17,10 @@
         <b-col cols="12" md="8">
           <b-collapse id="nav-text-collapse" is-nav>
             <b-navbar-nav class="align-items-lg-center ml-md-auto">
+               <b-nav-item href="/front/auth/login">
+                  <i class="fa fa-user-secret text-primary"></i>
+                  <span class="nav-link-inner--text text-primary">Agent Login</span>
+                </b-nav-item>
                 <b-nav-item to="/auth/forgot-pass" v-if="$route.name !== 'forgot-pass'">
                   <i class="fa fa-unlock-alt text-primary"></i>
                   <span class="nav-link-inner--text text-primary">Forgot password</span>

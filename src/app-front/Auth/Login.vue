@@ -90,13 +90,13 @@
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                   htmlFor="grid-password"
                 >
-                  Email
+                  Username
                 </label>
                 <input
-                   name="email"
+                   name="username"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white 
                   rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  placeholder="Email"
+                  placeholder="Username"
                   v-model="model.email"
                 />
                   <span v-if="errors[0]" class="text-red-500 text-sm">
@@ -180,7 +180,6 @@
               class="bg-white text-blueGray-600 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 
               rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
               type="button"
-              @click="loginSubmit"
             >
                Domain Manager Login
             </a>
