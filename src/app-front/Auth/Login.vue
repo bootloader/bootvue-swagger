@@ -34,20 +34,23 @@
                 >
                   Enter your domain URL
                 </label>
-                <div class="domain-box border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
-                  <input name="app" type="hidden" v-model="app" />
-                  <input id="domain"
-                    type="text" v-model="domainInput" autocomplete="off" name="domain"
-                    class="domain-input" :style="{
-                      'width' : domainSize + 'px'
-                    }"
-                    :placeholder="domainPlaceholder" />
-                    <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</label>
-                    <div class="domain-width-wrapper">
-                      <div class="domain-width" ref="domainWidth"><div>{{domainInput || domainPlaceholder}}</div></div>
+                  <div class="domain-box border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150">
+                    <div class="domain-box-center">
+                       <div class="domain-box-center-half">
+                          <input name="app" type="hidden" v-model="app" />
+                          <input id="domain"
+                            type="text" v-model="domainInput" autocomplete="off" name="domain"
+                            class="domain-input" :style="{
+                              'width' : domainSize + 'px'
+                            }"
+                            :placeholder="domainPlaceholder" />
+                            <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</label>
+                            <div class="domain-width-wrapper">
+                                <div class="domain-width" ref="domainWidth"><div>{{domainInput || domainPlaceholder}}</div></div>
+                            </div> 
+                        </div> 
                     </div> 
-                </div>  
-
+                  <div class="clear-both"/></div>
               </div>
 
               <div class="text-center mt-6">
@@ -206,7 +209,7 @@ export default {
       domain,
       app : "agent",
       domainInput : "",
-      domainPlaceholder : "yourdomain",
+      domainPlaceholder : "enter your domain",
       domainWidth : 0,
       model : {
         email : null, password : null,
@@ -234,6 +237,9 @@ export default {
       '$route.query.domain': function (domain) {
         this.updateTarget();
       },
+      'domainInput' : function(newVal){
+        this.domainInput = (newVal || '').toLowerCase().trim().replace(/[^A-Za-z0-9]+/g,'');
+      }
   },
   mounted () {
     const that = this;
@@ -307,6 +313,14 @@ export default {
 <style scoped>
   .domain-box, .domain-box input::-webkit-input-placeholder,.domain-box input {
     font-size: 16px;
+  }
+  .domain-box-center {
+    float: left;
+    min-width: 75%;
+  }
+  .domain-box-center-half {
+    float: right;
+    margin-left: 25px;
   }
   .domain-input, .domain-input:focus {
     outline-style: none;
