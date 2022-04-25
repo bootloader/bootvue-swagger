@@ -14,8 +14,7 @@
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                     :placeholder="input.meta.example || 'Select'"
                     searchable :clearable="!!input.meta.optional"
-                    @change="onChange(input.meta,input.config)"
-                    >
+                    @change="onChange(input.meta,input.config)" >
                 </BaseVSelect>
                 <ButtonRadioGroup v-else-if="input.meta.inputType=='OPTIONS'"
                     :name="(input.meta.title || input.meta.key)"
@@ -24,7 +23,7 @@
                         :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
                         @change="onChange(input.meta,input.config)"
                 />
-                <base-input v-else  class="mb-0" :size="size"
+               <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)"
                     v-model="input.config.value" 
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"

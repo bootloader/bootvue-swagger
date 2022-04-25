@@ -76,27 +76,20 @@
                   v-model="oneItem.appType"
                   placeholder="Select App Type">
                 </BaseVSelect>
-                <base-input v-if="oneItem.appType == 'WEBHOOK'" class="mb-0" size="sm" autocomplete="off"
-                    label="Webhook Url" placeholder="http://yourerver.com/callback_path"
-                    v-model="oneItem.webhook"
-                    rules="required|URL" >
-                </base-input>
-
                 <my-model-form size="sm"
                   :configs="`getx://api/meta/app_types/${oneItem.appType}/config`"
                   :model="oneItem">
                 </my-model-form> 
-
-            <template #modal-footer>
-                <div class="position-relative">
-                    <button @click="deleteItem(oneItem)" v-if="oneItem.id"
-                      name="generate" id="resetKeys"
-                      class="btn btn-outline-danger btn-sm mg-1">Delete</button>
-                    <button @click="saveItem(false)"
-                      name="save" id="saveitem" :disabled="!(isChanged)"
-                      class="btn btn-primary btn-sm mg-1">Save</button>
-                  </div>
-            </template>
+                <template #modal-footer>
+                    <div class="position-relative">
+                        <button @click="deleteItem(oneItem)" v-if="oneItem.id"
+                          name="generate" id="resetKeys"
+                          class="btn btn-outline-danger btn-sm mg-1">Delete</button>
+                        <button @click="saveItem(false)"
+                          name="save" id="saveitem" :disabled="!(isChanged)"
+                          class="btn btn-primary btn-sm mg-1">Save</button>
+                      </div>
+                </template>
         </b-modal>
         </ValidationObserver>
         <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Details : ${lastItem.name}`" size="md">

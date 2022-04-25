@@ -286,7 +286,7 @@
         }
         return this.value;
       },
-      displayValue: {
+      displayValue : {
           get: function() {
               if (
                 (this.formatLive || !this.focused) && this.formatFilter && this.$options.filters[this.formatFilter]) {
@@ -298,8 +298,8 @@
           set: function(modifiedValue) {
               if(this.formatFilter && this.$options.filters[this.formatFilter]){
                 let newValue = this.$options.filters[this.formatFilter](modifiedValue);
-                this.$emit('input', newValue);
-              } else this.$emit('input', modifiedValue);
+                this.emitValue(newValue);
+              } else  this.emitValue(modifiedValue);
           }
         }
     },
@@ -315,8 +315,13 @@
     },
     methods: {
       updateValue(evt) {
+        console.log("updateValue",evt)
         let value = evt.target.value;
+        this.emitValue(value);
+      },
+      emitValue(value){
         this.$emit("input", value);
+        this.$emit("change", value);
       },
       onFocus(evt) {
         this.focused = true;

@@ -3,7 +3,7 @@
                 <template #data="{options}">
                     <x-simple-form size="sm"
                         :inputs="options.map(function({item}){
-                            var key = (item.path || item.key)
+                            let key = (item.path || item.key);
                             return {
                                 meta : item,
                                 config : { 
