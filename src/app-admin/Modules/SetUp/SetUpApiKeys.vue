@@ -47,120 +47,77 @@
           </template>
       </master-view>
           
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="main-card mb-3 card">
 
-                </div>
-            </div>
-
-        </div>
-
+              </div>
+          </div>
+      </div>
 
         <ValidationObserver ref="form" class="template-form">
-        <b-modal v-if="oneItem" :id="modelName" :title="'Client App Details'" size="md"
-        @hidden="cancelItem">
-                <base-input class="mb-0" size="sm" autocomplete="off"
-                    label="App Name" placeholder="My API Key 1 or Slack Connector"
-                    v-model="oneItem.name" :textLimit="60" required
-                    rules="required|min:4|max:512" >
-                </base-input>
-                <base-input class="mb-0" size="sm" autocomplete="off" :readonly="oneItem.id && oneItem.code"
-                    label="Queue Code" placeholder="my_api_connector"
-                    v-model="oneItem.code" :textLimit="60" required
-                    rules="required|min:4|max:512" >
-                </base-input>
-                <BaseVSelect class="mb-0" size="sm"
-                  name="App Type" :clearable="false"
-                  options="getx:/api/meta/app_types"
-                  v-model="oneItem.appType"
-                  placeholder="Select App Type">
-                </BaseVSelect>
-                <my-model-form size="sm"
-                  :configs="`getx://api/meta/app_types/${oneItem.appType}/config`"
-                  :model="oneItem">
-                </my-model-form> 
-                <template #modal-footer>
-                    <div class="position-relative">
-                        <button @click="deleteItem(oneItem)" v-if="oneItem.id"
-                          name="generate" id="resetKeys"
-                          class="btn btn-outline-danger btn-sm mg-1">Delete</button>
-                        <button @click="saveItem(false)"
-                          name="save" id="saveitem" :disabled="!(isChanged)"
-                          class="btn btn-primary btn-sm mg-1">Save</button>
-                      </div>
-                </template>
-        </b-modal>
+          <b-modal v-if="oneItem" :id="modelName" :title="'Client App Details'" size="md"
+          @hidden="cancelItem">
+                  <base-input class="mb-0" size="sm" autocomplete="off"
+                      label="App Name" placeholder="My API Key 1 or Slack Connector"
+                      v-model="oneItem.name" :textLimit="60" required
+                      rules="required|min:4|max:512" >
+                  </base-input>
+                  <base-input class="mb-0" size="sm" autocomplete="off" :readonly="oneItem.id && oneItem.code"
+                      label="Queue Code" placeholder="my_api_connector"
+                      v-model="oneItem.code" :textLimit="60" required
+                      rules="required|min:4|max:512" >
+                  </base-input>
+                  <BaseVSelect class="mb-0" size="sm" :disabled="oneItem.id && oneItem.code"
+                    name="App Type" :clearable="false"
+                    options="getx:/api/meta/app_types"
+                    v-model="oneItem.appType"
+                    placeholder="Select App Type">
+                  </BaseVSelect>
+                  <my-model-form size="sm" 
+                    :configs="`getx://api/meta/app_types/${oneItem.appType}/config`"
+                    :model="oneItem">
+                  </my-model-form> 
+                  <template #modal-footer>
+                      <div class="position-relative">
+                          <button @click="deleteItem(oneItem)" v-if="oneItem.id"
+                            name="generate" id="resetKeys"
+                            class="btn btn-outline-danger btn-sm mg-1">Delete</button>
+                          <button @click="saveItem(false)"
+                            name="save" id="saveitem" :disabled="!(isChanged)"
+                            class="btn btn-primary btn-sm mg-1">Save</button>
+                        </div>
+                  </template>
+          </b-modal>
         </ValidationObserver>
         <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Details : ${lastItem.name}`" size="md">
-            <b-input-group class="mt-3" size="sm">
-              <b-input-group-prepend>
-                  <b-button variant="outline-dark"  class="text-sm w-120px">
-                    App Name</b-button>
-              </b-input-group-prepend>
-              <b-form-input readonly
-                :value="lastItem.name"
-              ></b-form-input>
-            </b-input-group>
-            <b-input-group class="mt-3" size="sm">
-              <b-input-group-prepend>
-                  <b-button variant="outline-dark"  class="text-sm w-120px">
-                    API Id</b-button>
-              </b-input-group-prepend>
-              <b-form-input readonly
-                :value="lastItem.id"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button
-                  v-clipboard:copy="lastItem.id" 
-                  variant="outline-success">Copy</b-button>
-              </b-input-group-append>
-            </b-input-group>
-            <b-input-group class="mt-3" size="sm">
-              <b-input-group-prepend>
-                  <b-button variant="outline-dark"  class="text-sm w-120px">
-                    API Key</b-button>
-              </b-input-group-prepend>
-              <b-form-input readonly
-                :value="lastItem.key || '***********'"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button v-if="lastItem.key"
-                  v-clipboard:copy="lastItem.key" 
-                  variant="outline-success">Copy</b-button>
-                <b-button v-else
-                  @click="resetItem(lastItem)" 
-                  variant="outline-success">Reset Key</b-button>
-              </b-input-group-append>
-            </b-input-group>
-            <b-input-group class="mt-3" size="sm">
-              <b-input-group-prepend>
-                  <b-button variant="outline-dark"  class="text-sm w-120px">
-                    API Endpoint</b-button>
-              </b-input-group-prepend>
-              <b-form-input readonly
-                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button
-                  v-clipboard:copy="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`" 
-                  variant="outline-success">Copy</b-button>
-              </b-input-group-append>
-            </b-input-group>
-            <b-input-group class="mt-3" size="sm"  v-if="lastItem.webhook">
-              <b-input-group-prepend>
-                  <b-button variant="outline-dark"  class="text-sm w-120px">
-                    Webhook URL</b-button>
-              </b-input-group-prepend>
-              <b-form-input readonly
-                :value="lastItem.webhook"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button
-                  v-clipboard:copy="lastItem.webhook" 
-                  variant="outline-success">Copy</b-button>
-              </b-input-group-append>
-            </b-input-group>
+            <base-copy class="mt-3" size="sm"
+                label="App Queue Code"
+                :value="lastItem.code">
+            </base-copy>
+            <base-copy class="mt-3" size="sm"
+                label="API Id"
+                :value="lastItem.id">
+            </base-copy>
+            <base-copy class="mt-3" size="sm"
+                label="API Key" reset
+                :value="lastItem.key"
+                @reset="resetItem(lastItem)" >
+            </base-copy>
+            <base-copy class="mt-3" size="sm"
+                label="API Endpoint"
+                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`">
+            </base-copy>
+            <base-copy class="mt-3" size="sm" v-if="lastItem.webhook"
+                label="Webhook URL"
+                :value="lastItem.webhook">
+            </base-copy>
+            
+            <my-model-form size="sm" class="mt-3 d-block" readonly disabled
+              :configs="`getx://api/meta/app_types/${lastItem.appType}/config`"
+              :model="lastItem">
+            </my-model-form> 
+
             <template #modal-footer="{cancel}">
                 <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
                   target="_blank"
@@ -282,6 +239,7 @@
             this.$bvModal.show(this.modelName + "_VIEW");
           }, 
           async resetItem(item) {
+            console.log("resetItem",item)
             this.oneItem = item;
             this.saveItem(true);
           }, 

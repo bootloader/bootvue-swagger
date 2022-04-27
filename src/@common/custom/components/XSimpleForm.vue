@@ -11,7 +11,8 @@
                     :options="input.meta.optionsSource || input.meta.options" 
                     v-model="input.config.value"
                     :value="input.meta.defaultValue"
-                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
+                    :disabled="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :placeholder="input.meta.example || 'Select'"
                     searchable :clearable="!!input.meta.optional"
                     @change="onChange(input.meta,input.config)" >
@@ -20,13 +21,18 @@
                     :name="(input.meta.title || input.meta.key)"
                         v-model="input.config.value" size="sm"
                         :options="input.meta.options"
-                        :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                        :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                         @change="onChange(input.meta,input.config)"
                 />
+                <b-alert v-else-if="input.meta.inputType=='MESSAGE'" show
+                    :variant="input.meta.messageType.toLowerCase()">
+                       <span> <MyIcon type="messageType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
+                       <small>{{input.meta.desc}}</small>
+                </b-alert>
                <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)"
                     v-model="input.config.value" 
-                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew)"
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :value="input.meta.defaultValue"
                     :required="!input.meta.optional "
                     :placeholder="input.meta.example"
@@ -67,6 +73,9 @@
                 default : false
             },
             size : {
+            },
+            readonly : {
+                type : Boolean, default : false
             }
         },
         data() {

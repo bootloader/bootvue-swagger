@@ -1,7 +1,7 @@
 <template>
         <my-source :options="configs">
                 <template #data="{options}">
-                    <x-simple-form size="sm"
+                    <x-simple-form size="sm" :readonly="readonly"
                         :inputs="options.map(function({item}){
                             let key = (item.path || item.key);
                             return {
@@ -40,6 +40,9 @@
                 default : false
             },
             size : {
+            },
+            readonly : {
+                type : Boolean, default : false
             }
         },
         data() {

@@ -1,16 +1,21 @@
 <template>
     <b-input-group :class="['mt-3',('input-group-'+size)]">
             <b-input-group-prepend>
-                <b-button variant="outline-dark" class="w-120px">
+                <b-button variant="outline-dark" :class="['w-120px',('text-'+size)]">
                     {{label}}</b-button>
             </b-input-group-prepend>
             <b-form-input readonly
-              :value="value"
+              :value="showValue"
             ></b-form-input>
             <b-input-group-append>
-              <b-button class="w-20"
-                v-clipboard:copy="value" 
-                variant="outline-success">Copy</b-button>
+
+                <b-button v-if="reset && !value"
+                  @click="onReset" 
+                  variant="outline-success">Reset</b-button>
+                <b-button v-else class="w-20"
+                  v-clipboard:copy="value" 
+                  variant="outline-success">Copy</b-button>
+
             </b-input-group-append>
       </b-input-group>
 </template>
@@ -27,13 +32,17 @@
         description: "Input label (text before input)"
       },
       value: {
-        type: [String, Number],
+        type: [String, Number,Boolean],
         description: "Input value"
       },
       size: {
         type: [String],
         description: "Size value"
-      }
+      },
+      reset: {
+        type: Boolean,
+        description: "Is it reset"
+      },
     },
     data() {
       return {
@@ -67,6 +76,9 @@
           this.prependIcon !== undefined ||
           this.group
         );
+      },
+      showValue(){
+        return this.reset ? (this.value || '***********') : this.value;
       }
     },
     created(){
@@ -84,6 +96,9 @@
       onBlur(evt) {
         this.focused = false;
         this.$emit("blur", evt);
+      },
+      onReset(evt) {
+        this.$emit("reset", evt);
       },
       fromOptions(options){
           this.selectOptions = options.map(function(option){

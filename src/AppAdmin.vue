@@ -27,6 +27,7 @@
   Vue.component('BaseSelect', () => import('./@common/argon/components/Inputs/BaseSelect.vue'));
   Vue.component('ButtonRadioGroup', () => import('./@common/argon/components/ButtonRadioGroup.vue'));
   Vue.component('BaseDropdown', () => import('./@common/argon/components/BaseDropdown.vue'));
+  Vue.component('BaseCopy', () => import('./@common/argon/components/BaseCopy.vue'));
   import globalDirectives from '@/@common/argon/plugins/globalDirectives';
   Vue.use(globalDirectives);
 

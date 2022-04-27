@@ -108,7 +108,8 @@
                                         <i v-if="showQuickReplies" class="fa fa-arrow-circle-down" ></i>
                                     </span> 
                                     <span v-if="quickReplies && quickReplies.length>0 " class="divider-v" ></span> 
-                                    <span class="msg_cotainer_smart" @click="activeChat.assignedToAgent && closSession()" v-tooltip="'End Chat'" 
+                                    <span class="msg_cotainer_smart" @click="activeChat.assignedToAgent && closSession()"
+                                        v-tooltip="'End Chat'" 
                                         v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
                                         <i class="fa fa-check-circle" ></i>
                                     </span>
@@ -117,6 +118,16 @@
                                             v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
                                              <i class="fas fa-sticky-note"></i> 
                                     </span>
+                                   
+                                     <span class="msg_cotainer_smart" v-tooltip="'Push HSM'" 
+                                            v-bind:class="{
+                                                'my-disbaled' : !activeChat.assignedToAgent,
+                                                'btn-active'  : is_SEND_NEW
+                                            }"
+                                            @click="showPushNewHSM()" >
+                                             <i class="fa fa-comment-medical"></i> 
+                                    </span>
+
                                    
                                 </span>    
   
@@ -214,9 +225,15 @@
                                 <div class="input-group-prepend">
                                     <span
                                     @click="toggleView('QUICK_MEDIA')"  v-tooltip="'Select Quick Media'"
+                                    :class="{
+                                        'btn-active' : is_QUICK_MEDIA
+                                    }"
                                     class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
                                     <span 
                                     @click="toggleView('QUICK_ACTIONS')" v-tooltip="'Trigger Quick Action'"
+                                    :class="{
+                                        'btn-active' : is_QUICK_ACTIONS
+                                    }"
                                     class="input-group-text attach_btn"><i class="fa fa-sliders-h"></i></span>
 
                                 </div>
@@ -665,6 +682,14 @@
                                     profileId : this.$route.params.contactId
                                 } 
                         });
+                }
+            },
+            showPushNewHSM(){
+                if(this.is_SEND_NEW){
+                    this.goToBack();
+                    this.scrollToBottom(true);
+                } else {
+                    this.initNewMessage(true);
                 }
             },
             goToBack(){
@@ -1178,18 +1203,20 @@
         cursor : pointer;
         display: inline-block;
 
-    /*margin-bottom: auto;*/
-    margin-right: 3px;
-    border-radius: 7px;
-    background-color: #FFF;
-    padding: 6px;
-    position: relative;
-    font-size: 14px;
-    -border : 1px solid #0000001c;
-    box-shadow: 0 1.5px 1.5px #00000052;
-
+        /*margin-bottom: auto;*/
+        margin-right: 3px;
+        border-radius: 7px;
+        background-color: #FFF;
+        padding: 6px;
+        position: relative;
+        font-size: 14px;
+        -border : 1px solid #0000001c;
+        box-shadow: 0 1.5px 1.5px #00000052;
     }
-
+    .msg_cotainer_smart.btn-active{
+         background-color: rgb(0 0 0 / 70%);
+         color: #FFF;
+    }
     
     .upload_card_body {
 /*    overflow-y: auto;
@@ -1244,9 +1271,12 @@
     }
 
 
-  .my-input-section .input-group-text:hover {
-    background-color: #00000069!important;
-  }
+    .my-input-section .input-group-text:hover {
+        background-color: #00000069!important;
+    }
+    .my-input-section .input-group-text.btn-active {
+        background-color: #00000094!important;
+    }
   
 
     .type_msg{

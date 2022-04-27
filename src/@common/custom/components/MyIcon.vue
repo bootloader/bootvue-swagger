@@ -16,9 +16,19 @@ var MAP = {
     },
     chatmode : {
         '_' : '',  '$' : 'fa fa-th-large',
-        'BOT' : "fa fa-robot",
-        'AGENT' : 'fa fa-user-secret',
-        'WEBHOOK' : 'openwebicons-webhooks'
+        'bot' : "fa fa-robot",
+        'agent' : 'fa fa-user-secret',
+        'webhook' : 'openwebicons-webhooks'
+    },
+    messageType : {
+        '_' : '', '$' : 'fa fa-question-circle',
+         'primary' : "fa fa-dot-circle",
+         'secondary' : "fa fa-minus-circle",
+         'success' : "fa fa-check-circle",
+         'info' : "fa fa-info-circle",
+        'warning' : "fa fa-exclamation-circle",
+        'danger' : "fa fa-times-circle",
+         'dark' : "fa fa-stop-circle"
     }
 }
 
@@ -48,7 +58,7 @@ export default {
             return this.typeClass || this.myType._ ;
         },
         valueClass(){
-            return this.myType[this.value] || this.myType["$"] || "";
+            return this.myType[(this.value || '').toLowerCase()] || this.myType["$"] || "";
         },
     }
 }
