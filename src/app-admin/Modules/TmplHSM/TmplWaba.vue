@@ -44,13 +44,6 @@
                         <span class="fa fa-trash-alt" title="Submit"/>
                 </b-button> 
             </template>
-             <template #top-row="row">
-                  <b-th><input type="text" v-model="columnFilter.code"  class="form-control form-control-sm" /></b-th>
-                  <b-th><input type="text" v-model="columnFilter.category"  class="form-control form-control-sm" /></b-th>
-                  <b-th><input type="text" v-model="columnFilter.status"  class="form-control form-control-sm" /></b-th>
-                  <b-th>&nbsp;</b-th>
-                  <b-th>&nbsp;</b-th>
-            </template>
             <template #cell(code)="{item}">
                 <b-button variant="link" :to="{
                         name : 'wabatemplate',
