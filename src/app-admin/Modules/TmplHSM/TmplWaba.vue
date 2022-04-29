@@ -1,6 +1,7 @@
 <template>
     <div class="m-tmpl-hsm-waba">
         <master-view v-show="!template.code" ref="templatesView" goodTables
+            goodTable="true"
             :header="{
                 heading: 'WhatsApp Templates',
                 subheading: 'All the templates registered with WhatsApp',
@@ -421,10 +422,18 @@
                   },
             table: {
                 fields: [
-                    { key: 'code', label: 'Template Code/Name', sortable: true},
-                    { key: 'template.category', label: 'Message Type', sortable: true},
+                    { key: 'code', label: 'Template Code/Name', sortable: true, filterOptions:{enabled:true}},
+                    { key: 'template.category', label: 'Message Type', sortable: true, 
+                    filterOptions:{
+                        enabled:true,
+                        
+                    }},
                     //{ key: 'template.namespace', label: 'namespace' },
-                    { key: 'template.status', label: 'Status', sortable: true},
+                    { key: 'template.status', label: 'Status', sortable: true, 
+                    filterOptions:{
+                        enabled:true,
+                        filterDropdownItems:["approved","rejected"]
+                    }},
                     { key: 'template.language', label: 'Language',sortable: false},
                     { key: 'row_actions', label: 'Linked HSM Template',sortable: false},
                 ],
