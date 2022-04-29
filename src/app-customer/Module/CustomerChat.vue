@@ -38,6 +38,9 @@
             <span  v-for="atch in message.data.attachments" :key="atch.mediaURL">
                 <img v-if="atch.mediaType == 'IMAGE'"  
                     :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https">
+                <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
+                                :file="atch.mediaURL"
+                            ></audio-player>
                 <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
                 <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
                 </a>
@@ -84,7 +87,7 @@
     //import Chat from 'vue-beautiful-chat'
     import Chat from '@cherrybase/cherry-webchat';
     Vue.use(Chat);
-
+    import AudioPlayer from '@/@common/custom/components/AudioPlayer';
     import { required, email,regex } from 'vee-validate/dist/rules';
     import formatters from './../../services/formatters';
     import tunnel from './../../services/tunnel';
@@ -117,6 +120,9 @@
 
     export default {
       name: 'app',
+      components: {
+        AudioPlayer
+      },
       data() {
         return {
           participants: [
