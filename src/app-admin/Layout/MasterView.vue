@@ -30,6 +30,9 @@
               }"
               :isLoading.sync="isbusy"
               :styleClass="'vgt-table condensed striped ' + table.tableClass"
+              :pagination-options="{
+                enabled: true
+              }"
             >
               <template slot="table-row" slot-scope="props">
                   <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
