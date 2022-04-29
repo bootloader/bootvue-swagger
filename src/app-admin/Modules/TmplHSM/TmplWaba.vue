@@ -28,7 +28,7 @@
             <template #filter(sync)="{apply,filter}">
                 <b-button variant="success" class="fa fa-sync" @click="filter.value=true;apply()"> </b-button>
             </template>
-            <template #cell(template_status)="{item}">
+            <template #cell(template.status)="{item}">
                 <my-status v-model="item.template.status">&nbsp;{{item.template.status}}</my-status>
             </template>
             <template #cell(row_actions)="{item}">
@@ -44,7 +44,7 @@
                         <span class="fa fa-trash-alt" title="Submit"/>
                 </b-button> 
             </template>
-            <template #cell(template_code)="{item}">
+            <template #cell(code)="{item}">
                 <b-button variant="link" :to="{
                         name : 'wabatemplate',
                         params : {
@@ -414,14 +414,19 @@
                     value : "",
                 },
             ],
+            columnFilter:{
+                      category:"",
+                      code:"",
+                      status:"",
+                  },
             table: {
                 fields: [
-                    { key: 'template_code', label: 'Template Code/Name', sortable: true },
-                    { key: 'template.category', label: 'Message Type', sortable: true },
+                    { key: 'code', label: 'Template Code/Name', sortable: true},
+                    { key: 'template.category', label: 'Message Type', sortable: true},
                     //{ key: 'template.namespace', label: 'namespace' },
-                    { key: 'template_status', label: 'Status', sortable: true },
-                    { key: 'template.language', label: 'Language' },
-                    { key: 'row_actions', label: 'Linked HSM Template' },
+                    { key: 'template.status', label: 'Status', sortable: true},
+                    { key: 'template.language', label: 'Language',sortable: false},
+                    { key: 'row_actions', label: 'Linked HSM Template',sortable: false},
                 ],
                 tableClass : 'text-sm', sortBy : "code",
                 items: [],

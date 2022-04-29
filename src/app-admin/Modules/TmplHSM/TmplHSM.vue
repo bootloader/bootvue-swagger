@@ -7,12 +7,21 @@
                 subheading: 'are HSM messages which can be  sent to contacts without session.',
                 icon: 'pe-7s-browser icon-gradient bg-tempting-azure far fa-comment-alt',
             }"
-            :table="table"
-            :actions="[{
+            :table="{
+              ...table,
+              items :filtered
+            }"
+                  :actions="[{
               label : 'Add Template', icon : 'plus', name : 'ADD_ITEM',  link : '/app/admins/tmpl/pushtemplate/edit/new'
             }]"
             @action="onAction"
             @rows="selectItem">
+            <template #top-row="row">
+                  <b-th><input type="text" v-model="filters.category"  class="form-control form-control-sm" /></b-th>
+                  <b-th><input type="text" v-model="filters.desc"  class="form-control form-control-sm" /></b-th>
+                  <b-th><input type="text" v-model="filters.categoryType"  class="form-control form-control-sm" /></b-th>
+                  <b-th>&nbsp;</b-th>
+            </template>
                 <template #cell(desc)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id" class=" btn-outline-primary-link pointer">
                          <span class="fa fa-edit" title="Edit"/>
@@ -416,8 +425,12 @@
                     currentPage: 1,
                     rows : 0,
                     tableClass : 'text-sm',
-                    api: 'api/tmpl/hsm',
                     sortBy : "name"
+                  },
+                  filters:{
+                      category:"",
+                      desc:"",
+                      categoryType:"",
                   },
                   newItem : newItem(),
                   modelName :  "MODAL_ADD_QUICK_REPLIES",
@@ -456,6 +469,25 @@
                   } 
         }),
         computed : {
+            filtered() {
+                let items = this.table.items;
+                console.log("items",items);
+                if(!items?.length) return [];
+                const filtered = items.filter(item => {
+                  return Object.keys(this.filters).every(key =>{
+                        return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
+                    }
+                  );
+                });
+                return filtered.length > 0
+                  ? filtered
+                  : [
+                      Object.keys(items[0]).reduce(function(obj, value) {
+                        obj[value] = '';
+                        return obj;
+                      }, {})
+                    ];
+            },
             templateVariable(){
               return [...this.sampleVar.contact,... this.sampleVar.data];
             },
@@ -499,12 +531,15 @@
           this.mode = this.$route.params.mode;
           this.itemId = this.$route.params.itemId;
           this.loadOptions();
+          this.loadItems();
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
           async loadOptions (argument) {
           },
           async loadItems (){
+            var resp = await this.$service.get("api/tmpl/hsm");
+            this.table.items = resp.results;
             await this.$refs.templatesView.apply();
           },
           selectItem : function () {
