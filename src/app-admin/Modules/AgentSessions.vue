@@ -17,13 +17,13 @@
                     </span>
                 </template>
 
-                <template #filter(daterange)>
+                <!-- <template #filter(daterange)>
                     <MyDatePicker 
                       :daterange="input.daterange"
                       @dateRangeOninit="dateRangeOnUpdate"
                       @dateRangeOnUpdate="dateRangeOnUpdate"
                     > </MyDatePicker>
-                </template>
+                </template> -->
 
                 <template #top-row="row">
                       <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
@@ -96,7 +96,7 @@
                 </template>
 
         </master-view>
-      <b-modal v-if="filteron" :id="modelName" :title="'Update Property '" size="md">
+      <b-modal v-if="filteron" :id="modelName" :title="'Update Property '" size="lg" hide-footer>
         <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <span class="action-wrapper text-center" >
                 <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker date-range-picker-mobile"
@@ -138,14 +138,16 @@
             </div>
             <hr />
             <i  class="note" :class="searchError ? 'shake-horizontal' : ''">Select a minimum of one filter element to continue</i>
-            <hr />
             <div style="text-align:center">
-                <button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" 
-                    @click="loadSessions" style="width:120px"> Search </button>
+                <b-button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" 
+                    @click="loadSessions" style="width:120px"> Search </b-button>
             </div>
             <hr />
             <i class="note">The search works on the principle of AND / OR operation when elements from multiple categories are selected. AND is applied across different categories and OR is applied within the category</i>
         </div>
+        <template #modal-footer>
+        
+      </template>
       </b-modal>
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
           <agent-chat v-if="session" :session="session" :key="session.sessionId"
@@ -235,6 +237,9 @@
         filters : {
           contactName(session){
             return session.contactName || session?.contact?.name || session.contactId;
+          },
+          date(val) {   
+            return val ? val.toLocaleDateString() : ''
           }
         },
         data: () => ({
@@ -310,8 +315,15 @@
             modelName :  "MODAL_FILTER",
             selectedStatus : [],
             selectedTag:null,
-            searchError : false
+            searchError : false,
+            daterange : {
+                startDate : null,
+                endDate : null,
+            },
         }),
+        created:async function(){
+           await this.$store.dispatch('LoadQuickTags')
+        },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
         },
@@ -330,6 +342,13 @@
                 sIndex != -1 ? this.selectedStatus.splice(sIndex, 1) : this.selectedStatus = [...this.selectedStatus, status];
               console.log("this.selectedStatus", this.selectedStatus, status, sIndex);
           },
+          sanitizeDateRange : function (daterange) {
+                var startDate = moment(daterange.startDate);
+                var endDate = moment(daterange.endDate);
+                daterange.startDate = hour0(startDate).toDate();
+                daterange.endDate = hour24(endDate).toDate();
+                return daterange;
+            },
           onDateRangeSelect : function (r) {
                 var range = this.sanitizeDateRange(r);
                 this.dateranegeinput.range.startDate = range.startDate;
@@ -342,17 +361,29 @@
               }
           },
           async loadSessions (){
-            if(!this.input.daterange.startDate){
-              console.error("No Data Range Specified")
-              return 
+            let tags = [];
+            for(var category in this.sortedQuickTags){
+                this.sortedQuickTags[category].map(v=>{
+                    v.selected ? tags.push(v) : ""
+                }) 
             }
+            if(!tags.length && !this.selectedStatus.length){
+                this.searchError = true;
+                setTimeout(() => {
+                    this.searchError = false;
+                }, 2000);
+                return;
+            }
+            this.$bvModal.hide(this.modelName)
             this.sessions.busy=true
             try{
               var resp = await this.$store.dispatch('GetSessions',{
                 "agent": "TEAM",
                 "contactType": "MESSAGE_TWITTER",
-                "startStamp": this.input.daterange.startDate,
-                "endStamp": this.input.daterange.endDate
+                status : this.selectedStatus, 
+                tags : tags,
+                startStamp : this.daterange.startDate.getTime(),
+                endStamp :  this.daterange.endDate.getTime()
               });
               this.sessions.items = resp.results.map(function(session){
                 return DataProcessor.session(session);
@@ -423,7 +454,13 @@
   .tag.tag-chat-status-active{
       color: #fff !important;
   }
-
+.tag-chat-status-active{
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+    font-weight: normal !important;
+    border-width: 1px !important;
+}
     
 </style>
 <style lang="scss" scoped="">
@@ -436,7 +473,6 @@
         background: #fff;
         overflow-y: scroll;
         height: 100%;
-        padding-bottom: 80px;
 
         .section-divider {
             width: 100%;
@@ -465,8 +501,9 @@
        margin: 0 4px 4px 0;
        user-select: none;
        cursor: pointer;
+       background-color: #fff;
+        text-transform: uppercase;
    }
-
     .contact-preview {
         display: flex;
         flex-wrap: nowrap;
@@ -509,4 +546,78 @@
    .note{
        font-size: 12px;
    }
+</style>
+
+<style lang="scss">
+    .m-session-search{
+        .contacts-header {
+            .contact-search {
+                border-radius: 15px 0 0 15px !important;
+                background-color: rgba(0,0,0,0.3) !important;
+                border: 0 !important;
+                line-height: 20px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                background: transparent;
+                outline: 0;
+                color: white !important;
+                resize: none;
+                background: transparent;
+                border: 0 !important;
+                outline: 0;
+                &:focus{
+                    box-shadow:none !important;
+                    outline:0px !important;
+                }
+            }
+        }
+    }
+    .session-search-date-picker.vue-daterange-picker {
+        min-height: 35px;
+        .reportrange-text{
+            min-height: calc(2.25rem + 0px);
+            margin-top: 0px;
+            font-size: inherit;
+            font-weight: bold;
+            border-color: #000000 !important;
+            color: #fff;
+        }
+        .daterangepicker.show-calendar .ranges {
+            padding: 0px !important;
+        }
+    }
+
+    .btn-outline-black-dirty {
+        color: #5a5a5a;
+        border-color: #5a5a5a;
+    }
+
+    .shake-horizontal {
+        animation: shake-horizontal 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+        color: red;
+        display: inline-block;
+    }
+    @keyframes shake-horizontal {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70% {
+            transform: translateX(-10px);
+        }
+        20%,
+        40%,
+        60% {
+            transform: translateX(10px);
+        }
+        80% {
+            transform: translateX(8px);
+        }
+        90% {
+            transform: translateX(-8px);
+        }
+        }
 </style>

@@ -156,9 +156,9 @@
             DateRangePicker
         },
         computed : {
-            sortedQuickTags  : function () {
-                return this.$store.getters.StateQuickTagsSorted;
-            },
+            // sortedQuickTags  : function () {
+            //     return this.$store.getters.StateQuickTagsSorted;
+            // },
             editableStatus :function(){
                 return Object.keys(MyDict.chatStatus).map((key) => MyDict.chatStatus[key]).filter((status)=>status.editable);
             }
@@ -168,6 +168,7 @@
                 startDate : null,
                 endDate : null,
             },
+            sortedQuickTags : this.$store.getters.StateQuickTagsSorted,
             dateranegeinput : (() => { 
                 var startDate = hour0(moment().subtract(7,"day")).toDate(),
                 endDate = hour24(moment()).toDate();

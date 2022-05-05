@@ -25,9 +25,20 @@ const state = {
   chatsCounter : 1,
   meta : null,
   quickReplies : [],
-  qreps : null,qaxns : null,qlabels : null, qtags : null,qmeds : null
+  qreps : null,qaxns : null,qlabels : null, qtags : null,qmeds : null,
+  quickTags:[],
 };
-
+var tagFormat = function (argument) {
+    return {
+        id : argument.id,
+        category : argument.category,
+        title : argument.title,
+        text : argument.title,
+        code : argument.code,
+        color : formatters.hexacode(argument.category),
+        selected:false
+    };
+}
 const getters = {
     //Contacts
   isAuthenticated: (state) => !!state.user,
@@ -38,7 +49,17 @@ const getters = {
   StateQTags: (state) => state.qtags,
   StateTeams: (state) => state.teams,
   StateAgents: (state) => state.agents,
-  StateMeta: (state) => state.meta
+  StateMeta: (state) => state.meta,
+  StateQuickTags: (state) => state.quickTags,
+  StateQuickTagsSorted: function(state){
+    let sortedObj = {};
+    let tags = state.qtags;
+
+    tags?.map(v=>{
+        sortedObj[v.category] = sortedObj[v.category] ? [...sortedObj[v.category], v] : [v] 
+    })
+    return sortedObj;
+  },
 };
 
 const actions = {
@@ -312,7 +333,10 @@ const actions = {
     let response = await axios.post(url,params);
     return response.data;
   },
-
+  async LoadQuickTag({ commit }) {
+    let response = await axios.get("/gallery/map/quick_tags");
+    commit("setQuickTags", response.data);
+  },
 };
 
 const mutations = {
@@ -350,6 +374,11 @@ const mutations = {
   },
   logout(state, user) {
     state.user = user;
+  },
+  setQuickTags(state, quickTags) {
+    let tags = quickTags.map(v=>tagFormat(v));
+    formatters.addContactTags(tags);
+    state.quickTags = tags;
   },
 };
 
