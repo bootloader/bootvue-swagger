@@ -12,18 +12,18 @@
             >
 
                 <template #filter(sync)>
-                    <span class="btn btn-success" @click="loadSessions">
-                      <i class="fa fa-sync"/>
+                    <span class="btn btn-success" @click="openFilterPopup">
+                      <i class="fa fa-filter"/>
                     </span>
                 </template>
 
-                <template #filter(daterange)>
+                <!-- <template #filter(daterange)>
                     <MyDatePicker 
                       :daterange="input.daterange"
                       @dateRangeOninit="dateRangeOnUpdate"
                       @dateRangeOnUpdate="dateRangeOnUpdate"
                     > </MyDatePicker>
-                </template>
+                </template> -->
 
                 <template #top-row="row">
                       <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
@@ -96,7 +96,59 @@
                 </template>
 
         </master-view>
+      <b-modal v-if="filteron" :id="modelName" :title="'Update Property '" size="lg" hide-footer>
+        <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <span class="action-wrapper text-center" >
+                <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker date-range-picker-mobile"
+                :opens="'right'"
+                :time-picker="false"
+                control-container-class="reportrange-text btn"
+                :ranges="dateranegeinput.ranges"
+                @select="onDateRangeSelect"
+                @update="onDateRangeUpdate">
+                    <!--    input slot (new slot syntax)-->
+                    <template #input="picker" style="min-width: 350px;">
+                        <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
+                    </template>
+                  </date-range-picker>
+            </span>
+            <br/>
+            <div class="section-divider">
+                 <span class="cat-title section-title">Chat Status</span>
+            </div>
+            <div>
+                <span v-for="(status,s) in editableStatus" v-bind:key="s"
+                    class="tag-chat-status-lg tag" @click="selectStatus(s)"
+                    :class="'tag-chat-status-'+ s + (selectedStatus.indexOf(s) != -1 ? ' tag-chat-status-active' : '')">
+                    {{status.label}}
+                </span>
+            </div>
 
+            <div v-for="(category, categoryName) in sortedQuickTags" v-bind:key="categoryName" class="mt-3">
+                <div class="section-divider">
+                    <span class="cat-title section-title">{{categoryName}}</span>
+                </div>
+                <span v-for="(tag, index) in sortedQuickTags[categoryName]"  v-bind:key="index"
+                    @click="selectTag(tag)"
+                    :class="'tag-chat-status-lg tag ' + 
+                    (tag.selected  ? ' tag-chat-status-active' : '')">
+                    {{tag.title}} 
+                </span>
+                
+            </div>
+            <hr />
+            <i  class="note" :class="searchError ? 'shake-horizontal' : ''">Select a minimum of one filter element to continue</i>
+            <div style="text-align:center">
+                <b-button class="btn btn-sm text-black:hover rounded-pill btn-outline-black-dirty" 
+                    @click="loadSessions" style="width:120px"> Search </b-button>
+            </div>
+            <hr />
+            <i class="note">The search works on the principle of AND / OR operation when elements from multiple categories are selected. AND is applied across different categories and OR is applied within the category</i>
+        </div>
+        <template #modal-footer>
+        
+      </template>
+      </b-modal>
       <div class="chat_archive"  v-bind:class="{closed : !session}" >
           <agent-chat v-if="session" :session="session" :key="session.sessionId"
           @close="hideChat"
@@ -113,15 +165,26 @@
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import AgentChat from './AgentChat';
     import DataProcessor from './../../services/DataProcessor';
-
+    import moment from 'moment'
+    import DateRangePicker from 'vue2-daterange-picker'
+    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
     //import chart1 from './Analytics/chart1';
     //import chart2 from './Analytics/chart2';
     //import chart3 from './Analytics/chart3';
+    import formatters from '../../services/formatters';
+    function hour0(mmt){
+            return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
+    }
+    function hour24(mmt){
+        //return mmt.hour(24).minute(0).seconds(0).milliseconds(0);
+        return mmt.hour(23).minute(59).seconds(59).milliseconds(999);
+    }
 
     export default {
         components: {
             PageTitle,
-            AgentChat
+            AgentChat,
+            DateRangePicker
            // chart1,chart2,chart3,
         },
         computed:{
@@ -163,11 +226,20 @@
                   ? filtered
                   : [
                     ];
-              }
+              },
+            sortedQuickTags  : function () {
+                return this.$store.getters.StateQuickTagsSorted;
+            },
+            editableStatus :function(){
+                return Object.keys(MyDict.chatStatus).map((key) => MyDict.chatStatus[key]).filter((status)=>status.editable);
+            }
         },
         filters : {
           contactName(session){
             return session.contactName || session?.contact?.name || session.contactId;
+          },
+          date(val) {   
+            return val ? val.toLocaleDateString() : ''
           }
         },
         data: () => ({
@@ -218,23 +290,100 @@
                 }
             },
             session : null,
+            dateranegeinput : (() => { 
+                var startDate = hour0(moment().subtract(7,"day")).toDate(),
+                endDate = hour24(moment()).toDate();
+
+                return {
+                    range: {startDate : startDate, endDate : endDate},
+                    ranges : {
+                        'Today': [ hour0(moment()).toDate(), hour24(moment()).toDate()],
+                        'Last 7 Days': [hour0(moment().subtract(7,"day")).toDate(), 
+                                            hour24(moment()).toDate()],
+                        'Yesterday': [hour0(moment().subtract(1,"day")).toDate(),
+                                            hour24(moment().subtract(1,"day")).toDate()],
+
+                        'This month': [hour0(moment().date(1)).toDate(), 
+                                            hour24(moment()).toDate()],
+                        'Last month': [hour0(moment().subtract(1,"month").date(1)).toDate(), 
+                                            hour24(moment().date(0)).toDate()]
+                    }
+                }
+            })(),
+            filteron:true,
+            formatters,
+            modelName :  "MODAL_FILTER",
+            selectedStatus : [],
+            selectedTag:null,
+            searchError : false,
+            daterange : {
+                startDate : null,
+                endDate : null,
+            },
         }),
+        created:async function(){
+           await this.$store.dispatch('LoadQuickTags')
+        },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
         },
         methods: {
+          openFilterPopup(){
+            this.$bvModal.show(this.modelName)
+          },
+          selectTag : function (tag) {
+              this.sortedQuickTags[tag.category].map((v,i)=>{
+                    this.sortedQuickTags[tag.category][i].selected = (v.id == tag.id) ?  !v.selected : v.selected;
+              })
+              // this.selectedTag = this.selectedTag  && this.selectedTag.id == tag.id ?  null : tag;
+          },
+          selectStatus : function (status) {
+              let sIndex = this.selectedStatus.indexOf(status);
+                sIndex != -1 ? this.selectedStatus.splice(sIndex, 1) : this.selectedStatus = [...this.selectedStatus, status];
+              console.log("this.selectedStatus", this.selectedStatus, status, sIndex);
+          },
+          sanitizeDateRange : function (daterange) {
+                var startDate = moment(daterange.startDate);
+                var endDate = moment(daterange.endDate);
+                daterange.startDate = hour0(startDate).toDate();
+                daterange.endDate = hour24(endDate).toDate();
+                return daterange;
+            },
+          onDateRangeSelect : function (r) {
+                var range = this.sanitizeDateRange(r);
+                this.dateranegeinput.range.startDate = range.startDate;
+                this.dateranegeinput.range.endDate = range.endDate;
+          },
+          onDateRangeUpdate : function (r) {
+              if(this.daterange){
+                  this.daterange.startDate = r.startDate;
+                  this.daterange.endDate = r.endDate;
+              }
+          },
           async loadSessions (){
-            if(!this.input.daterange.startDate){
-              console.error("No Data Range Specified")
-              return 
+            let tags = [];
+            for(var category in this.sortedQuickTags){
+                this.sortedQuickTags[category].map(v=>{
+                    v.selected ? tags.push(v) : ""
+                }) 
             }
+            if(!tags.length && !this.selectedStatus.length){
+                this.searchError = true;
+                setTimeout(() => {
+                    this.searchError = false;
+                }, 2000);
+                return;
+            }
+            this.$bvModal.hide(this.modelName)
             this.sessions.busy=true
             try{
               var resp = await this.$store.dispatch('GetSessions',{
                 "agent": "TEAM",
                 "contactType": "MESSAGE_TWITTER",
-                "startStamp": this.input.daterange.startDate,
-                "endStamp": this.input.daterange.endDate
+                status : this.selectedStatus, 
+                tags : tags,
+                startStamp : this.daterange.startDate.getTime(),
+                endStamp :  this.daterange.endDate.getTime()
               });
               this.sessions.items = resp.results.map(function(session){
                 return DataProcessor.session(session);
@@ -297,4 +446,178 @@
   .chat_archive>div {
     width: 450px;
   }
+
+  .tag{
+    border-color: #000 !important;
+    color: #000 !important;
+  }
+  .tag.tag-chat-status-active{
+      color: #fff !important;
+  }
+.tag-chat-status-active{
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+    font-weight: normal !important;
+    border-width: 1px !important;
+}
+    
+</style>
+<style lang="scss" scoped="">
+    .action-wrapper {
+        display: block ;
+    }
+    .filter-wrapper {
+        padding:15px 20px;
+        display: block;
+        background: #fff;
+        overflow-y: scroll;
+        height: 100%;
+
+        .section-divider {
+            width: 100%;
+            height: 13px; 
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+            text-align: left;
+            .section-title {
+                font-size: 12px; 
+                background-color: #ffffff; 
+                padding: 0 5px;
+                border-radius: 5px;
+            }
+        }
+
+    }
+    .session-search-wrapper{
+        background: #fff !important;
+    }
+    .search-result{
+        background: #fff !important;
+        padding: 0;
+        overflow-y: scroll;
+    }
+   .tag{
+       margin: 0 4px 4px 0;
+       user-select: none;
+       cursor: pointer;
+       background-color: #fff;
+        text-transform: uppercase;
+   }
+    .contact-preview {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        font-size: 16px;
+        
+        .img_cont,
+        .user_img {
+            width: 40px;
+            height: 40px;
+            flex-grow: 0;
+        }
+
+        .contact-text {
+            flex-grow: 1;
+            margin-left: 15px;
+            height: 40px;
+            color : rgba(21, 21, 21, 0.68);
+            width: calc(100% - 160px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-flags {
+            float: right;
+            text-align: right;
+            align-self :baseline;
+            flex-grow: 0;
+            .contact-time{
+                font-size: .6em;
+                text-align: right;
+                float: right;
+            }
+        }
+
+    }
+   .note{
+       font-size: 12px;
+   }
+</style>
+
+<style lang="scss">
+    .m-session-search{
+        .contacts-header {
+            .contact-search {
+                border-radius: 15px 0 0 15px !important;
+                background-color: rgba(0,0,0,0.3) !important;
+                border: 0 !important;
+                line-height: 20px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                background: transparent;
+                outline: 0;
+                color: white !important;
+                resize: none;
+                background: transparent;
+                border: 0 !important;
+                outline: 0;
+                &:focus{
+                    box-shadow:none !important;
+                    outline:0px !important;
+                }
+            }
+        }
+    }
+    .session-search-date-picker.vue-daterange-picker {
+        min-height: 35px;
+        .reportrange-text{
+            min-height: calc(2.25rem + 0px);
+            margin-top: 0px;
+            font-size: inherit;
+            font-weight: bold;
+            border-color: #000000 !important;
+            color: #fff;
+        }
+        .daterangepicker.show-calendar .ranges {
+            padding: 0px !important;
+        }
+    }
+
+    .btn-outline-black-dirty {
+        color: #5a5a5a;
+        border-color: #5a5a5a;
+    }
+
+    .shake-horizontal {
+        animation: shake-horizontal 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+        color: red;
+        display: inline-block;
+    }
+    @keyframes shake-horizontal {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70% {
+            transform: translateX(-10px);
+        }
+        20%,
+        40%,
+        60% {
+            transform: translateX(10px);
+        }
+        80% {
+            transform: translateX(8px);
+        }
+        90% {
+            transform: translateX(-8px);
+        }
+        }
 </style>
