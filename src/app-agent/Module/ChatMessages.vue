@@ -49,6 +49,8 @@
 
                         <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
                             <i v-if="!m.messageId" class="sending fa fa-spinner fa-spin msg_status_send" >&nbsp;</i>
+                            <i v-else-if="m.stamps.CCWIN" class="fa fa-comment-slash msg_status_send text-danger"
+                                v-tooltip="`Out of customer care window`"></i>
                             <b-icon v-else-if="m.stamps.SENT_ERR" icon="exclamation-triangle"  scale=.8 v-tooltip="cleanlog(m.logs)"
                                 variant="danger" class="msg_status_send" ></b-icon>
                             <b-icon v-else-if="m.stamps.BLCKD" icon="slash-circle-fill"  scale=.8 v-tooltip="cleanlog(m.logs)"
