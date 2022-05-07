@@ -18,6 +18,7 @@ $social-list:(
     instagram-r : #fd5949,
     instagram-p : #d6249f,
     instagram-b : #285AEB,
+    envelope : #444343,
 );
 
 @each $key,$val in $social-list{
