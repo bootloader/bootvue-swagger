@@ -12,8 +12,11 @@
             >
 
                 <template #filter(sync)>
-                    <span class="btn btn-success" @click="openFilterPopup">
+                    <span class="btn btn-success margin-right-5px" @click="openFilterPopup">
                       <i class="fa fa-filter"/>
+                    </span>
+                    <span class="btn btn-success" @click="loadSessions">
+                      <i class="fa fa-refresh"/>
                     </span>
                 </template>
 
@@ -21,7 +24,7 @@
                     <MyDatePicker 
                       :daterange="input.daterange"
                       @dateRangeOninit="dateRangeOnUpdate"
-                      @dateRangeOnUpdate="dateRangeOnUpdate"
+                      @dateRangeOnUpdate="dateRangeOnUpdate"s
                     > </MyDatePicker>
                 </template> -->
 
@@ -96,7 +99,7 @@
                 </template>
 
         </master-view>
-      <b-modal v-if="filteron" :id="modelName" :title="'Update Property '" size="lg" hide-footer>
+      <b-modal :id="modelName" :title="'Session Filter'" size="lg" hide-footer>
         <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <span class="action-wrapper text-center" >
                 <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker date-range-picker-mobile"
@@ -104,6 +107,7 @@
                 :time-picker="false"
                 control-container-class="reportrange-text btn"
                 :ranges="dateranegeinput.ranges"
+                :date-range="dateranegeinput.daterange"
                 @select="onDateRangeSelect"
                 @update="onDateRangeUpdate">
                     <!--    input slot (new slot syntax)-->
@@ -319,6 +323,7 @@
             daterange : {
                 startDate : null,
                 endDate : null,
+                span : "Today"
             },
         }),
         created:async function(){
@@ -326,6 +331,7 @@
         },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
+          this.loadSessions();
         },
         methods: {
           openFilterPopup(){
@@ -367,13 +373,13 @@
                     v.selected ? tags.push(v) : ""
                 }) 
             }
-            if(!tags.length && !this.selectedStatus.length){
-                this.searchError = true;
-                setTimeout(() => {
-                    this.searchError = false;
-                }, 2000);
-                return;
-            }
+            // if(!tags.length && !this.selectedStatus.length){
+            //     this.searchError = true;
+            //     setTimeout(() => {
+            //         this.searchError = false;
+            //     }, 2000);
+            //     return;
+            // }
             this.$bvModal.hide(this.modelName)
             this.sessions.busy=true
             try{
@@ -382,8 +388,8 @@
                 "contactType": "MESSAGE_TWITTER",
                 status : this.selectedStatus, 
                 tags : tags,
-                startStamp : this.daterange.startDate.getTime(),
-                endStamp :  this.daterange.endDate.getTime()
+                startStamp : this.daterange.startDate?.getTime() || this.dateranegeinput.range.startDate.getTime(),
+                endStamp :  this.daterange.endDate?.getTime() || this.dateranegeinput.range.endDate.getTime()
               });
               this.sessions.items = resp.results.map(function(session){
                 return DataProcessor.session(session);
@@ -461,7 +467,9 @@
     font-weight: normal !important;
     border-width: 1px !important;
 }
-    
+.margin-right-5px{
+  margin-right: 5px;
+}  
 </style>
 <style lang="scss" scoped="">
     .action-wrapper {
