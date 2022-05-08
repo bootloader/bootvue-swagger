@@ -304,7 +304,7 @@
 `       <!-- Add this snippt as last tag in body -->
 <script src='https://cdn.jsdelivr.net/gh/cherrybase/cherrybase.github.io@gh-pages/plugins/customer.js?theme=bubble'>
 {
-  "domain" : "${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_DOMAIN}",
+  "domain" : "${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_SERVER}",
   "channelId" : "${paths[6]}",
   "channelKey" : "${paths[7]}",
   "config" : {}

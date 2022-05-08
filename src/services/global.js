@@ -121,7 +121,7 @@ export const MyDict = {
 		} else if(c.contactType == 'INSTAGRAM'){
 			return `https://instagram.com/${c.instagram.handler}`;
 		}
-		return `https://${MyConst.tenant}.${MyConst.config.PROP_SERVICE_DOMAIN}`;
+		return `https://${MyConst.tenant}.${MyConst.config.PROP_SERVICE_SERVER}`;
 	},
 	profilePic : require('./../assets/agent/images/profile.png')
 }

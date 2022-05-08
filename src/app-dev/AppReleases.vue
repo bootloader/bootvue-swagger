@@ -157,9 +157,9 @@
                 }).then(function(response) {
                     return JSON.parse(response);
                 }).then(function(response) {
-                    THAT.deployed.version = response.results[0].value.split("@")[1];
+                    THAT.deployed.version = (response.results[0].value || "").split("@")[1] || "NULL";
                 }).catch(function(e){
-                    console.log(e);
+                    console.error(e);
                 });
             }
         },
@@ -168,6 +168,7 @@
             if(this.model.client == 'cherrybase.github.io'){
                 const data = new URLSearchParams();
                 data.append('version', version);
+                data.append('url', `https://cdn.jsdelivr.net/gh/cherrybase/${this.model.client}@${version}`);
                 fetch(new Request(
                         `/api/config/cdn?beta=false`, {
                         method: 'POST',
@@ -177,9 +178,9 @@
                     }).then(function(response) {
                         return JSON.parse(response);
                     }).then(function(response) {
-                        THAT.deployed.version = response.results[0].value.split("@")[1];
+                        THAT.deployed.version = (response.results[0].value || "").split("@")[1] || "NULL";
                     }).catch(function(e){
-                        console.log(e);
+                        console.error(e);
                     });
             }
         }

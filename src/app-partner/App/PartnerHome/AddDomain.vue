@@ -5,7 +5,7 @@
         <b-card-header class="bg-transparent border-0">
           <b-row align-v="center" slot="header" >
             <b-col cols="8">
-              <h3 class="mb-0">Domain Owners for <i class="text-blue"> {{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}} </i></h3>
+              <h3 class="mb-0">Domain Owners for <i class="text-blue"> {{model.domain}}.{{$config.PROP_SERVICE_SERVER}} </i></h3>
             </b-col>
             <b-col cols="4" class="text-right" >
               <span target="_blank" @click="domainUsersIndex=-1"
@@ -33,9 +33,9 @@
             </template>
             <template slot="footer">
               <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
-                :href="`https://${model.domain}.${$config.PROP_SERVICE_DOMAIN}`" target="_blank">
+                :href="`https://${model.domain}.${$config.PROP_SERVICE_SERVER}`" target="_blank">
               <span class="text-success">https://</span>
-              <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}</span>
+              <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_SERVER}}</span>
               &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
               </a>
                 <hr style="margin:0.5em 0;"/>
@@ -152,7 +152,7 @@
                         'width' : domainSize + 'px'
                       }"
                       :placeholder="domainPlaceholder" />
-                      <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</label>
+                      <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_SERVER}}</label>
                       <div class="domain-width-wrapper">
                         <div class="domain-width" ref="domainWidth"><div>{{model.domain || domainPlaceholder}}</div></div>
                       </div> 
@@ -167,9 +167,9 @@
                <b-col v-if="isDomainSet" lg="6" class="text-center justify-content-center align-items-center d-flex">
                   <div class="domain-box d-inline-block input-group-alternative">
                     <a target="_blank" 
-                      :href="'https://' + model.domain + '.' + $config.PROP_SERVICE_DOMAIN" 
+                      :href="'https://' + model.domain + '.' + $config.PROP_SERVICE_SERVER" 
                       class="">
-                        {{model.domain}}.{{$config.PROP_SERVICE_DOMAIN}}
+                        {{model.domain}}.{{$config.PROP_SERVICE_SERVER}}
                     </a>
                   </div>
                </b-col>

@@ -15,7 +15,7 @@
                 <h6 class="text-blueGray-500 text-sm">
                   <span class="text-emerald-600">https://</span>
                   <span class="text-blueGray-600  font-bold">{{domain}}</span>
-                  <span class="text-blueGray-500  font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</span>
+                  <span class="text-blueGray-500  font-bold">.{{$config.PROP_SERVICE_SERVER}}</span>
                 </h6>
             </div>
             <hr class="mt-2 border-b-1 border-blueGray-300" />
@@ -26,7 +26,7 @@
               <small>Or sign in with credentials</small>
             </div>
             <validation-observer ref="formValidator">
-            <form v-if="!domain" ref="domainForm" :action="`https://app.${$config.PROP_SERVICE_DOMAIN}/front/auth/login`">
+            <form v-if="!domain" ref="domainForm" :action="`https://app.${$config.PROP_SERVICE_SERVER}/front/auth/login`">
               <div class="relative w-full mb-3">
                 <label
                   class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -44,7 +44,7 @@
                               'width' : domainSize + 'px'
                             }"
                             :placeholder="domainPlaceholder" />
-                            <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_DOMAIN}}</label>
+                            <label for="domain" class="font-bold">.{{$config.PROP_SERVICE_SERVER}}</label>
                             <div class="domain-width-wrapper">
                                 <div class="domain-width" ref="domainWidth"><div>{{domainInput || domainPlaceholder}}</div></div>
                             </div> 
@@ -154,7 +154,7 @@
             </form>
             </validation-observer>
             <div>
-              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_DOMAIN + '/' + model.app + '/auth/direct'" method="POST" ref="loginForm">
+              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_SERVER + '/' + model.app + '/auth/direct'" method="POST" ref="loginForm">
                 <input name="domainName" :value="model.domainName" type="hidden"/>
                  <input name="domainId" :value="model.domainId" type="hidden"/>
                  <input name="domainToken" :value="model.domainToken" type="hidden"/>

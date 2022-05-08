@@ -106,7 +106,7 @@
             </base-copy>
             <base-copy class="mt-3" size="sm"
                 label="API Endpoint"
-                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_DOMAIN}/xms`">
+                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_SERVER}/xms`">
             </base-copy>
             <base-copy class="mt-3" size="sm" v-if="lastItem.webhook"
                 label="Webhook URL"
