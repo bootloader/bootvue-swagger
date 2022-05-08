@@ -101,15 +101,17 @@
                     v-bind:class="{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
-                        active_contact : (contactId == chat.contactId),
+                        active_contact : (contactId == chat.contactId && ticketHash == chat.ticketHash),
                         contact_attention : chat._attention && (chat._tab == 'TEAM' ),
-                        contact_waiting : chat._waiting
+                        contact_waiting : chat._waiting,
+                        data_subjective : !!chat.subject
                     }">
                 <router-link tag="span" 
                     :id="chat.contactId"
                     :to="{ 
                         name: 'defAgentView', 
                         params: { 
+                            ticketHash: chat.ticketHash,
                             contactId: chat.contactId,
                             sessionId : chat.sessionId,
                             profileId : chat.contactId,
@@ -136,7 +138,7 @@
                         </div>
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.contact.name || chat.contact.phone || chat.contact.email || chat.contactId}}</span>
-
+                            <span class="font-subject" >{{chat.subject}}</span>
                             <span v-if="chat.lastmsg" class="font-preview"
                                 :class="{
                                     'text-blue' : $global.MyFunc.isOutbound(chat.lastmsg.type)
@@ -304,8 +306,9 @@
                     });
                     return (_searchTokens.length == searchTokens.length);// && chat.active;
                 }).filter(function(chat){
-                    if(unique[chat.contactId]) return false;
-                    unique[chat.contactId] = true;
+                    let ticketHash = chat.ticketHash || chat.contactId;
+                    if(unique[ticketHash]) return false;
+                    unique[ticketHash] = true;
                     if(searchText){
                         return true
                     } else if(status == 'STALED')
@@ -332,6 +335,9 @@
             },
             contactId : function () {
                return this.$route.params.contactId;
+            },
+            ticketHash(){
+                return this.$route.params.ticketHash;
             },
             isSearch(){
                 return !!this.search.text.trim();
@@ -621,7 +627,7 @@
     .contacts li > span{
         width: 100% !important;
         display: list-item;
-        padding: 5px 10px;
+        padding: 3px 10px;
         /*margin-bottom: 3px !important;*/
         /*box-shadow: inset 0 0 52px #0000000d;*/
         border-bottom: 1px solid #00000008;
@@ -851,24 +857,36 @@
             width: calc(100% - 160px);
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 18px;
+            font-size: 16px;
 
             .font-name{
                 text-overflow: ellipsis;
                 max-width: 187px;
                 overflow: hidden;
             }
+            .font-subject {
+                text-overflow: ellipsis;
+                max-width: 187px;
+                overflow: hidden;
+                display: block;
+                font-size: 0.7em;
+                font-style: italic;
+            }
             .chat_tags {
-                line-height: 12px;
+                line-height: 0.6em;
                 .tag-chat-status-sm {
+                    font-size: 0.6em;
                     background: rgba(255, 255, 255, 0.274)!important;
+                    padding-bottom: 0px;
+                    padding-top: 0px;
+                    line-height: 1.5em !important;
                 }
             }
             .font-preview{
                 text-overflow: ellipsis;
                 max-width: 187px;
                 overflow: hidden;
-                font-size: 10px;
+                font-size: 0.7em;
                 display: block;
             }
         }
@@ -908,6 +926,15 @@
         }
         li.data_unassigned .user_img{
             border: 1px dashed #495d734d;
+        }
+        li.data_subjective {
+            .contact-text {
+                line-height: 16px;
+                height: 65px;
+            }
+            .font-preview {
+                font-size: 0.7em;
+            }
         }
     }
 

@@ -61,7 +61,7 @@
                           v-model="row.item.local.channelId" invalidDisplay="DEMO"
                           optionLabel="channelCode"/>
 
-                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactId)"> </i>
+                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
                     {{ row.item | contactName}}
 
                     <span cursor-pointer class="fa fa-info-circle" :id="'template-details-'+ row.index ">

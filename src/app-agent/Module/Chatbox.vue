@@ -57,6 +57,8 @@
             <div><small>Channel Details</small></div>
             <i class="contact_type fac-bg" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
+            <div v-if="activeChat.subject"
+                class="text-align-left text-darkish font-weight-bold"><i class="far fa-bookmark"/>&nbsp;{{activeChat.subject}}</div>
         </div>
         <hr/>
     </div>  

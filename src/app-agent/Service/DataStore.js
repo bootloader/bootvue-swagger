@@ -198,7 +198,10 @@ const actions = {
   async AddChat({ commit,dispatch},chat) {
     let _chat = Object.assign({},chat);
     for(var c in state.chats){
-      if(state.chats[c].contactId == chat.contactId){
+      if(
+        (state.chats[c].contactId == chat.contactId)
+        && (state.chats[c].ticketHash == chat.ticketHash)
+      ){
         state.chats[c].active = !!chat.active;
         state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
         state.chats[c].resolved = chat.resolved;
