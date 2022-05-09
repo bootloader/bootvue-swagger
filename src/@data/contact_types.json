@@ -40,7 +40,7 @@
             "code": "EMAIL",
             "name": "Email",
             "channelType" : "mailto",
-            "enabled" : false
+            "enabled" : true
         }
     ]
  }

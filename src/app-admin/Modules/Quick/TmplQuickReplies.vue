@@ -101,7 +101,7 @@
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
+    import PageTitle from "../../Components/PageTitle.vue";
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -109,7 +109,7 @@
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import mustache from 'mustache';
-    import formatters from './../../services/formatters';
+    import formatters from '../../../services/formatters';
 
     import TextComplete from '@/@common/cloned/v-textcomplete'
 
@@ -139,7 +139,7 @@
         data: () => ({
             heading: 'Quick Replies',
             subheading: 'are prompt suggestion shown to Agent for Quick response.',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-comment-dots',
             actions : [{
               label : "Add Quick Reply", icon : "plus", name : "ADD_ITEM"
             }],

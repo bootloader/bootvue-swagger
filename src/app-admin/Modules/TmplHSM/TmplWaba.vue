@@ -1,7 +1,6 @@
 <template>
     <div class="m-tmpl-hsm-waba">
-        <master-view v-show="!template.code" ref="templatesView" goodTables
-            goodTable="true"
+        <master-view v-show="!template.code" ref="templatesView" goodTable
             :header="{
                 heading: 'WhatsApp Templates',
                 subheading: 'All the templates registered with WhatsApp',
@@ -71,7 +70,7 @@
             <template #action(cancel)="{action}">
                 <b-button variant="success"
                 :to="{ name : 'wabatemplates'}"
-                @click="selectTemplate({})">{{action.name}}</b-button>
+                @click="selectTemplate({})">{{template.id ? 'Back' : 'Cancel'}}</b-button>
             </template>
 
             <template #body>

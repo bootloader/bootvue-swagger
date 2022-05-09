@@ -69,9 +69,10 @@
                     <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
                       custom-class="message-preview">
                       <template #default class="message-preview"> 
-                          <div class="message-text">Name : {{row.item.contactName}}</div>
-                          <div class="message-text">Id : {{row.item.contactId}}</div>
-                          <div class="message-text">Session : {{row.item.sessionId}}</div>
+                          <div class="message-text text-bold ">{{row.item.contactName}}</div>
+                          <div class="message-text text-bolder" v-if="row.item.subject">{{row.item.subject}}</div>
+                          <div class="message-text text-italic text-xs">{{row.item.contactId}}</div>
+                          <div class="message-text text-italic text-sm">{{row.item.sessionId}}</div>
                       </template>
                     </b-popover>
 

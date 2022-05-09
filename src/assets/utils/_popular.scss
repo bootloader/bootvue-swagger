@@ -84,6 +84,22 @@ $popular-list:(
     content: ',';
 }
 
+.text-bold {
+    font-weight: 600 !important;
+}
+.text-bolder {
+    font-weight: bolder !important;
+}
+.text-italic {
+    font-style: italic;
+}
+.text-underline {
+    text-decoration: underline;
+}
+.text-dotted {
+    text-decoration: underline dotted;
+}
+
 .dull {
     opacity: 0.7;
 }

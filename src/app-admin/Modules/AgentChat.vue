@@ -1,7 +1,7 @@
 <template>
           <div class="card card-shadow chat_box_wrapper">
-                <div class="card-header msg_head chat-head">
-                    <div class="d-flex bd-highlight chat-header-left">
+                <div class="card-header msg_head chat-head d-flex justify-content-between">
+                    <div class="bd-highlight chat-header-left flex-fill d-flex justify-content-start ">
                         <div class="img_cont" 
                             v-if="activeChat"
                             @click="MyFlags.showContactProfile = !MyFlags.showContactProfile">
@@ -12,14 +12,9 @@
                             v-if="activeChat"
                             @click="MyFlags.showContactProfile = !MyFlags.showContactProfile">
                             <span class="user_name">{{activeChat.name}}</span>
-                            <p v-if="activeChat.ilastmsg" class="user_text">{{activeChat.ilastmsg.timestamp | formatDate}} </p>
-                        </div>
-                        <div class="video_cam">
-                            <span hidden><i class="fas fa-video" ></i></span>
-                            <span hidden><i class="fas fa-phone" ></i></span>
-                            <span  hidden  @click="MyFlags.showContactProfile = !MyFlags.showContactProfile" >
-                                <i class="fas fa-history"></i>
-                            </span> 
+                            <div v-if="activeChat.msg && activeChat.msg.lastInBoundMsg" 
+                                class="user_text text-xs">{{activeChat.msg.lastInBoundMsg.timestamp | formatDate}} </div>
+                            <div class="user_text text-bold text-elisp">{{activeChat.subject}}</div>    
                         </div>
                     </div>
                     <div  class="chat-header-right">

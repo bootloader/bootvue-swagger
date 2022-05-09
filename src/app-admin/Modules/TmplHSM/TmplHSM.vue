@@ -96,7 +96,7 @@
             :header="{
                 heading: newItem.desc,
                 subheading: newItem.categoryType,
-                icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-reply-all',
+                icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-comment-alt',
             }"
             :table="table"
             :actions="[{
@@ -134,10 +134,11 @@
 
                                       <div class="position-relative form-group row">
 
-                                        <base-input class="col-md-3" size="sm"
-                                          name="Template Code" placeholder="CREDIT_ALERT"
+                                        <base-input class="col-md-3" size="sm" 
+                                          name="Template Code" placeholder="CREDIT_ALERT" autocomplete="off"
                                           rules="required|max:60" required
-                                          v-model="newItem.code"
+                                          v-model="newItem.code" 
+                                          :format-value="newItem.desc"  format-filter="item_code" format-live
                                           >
                                         </base-input>
 
@@ -514,9 +515,9 @@
               this.itemId = itemId;
               this.selectItem();
             },
-            "newItem.code" : function(newVal,oldVal){
-              this.newItem.code = this.newItem.code.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
-            },
+            // "newItem.code" : function(newVal,oldVal){
+            //   this.newItem.code = this.newItem.code.toLowerCase().replace(/[^A-Za-z0-9_]+/g,'_');
+            // },
             "templateName" : function(){
               this.newItem.name = this.templateName;
             },
@@ -650,9 +651,9 @@
             }
           },
           descOnChange : function (argument) {
-            if(!this.newItem.code){
-                this.newItem.code = this.newItem.desc;  
-            }
+            // if(!this.newItem.code){
+            //     this.newItem.code = this.newItem.desc;  
+            // }
           },
           afterEdit(e){
               const rs = JsonXPath({

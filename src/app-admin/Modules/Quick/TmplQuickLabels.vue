@@ -1,16 +1,8 @@
 <template>
     <div>
         <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
-        @action="onAction" ></page-title>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="main-card mb-3 card">
-
-                </div>
-            </div>
-        </div>
-
+        @action="onAction"
+        ></page-title>
 
           <b-card title="" class="main-card mb-4">
             <b-table :striped=true
@@ -37,69 +29,63 @@
 
             </b-table>
         </b-card>
-          
+        
 
 
-        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Quick Action '"
-          @hidden="cancelReps">
-              <ValidationObserver ref="form">
-                        <div class="position-relative form-group">
-                          <ValidationProvider v-slot="v" rules="required">
-                                <label for="examplePassword" class="">Category</label>
-                                <input name="category" id="examplePassword"
-                                 placeholder="transaction" type="text"
-                                  class="form-control" v-model="newItem.category">
-                                  <span class="v-input-error">{{ v.errors[0] }}</span>
-                          </ValidationProvider>
-                        </div>
 
-                        <div class="position-relative form-group">
-                           <ValidationProvider v-slot="v" rules="required">
-                                <label for="examplePassword" class="">Title</label>
-                                <input name="agent_name" id="examplePassword"
-                                 placeholder="Send Last Invoice" type="text"
-                                  class="form-control" v-model="newItem.title">
-                                  <span class="v-input-error">{{ v.errors[0] }}</span>
-                          </ValidationProvider>
-                        </div>
+        <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Customer Labels '"
+        @hidden="cancelReps">
+                  <ValidationObserver ref="form">
+                            <div class="position-relative form-group">
+                              <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Category</label>
+                                    <input name="category" id="examplePassword" 
+                                     placeholder="eg : country, customerType" type="text"
+                                      class="form-control" v-model="newItem.category">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
 
-                        <div class="position-relative form-group">
+                            <div class="position-relative form-group">
+                               <ValidationProvider v-slot="v" rules="required">
+                                    <label for="examplePassword" class="">Title</label>
+                                    <input name="agent_name" id="examplePassword" autocomplete="off"
+                                     placeholder="eg: Platiinum, Verified, India" type="text"
+                                      class="form-control" v-model="newItem.title">
+                                      <span class="v-input-error">{{ v.errors[0] }}</span>
+                              </ValidationProvider>
+                            </div>
+
                             <base-input format-filter="item_code" :format-value="newItem.title" format-live
-                                  v-model="newItem.code" label="Action Code" autocomplete="off" rules="required"
-                                  placeholder="eg:- SEND_INVOICE">
+                                  v-model="newItem.code" label="Label Code" autocomplete="off" rules="required"
+                                  placeholder="eg:- PLATINUM, VERFD, IND">
                             </base-input>
-                        </div>
+
+                  </ValidationObserver>
+
+                  <template #modal-footer>
+
+                        <button @click="cancelReps" class="btn btn-warning">Cancel</button>
+            &nbsp;
+                        <button v-if="newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
+                                            class="btn btn-primary">Update</button>
+            &nbsp;
+                        <button v-if="!newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
+                                            class="btn btn-primary">Create</button>
 
 
-
-                       
-              </ValidationObserver>
-
-            <template #modal-footer>
-
-                <div class="text-center form-group">
-                  <button @click="cancelReps"
-                    class="btn btn-warning">Cancel</button>
-&nbsp;
-                  <button v-if="newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
-                    class="btn btn-primary">Update</button>
-&nbsp;
-                  <button v-if="!newItem.id"  @click="creatQuickReps" :disabled="!isChanged"
-                    class="btn btn-primary">Create</button>
-
-                </div>
-
-            </template>
+                  </template>
 
         </b-modal>
+
 
     </div>
 </template>
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
-
+    import PageTitle from "../../Components/PageTitle.vue";
+    
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUsersSlash,faUsers,faTrash,faEye
@@ -122,14 +108,14 @@
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,
         },
         data: () => ({
-            heading: 'Quick Actions',
-            subheading: 'are used by agents to trigger functionalty in core business app ',
-            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-location-arrow',
+            heading: 'Customer Labels',
+            subheading: 'Assign Customer specific labels that your agent can use',
+            icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             actions : [{
-              label : "Add Quick Action", icon : "plus", name : "ADD_ITEM"
+              label : "Add Customer Labels", icon : "plus", name : "ADD_ITEM"
             }],
             fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
-              { key : 'code', label : "Action Code" },
+              { key : 'code', label : "Code" },
               { key: 'actions', label: 'Options' }],
             newItem : newItem(),
             sample : {
@@ -137,11 +123,11 @@
                 name : "John Doe", phone : "919876543210", email : "John.Doe@company.com"
               }
             },
-            modelName :  "MODAL_ADD_QUICK_ACTION",
+            modelName :  "MODAL_ADD_QUICK_LABEL",
         }),
         computed : {
             teams : function (argument) {
-              return this.$store.getters.StateQAxns;
+              return this.$store.getters.StateQLabels;
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
@@ -152,19 +138,19 @@
         },
         methods : {
           async loadQReps (){
-            await this.$store.dispatch('GetQuickAxns');
+            await this.$store.dispatch('LoadQuickLabels');
           },
           async creatQuickReps () {
             let success = await this.$refs.form.validate();
             if(success === true){
-              await this.$store.dispatch('CreatQuickAxns', this.newItem);
+              await this.$store.dispatch('CreatQuickLabels', this.newItem);
               this.newItem = newItem();
               this.$refs.form.reset();
               this.onAction({name : "CANCEL"});
             }
           },
           async deleteReps(item) {
-             await this.$store.dispatch('DeleteQuickAxns', item);
+             await this.$store.dispatch('DeleteQuickLabels', item);
           }, 
           async cancelReps(item) {
              this.newItem = newItem();
@@ -176,14 +162,13 @@
               this.newItem.category = item.category;
               this.newItem.title = item.title;
               this.newItem.code = item.code;
-               this.onAction({name : "EDIT_ITEM"});
+              this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
           rowClass(item, type) {
             if (!item || type !== 'row') return
             if (this.newItem.id == item.id) return 'table-success'
           },
-
           onAction : function (argument) {
             switch(argument.name){
               case "ADD_ITEM" :
@@ -202,9 +187,7 @@
               default:
                 console.log("NoMapping",argument) 
             }
-          },
-
-
+          }
         }
 
 

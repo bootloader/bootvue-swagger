@@ -90,7 +90,7 @@
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
+    import PageTitle from "./../../Components/PageTitle.vue";
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -100,7 +100,7 @@
     import mustache from 'mustache';
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-    import { MyFlags,MyConst } from './../../services/global';
+    import { MyFlags,MyConst } from '../../../services/global';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye

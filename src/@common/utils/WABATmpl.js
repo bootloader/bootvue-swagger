@@ -93,7 +93,7 @@ function cloneWABATmplSample(template,hsm) {
                                 return null;    
                         }
                     })();
-                    let text = (format == "TEXT") ? (headerText) : null; 
+                    let text = (format == "TEXT") ? (headerText) : undefined; 
                     return {
                         type: 'HEADER',
                         format : format,

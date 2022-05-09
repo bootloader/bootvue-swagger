@@ -86,27 +86,27 @@ export default AppRouter.route({
         {
             path : "/app/admins/tmpl/quickreplies",
             name: 'quickreplies',
-            component: () => import('./Modules/TmplQuickReplies.vue'),    
+            component: () => import('./Modules/Quick/TmplQuickReplies.vue'),    
         },
         {
             path : "/app/admins/tmpl/quickactions",
             name: 'quickactions',
-            component: () => import('./Modules/TmplQuickActions.vue'),    
+            component: () => import('./Modules/Quick/TmplQuickActions.vue'),    
         },
         {
             path : "/app/admins/tmpl/quicklabels",
             name: 'quicklabels',
-            component: () => import('./Modules/TmplQuickLabels.vue'),    
+            component: () => import('./Modules/Quick/TmplQuickLabels.vue'),    
         },
         {
             path : "/app/admins/tmpl/quicktags",
             name: 'quicktags',
-            component: () => import('./Modules/TmplQuickTags.vue'),    
+            component: () => import('./Modules/Quick/TmplQuickTags.vue'),    
         },
         {
             path : "/app/admins/tmpl/quickmedia",
             name: 'quickmedia',
-            component: () => import('./Modules/TmplQuickMedia.vue'),    
+            component: () => import('./Modules/Quick/TmplQuickMedia.vue'),    
         },
         {
             path : "/app/admins/tmpl/pushtemplate/:mode/:itemId",
