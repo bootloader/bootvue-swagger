@@ -67,7 +67,7 @@
                     <span cursor-pointer class="fa fa-info-circle" :id="'template-details-'+ row.index ">
                     </span>
                     <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
-                      custom-class="message-preview">
+                      custom-class="">
                       <template #default class="message-preview"> 
                           <div class="message-text text-bold ">{{row.item.contactName}}</div>
                           <div class="message-text text-bolder" v-if="row.item.subject">{{row.item.subject}}</div>
