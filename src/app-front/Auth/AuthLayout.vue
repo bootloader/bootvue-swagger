@@ -4,15 +4,21 @@
     <main>
       <section class="relative w-full h-full py-40 min-h-screen">
         <div
-          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-lg sm:hidden xs:hidden"
+          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-lg hidden md:block"
           :style="`background-image: url('${bgCoverDesktop}');`"
+          :class="{
+            'bg-cover-full' : $global.isMobileApp
+          }"
         ></div>
         <div
-          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-sm md:hidden lg:hidden xl:hidden"
+          class="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full bg-cover-sm md:hidden"
           :style="`background-image: url('${bgCoverMobile}');`"
+          :class="{
+            'bg-cover-full' : $global.isMobileApp
+          }"
         ></div>
         <router-view />
-        <footer-small absolute />
+        <footer-small absolute v-if="!$global.isMobileApp" />
       </section>
     </main>
   </div>
@@ -48,5 +54,8 @@ export default {
 .bg-cover-sm {
   background-position: bottom center;
   height: calc( 100% - 100px);
+}
+.bg-cover-full {
+  height: calc( 100% - 0px)!important;
 }
 </style>

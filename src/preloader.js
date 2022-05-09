@@ -19,4 +19,9 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 } else if(pathname.indexOf("/front") == 0){
 	window.CONST.APP = "front";
 }
-console.log("preloader",window.CONST)
+window.callMobileEventListener = function(options){
+	console.log("callMobileEventListener",options)
+}
+console.log("preloader",window.CONST);
+
+

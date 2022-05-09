@@ -17,7 +17,6 @@
   import tunnel from './services/tunnel';
   import formatters from './services/formatters';  
 
-
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
@@ -30,11 +29,9 @@
   })
 
   const default_layout = "default";
-
   Vue.component('default-layout', () => import('./app-customer/Layout/DefaultLayout.vue'));
-
   var LOADED_JS = {};
-
+  
   export default {
     name:"AppCustomer",
     computed: {
@@ -45,7 +42,6 @@
     data: () => ({
     }),
     methods : {
-
     },
     created (){
       //this.$store.registerModule("DataStore",DataStore);

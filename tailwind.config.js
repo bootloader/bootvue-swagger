@@ -102,6 +102,13 @@ module.exports = {
           ".container": { width: "100%" },
         },
         {
+          [`@media (min-width: ${screens.xs})`]: {
+            ".container": {
+              "max-width": "480",
+            },
+          },
+        },
+        {
           [`@media (min-width: ${screens.sm})`]: {
             ".container": {
               "max-width": "640px",

@@ -3980,10 +3980,20 @@ select {
             animation-timing-function: cubic-bezier(0,0,0.2,1);
   }
 }
+@media (min-width: 420px) {
 
+  .xs\:hidden {
+    display: none;
+  }
+
+}
 @media (min-width: 640px) {
   .sm\:block {
     display: block;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:mt-0 {

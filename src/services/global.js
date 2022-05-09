@@ -6,7 +6,7 @@ window.CONST.dev =  window.CONST.dev != 'false';
 
 export const MyConst = {
  	some: 'Settings',
-	app : window.CONST.APP,
+	app : window.CONST.APP, appView : window.CONST.APP_VIEW,
 	cdn : window.CONST.CDN_URL,
 	appPrefix : "/" + window.CONST.APP, tenant : window.CONST.TENANT,
 	appDomain : window.CONST.APP_DOMAIN,appDomainId : window.CONST.APP_DOMAIN_ID,
@@ -137,5 +137,7 @@ export const MyFunc  = {
 
 Vue.prototype.$config = MyConst.config;
 Vue.prototype.$global = {
-	MyConst,MyFlags,MyDict,MyFunc,User
+	MyConst,MyFlags,MyDict,MyFunc,User,
+	//Flags
+	isMobileApp : (window.CONST.APP_VIEW == "mobile")
 };

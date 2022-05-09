@@ -65,7 +65,7 @@
             </form>
 
             <form v-else-if="domain">
-              <div class="btn-wrapper text-center">
+              <div class="btn-wrapper text-center" v-if="!$global.isMobileApp">
                 <a :href="`/front/auth/?app=agent&domain=${front_domain}`"
                   class="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 
                   rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md 
@@ -177,7 +177,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap mt-0 relative justify-center">
+        <div class="flex flex-wrap mt-0 relative justify-center" v-if="!$global.isMobileApp">
           <div class="text-center mt-1">
             <a href="/partner/auth"
               class="bg-white text-blueGray-600 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 

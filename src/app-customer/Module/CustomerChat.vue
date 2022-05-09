@@ -419,6 +419,9 @@
         } else if (element.attachEvent) {
             window.attachEvent('onmessage', this.onPostMessage);
         }
+        window.callMobileEventListener = function(options){
+          alert("CALL:"+options.event)
+        };
         this.sendPostMessage({
           event : "ON_CHAT_LOAD"
         });
