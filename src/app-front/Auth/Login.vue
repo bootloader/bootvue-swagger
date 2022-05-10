@@ -154,10 +154,10 @@
             </form>
             </validation-observer>
             <div>
-              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_SERVER + '/' + model.app + '/auth/direct'" method="POST" ref="loginForm">
-                <input name="domainName" :value="model.domainName" type="hidden"/>
-                 <input name="domainId" :value="model.domainId" type="hidden"/>
-                 <input name="domainToken" :value="model.domainToken" type="hidden"/>
+              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_SERVER + '/' + model.app + '/auth/direct?_=' + nounce" method="POST" ref="loginForm">
+                  <input name="domainName" :value="model.domainName" type="hidden"/>
+                  <input name="domainId" :value="model.domainId" type="hidden"/>
+                  <input name="domainToken" :value="model.domainToken" type="hidden"/>
                   <input name="domainUser" :value="model.domainUser" type="hidden"/>
               </form>
             </div>
@@ -204,6 +204,7 @@ var domain = "";
 export default {
   data() {
     return {
+      nounce : Date.now(),
       github,
       google,
       domain,

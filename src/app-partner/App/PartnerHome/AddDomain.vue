@@ -29,7 +29,7 @@
               footer-classes="mt--1">
             <template slot="icon">
               <a class="btn btn-sm btn-primary" target="_blank"
-                :href="`/partner/app/goto/${model.domain}/admin`" > Setup</a>
+                :href="`/partner/app/goto/${model.domain}/admin`" > <i class="fa fa-cog"/> Manage</a>
             </template>
             <template slot="footer">
               <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
@@ -44,7 +44,7 @@
                 <button 
                   v-if=" $global.User.isMultiDomainUser"
                   class="btn btn-link btn-sm text-nowrap fa fa-user-plus" v-tooltip="'Add Domain Owner'"
-                  @click="showDomainOwners(index)"> Add Domain Owner</button>
+                  @click="showDomainOwners(index)"> Manage Domain Owners</button>
             </template>
           </stats-card>
         </b-col>
