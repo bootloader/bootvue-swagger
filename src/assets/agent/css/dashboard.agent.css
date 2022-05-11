@@ -256,13 +256,6 @@
 .hidden {
   display : none!important;
 }
-.my-attachments {
-  justify-content: center;
-}
-.my-attachments img{
-  margin: 10px;
-  max-width : 200px;
-}
 .my-actions-button.btn.disabled, .my-actions-button.btn[disabled]{
   opacity: 1;
   color: #b9b4b4;

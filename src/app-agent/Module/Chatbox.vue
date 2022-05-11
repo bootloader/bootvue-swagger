@@ -1175,13 +1175,6 @@
         line-height: 15px;
     }
 
-    .my-attachments img {
-        cursor: pointer;
-        margin: 10px;
-        max-width: 200px;
-        min-width: 100px;
-    }
-
     .divider-v {
         padding-left: 2px;
         padding-right: 4px;

@@ -50,6 +50,7 @@
 
   Vue.component('MySource', () => import('@/@common/custom/components/MySource.vue'));
   Vue.component('MyText', () => import('@/@common/custom/components/MyText.vue'));
+  Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
 
   var LOADED_JS = {};
 

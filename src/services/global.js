@@ -69,7 +69,7 @@ export const MyDict = {
 	social : {
 	 "FACEBOOK" : "fa fa-facebook", "WEBSITE" : "fa fa-chrome", "TELEGRAM" : "fa fa-telegram",  
 	 "TWITTER" : "fa fa-twitter","WHATSAPP" : "fa fa-whatsapp","INSTAGRAM" : "fa fa-instagram",
-	 "EMAIL" : "fas fa-envelope",
+	 "EMAIL" : "fas fa-envelope"
 	},
 	chatStatus : {
 		"UNASSIGNED"	: {label : "UNASSIGNED" }, 
