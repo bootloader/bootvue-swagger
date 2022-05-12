@@ -154,7 +154,9 @@
             </form>
             </validation-observer>
             <div>
-              <form :action="'https://' + model.domainName + '.' + $config.PROP_SERVICE_SERVER + '/' + model.app + '/auth/direct?_=' + nounce" method="POST" ref="loginForm">
+              <form 
+                :action="formUrl" 
+                method="POST" ref="loginForm">
                   <input name="domainName" :value="model.domainName" type="hidden"/>
                   <input name="domainId" :value="model.domainId" type="hidden"/>
                   <input name="domainToken" :value="model.domainToken" type="hidden"/>
@@ -229,6 +231,10 @@ export default {
     },
     domainPreFilled :  function(){
       return (this.$global.MyConst.appDomainId && (this.$global.MyConst.appDomain == this.domainInput));
+    },
+    formUrl(){
+      //return 'https://demo.local.com/agent/auth/login/direct?_=' + this.nounce
+      return 'https://' + this.model.domainName + '.' + this.$config.PROP_SERVICE_SERVER + '/' + this.model.app + '/auth/login/direct?_=' + this.nounce
     }
   },
   watch : {
