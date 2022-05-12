@@ -61,6 +61,9 @@
                 .myChatDivOpen#myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 
                 }
+                .myChatDivOpen#myChatDiv #myChatTitleBar {
+                    display : none;
+                }
                 .myChatDivOpen#myChatDiv #myChatFrame #myChatIFrame-${UNIQUEID} {
                     margin: 0px 0px 0px 0px;
                     height: ${maxHeight}px; width: ${maxWidth}px; 

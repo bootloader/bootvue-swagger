@@ -3959,9 +3959,9 @@
   "version" "7.0.2"
 
 "emoji-js@^3.4.0":
-  "integrity" "sha512-prx30N1+OOgJ4vAvvjBat5DR13h2WYsR9KmbIANHwxwPFHZh12EaDw5sQsko3frEUhoMP17HqmGfrJ6zIAeYmg=="
-  "resolved" "https://registry.npmjs.org/emoji-js/-/emoji-js-3.6.0.tgz"
-  "version" "3.6.0"
+  "integrity" "sha512-YNJCF8DOYI1AZnkSIcJbmIN6rtXtSv5DObqzvHuGAP8VLQc15MMN+DG9rQVSfHPXGFkFub9pGvbiO4FNz5+sjg=="
+  "resolved" "https://registry.npmjs.org/emoji-js/-/emoji-js-3.7.0.tgz"
+  "version" "3.7.0"
   dependencies:
     "emoji-datasource" "7.0.2"
 

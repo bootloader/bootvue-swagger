@@ -10,6 +10,7 @@
       :close="closeChat"
       :open="openChat"
       :showEmoji="true"
+      :showHeader="!config.header.disabled"
       :showFile="false"
       :showTypingIndicator="showTypingIndicator"
       :showLauncher="true"
@@ -139,8 +140,12 @@
               },
               title : {
                 text : "Support"
-              }
+              },
+              disabled : false,
             },
+            launcher : {
+              open : false
+            }
           },
           options : {
             domain : null,
@@ -370,7 +375,9 @@
 
         },
         onOptionSet : function(){
-            if(this.options['launcher.open']){
+            console.log("this.options",this.options);
+            console.log("this.config",this.config)
+            if(this.config.launcher.open){
               this.openChat();
             }
         },
@@ -421,9 +428,15 @@
                   if(keys[keys.length-1] == 'color'){
                     this.colors[keys[0]][keys[1]] = config[key] || this.colors[keys[0]][keys[1]];
                     console.log(`${keys[0]}.${keys[1]} == `,this.colors[keys[0]][keys[1]])
-                  } else if(thisConfig[keys[0]] && thisConfig[keys[0]][keys[1]] ){
+                  } else if(thisConfig[keys[0]]!==undefined 
+                            && thisConfig[keys[0]][keys[1]]!==undefined
+                            && thisConfig[keys[0]][keys[1]][keys[2]]!==undefined){
                     console.log(`${keys[0]}.${keys[1]}.${keys[2]} =`,thisConfig[keys[0]][keys[1]][keys[2]])
                     thisConfig[keys[0]][keys[1]][keys[2]] =  config[key];
+                  } else if(thisConfig[keys[0]]!==undefined
+                            && thisConfig[keys[0]][keys[1]]!==undefined){
+                    console.log(`${keys[0]}.${keys[1]} =`,thisConfig[keys[0]][keys[1]])
+                    thisConfig[keys[0]][keys[1]] =  config[key];
                   } else {
                     console.log(`${keys[0]}.${keys[1]}.${keys[2]} !=`,thisConfig[keys[0]])
                   }
