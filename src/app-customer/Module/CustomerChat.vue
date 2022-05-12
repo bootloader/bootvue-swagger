@@ -198,7 +198,10 @@
         },
         addMessage : function (message) {
           //message.type = message.data.file ? "file" : message.type; 
-          console.log("addMessage",message)
+          if(!message){
+              console.log("addMessage:message:undefined");
+              return;
+          }
           if(message.id && this.messageMap[message.id]){
             this.messageMap[message.id].data = message.data;
           } else {
@@ -210,6 +213,10 @@
         },
         async onMessageWasSentAsync (message, form) {
           // called when the user sends a message
+          if(!message){
+              console.log("onMessageWasSentAsync:message:undefined");
+              return;
+          }
           message.id=null;
           message.data.type="I"; 
           message.data.timestamp = Date.now();
@@ -223,6 +230,10 @@
                   form : form
                 });
               var _msg = toMessage(resp.results[0]);
+              if(!_msg){
+                console.log("onMessageWasSentAsync:if:_msg:undefined");
+                return;
+              }
               message.id = _msg.id;
               message.data.timestamp = _msg.data.timestamp;
               message.data.attachments = _msg.data.attachments;
@@ -235,6 +246,10 @@
                 form : form
               });
               var _msg = toMessage(resp);
+              if(!_msg){
+                console.log("onMessageWasSentAsync:else:_msg:undefined");
+                return;
+              }
               message.id = _msg.id;
               message.data.timestamp = _msg.data.timestamp;
               message.data.attachments = _msg.data.attachments;
@@ -354,8 +369,11 @@
 
 
         },
-
-
+        onOptionSet : function(){
+            if(this.options['launcher.open']){
+              this.openChat();
+            }
+        },
         //Chat Windwo
         publishChatWindowStatus : function () {
             this.sendPostMessage({
@@ -365,14 +383,18 @@
         },
         onPostMessage : function (e) {
           //console.log("CHILD:onPostMessage",e)
+          //alert("CALL:"+e.data)
           if(!e || !e.data || typeof e.data != 'string' || e.data.trim().indexOf("{")!=0){
             return;
           }
+          console.log("myChatEvent====onPostMessage:data"+e.data);
+
           var data = JSON.parse(e.data);
           if(!data.myChatEvent){
             return;
           }
           var myChatEvent = data.myChatEvent;
+          console.log("myChatEvent====onPostMessage"+JSON.stringify(myChatEvent))
           if(myChatEvent.event == "CHAT_TOGGLE"){
             //console.log("CHAT_TOGGLE",this,myChatEvent)
               if(this.isChatOpen){
@@ -390,7 +412,7 @@
             window.parent.postMessage(msg, '*');
         },
         SET_OPTIONS : function (myChatEvent) {
-            console.log("SET_OPTIONS",myChatEvent);
+            console.log("SET_OPTIONS===myChatEvent",myChatEvent);
             var config = myChatEvent.options.config || {};
             config.dummy = 'dummy.dummy';
             var thisConfig = this.config;
@@ -410,6 +432,7 @@
             myChatEvent.options.config = null;
             delete myChatEvent.options.config;
             this.options = Object.assign({},this.options,myChatEvent.options);
+            this.onOptionSet();
         }
       },
       //Component Events
@@ -423,8 +446,9 @@
         let THIS = this;
         window.callMobileEventListener = function(data){
           //alert("CALL:"+data.event)
+          console.log("myChatEvent====callMobileEventListener"+JSON.stringify(data))
           THIS.onPostMessage({
-            data : JSON.stringify(data)
+            data : JSON.stringify({myChatEvent : data})
           })
         };
         this.sendPostMessage({
