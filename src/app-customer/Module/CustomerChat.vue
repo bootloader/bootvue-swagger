@@ -343,10 +343,11 @@
           var THAT = this;
           clearTimeout(this.fploader);
           this.fploader = setTimeout(function() {
-              if(window.CONST.fp){
+              if(window.CONST.fp && THAT.options.channelId){
                 THAT.csid = (window.CONST.fp + "00");
                 THAT.loadChats();
               } else {
+                console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
                 THAT.init();
               }
           },1000);
