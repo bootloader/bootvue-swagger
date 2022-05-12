@@ -419,8 +419,12 @@
         } else if (element.attachEvent) {
             window.attachEvent('onmessage', this.onPostMessage);
         }
-        window.callMobileEventListener = function(options){
-          alert("CALL:"+options.event)
+        let THIS = this;
+        window.callMobileEventListener = function(data){
+          //alert("CALL:"+data.event)
+          THIS.onPostMessage({
+            data : JSON.stringify(data)
+          })
         };
         this.sendPostMessage({
           event : "ON_CHAT_LOAD"
