@@ -22,6 +22,7 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 window.callMobileEventListener = function(options){
 	console.log("callMobileEventListener",options)
 }
+window.parent.postMessage("SocComApp", '*');
 console.log("preloader",window.CONST);
 
 
