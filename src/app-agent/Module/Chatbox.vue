@@ -54,7 +54,15 @@
 
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
         <div class="msg_card_body-bubbles-lane">
-            <div><small>Channel Details</small></div>
+            <div>   
+                <small class="text-xs">Channel</small>
+                <span class="chat-channel-code">
+                     <MyText options="getx:/api/options/channels"
+                        v-model="chatLocal.channelId"
+                        optionLabel="channelCode" :invalidDisplay="chatLocal.lane"
+                        :emptyDisplay="chatLocal.lane" />
+                </span>
+            </div>
             <i class="contact_type fac-bg" v-bind:class="MyDict.socialPrefix(activeChat.contactType)"></i>            
             <span class="text-align-left">&nbsp;{{activeChat.contact.lane}}</span>
             <div v-if="activeChat.subject"
@@ -1116,6 +1124,19 @@
         font-size: 20px;
         width: 30px;
         height: 30px;
+    }
+    .msg_card_body-bubbles-header .chat-channel-code {
+        margin: 2px 5px 0px 5px;
+        border-radius: 3px;
+        padding: 1px 4px 1px 4px;
+        font-size: 0.7em;
+        text-align: center;
+        background-color: #00000083;
+        color: #FFF;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
     }
     .msg_card_body-logo{
         min-height: calc(100% - 25px);

@@ -123,7 +123,28 @@ export const MyDict = {
 		}
 		return `https://${MyConst.tenant}.${MyConst.config.PROP_SERVICE_SERVER}`;
 	},
-	profilePic : require('./../assets/agent/images/profile.png')
+	profilePic : require('./../assets/agent/images/profile.png'),
+	profilePicFun(url,name,type){
+		if(url){
+			return url;
+		}
+		switch(type){
+			case 'FACEBOOK':
+				return `https://ui-avatars.com/api/?name=${name}&background=a0acbe&color=333f54`;
+			case 'TWITTER':
+				return `https://ui-avatars.com/api/?name=${name}&background=b7d9ec&color=102f41`;
+			case 'WHATSAPP':
+				return `https://ui-avatars.com/api/?name=${name}&background=b9c4be&color=394f42`;
+			case 'TELEGRAM':
+				return `https://ui-avatars.com/api/?name=${name}&background=8ca5b2&color=243037`;
+			case 'INSTAGRAM':
+				return `https://ui-avatars.com/api/?name=${name}&background=cabcc6&color=371e4f`;
+			case 'EMAIL':
+				return `https://ui-avatars.com/api/?name=${name}&background=a9a9a9&color=313030`;
+			default :
+				return `https://ui-avatars.com/api/?name=${name}&background=c6d7ee&color=20262d`;
+		}
+	}
 }
 
 export const MyFunc  = {

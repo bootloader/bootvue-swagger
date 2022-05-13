@@ -122,7 +122,7 @@
 
                         <div>
                             <div class="img_cont">
-                                <img :src="chat.profilePic || MyDict.profilePic" class="rounded-circle user_img" alt="profilpicture">
+                                <img :src="MyDict.profilePicFun(chat.profilePic,chat.contact.name,chat.contactType)" class="rounded-circle user_img" alt="profilpicture">
                                 <span class="contact_type fab fac-bg"
                                 v-bind:class="MyDict.socialPrefix(chat.contactType)"></span>
                             </div>
