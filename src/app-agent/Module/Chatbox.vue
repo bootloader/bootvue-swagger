@@ -1128,11 +1128,14 @@
     .msg_card_body-bubbles-header .chat-channel-code {
         margin: 2px 5px 0px 5px;
         border-radius: 3px;
+        border-width: 1px;
+        border-style: solid;
         padding: 1px 4px 1px 4px;
-        font-size: 0.7em;
+        font-size: 0.6em;
         text-align: center;
-        background-color: #00000083;
-        color: #FFF;
+        background-color: #ffffff00;
+        border-color: rgb(33, 33, 33);
+        color: rgb(33, 33, 33);
         display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
