@@ -62,7 +62,6 @@
         </div>
         <hr/>
     </div>  
-
     <div v-if="is_SEND_NEW" class="text-center">
         <span v-if="chatLocal.isModeAgent || chatLocal.closed">
             <span class="fa fa-hourglass-end fa-5x text-white-dirty" />

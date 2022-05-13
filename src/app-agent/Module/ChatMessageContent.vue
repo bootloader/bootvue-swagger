@@ -16,7 +16,10 @@
                             ></audio-player>    
                         <a class="my-attachment-link text-center w-100 d-block bg-greyish" :id="`attachment-${m.messageId}-${i}`"
                             v-else :href="atch.mediaURL | https" target="_blank" download>
-                            <my-icon type="fileType" :value="atch.mediaMimeType" :status="atch.mediaMimeType" class=""/>
+                            <my-icon type="fileType" 
+                                :value="atch.mediaMimeType" 
+                                :status="atch.mediaMimeType"
+                                :meta="atch.mediaName" class=""/>
                         </a>
                         <label class="my-attachment-title mediaCaption"  :for="`attachment-${m.messageId}-${i}`"
                             v-if="atch.mediaCaption && atch.mediaCaption !== m.text">{{atch.mediaCaption}}</label>
@@ -96,6 +99,9 @@
     .my-attachments .my-attachment.mediaType-AUDIO {
         max-width: 250px; min-width: 250px; 
         min-height: 50px;   max-height: 100px;
+    }
+    .my-attachments .my-attachment.mediaType-AUDIO .my-attachment-title{
+        display: none;
     }
     .my-attachments .my-attachment-title {
         background-color: rgb(0 0 0 / 70%);
