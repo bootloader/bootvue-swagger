@@ -131,7 +131,7 @@
                                     <MyText
                                         options="getx:/api/options/channels"
                                         v-model="chat.local.channelId"
-                                        optionLabel="channelCode"
+                                        optionLabel="channelCode" :invalidDisplay="chat.local.lane" :emptyDisplay="chat.local.lane"
                                     />
                                 </span>
                             </div>    
