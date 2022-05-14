@@ -89,7 +89,7 @@
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="isSearch">  
               <li class="nav-item">
                 <span class="nav-link btn-xs active">
-                    <span class="fa fa-search"/> Results for "{{search.text}}"
+                    <span class="fa fa-search"/> Results for "{{search.text}}" <span v-if="search.sortBy">sorted by {{search.sortBy}}</span>
                      <span class="fa fa-times float-right" @click="search.text=''"></span>
                 </span>
               </li>
@@ -102,8 +102,8 @@
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
                         active_contact : (contactId == chat.contactId && ticketHash == chat.ticketHash),
-                        contact_attention : chat._attention && (chat._tab == 'TEAM' ),
-                        contact_waiting : chat._waiting,
+                        contact_attention : chat.local.is_attention && (chat._tab == 'TEAM' ),
+                        contact_waiting : chat.local.is_waiting,
                         data_subjective : !!chat.subject
                     }">
                 <router-link tag="span" 
@@ -185,11 +185,11 @@
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
                                 <span class="">
-                                    <b-icon v-if="chat._attention"  class="icon_attention text-md" variant="red"
+                                    <b-icon v-if="chat.local.is_attention"  class="icon_attention text-md" variant="red"
                                             icon="alarm-fill" 
                                             v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
                                     ></b-icon>
-                                    <b-icon v-else-if="chat._waiting"  class="icon_attention text-md" variant="red"
+                                    <b-icon v-else-if="chat.local.is_waiting"  class="icon_attention text-md" variant="red"
                                             icon="phone-vibrate"
                                             v-tooltip="(chat.name || chat.contactId) + ' has replied \n& is waiting for response'"
                                     ></b-icon>
@@ -226,7 +226,32 @@
             </ul>
         </div>
         <div class="card-footer">
-            &nbsp; <i class="contact_type fac-bg fa fa-facebook" @click="searchTag(':facebook')"
+            &nbsp; 
+            
+                <i class="contact_type fa fa-user-secret" @click="sortByTag('is_unassigned')"
+                    v-tooltip="'Show Unassigned on top'"
+                    v-bind:class="{
+                        'my-selected text-greyer' : search.sortBy=='is_unassigned',
+                        'text-grey' : (search.sortBy && search.sortBy!='is_unassigned'),
+                        'text-success' : !search.sortBy
+                    }"></i>
+                <i class="contact_type bi bi-alarm-fill pointer" @click="sortByTag('is_attention')"
+                    v-tooltip="`Need Attention`"
+                    v-bind:class="{
+                        'my-selected text-red' : search.sortBy=='is_attention',
+                        'text-grey' : search.sortBy!='is_attention' 
+                     }">
+                </i>
+                <i class="contact_type bi bi-phone-vibrate pointer" @click="sortByTag('is_waiting')"
+                    v-tooltip="`Waiting for response`"
+                    v-bind:class="{
+                        'my-selected text-red' : search.sortBy=='is_waiting',
+                        'text-grey' : search.sortBy!='is_waiting' 
+                    }">
+                </i>
+
+                <!-- 
+                <i class="contact_type fac-bg fa fa-facebook" @click="searchTag(':facebook')"
                     v-bind:class="{'my-selected' : search.text==':facebook' }"></i>
                 <i class="contact_type fa fac-bg fa-whatsapp"  @click="searchTag(':whatsapp')"
                     v-bind:class="{'my-selected' : search.text==':whatsapp' }" ></i>
@@ -238,7 +263,7 @@
                     v-bind:class="{'my-selected' : search.text==':instagram' }"></i>
                 <i class="contact_type fac-bg fa fa-chrome" @click="searchTag(':website')"
                     v-bind:class="{'my-selected' : search.text==':website' }"></i>
-            
+             -->
             <span
                  v-bind:class="{'toggle-active' : isOnline, 'fa-rotate-180' : !isOnline }" 
                  @click="toggleOnline"
@@ -274,7 +299,7 @@
         computed : {
             urgentChat : function (argument) {
                 for(var i in this.$store.getters.StateChats){
-                    if(this.$store.getters.StateChats[i]._attention 
+                    if(this.$store.getters.StateChats[i].local.is_attention 
                         && this.$store.getters.StateChats[i]._tab == 'TEAM' 
                         && this.$store.getters.StateChats[i].local.active){
                         return true;
@@ -285,6 +310,7 @@
             activeChats : function(){ 
                 let unique = {};
                 console.log("activeChats",this.$store.getters.StateChats.length); 
+                let search = this.search;
                 let searchText = this.search.text.trim();
                 let searchTokens = this.$store.getters.SearchChat.tokens;
                 var tab = MyFlags.agent.contactsTab;
@@ -319,6 +345,13 @@
                         return !chat?.msg?.lastInBoundMsg; 
                     return chat.local.active && !!chat?.msg?.lastInBoundMsg;
                 }).sort(function(a, b){
+                    if(search.sortBy){
+                       if(a.local[search.sortBy] && !b.local[search.sortBy]){
+                            return -1;
+                       } else if(!a.local[search.sortBy] && b.local[search.sortBy]){
+                            return 1;
+                       }
+                    }
                     if(a._assignedToMe && !b._assignedToMe){
                         return -1;
                     } else if(!a._assignedToMe && b._assignedToMe){
@@ -357,6 +390,7 @@
                 text : "",
                 active : false,
                 limit : 0,
+                sortBy : null
             }, 
             strategies: [{
                 match: /(^|\s)\:([a-z0-9+\-\_\.]*)$/,
@@ -462,6 +496,13 @@
                     this.search.text = "";
                 } else {
                     this.search.text = searchTag;
+                }
+            },
+            sortByTag (sortTag){
+                if(this.search.sortBy  == sortTag){
+                    this.search.sortBy = null;
+                } else {
+                    this.search.sortBy = sortTag;
                 }
             },
             searchText : function() {

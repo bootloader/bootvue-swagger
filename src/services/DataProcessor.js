@@ -22,7 +22,7 @@ function eq(a,b) {
  	session (session){
 		  session._stamp = new Date().getTime();
 		  session.local = session.local || {
-			  active : false, expired : false
+			  active : false, expired : false, tags : {}
 		  };
 		  var expiryDateStamp = session._stamp-MyConst.config.chatSessionTimeout;
 
@@ -67,14 +67,19 @@ function eq(a,b) {
 		  }
 		  session._gracestamp = session._stamp-MyConst.config.chatIdleTimeout;
 		  session._waitingSinceStamp = Math.max(session.lastResponseStamp,session.agentSessionStamp);
-		  session._waiting = (session.lastResponseStamp < session.lastInComingStamp) && (session.local.isInBound);
+		  session.local.is_waiting = (session.lastResponseStamp < session.lastInComingStamp) && (session.local.isInBound);
 		  session._waitingstamp_en= formatters.timespan((session._stamp - session._waitingSinceStamp)/1000);
-		  session._attention = session._waiting && (session.lastResponseStamp < session._gracestamp);
+		  session.local.is_attention = session.local.is_waiting && (session.lastResponseStamp < session._gracestamp);
 		  session._new = (session.lastReadStamp < session.lastInComingStamp) 
-		  				|| (session._waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
+		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
-			session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ")
+			session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ");
+
+		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
+		session.local.is_assigned = (session.mode == 'AGENT' && session.assignedToAgent);
+
+
 		 return session;
  	},
 	appendMessage(session,m){
