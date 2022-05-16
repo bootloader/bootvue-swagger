@@ -69,7 +69,7 @@ function eq(a,b) {
 		  session._waitingSinceStamp = Math.max(session.lastResponseStamp,session.agentSessionStamp);
 		  session.local.is_waiting = (session.lastResponseStamp < session.lastInComingStamp) && (session.local.isInBound);
 		  session._waitingstamp_en= formatters.timespan((session._stamp - session._waitingSinceStamp)/1000);
-		  session.local.is_attention = session.local.is_waiting && (session.lastResponseStamp < session._gracestamp);
+		  session.local.is_waiting_long = session.local.is_waiting && (session.lastResponseStamp < session._gracestamp);
 		  session._new = (session.lastReadStamp < session.lastInComingStamp) 
 		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));

@@ -81,8 +81,8 @@
               <li class="nav-item chat_tags">
                 <span class="tag-chat-status" 
                     v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000"
-                    v-bind:class="[searchStatus == 'STALED' ? 'tag-darker' : 'tag-lighter']"
-                    @click="search.status = 'STALED'">
+                    v-bind:class="[searchStatus == 'EXPIRED' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.status = 'EXPIRED'">
                     Expired</span>
               </li>
              </ul>
@@ -102,7 +102,7 @@
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
                         active_contact : (contactId == chat.contactId && ticketHash == chat.ticketHash),
-                        contact_attention : chat.local.is_attention && (chat._tab == 'TEAM' ),
+                        contact_attention : chat.local.is_waiting_long && (chat._tab == 'TEAM' ),
                         contact_waiting : chat.local.is_waiting,
                         data_subjective : !!chat.subject
                     }">
@@ -185,7 +185,7 @@
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
                                 <span class="">
-                                    <b-icon v-if="chat.local.is_attention"  class="icon_attention text-md" variant="red"
+                                    <b-icon v-if="chat.local.is_waiting_long"  class="icon_attention text-md" variant="red"
                                             icon="alarm-fill" 
                                             v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
                                     ></b-icon>
@@ -235,11 +235,11 @@
                         'text-grey' : (search.sortBy && search.sortBy!='is_unassigned'),
                         'text-success' : !search.sortBy
                     }"></i>
-                <i class="contact_type bi bi-alarm-fill pointer" @click="sortByTag('is_attention')"
+                <i class="contact_type bi bi-alarm-fill pointer" @click="sortByTag('is_waiting_long')"
                     v-tooltip="`Need Attention`"
                     v-bind:class="{
-                        'my-selected text-red' : search.sortBy=='is_attention',
-                        'text-grey' : search.sortBy!='is_attention' 
+                        'my-selected text-red' : search.sortBy=='is_waiting_long',
+                        'text-grey' : search.sortBy!='is_waiting_long' 
                      }">
                 </i>
                 <i class="contact_type bi bi-phone-vibrate pointer" @click="sortByTag('is_waiting')"
@@ -281,11 +281,11 @@
     import debounce from "debounce";
     import TextComplete from '../../@common/cloned/v-textcomplete/TextComplete.vue';
     import contact_types from '@/@data/contact_types.json';
-    import chat_status from '@/@data/chat_status.json';
+    import chat_search_tokens from '@/@data/chat_search_tokens.json';
 
     let sampleJsonKeys = [...contact_types.options.map(function(c){
         return c.code.toLowerCase();
-    }),...chat_status.options.map(function(c){
+    }),...chat_search_tokens.options.map(function(c){
         return c.code.toLowerCase();
     })];
 
@@ -299,7 +299,7 @@
         computed : {
             urgentChat : function (argument) {
                 for(var i in this.$store.getters.StateChats){
-                    if(this.$store.getters.StateChats[i].local.is_attention 
+                    if(this.$store.getters.StateChats[i].local.is_waiting_long 
                         && this.$store.getters.StateChats[i]._tab == 'TEAM' 
                         && this.$store.getters.StateChats[i].local.active){
                         return true;
@@ -325,7 +325,12 @@
                             return (
                                 (chat.contactType || "").toLowerCase().indexOf(searchToken._text) == 0
                                 || (chat.status || "").toLowerCase().indexOf(searchToken._text) == 0
-                            );
+                            ) || (searchToken._text == "waiting" && chat.local.is_waiting)
+                              || (searchToken._text == "waiting_long" && chat.local.is_waiting_long)
+                              || (searchToken._text == "unattended" && chat.local.is_unassigned)
+                              || (searchToken._text == "resolved" && chat.local.resolved)
+                              || (searchToken._text == "expired" && chat.local.expired)
+                              ;
                         } else {
                             return ((chat._searchText || "").toLowerCase().indexOf(searchToken._text) > -1);
                         }
@@ -337,7 +342,7 @@
                     unique[ticketHash] = true;
                     if(searchText){
                         return true
-                    } else if(status == 'STALED')
+                    } else if(status == 'EXPIRED')
                         return chat.local.expired;
                     else if(status == 'CLOSED')
                         return chat.local.resolved;    

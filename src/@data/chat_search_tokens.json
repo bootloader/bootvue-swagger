@@ -1,0 +1,24 @@
+{
+    "options": [
+        {
+            "code": "RESOLVED",
+            "name": "RESOLVED"
+        },
+        {
+            "code": "EXPIRED",
+            "name": "EXPIRED"
+        },
+        {
+            "code": "WAITING",
+            "name": "WAITING"
+        },
+        {
+            "code": "WAITING_LONG",
+            "name": "WAITING_LONG"
+        },
+        {
+            "code": "UNATTENDED",
+            "name": "UNATTENDED"
+        }
+    ]
+ }
