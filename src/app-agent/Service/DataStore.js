@@ -70,6 +70,7 @@ const getters = {
 };
 const cache = {
   __RefeshSessionRequest : function({isOnline,isUpdate,isAway}){
+    console.log("__RefeshSessionRequest",state.searchChat)
     return axios.get("/api/sessions/assignments",{
       params : {
         status : isOnline,

@@ -93,6 +93,9 @@
     import formatters from './../../services/formatters';
     import tunnel from './../../services/tunnel';
 
+    var userAgent = window.navigator.userAgent.toLowerCase(),
+    safari = /safari/.test( userAgent ),
+    ios = /iphone|ipod|ipad/.test( userAgent );
 
     function toMessage(msg) {
       if(!msg) return;
@@ -369,9 +372,9 @@
               } else {
                 console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
                 THAT.init();
+                //THAT.sendPostMessage({event : "NO_FP_AND_CH"})
               }
           },1000);
-
 
         },
         onOptionSet : function(){
@@ -415,8 +418,19 @@
         },
         sendPostMessage : function (obj) {
             var msg = JSON.stringify({myChatEvent : obj});
-            //console.log("CHILD:sendPostMessage",msg)
+            //console.log("CHILD:sendPostMessage",msg);
+            console.log("before => window.parent.postMessage",msg);
             window.parent.postMessage(msg, '*');
+            if(ios && !safari){
+              this.sendPostMessageIOS(msg, '*');
+            }
+        },
+        sendPostMessageIOS(message,star){
+          if(webkit?.messageHandlers?.iosListener){
+              webkit.messageHandlers.iosListener.postMessage(message,star);
+          } else {
+            setTimeout(()=>this.sendPostMessageIOS(message,star),1000);
+          }
         },
         SET_OPTIONS : function (myChatEvent) {
             console.log("SET_OPTIONS===myChatEvent",myChatEvent);
