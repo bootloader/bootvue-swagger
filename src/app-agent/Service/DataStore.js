@@ -34,7 +34,7 @@ const state = {
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null},
-  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME'}
+  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME', text : ''}
 };
 var tagFormat = function (argument) {
     return {
@@ -76,10 +76,16 @@ const cache = {
         status : isOnline,
         away : isAway,
         isUpdate : isUpdate,
-        tab : MyFlags.agent.contactsTab,
-        searchStatus : state.searchChat.status,
         limit : state.searchChat.limit,
-        search : state.searchChat.tokens.filter(function(tag){
+        ... (function(isTextQuery){
+          return (!isTextQuery ? {
+              tab : MyFlags.agent.contactsTab,
+              searchStatus : state.searchChat.status
+          } : {
+            search : state.searchChat.text,
+          });
+        })(!!state.searchChat.text),
+        _search : state.searchChat.tokens.filter(function(tag){
           return !tag.isTag && tag.text;
         }).map(function(tag){
           return tag.text
@@ -580,9 +586,10 @@ const mutations = {
   },
   setSessionSearch(state,search){
       let searchText = (search.text || "").trim();  
+      state.searchChat.text = searchText;
       if(searchText){
         searchText = searchText+ "*";
-      }   
+      }
       state.searchChat.tokens = (searchText).split(/(:[\w]+)/).filter(function (argument) {
           return !!argument;
       }).map(function (argument) {
@@ -593,7 +600,7 @@ const mutations = {
               _text : (tags[0] || tags[1]).toLowerCase().replaceAll("*","").trim()
           }
       });
-      console.log(" state.searchChat.status",search.status)
+      console.log(" state.searchChat.status",search.status);
       state.searchChat.status = search.status;
       state.searchChat.limit = search.limit;
       state.searchChat.tab = search.tab;
