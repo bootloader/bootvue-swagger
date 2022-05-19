@@ -8,7 +8,7 @@
 
         <div>
         <b-tabs content-class="mt-3">
-            <b-tab title="Cherry Client Info" active>
+            <b-tab title="Cherry Client Info">
                 <b-card no-body class="bg-secondary border-0 " >
                     <b-card-header class="px-lg-5 bg-transparent pb-2">
                         <base-select   alternative feedback
@@ -56,7 +56,7 @@
                     </b-card-body>
                 </b-card>
             </b-tab>
-            <b-tab title="Deployed Versions">
+            <b-tab title="Deployed Versions" active>
 
                <b-card no-body class="bg-secondary border-0 " >
                     <b-card-body class="px-lg-5 py-lg-2" >
@@ -90,6 +90,7 @@
           BaseCopy
       },
       data : () => ({
+          tab : null,
           model : {
               client : "cherrybase.github.io", env : "",
               releaseVersion : "",
@@ -150,6 +151,9 @@
               return (this.clientOptions.filter(function(option){
                   return option.value == client
               })[0] || {});
+          },
+          currentTab(){
+              return this.tab || 'client';
           }
       }, 
       mounted(){
