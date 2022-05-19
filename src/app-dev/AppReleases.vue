@@ -5,53 +5,75 @@
       <!-- Table -->
       <b-row class="justify-content-center">
         <b-col lg="6" md="8" >
-          <b-card no-body class="bg-secondary border-0 " >
-            <b-card-header class="px-lg-5 bg-transparent pb-2">
-               <h2> Cherry Client Info </h2>
-                  <base-select   alternative feedback
-                        class="mb-3"
-                        name="Client" placeholder="Select Client"
-                        :rules="{required: true}"  required
-                        v-model="model.client" @change="clientOnChange"
-                        :options="clientOptions">
-                    </base-select>
-                    <base-select hidden alternative feedback v-if="clientOption.env && clientOption.env.length"
-                        class="mb-3"
-                        name="Env" placeholder="Select Env"
-                        :rules="{required: true}"  required
-                        v-model="model.env"
-                        :options="clientOption.env">
-                    </base-select>
-            </b-card-header>
-            <b-card-body class="px-lg-5 py-lg-2">
-                <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
-                    <BaseCopy label="Release Version" :value="model.releaseVersion" size="sm" />
-                    <BaseCopy label="Release Url" :value="model.releaseVersion" size="sm"/>
-                </b-form>
-            </b-card-body>
-            <b-card-body class="px-lg-5 py-lg-2">
-                <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
-                     <BaseCopy label="Beta Version" :value="model.betaVersion" size="sm" />
-                    <BaseCopy label="Beta Url" :value="model.betaVersion" size="sm"/>
-                </b-form>
-                <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.betaVersion">
-                    <button @click="updateAlpha(model.betaVersion)"
-                    class="btn btn-sm btn-primary">Update Beta</button> 
-                </div>  
-            </b-card-body>
-            <b-card-body class="px-lg-5 py-lg-2">
-                <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
-                    <BaseCopy label="Alpha Version" :value="model.alphaVersion" size="sm"/>
-                    <BaseCopy label="Alpha Url" 
-                        :value="`https://cdn.jsdelivr.net/gh/cherrybase/${model.client}@${model.alphaVersion}`" 
-                        size="sm"/>
-                </b-form>
-                <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.alphaVersion">
-                        <button @click="updateAlpha(model.alphaVersion)"
-                            class="btn btn-sm btn-primary">Update Alpha</button> 
-                     </div>  
-            </b-card-body>
-          </b-card>
+
+        <div>
+        <b-tabs content-class="mt-3">
+            <b-tab title="Cherry Client Info" active>
+                <b-card no-body class="bg-secondary border-0 " >
+                    <b-card-header class="px-lg-5 bg-transparent pb-2">
+                        <base-select   alternative feedback
+                            class="mb-3"
+                            name="Client" placeholder="Select Client"
+                            :rules="{required: true}"  required
+                            v-model="model.client" @change="clientOnChange"
+                            :options="clientOptions">
+                        </base-select>
+                        <base-select hidden alternative feedback v-if="clientOption.env && clientOption.env.length"
+                            class="mb-3"
+                            name="Env" placeholder="Select Env"
+                            :rules="{required: true}"  required
+                            v-model="model.env"
+                            :options="clientOption.env">
+                        </base-select>
+                    </b-card-header>
+                    <b-card-body class="px-lg-5 py-lg-2">
+                        <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
+                            <BaseCopy label="Release Version" :value="model.releaseVersion" size="sm" />
+                            <BaseCopy label="Release Url" :value="model.releaseVersion" size="sm"/>
+                        </b-form>
+                    </b-card-body>
+                    <b-card-body class="px-lg-5 py-lg-2">
+                        <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
+                            <BaseCopy label="Beta Version" :value="model.betaVersion" size="sm" />
+                            <BaseCopy label="Beta Url" :value="model.betaVersion" size="sm"/>
+                        </b-form>
+                        <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.betaVersion">
+                            <button @click="updateAlpha(model.betaVersion)"
+                            class="btn btn-sm btn-primary">Update Beta</button> 
+                        </div>  
+                    </b-card-body>
+                    <b-card-body class="px-lg-5 py-lg-2">
+                        <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">  
+                            <BaseCopy label="Alpha Version" :value="model.alphaVersion" size="sm"/>
+                            <BaseCopy label="Alpha Url" 
+                                :value="`https://cdn.jsdelivr.net/gh/cherrybase/${model.client}@${model.alphaVersion}`" 
+                                size="sm"/>
+                        </b-form>
+                        <div class="text-center mt-2" v-if="deployed.version && deployed.version!=model.alphaVersion">
+                                <button @click="updateAlpha(model.alphaVersion)"
+                                    class="btn btn-sm btn-primary">Update Alpha</button> 
+                            </div>  
+                    </b-card-body>
+                </b-card>
+            </b-tab>
+            <b-tab title="Deployed Versions">
+
+               <b-card no-body class="bg-secondary border-0 " >
+                    <b-card-body class="px-lg-5 py-lg-2" >
+                        <BaseCopy label="owa" :value="deployed.version" size="sm" />
+                        <small class="float-right">  {{deployed.stamp}} <i class="fa fa-clock"/></small>
+                    </b-card-body>
+                    <b-card-body v-for="server  in deployed.servers" class="px-lg-5 py-lg-2" v-bind:key="server.title">
+                        <BaseCopy :label="server.title" :value="server.version" size="sm" />
+                        <small class="float-right">  {{server.stamp}} <i class="fa fa-clock"/></small>
+                    </b-card-body>
+                </b-card>
+            </b-tab>
+        </b-tabs>
+        </div>
+
+
+
         </b-col>
       </b-row>
 
@@ -93,7 +115,34 @@
           ],
           deployed : {
               version : null,
-          }
+              stamp : null,
+              servers : [{
+                      context : '',
+                      version : '', stamp : '',
+                      title : "Account"
+                },{
+                      context : '/admin',
+                      version : '', stamp : '',
+                      title : "AdminPanel"
+                },{
+                      context : '/agent',
+                      version : '', stamp : '',
+                      title : "AgentDesk"
+                },{
+                      context : '/bot',
+                      version : '', stamp : '',
+                      title : "BotMan"
+                },{
+                      context : '/postman',
+                      version : '', stamp : '',
+                      title : "PostMan"
+                },{
+                      context : '/xms',
+                      version : '', stamp : '',
+                      title : "XMS"
+                },
+              ]
+          },
       }),
       computed : {
           clientOption(){
@@ -105,6 +154,9 @@
       }, 
       mounted(){
           this.clientOnChange();
+          for(var i in this.deployed.servers){
+              this.clientInf(this.deployed.servers[i]);
+          }
       },
       methods : {
         async clientOnChange(){
@@ -183,6 +235,23 @@
                         console.error(e);
                     });
             }
+        },
+        async clientInf(server){
+            let THAT = this;
+            fetch(new Request(
+                    server.context + `/v2/api-docs?group=latest`, {
+                    method: 'GET'
+                })).then(function(response) {
+                    return response.text();
+                }).then(function(response) {
+                    return JSON.parse(response);
+                }).then(function(response) {
+                    //1.0 - 2022-05-19 08:58 am UTC
+                    server.version = response.info.version;
+                    server.stamp = new Date(server.version.replace('1.0 - ','')).toString();
+                }).catch(function(e){
+                    console.error(e);
+                });
         }
       }
   }

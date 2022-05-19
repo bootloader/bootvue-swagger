@@ -53,6 +53,11 @@
                               </ValidationProvider>
                             </div>
 
+                            <base-input prepend="</>" format-filter="item_code" :format-value="newItem.title" format-live
+                              v-model="newItem.code" label="Code" autocomplete="off"
+                              placeholder="ONLINE,BILLING">
+                            </base-input>
+
                             <div v-if="newItem.id" class="row">
                                 <img :src="newItem.url"  class="position-relative form-group col-md-12">
                             </div>
@@ -110,7 +115,7 @@
       return {
               id : null,
               "category": "",
-              "title": "",
+              "title": "", code : "",
               "template" : "", url : "",         };
     }
     export default {
@@ -183,6 +188,7 @@
             formData.append('category', this.newItem.category);
             formData.append('title', this.newItem.title);
             formData.append('content', this.newItem.title);
+            formData.append('code', this.newItem.code);
           },
           async fileUploaded () {
             await this.loadItems();
@@ -222,6 +228,7 @@
               this.newItem.id = item.id;
               this.newItem.category = item.category;
               this.newItem.title = item.title;
+              this.newItem.code = item.code;
               this.newItem.message = item.message;
               this.newItem.template = item.template;
               this.newItem.url = item.url;
