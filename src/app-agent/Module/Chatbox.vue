@@ -794,7 +794,7 @@
 
                //this.calcQuickReplies();
                 var categories = [];
-                var ilastmsg = activeChat.ilastmsg;
+                var ilastmsg = activeChat?.msg?.lastInBoundMsg;
                 if(ilastmsg && ilastmsg.tags){
                     categories = ilastmsg.tags.categories;
                 } else if(!force || !ilastmsg){

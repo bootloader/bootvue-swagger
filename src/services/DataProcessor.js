@@ -56,13 +56,13 @@ function eq(a,b) {
 			//session._tab = "HISTORY";
 		  }
 
-		  if(session.lastmsg){
-		      if(session.lastmsg.type == "I"){
+		  if(session.msg.lastMsg){
+		      if(session.msg.lastMsg.type == "I"){
 				session.local.isInBound = true;
-		        session.lastInComingStamp = Math.max(session.lastInComingStamp,session.lastmsg.timestamp);
-		      } else if(session.lastmsg.type == "O"){
+		        session.lastInComingStamp = Math.max(session.lastInComingStamp,session.msg.lastMsg.timestamp);
+		      } else if(session.msg.lastMsg.type == "O"){
 				session.local.isOutBound = true;
-		        session.lastResponseStamp = Math.max(session.lastInComingStamp,session.lastmsg.timestamp);
+		        session.lastResponseStamp = Math.max(session.lastInComingStamp,session.msg.lastMsg.timestamp);
 		      }
 		  }
 		  session._gracestamp = session._stamp-MyConst.config.chatIdleTimeout;
@@ -74,13 +74,17 @@ function eq(a,b) {
 		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
-			session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ");
-
+		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ");
 		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
 		session.local.is_assigned = (session.mode == 'AGENT' && session.assignedToAgent);
+		let agent = session?.local?.agent;
+		session.local.is_offline_agent = false;
+		if(agent?.session){
+			session.local.is_offline_agent = (agent.session.isAvailableNot || !agent.session.isLoggedIn);
+		}
+		session.local.is_unattended = !agent || (session.local.is_waiting_long && session.local.is_offline_agent);
 
-
-		 return session;
+		return session;
  	},
 	appendMessage(session,m){
 		if(!m || m.length) return;
@@ -116,7 +120,7 @@ function eq(a,b) {
 			  chat.messages.splice(index, 1, m);
 			}
 		}
-		chat.lastmsg = m;
+		chat.msg.lastMsg = m;
 		//state.chats[c].newmsg = true;
 		return chat;
 	},

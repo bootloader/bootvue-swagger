@@ -89,7 +89,7 @@
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="isSearch">  
               <li class="nav-item">
                 <span class="nav-link btn-xs active">
-                    <span class="fa fa-search"/> Results for "{{search.text}}" <span v-if="search.sortBy">sorted by {{search.sortBy}}</span>
+                    <span class="fa fa-search"/> Results for "{{search.text}}" <span v-if="search.sortBy" hidden>sorted by {{search.sortBy}}</span>
                      <span class="fa fa-times float-right" @click="search.text=''"></span>
                 </span>
               </li>
@@ -98,6 +98,7 @@
         <div class="card-body contacts_body" ref="scrollable">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <li v-for="(chat,index) in activeChats"  :key="index"
+                    :title="chat.local"
                     v-bind:class="{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
@@ -139,27 +140,30 @@
                         <div class="user_info contact-text">
                             <span class="font-name" >{{chat.contact.name || chat.contact.phone || chat.contact.email || chat.contactId}}</span>
                             <span class="font-subject" >{{chat.subject}}</span>
-                            <span v-if="chat.lastmsg" class="font-preview"
+                            <span v-if="chat.msg.lastMsg" class="font-preview"
                                 :class="{
-                                    'text-blue' : $global.MyFunc.isOutbound(chat.lastmsg.type)
+                                    'text-blue' : $global.MyFunc.isOutbound(chat.msg.lastMsg.type)
                                 }"
                             >
-                                <span v-if="chat.lastmsg.type=='O'" class="fa fa-reply fa-rotate-45s"></span>&nbsp;
-                                <span v-if="chat.lastmsg.status == 'DELTD'" class="fw-normal text-capitalize">
+                                <span v-if="chat.msg.lastMsg.type=='O'" class="fa fa-reply fa-rotate-45s"></span>&nbsp;
+                                <span v-if="chat.msg.lastMsg.status == 'DELTD'" class="fw-normal text-capitalize">
                                     <span class="fa fa-ban"></span>&nbsp;
                                     <i>message deleted</i>
                                 </span>
-                                <span v-else-if="chat.lastmsg.attachments && chat.lastmsg.attachments[0]" class="fw-normal text-capitalize">
+                                <span v-else-if="chat.msg.lastMsg.attachments && chat.msg.lastMsg.attachments[0]" class="fw-normal text-capitalize">
                                     <span  :class="[{
-                                            'fa fa-camera' : chat.lastmsg.attachments[0].mediaType == 'IMAGE',
-                                            'fa fa-video' : chat.lastmsg.attachments[0].mediaType == 'VIDEO',
-                                            'fa fa-microphone' : chat.lastmsg.attachments[0].mediaType == 'AUDIO',
-                                            'fa fa-file-alt' : chat.lastmsg.attachments[0].mediaType == 'DOCUMENT',
+                                            'fa fa-camera' : chat.msg.lastMsg.attachments[0].mediaType == 'IMAGE',
+                                            'fa fa-video' : chat.msg.lastMsg.attachments[0].mediaType == 'VIDEO',
+                                            'fa fa-microphone' : chat.msg.lastMsg.attachments[0].mediaType == 'AUDIO',
+                                            'fa fa-file-alt' : chat.msg.lastMsg.attachments[0].mediaType == 'DOCUMENT',
                                         }]"></span>
-                                    {{chat.lastmsg.attachments[0].mediaType | lowercase}}
+                                    {{chat.msg.lastMsg.attachments[0].mediaType | lowercase}}
                                 </span>
-
-                                <span v-else>{{chat.lastmsg.text}}</span>
+                                <span v-else>
+                                    <span  :class="[{
+                                            'bi bi-code-square' : chat.msg.lastMsg.template,
+                                        }]"></span>
+                                    {{chat.msg.lastMsg.text || chat.msg.lastMsg.template}}</span>
                             </span>
                             <div v-if="MyConst.config.CHAT_TAG_ENABLED" data-v-5dda926d="" class="chat_tags">
                                 <div data-v-5dda926d="" class="chat_tags text-align-left">
@@ -195,7 +199,12 @@
                                     ></b-icon>
                                 </span>
                                 <span class="">
-                                    <span v-if="chat.mode == 'AGENT' && chat.assignedToAgent" class="fa fa-user-secret text-success assigned_to_agent text-md"
+                                    <span v-if="chat.mode == 'AGENT' && chat.assignedToAgent" :title="JSON.stringify(chat.local)"
+                                        class="fa fa-user-secret assigned_to_agent text-md"
+                                        :class="{
+                                            'text-success' : !chat.local.is_offline_agent,
+                                            'text-red' : chat.local.is_offline_agent
+                                        }"
                                         v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}`"></span>
                                      <span v-else-if="chat.mode == 'AGENT' && !chat.assignedToAgent" class="fa fa-user-secret text-grey assigned_to_agent text-md"
                                         v-tooltip="`Ticket is assigned to None`"></span>
@@ -227,26 +236,27 @@
         </div>
         <div class="card-footer">
             &nbsp; 
-            
-                <i class="contact_type fa fa-user-secret" @click="sortByTag('is_unassigned')"
+                <i class="contact_type fa fa-user-secret opacity-7" @click="sortByTag('is_unassigned')"
                     v-tooltip="'Show Unassigned on top'"
                     v-bind:class="{
-                        'my-selected text-greyer' : search.sortBy=='is_unassigned',
-                        'text-grey' : (search.sortBy && search.sortBy!='is_unassigned'),
-                        'text-success' : !search.sortBy
+                        'my-selected text-grey opacity-10 bg-white:before' : search.sortBy=='is_unassigned',
+                        'text-success bg-greyish:before' : (search.sortBy!='is_unassigned'),
                     }"></i>
-                <i class="contact_type bi bi-alarm-fill pointer" @click="sortByTag('is_waiting_long')"
+                <i class="contact_type fa fa-user-secret text-red opacity-7 bg-greyish:before" @click="sortByTag('is_unattended')"
+                    v-tooltip="'Show Unassigned on top'"
+                    v-bind:class="{
+                        'my-selected opacity-10 bg-white:before' : search.sortBy=='is_unattended',
+                    }"></i>
+                <i class="contact_type bi bi-alarm-fill pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting_long')"
                     v-tooltip="`Need Attention`"
                     v-bind:class="{
-                        'my-selected text-red' : search.sortBy=='is_waiting_long',
-                        'text-grey' : search.sortBy!='is_waiting_long' 
+                        'my-selected opacity-10 bg-white:before' : search.sortBy=='is_waiting_long'
                      }">
                 </i>
-                <i class="contact_type bi bi-phone-vibrate pointer" @click="sortByTag('is_waiting')"
+                <i class="contact_type bi bi-phone-vibrate pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting')"
                     v-tooltip="`Waiting for response`"
                     v-bind:class="{
-                        'my-selected text-red' : search.sortBy=='is_waiting',
-                        'text-grey' : search.sortBy!='is_waiting' 
+                        'my-selected opacity-10 bg-white:before'  : search.sortBy=='is_waiting',
                     }">
                 </i>
 
@@ -307,6 +317,13 @@
                 }
                 return false;
             },
+            activeAgents (){
+                var agents = {}
+                this.$store.getters.StateAgentOptions.map(function(agent){
+                    agents[agent.code] = agent;
+                });
+                return agents;
+            },
             activeChats : function(){ 
                 let unique = {};
                 console.log("activeChats",this.$store.getters.StateChats.length); 
@@ -315,22 +332,36 @@
                 let searchTokens = this.$store.getters.SearchChat.tokens;
                 var tab = MyFlags.agent.contactsTab;
                 var status = this.$store.getters.SearchChat.status;
+                
                 //console.log("searchTokens",searchTokens)
+                console.log("activeChats",this.$store.getters.StateChats)
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
                     return (chat._tab == tab) || searchText;
                 }).filter(function(chat){
                     var _searchTokens = searchTokens.filter(function (searchToken) {
                         console.log(chat.name,searchToken._text);
                         if(searchToken.isTag){
-                            return (
-                                (chat.contactType || "").toLowerCase().indexOf(searchToken._text) == 0
+                            if((chat.contactType || "").toLowerCase().indexOf(searchToken._text) == 0
                                 || (chat.status || "").toLowerCase().indexOf(searchToken._text) == 0
-                            ) || (searchToken._text == "waiting" && chat.local.is_waiting)
-                              || (searchToken._text == "waiting_long" && chat.local.is_waiting_long)
-                              || (searchToken._text == "unattended" && chat.local.is_unassigned)
-                              || (searchToken._text == "resolved" && chat.local.resolved)
-                              || (searchToken._text == "expired" && chat.local.expired)
-                              ;
+                            ){
+                                return true;
+                            }
+                            switch(searchToken._text ){
+                                case  "waiting" :
+                                    return chat.local.is_waiting;
+                                case  "waiting_long" :
+                                    return chat.local.is_waiting_long;
+                                case  "unattended" :
+                                    return chat.local.is_unattended;
+                                case  "unassigned" :
+                                    return chat.local.is_unassigned;
+                                case  "resolved" :
+                                    return chat.local.resolved;
+                                case  "expired" :
+                                    return chat.local.expired;
+                                default :
+                                    return true;
+``                            }
                         } else {
                             return ((chat._searchText || "").toLowerCase().indexOf(searchToken._text) > -1);
                         }
@@ -634,7 +665,19 @@
                 border-left: 5px solid rgba(var(--scheme-color-rgba), 0.6);
             }
         }
-        li.data_unassigned ~ .data_unassigned::before{
+        li.data_assigned {
+            &::before {
+                content: "Assigned";
+                display: block;
+                font-size: .8em;
+                padding: 0px 10px;
+                color: #000000cc;
+                background-color :  rgba(var(--scheme-color-rgba), 0.2);
+                border-left: 5px solid rgba(var(--scheme-color-rgba), 0.6);
+            }
+        }
+        li.data_unassigned ~ .data_unassigned::before,
+        li.data_assigned ~ .data_assigned::before{
             content: "";
             display: none;
         }

@@ -27,13 +27,13 @@ var updateTimer = function(){
 const state = {
   user: null,agents : [],
   contacts : null,
-  chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
+  chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null, chatsFetchStamp : 0,
   chatsCounter : 1, 
   meta : { isOnline : undefined, isAway : false, isLoadingChats : false},
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
-  chatHistory : { sessions : null},
+  chatHistory : { sessions : null },
   searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME', text : ''}
 };
 var tagFormat = function (argument) {
@@ -70,7 +70,8 @@ const getters = {
 };
 const cache = {
   __RefeshSessionRequest : function({isOnline,isUpdate,isAway}){
-    console.log("__RefeshSessionRequest",state.searchChat)
+    console.log("__RefeshSessionRequest",state.searchChat);
+    let chatsFetchStamp = Date.now();
     return axios.get("/api/sessions/assignments",{
       params : {
         status : isOnline,
@@ -92,6 +93,9 @@ const cache = {
         }).join("*")
       //  withMessage : false
       }
+    }).then(function(response){
+      response.data.chatsFetchStamp = chatsFetchStamp;
+      return response;
     });
   },
   _RefeshSession : (function () {
@@ -153,7 +157,10 @@ const actions = {
           dispatch("SetAgentOptionsStatus", response.data.details);
       }
       if(response.data && response.data.results){
-          dispatch("updateChats", response.data.results);
+          if(response.data.chatsFetchStamp > state.chatsFetchStamp){
+            state.chatsFetchStamp = response.data.chatsFetchStamp;
+            dispatch("updateChats", response.data.results);
+          }
       }
       commit("setMeta", state.meta);
       clearTimeout(REFRESH_TIMER);
@@ -353,33 +360,40 @@ const actions = {
     await dispatch('LoadAgentOptions');
     var awayStamp = new Date().getTime()-MyConst.config.agentSessionTimeout;
     var offlineStamp = awayStamp-MyConst.config.agentSessionTimeout*2;
-    for(var i in agentSessons){
+    
       state.agents.map(function(agent) {
-        var session = agentSessons[i];
-        if(agent.code == session.agentCode){
-          agent.session = session;
-          session.isLoggedIn = (session.isLoggedIn && (session.lastOnlineStamp > offlineStamp))
-          session.isAvailable = session.isLoggedIn && session.isOnline && (session.lastOnlineStamp > awayStamp);
-          session.isAvailableNot = session.isLoggedIn && !session.isOnline;
-          session.isAway =      session.isOnline && session.isLoggedIn && (session.lastOnlineStamp < awayStamp);
-          agent.statusScore = 0;
-          if(session.isAvailable ) {
-             agent.statusScore = 4;
-          } else if(session.isAway) {
-             agent.statusScore = 3;
-          } else if(session.isAvailableNot) {
-             agent.statusScore = 2;
-          } else if(session.isLoggedIn){
-             agent.statusScore = 1;
-          } 
-          if(agent.code == MyConst.agent){
-              state.meta.isOnline = session.isOnline;
-              commit("setMeta", state.meta);
-          }
+        for(var i in agentSessons){
+              var session = agentSessons[i];
+              if(agent.code == session.agentCode){
+                agent.session = session;
+                session.isLoggedIn = (session.isLoggedIn && (session.lastOnlineStamp > offlineStamp))
+                session.isAvailable = session.isLoggedIn && session.isOnline && (session.lastOnlineStamp > awayStamp);
+                session.isAvailableNot = session.isLoggedIn && !session.isOnline;
+                session.isAway =      session.isOnline && session.isLoggedIn && (session.lastOnlineStamp < awayStamp);
+                agent.statusScore = 0;
+                if(session.isAvailable ) {
+                  agent.statusScore = 4;
+                } else if(session.isAway) {
+                  agent.statusScore = 3;
+                } else if(session.isAvailableNot) {
+                  agent.statusScore = 2;
+                } else if(session.isLoggedIn){
+                  agent.statusScore = 1;
+                } 
+                if(agent.code == MyConst.agent){
+                    state.meta.isOnline = session.isOnline;
+                    commit("setMeta", state.meta);
+                }
+              }
         }
+
+        agent.session = agent.session || {};
+        agent.statusScore = agent.statusScore == undefined ? -1 : agent.statusScore;
+
       });
-    }
+ 
     state.agents = state.agents.sort(function (a,b) {
+      if(!a.statusScore && !b.statusScore) -1;
       if(a.statusScore > b.statusScore){
         return -1 //(a.code.toLowerCase() < b.code.toLowerCase()) ? -1 : 1 ;
       } else if(a.statusScore < b.statusScore ){
@@ -470,16 +484,20 @@ const actions = {
   },
   async GetSessionChats({ commit , dispatch},options) {
     let response = await jskeeper.first(function(){
-      return axios.post("/api/sessions/messages?sessionId="+options.sessionId,options);
+      return axios.get("/api/session/messages?sessionId="+options.sessionId,options);
     },"messages:"+options.sessionId);
-
-    DataProcessor.session(response.data.results[0]);
-    if(response.data.results[0].local.active){
-        dispatch("AddChat",response.data.results[0]);
+    let session =  {
+      ...response.data.meta,
+      messages : response.data.results
+    };
+    console.log("session",session)
+    DataProcessor.session(session);
+    if(session.local.active){
+        dispatch("AddChat",session);
     } else {
-        dispatch("AddHistoryChat",response.data.results[0]);
+        dispatch("AddHistoryChat",session);
     }
-    return response.data.results[0];
+    return session;
   },
 
   async AssingToAgent({commit,dispatch},{ sessionId,agentId }) {
@@ -520,20 +538,20 @@ const mutations = {
   //Contacts
   setChats(state, chats) {
     for(var c in chats){
-      chats[c].lastmsg = chats[c].lastmsg || {};
+      chats[c].msg = chats[c].msg || {};
       if(chats[c].messages){
         for (var i = 0; i < chats[c].messages.length; i++) {
           if(chats[c].messages[i].type == 'I'){
-            chats[c].ilastmsg = chats[c].messages[i];
+            chats[c].msg.lastInBoundMsg = chats[c].messages[i];
           }  
           if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
-            chats[c].lastmsg = chats[c].messages[i];
+            chats[c].msg.lastMsg = chats[c].messages[i];
           }
           chats[c].messages[i].stamps = chats[c].messages[i].stamps || { }
         }
-      } else if(chats[c].msg){
-        chats[c].ilastmsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
-        chats[c].lastmsg = chats[c].msg.lastMsg || chats[c].lastmsg;
+      } else {
+        //chats[c].msg.lastInBoundMsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
+        //chats[c].msg.lastMsg = chats[c].msg.lastMsg || chats[c].lastmsg;
       }
       
       if(
@@ -547,6 +565,15 @@ const mutations = {
         state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
       }
 
+      chats[c].local = chats[c].local || {
+			  active : false, expired : false, tags : {}
+		  };
+
+      if(chats[c].assignedToAgent && chats[c].local){
+        chats[c].local.agent = state.agents.filter(function(agent){
+          return agent.code == chats[c].assignedToAgent;
+        })[0];
+      }
       chats[c].messages = state.chatsMessages[chats[c].sessionId];
       
       chats[c].local =  chats[c].local;

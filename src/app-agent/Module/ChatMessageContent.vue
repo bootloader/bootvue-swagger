@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div v-else-if="m.template" class="my-msg-template-tag">
-                <span class="fa fa-tag"></span>&nbsp;{{m.template}}
+                <span class="bi bi-code-square"></span>&nbsp;{{m.template}}
             </div>
          </span>
     </span>
