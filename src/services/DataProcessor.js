@@ -56,7 +56,7 @@ function eq(a,b) {
 			//session._tab = "HISTORY";
 		  }
 
-		  if(session.msg.lastMsg){
+		  if(session?.msg?.lastMsg){
 		      if(session.msg.lastMsg.type == "I"){
 				session.local.isInBound = true;
 		        session.lastInComingStamp = Math.max(session.lastInComingStamp,session.msg.lastMsg.timestamp);
