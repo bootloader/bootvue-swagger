@@ -40,7 +40,7 @@
                         </select>
                       </b-th>
                       <b-th>
-                        <select class="form-control form-control-sm" v-model="filters.closeSessionStamp" @click.stop.prevent>
+                        <select class="form-control form-control-sm" v-model="filters.lastSessionStamp" @click.stop.prevent>
                           <option value="">--</option>
                           <option :value="option.value" v-for="option in closeSessionOptions" :key="option.value">{{ option.label }}</option>
                         </select>    
@@ -83,7 +83,7 @@
                 <template #cell(fistResponseStamp)="row">
                     {{ row.item.fistResponseStamp | formatDate}} 
                 </template>
-                <template #cell(closeSessionStamp)="row">
+                <template #cell(lastSessionStamp)="row">
                     <span class="fa text-xs" :class="{
                         'text-success' : row.item.local.open,
                         'text-danger' : row.item.local.expired,
@@ -91,7 +91,7 @@
                         'fa-dot-circle' : row.item.primary,
                         'fa-circle' : !row.item.primary
                       }" />
-                      {{ row.item.closeSessionStamp| formatDate}}
+                      {{ row.value | formatDate}}
                 </template>   
                 <template #cell(actions)="row">
                     <span class="far fa-comment-alt mg-1 pointer text-primary text-bold" 
@@ -197,7 +197,7 @@
                 if(!this.sessions.items.length) return [];
                 const filtered = this.sessions.items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
-                    if(key === "closeSessionStamp"){
+                    if(key === "lastSessionStamp"){
                       switch (this.filters[key]) {
                         case "resolved": 
                           return item?.local?.resolved;
@@ -263,7 +263,8 @@
                     { key : 'fistResponseStamp', label : "Agent@", sortable: false },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
-                    { key : 'closeSessionStamp', label : "Closed@", sortable: true},
+                    { key : 'lastSessionStamp', label : "Closed@", sortable: true, sortByFormatted:true,
+						            formatter: (v,k,item) => (item.closeSessionStamp || item.updatedStamp)},
                     //{ key : 'actions', label : "Action" }
                 ],
                 items : [],
@@ -284,7 +285,7 @@
             filters:{
               assignedToAgent:"",
               contactName:"",
-              closeSessionStamp:"",
+              lastSessionStamp:"",
               fistResponseStamp:"",
             },
             input : {
