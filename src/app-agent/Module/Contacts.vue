@@ -12,7 +12,7 @@
                 </div>
                     <text-complete v-model="search.text" placeholder="Search..." name="" @active="searchInActive"
                         class="form-control contact-search" :strategies="this.search.active ? strategies : []"
-                        :rows="1" resize="none"/>
+                        :rows="1" resize="none" nonewline/>
                 <div class="input-group-prepend">
                     <span v-if="!!search.text" class="input-group-text search_btn" @click="search.text=''" ><i class="fa fa-close"></i></span>
                     <span v-if="!search.text" class="input-group-text search_btn" ><i class="fa fa-search"></i></span>
@@ -199,13 +199,13 @@
                                     ></b-icon>
                                 </span>
                                 <span class="">
-                                    <span v-if="chat.mode == 'AGENT' && chat.assignedToAgent" :title="JSON.stringify(chat.local)"
+                                    <span v-if="chat.mode == 'AGENT' && chat.assignedToAgent"
                                         class="fa fa-user-secret assigned_to_agent text-md"
                                         :class="{
                                             'text-success' : !chat.local.is_offline_agent,
                                             'text-red' : chat.local.is_offline_agent
                                         }"
-                                        v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}`"></span>
+                                        v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}` + (chat.local.is_offline_agent ? ` (offline)` : ``) "></span>
                                      <span v-else-if="chat.mode == 'AGENT' && !chat.assignedToAgent" class="fa fa-user-secret text-grey assigned_to_agent text-md"
                                         v-tooltip="`Ticket is assigned to None`"></span>
                                      <span v-else-if="chat.mode == 'BOT'" class="fa fa-robot text-success assigned_to_agent text-md"
@@ -237,26 +237,26 @@
         <div class="card-footer">
             &nbsp; 
                 <i class="contact_type fa fa-user-secret opacity-7" @click="sortByTag('is_unassigned')"
-                    v-tooltip="'Show Unassigned on top'"
+                    v-tooltip="'Show Un-Assigned on top'"
                     v-bind:class="{
-                        'my-selected text-grey opacity-10 bg-white:before' : search.sortBy=='is_unassigned',
+                        'my-selected text-grey opacity-10 bg-white:before bg-grey' : search.sortBy=='is_unassigned',
                         'text-success bg-greyish:before' : (search.sortBy!='is_unassigned'),
                     }"></i>
                 <i class="contact_type fa fa-user-secret text-red opacity-7 bg-greyish:before" @click="sortByTag('is_unattended')"
-                    v-tooltip="'Show Unassigned on top'"
+                    v-tooltip="'Show Un-Attended on top'"
                     v-bind:class="{
-                        'my-selected opacity-10 bg-white:before' : search.sortBy=='is_unattended',
+                        'my-selected opacity-10 bg-white:before bg-grey' : search.sortBy=='is_unattended',
                     }"></i>
                 <i class="contact_type bi bi-alarm-fill pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting_long')"
                     v-tooltip="`Need Attention`"
                     v-bind:class="{
-                        'my-selected opacity-10 bg-white:before' : search.sortBy=='is_waiting_long'
+                        'my-selected opacity-10 bg-white:before bg-grey' : search.sortBy=='is_waiting_long'
                      }">
                 </i>
                 <i class="contact_type bi bi-phone-vibrate pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting')"
                     v-tooltip="`Waiting for response`"
                     v-bind:class="{
-                        'my-selected opacity-10 bg-white:before'  : search.sortBy=='is_waiting',
+                        'my-selected opacity-10 bg-white:before bg-grey'  : search.sortBy=='is_waiting',
                     }">
                 </i>
 

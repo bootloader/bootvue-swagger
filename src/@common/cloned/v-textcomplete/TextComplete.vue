@@ -11,7 +11,7 @@
               name="textcomplete"
               @focus="handleFocus"
               @blur="handleBlur"
-              @keydown="keyEvent"
+              @keydown="keyEvent" 
               @keyup="keyUp"></textarea>
 
     <div class="autocomplete transition" :id="'autocomplete-' + id" v-show="showList">
@@ -60,6 +60,10 @@ export default {
       type: [Number,String],
       default: 2
     },
+    nonewline : {
+      type : Boolean, 
+      default : false
+    }
   },
   data() {
     return {
@@ -112,7 +116,9 @@ export default {
     },
     updateValue: function (value) {
       this.$refs.textarea.value = value
-
+      if(this.nonewline){
+        value = value.replace(/\n/g, " "); 
+      }
       this.$emit('input', value)
     },
     change() {
