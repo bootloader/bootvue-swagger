@@ -49,7 +49,7 @@ export default AppRouter.route({
         },
         {
             path: '/:app/chat/:contactId/:sessionId/:profileId/:profileView/:mvu/:mash',
-            name: 'defAgentView',
+            name: 'defAgentViewLong',
             component: () => import('./Module/Home.vue'),
         },
         {

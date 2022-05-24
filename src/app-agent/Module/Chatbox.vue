@@ -667,11 +667,12 @@
                     if(this.activeChat.contact.sessionId != this.$route.params.sessionId){
                         console.log("initNewMessage:3",this.activeChat.contact.sessionId,this.$route.params.sessionId);
                         this.$router.push({
-                            name: 'defAgentView', 
+                            name: 'defAgentViewLong', 
                                 params: { 
-                                    sessionId : this.activeChat.contact.sessionId,
+                                    sessionId : this.activeChat.contact.sessionId || this.$route.params.sessionId,
                                     profileId : this.$route.params.contactId,
-                                    sendNewMessage : true
+                                    sendNewMessage : true,
+                                    mash : "PUSH_HSM"
                                 }
                         });
                     } else {
