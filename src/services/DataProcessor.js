@@ -80,7 +80,6 @@ function eq(a,b) {
 		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
-		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ").toLowerCase();
 		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
 		session.local.is_assigned = (session.mode == 'AGENT' && session.assignedToAgent);
 		let agent = session?.local?.agent;
@@ -90,6 +89,11 @@ function eq(a,b) {
 		}
 		session.local.is_unattended = !agent || (session.local.is_waiting_long && session.local.is_offline_agent);
 
+		if(!session?.contact?.name){
+			session.contact.name = session.name;
+		}
+
+		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ").toLowerCase();
 		return session;
  	},
 	appendMessage(session,m){

@@ -664,15 +664,14 @@
                 console.log("initNewMessage:1",init,this.$route.params.sendNewMessage);
                 if(init || this.$route.params.sendNewMessage){
                     console.log("initNewMessage:2",init,this.$route.params.sendNewMessage);
-                    if(this.activeChat.contact.sessionId != this.$route.params.sessionId){
+                    if(this.activeChat.contact.sessionId && this.activeChat.contact.sessionId != this.$route.params.sessionId){
                         console.log("initNewMessage:3",this.activeChat.contact.sessionId,this.$route.params.sessionId);
                         this.$router.push({
                             name: 'defAgentViewLong', 
                                 params: { 
-                                    sessionId : this.activeChat.contact.sessionId || this.$route.params.sessionId,
+                                    sessionId : this.activeChat.contact.sessionId,
                                     profileId : this.$route.params.contactId,
-                                    sendNewMessage : true,
-                                    mash : "PUSH_HSM"
+                                    sendNewMessage : true
                                 }
                         });
                     } else {
