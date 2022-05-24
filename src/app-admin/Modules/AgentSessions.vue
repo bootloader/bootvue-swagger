@@ -253,7 +253,7 @@
             subheading: 'Select date range for report',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-chalkboard-teacher',
             sessions : {
-                sortBy: 'startSessionStamp',
+                sortBy: 'lastSessionStamp',
                 sortDesc: true,
                 fields: [ 
                     { key : 'assignedToAgent', label : "Assigned", sortable: true},

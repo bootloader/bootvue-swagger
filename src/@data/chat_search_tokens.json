@@ -13,8 +13,8 @@
             "name": "WAITING"
         },
         {
-            "code": "WAITING_LONG",
-            "name": "WAITING_LONG"
+            "code": "NEED_ATTENTION",
+            "name": "NEED_ATTENTION"
         },
         {
             "code": "UNATTENDED",

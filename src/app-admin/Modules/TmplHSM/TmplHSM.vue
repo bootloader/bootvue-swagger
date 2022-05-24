@@ -474,20 +474,12 @@
                 let items = this.table.items;
                 console.log("items",items);
                 if(!items?.length) return [];
-                const filtered = items.filter(item => {
+                return items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
                         return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
                     }
                   );
-                });
-                return filtered.length > 0
-                  ? filtered
-                  : [
-                      Object.keys(items[0]).reduce(function(obj, value) {
-                        obj[value] = '';
-                        return obj;
-                      }, {})
-                    ];
+                }) || [];
             },
             templateVariable(){
               return [...this.sampleVar.contact,... this.sampleVar.data];

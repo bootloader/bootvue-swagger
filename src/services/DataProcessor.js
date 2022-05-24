@@ -56,6 +56,7 @@ function eq(a,b) {
 			//session._tab = "HISTORY";
 		  }
 
+		  session.local.is_agent_responded = false;
 		  if(session?.msg?.lastMsg){
 		      if(session.msg.lastMsg.type == "I"){
 				session.local.isInBound = true;
@@ -64,17 +65,22 @@ function eq(a,b) {
 				session.local.isOutBound = true;
 		        session.lastResponseStamp = Math.max(session.lastInComingStamp,session.msg.lastMsg.timestamp);
 		      }
+			  if(session.msg.lastMsg?.route?.senderType == "AGENT"){
+				session.local.is_agent_responded = true;
+			  }
 		  }
 		  session._gracestamp = session._stamp-MyConst.config.chatIdleTimeout;
 		  session._waitingSinceStamp = Math.max(session.lastResponseStamp,session.agentSessionStamp);
-		  session.local.is_waiting = (session.lastResponseStamp < session.lastInComingStamp) && (session.local.isInBound);
+		  session.local.is_waiting = session.local.isModeAgent && !session.local.resolved
+		  						&& ((session.lastResponseStamp < session.lastInComingStamp) 
+									|| (session.local.isInBound || !session.local.is_agent_responded));
 		  session._waitingstamp_en= formatters.timespan((session._stamp - session._waitingSinceStamp)/1000);
 		  session.local.is_waiting_long = session.local.is_waiting && (session.lastResponseStamp < session._gracestamp);
 		  session._new = (session.lastReadStamp < session.lastInComingStamp) 
 		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
-		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ");
+		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ").toLowerCase();
 		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
 		session.local.is_assigned = (session.mode == 'AGENT' && session.assignedToAgent);
 		let agent = session?.local?.agent;

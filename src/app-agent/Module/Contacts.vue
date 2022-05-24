@@ -98,7 +98,6 @@
         <div class="card-body contacts_body" ref="scrollable">
             <ul class="contacts contact-list" v-if="activeChats.length>0">
                 <li v-for="(chat,index) in activeChats"  :key="index"
-                    :title="chat.local"
                     v-bind:class="{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
@@ -189,7 +188,19 @@
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
                                 <span class="">
-                                    <b-icon v-if="chat.local.is_waiting_long"  class="icon_attention text-md" variant="red"
+                                    <b-icon v-if="chat.local.resolved && chat.local.closed"  class="text-md" variant="success"
+                                            icon="check-circle-fill" 
+                                            v-tooltip="`This conversation is marked as resolved & closed`"
+                                    ></b-icon>
+                                    <b-icon v-else-if="chat.local.resolved"  class="text-md" variant="success"
+                                            icon="check-circle" 
+                                            v-tooltip="`This conversation is marked as resolved`"
+                                    ></b-icon>
+                                    <b-icon v-else-if="chat.local.expired"  class="icon_attention text-md" variant="red"
+                                            icon="dash-circle-fill" 
+                                            v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
+                                    ></b-icon>
+                                    <b-icon v-else-if="chat.local.is_waiting_long"  class="icon_attention text-md" variant="red"
                                             icon="alarm-fill" 
                                             v-tooltip="(chat.name || chat.contactId) + ' is waiting for response for ' + chat._waitingstamp_en"
                                     ></b-icon>
@@ -208,7 +219,7 @@
                                         v-tooltip="`Ticket is assigned to ${chat.assignedToAgent}` + (chat.local.is_offline_agent ? ` (offline)` : ``) "></span>
                                      <span v-else-if="chat.mode == 'AGENT' && !chat.assignedToAgent" class="fa fa-user-secret text-grey assigned_to_agent text-md"
                                         v-tooltip="`Ticket is assigned to None`"></span>
-                                     <span v-else-if="chat.mode == 'BOT'" class="fa fa-robot text-success assigned_to_agent text-md"
+                                     <span v-else-if="chat.mode == 'BOT'" class="fa fa-robot text-success assigned_to_agent text-sm"
                                         v-tooltip="`Ticket is assigned to ${chat.assignedToBot || chat.assignedToQueue}`"></span>
                                      <span v-else class="openwebicons-webhooks text-success assigned_to_agent text-md"
                                         v-tooltip="`Ticket is assigned to ${chat.assignedToBot || chat.assignedToQueue || 'None'}`"></span>
@@ -339,7 +350,7 @@
                     return (chat._tab == tab) || searchText;
                 }).filter(function(chat){
                     var _searchTokens = searchTokens.filter(function (searchToken) {
-                        console.log(chat.name,searchToken._text);
+                        console.log(chat.name,searchToken.isTag,searchToken._text,"===",chat._searchText);
                         if(searchToken.isTag){
                             if((chat.contactType || "").toLowerCase().indexOf(searchToken._text) == 0
                                 || (chat.status || "").toLowerCase().indexOf(searchToken._text) == 0
@@ -350,6 +361,7 @@
                                 case  "waiting" :
                                     return chat.local.is_waiting;
                                 case  "waiting_long" :
+                                case  "need_attention" :
                                     return chat.local.is_waiting_long;
                                 case  "unattended" :
                                     return chat.local.is_unattended;

@@ -27,7 +27,7 @@
                 <b-alert v-else-if="input.meta.inputType=='MESSAGE'" show
                     :variant="input.meta.messageType.toLowerCase()">
                        <span> <MyIcon type="messageType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
-                       <small>{{input.meta.desc}}</small>
+                      <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
                <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)"
