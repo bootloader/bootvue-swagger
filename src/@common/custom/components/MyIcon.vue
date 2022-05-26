@@ -20,6 +20,14 @@ var MAP = {
         'agent' : ['fa fa-user-secret'],
         'webhook' : ['openwebicons-webhooks']
     },
+    senderType : {
+        '_' : [''],  '$' : ['fa fa-th-large'],
+        'bot' : ["fa fa-robot"],
+        'system' : ['fa fa-robot'],
+        'agent' : ['fa fa-user-secret'],
+        'api' : ['openwebicons-webhooks'],
+        'admin' : []
+    },
     messageType : {
         '_' : [''], '$' : ['fa fa-question-circle'],
          'primary' : ["fa fa-dot-circle"],

@@ -217,7 +217,7 @@ const actions = {
         && (state.chats[c].ticketHash == chat.ticketHash)
       ){
         state.chats[c].active = !!chat.active;
-        state.chats[c].getAssignedToAgent = chat.getAssignedToAgent;
+        state.chats[c].assignedToAgent = chat.assignedToAgent;
         state.chats[c].resolved = chat.resolved;
         //Append new messages to existing session
         for(var m in chat.messages){
@@ -500,10 +500,13 @@ const actions = {
     return session;
   },
 
-  async AssingToAgent({commit,dispatch},{ sessionId,agentId }) {
+  async AssingToAgent({commit,dispatch},options,{ sessionId,agentId, agentCode,deptCode ,deptId}) {
     let AssignAgentForm = new URLSearchParams();
-    AssignAgentForm.append('sessionId', sessionId);
-    AssignAgentForm.append('agentId', agentId);
+    // AssignAgentForm.append('sessionId', sessionId);
+    // AssignAgentForm.append('agentId', agentId);
+    // AssignAgentForm.append('agentCode', agentCode);
+    // AssignAgentForm.append('deptCode', deptCode);
+    // AssignAgentForm.append('deptId', deptId);
     let response = await axios.post("/api/session/agent",AssignAgentForm);
     dispatch("AddChat",response.data.results[0]);
     //commit("setQuickTags", response.data);
@@ -575,7 +578,6 @@ const mutations = {
         })[0];
       }
       chats[c].messages = state.chatsMessages[chats[c].sessionId];
-      
       chats[c].local =  chats[c].local;
       DataProcessor.session(chats[c]);
     }

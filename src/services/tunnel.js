@@ -25,5 +25,8 @@ export default {
 	},
 	instance : function () {
 		return this.client.instance()
+	},
+	pipe : function () {
+		return this.init().instance()
 	}
 }

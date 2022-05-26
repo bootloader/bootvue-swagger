@@ -7,6 +7,7 @@ import axios from "axios";
 import DataProcessor from "./DataProcessor";
 import { i18n } from "./i18n";
 import formatter from "./formatters";
+import tunnel from './/tunnel';
 
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
@@ -144,7 +145,9 @@ const DataService = {
     url = slashUrl(url);
     let SubmitForm = new URLSearchParams();
     for (var key in params) {
-        SubmitForm.append(key, params[key]);
+        if((params[key] !== null) && (params[key] !== undefined)){
+          SubmitForm.append(key, params[key]);
+        }
     }
     try{
       let response = await axios.post(url, SubmitForm,config);
@@ -177,5 +180,6 @@ const DataService = {
 };
 
 Vue.prototype.$service = DataService;
+Vue.prototype.$tunnel = tunnel;
 
 export default  DataService

@@ -16,7 +16,7 @@
                     :agentOptions="agentOptions"
                     :onAssignedToAgent="onAssignedToAgent"
                     :isActionable="isActionable"
-                    :assignedToAgent="assignedToAgent"
+                    :assignedToAgent="chatLocal.agent"
                     :closSession="closSession"
                     ref="chatHeader"
                     :plug="plug"
@@ -31,7 +31,7 @@
                     :agentOptions="agentOptions"
                     :onAssignedToAgent="onAssignedToAgent"
                     :isActionable="isActionable"
-                    :assignedToAgent="assignedToAgent"
+                    :assignedToAgent="chatLocal.agent"
                     :closSession="closSession"
                     ref="chatHeader"
                     v-else
@@ -399,7 +399,8 @@
                return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent);
             },
             agentOptions : function(){ 
-                return this.$store.getters.StateAgentOptions;
+                return [...this.$store.getters.StateAgentOptions,
+                        ...this.$store.getters.StateApi.OptionsAgentTeams || []];
             },
             mediaOptions : function(){ 
                 //console.log("mediaOptions=",this.$store.getters.StateMediaOptions)
@@ -448,11 +449,12 @@
             },
             showQuickReplies : false, countQuickReplies : 3,
             showAgentOption : false,
-            assignedToAgent : null,
+            assignedToAgent : { code : null },
             activeChat : {
                 local : {
                     active : false,
-                    expired : false
+                    expired : false,
+                    agent : { }
                 }
             },
             chatsVersionLocal : 0,
@@ -521,11 +523,18 @@
             this.loadChats();
 
             var THAT =  this;
-            this.tunnel = tunnel.init().instance()
+            this.tunnel = this.$tunnel.pipe()
             .on("/agent/onmessage", function(msg){
                 if(msg.sessionId == THAT.$route.params.sessionId)
                     THAT.scrollToBottom(true);
-            });
+            }).on("/chat/session/delta", function(data){
+                if(THAT.activeChat.sessionId == data.sessionId
+                    && THAT.activeChat._tab == "ORG"){
+                    THAT.loadCurrentession();
+                } else {
+                    THAT.refreshActiveChat();
+                }
+            })
 
             // const editor = new TextareaEditor(this.$refs.message_text);
             // this.textcomplete = new Textcomplete(editor,this.strategies, {
@@ -827,7 +836,8 @@
             },
             async loadSession(options){
                 let chat = await this.$store.dispatch('GetSessionChats',options);
-                this.activeChat = chat;
+                //this.activeChat = chat;
+                this.activeChat = this.selectActiveChat();
                 return chat;
             },
             loadCurrentession : pebounce(async function(){
@@ -852,6 +862,7 @@
                 this.$refs.chatHeader && typeof this.$refs.chatHeader.defaultSelectedStatusTag == "function"  ? this.$refs.chatHeader?.defaultSelectedStatusTag() : "";
             },200),
             async loadChats(){
+                await this.$service.getX('/api/options/agent_teams');
                 await this.$store.dispatch('GetChats');
                 await this.$store.dispatch('LoadAgentOptions');
                 this.onSessionChange();
@@ -909,7 +920,7 @@
                 
                 this.assignedToAgent = this.$store.getters.StateAgentOptions.filter(function (t) {
                     return t.code == activeChat.assignedToAgent;
-                })[0] || {};
+                })[0] || { code : null};
 
                 if(!activeChat.messages || forceLoad){
                     this.isLoading = (!activeChat.messages || !activeChat.messages.length);
@@ -926,11 +937,14 @@
             },
             
             async onAssignedToAgent (argument) {
-                console.log("onAssignedToAgent",argument);
-                var resp = await this.$store.dispatch('AssingToAgent',{
+                var resp = await this.$service.submit('/api/session/agent',{
                     sessionId : this.activeChat.sessionId,
-                    agentId : argument.id
+                    agentId : argument.dept_id ? argument.id : null,
+                    agentCode :  argument.dept_id ? argument.code : null,
+                    deptCode :  !argument.dept_id ? argument.code : null,
+                    deptId :  !argument.dept_id ? argument.id : null,
                 });
+                this.$service.dispatch("AddChat",resp.results[0]);
                 this.onSessionChange();
             },
 

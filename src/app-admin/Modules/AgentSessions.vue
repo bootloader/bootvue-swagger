@@ -97,6 +97,11 @@
                     <span class="far fa-comment-alt mg-1 pointer text-primary text-bold" 
                       v-tooltip="'View Chat'"
                      @click="showChat(row.item, row.index, $event.target)" ></span>
+                      &nbsp;<span v-if="row.item.feedback"
+                        class="bi bi-emoji-smile mg-1 pointer text-primary text-bold" 
+                        v-tooltip="row.item.feedback.tag">
+                        {{row.item.feedback.score}}
+                      </span>
                 </template>
 
         </master-view>

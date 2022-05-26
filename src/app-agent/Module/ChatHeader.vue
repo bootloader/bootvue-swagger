@@ -16,34 +16,42 @@
                                 <img v-if="activeChat" :src="activeChat.profilePic || MyDict.profilePic" class="rounded-circle user_img">
                                 <span class="online_icon" hidden ></span>
                             </div>
-                            <div class="user_info"
+                            <div class="user_info" 
                                 v-if="activeChat">
-                                <span class="user_name" @click="showContactProfile" >{{contactName}}</span>
-                                <div v-if="assignedToAgent" class="user_assignment">
-                                    <v-select v-if="chatLocal.active && chatLocal.isModeAgent" :options="agentOptions" v-model="assignedToAgent"
-                                    @option:selected="onAssignedToAgent" label="code"
-                                    :components="{Deselect}">
+                                <span class="user_name" @click="showContactProfile" v-if="activeChat.contact">
+                                    {{activeChat.contact.name}}
+                                    <span v-if="activeChat.local && activeChat.local.agent">
+                                    {{activeChat.local.agent.code}}</span>
+                                </span>
+                                <div class="user_assignment">
+                                    <v-select v-if="chatLocal.active && chatLocal.isModeAgent" 
+                                        :options="agentOptions" v-model="activeChat.local.agent"
+                                        @option:selected="onAssignedToAgent" label="code"
+                                        :components="{Deselect}">
                                         <template #selected-option="option">
-                                          <div class="user_assignment-selected">Assigned to {{ option.code }}</div>
+                                          <div class="user_assignment-selected">{{option.dept_id ? `Assigned to` : `Team` }} {{ option.code }}</div>
                                         </template>
                                         <template #open-indicator="{ attributes }">
                                           <span v-bind="attributes" class="fa fa-caret-down"></span>
                                         </template>
-                                        <template #option="{ code, name, session}">
-                                        <i v-if="!session || !session.isEnabled || !session.isLoggedIn" class="fa fa-times-circle"/>
-                                        <i v-else-if="session.isAway" class="fa fa-question-circle"/>
-                                        <i v-else-if="session.isOnline" class="fa fa-check-circle"/> 
-                                        <i v-else-if="!session.isOnline" class="fa fa-minus-circle"/>
-
-                                        {{ code }}<em>  - {{ name }}</em>
+                                        <template #option="{ code, name, session, dept_id}">
+                                            <i v-if="!dept_id" class="fa fa-users text-scheme"/>
+                                            <i v-else-if="!session || !session.isEnabled || !session.isLoggedIn" class="fa fa-times-circle"/>
+                                            <i v-else-if="session.isAway" class="fa fa-question-circle"/>
+                                            <i v-else-if="session.isOnline" class="fa fa-check-circle"/> 
+                                            <i v-else-if="!session.isOnline" class="fa fa-minus-circle"/>
+                                            <span>&nbsp; {{ code }}<em>  - {{ name }}</em></span>
                                         </template>
                                     </v-select>
                                     <span v-else-if="!chatLocal.active" class="vs__selected">
-                                        Assigned to {{assignedToAgent.code  || 'NONE'}}
+                                        Assigned to {{(chatLocal.agent ? chatLocal.agent.code : null) || 'NONE'}}
                                     </span>
-                                      <span v-else-if="!chatLocal.isModeAgent" class="vs__selected">
+                                    <span v-else-if="!chatLocal.isModeAgent" class="vs__selected">
                                         Mode : {{activeChat.mode || 'NONE'}}
-                                    </span>    
+                                    </span>   
+                                    <span v-else class="vs__selected" :title="JSON.stringify(activeChat.local)">
+                                        - - - {{chatLocal}}
+                                    </span> 
                                 </div>
                             </div>
 
@@ -203,13 +211,11 @@
         computed : {
             sortedQuickTags  : function () {
                 return this.$store.getters.StateQuickTagsSorted;
-            },
-            profileViewInfo : function (argument) {
+            }, profileViewInfo : function (argument) {
                 return MyFlags.agent.profileView =='info' && MyFlags.agent.showProfile
             }, profileViewHistory : function (argument) {
                 return MyFlags.agent.profileView =='history' && MyFlags.agent.showProfile
-            },
-            contactName (){
+            }, contactName (){
                 return (this.activeChat?.contact?.name 
                             || this.activeChat?.contact?.phone
                             || this.activeChat?.contact?.email ) || this.activeChat?.name;

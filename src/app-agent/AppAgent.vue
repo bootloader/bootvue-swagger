@@ -15,7 +15,6 @@
 <script>
   import Vue from 'vue';
   import DataStore from "./Service/DataStore";
-  import tunnel from '../services/tunnel';
   import visibility from 'vue-visibility-change';
   import VueCookies from 'vue-cookies'
   Vue.use(VueCookies)
@@ -80,7 +79,7 @@
         let THIS = this;
         this.refreshTimer = window.setTimeout(function () {
            THIS.refresh();
-        }, (tunnel.connected ? 10000 : 1000));
+        }, (this.$tunnel.connected ? 10000 : 1000));
       }
     },
     created (){
@@ -107,7 +106,7 @@
 
       var THAT =  this;
       console.log("TUNNEL")
-      this.tunnel = tunnel.init().instance()
+      this.tunnel = this.$tunnel.pipe()
         .on("/message/sent/new", function(msg){
             console.log("/message/sent/new===",msg)
             THAT.$store.dispatch('ReadChatMessage', msg);
@@ -134,9 +133,9 @@
             THAT.$store.dispatch('SetAgentOptionsStatus', [status]);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/chat/session/update", function(chatSession){
-            console.log("/chat/session/update",status)
+            console.log("/chat/session/update",chatSession)
             THAT.$store.dispatch('ReadSession', [chatSession]);
-             THAT.$store.dispatch('RefeshTimer');
+            THAT.$store.dispatch('RefeshTimer');
         });
 
           visibility.change((evt, hidden) => {

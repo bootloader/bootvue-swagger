@@ -77,6 +77,12 @@
         let recaptchaScript = document.createElement('script')
         recaptchaScript.setAttribute('src', 'https://kit.fontawesome.com/1153462312.js')
         document.head.appendChild(recaptchaScript);
+
+      recaptchaScript = document.createElement('link')
+      recaptchaScript.setAttribute('rel', 'stylesheet')
+      recaptchaScript.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css')
+      document.head.appendChild(recaptchaScript);
+      
     },
     created (){
       this.$store.registerModule("DataStore",DataStore);

@@ -44,7 +44,12 @@
 
                     <span class="msg_time_send">
                         
-                        <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span><span class="msg_user">{{m.name ||'---'}}</span> 
+                        <span>{{m.timestamp|formatDate}}&nbsp;&nbsp;</span>
+                        <span class="msg_user">{{m.name ||'---'}}</span> 
+                        <span>&nbsp;</span>
+                        <span v-if="m.route && m.route.senderType">
+                            <my-icon type="senderType" :value="m.route.senderType"/>
+                        </span>    
                         <span>&nbsp;&nbsp;</span>
 
                         <span v-if="m.logs || m.stamps" class="msg_status_send-wrapper">
@@ -58,15 +63,15 @@
                             <b-icon v-else-if="m.logs || m.stamps.FAILD || m.stamps.NSENT || m.stamps.SENTX_ERR" 
                                 icon="exclamation-triangle-fill"  scale=.8 v-tooltip="cleanlog(m.logs)"
                                 variant="danger" class="msg_status_send" ></b-icon>  
-                            <b-icon v-else-if="m.stamps.READ" icon="check-all" 
+                            <b-icon v-else-if="m.stamps.READ" icon="check-all" scale=1.8
                                 variant="success" class="msg_status_send"></b-icon>
-                             <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" 
+                             <b-icon v-else-if="m.stamps.DLVRD" icon="check-all" scale=1.8
                                 variant="dark" class="msg_status_send"></b-icon>
-                             <b-icon v-else-if="m.stamps.SENTX" icon="check" 
+                             <b-icon v-else-if="m.stamps.SENTX" icon="check" scale=1.8
                                 variant="dark" class="msg_status_send"></b-icon>
-                             <b-icon v-else-if="m.stamps.SENT" icon="check" 
+                             <b-icon v-else-if="m.stamps.SENT" icon="check" scale=1.8
                                 variant="muted" class="msg_status_send muted"></b-icon>
-                             <b-icon v-else icon="check" 
+                             <b-icon v-else icon="check" scale=1.8
                                 variant="light" class="msg_status_send"></b-icon>
                         </span>
                     </span>
