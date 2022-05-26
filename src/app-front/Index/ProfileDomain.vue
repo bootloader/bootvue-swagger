@@ -1,7 +1,10 @@
 <template>
   <div>
     <navbar />
-    <main class="profile-page">
+    <profile-no-domain  v-if="!domainProfile">
+      
+    </profile-no-domain> 
+    <main  v-else class="profile-page">
       <section class="relative block h-500-px">
         <div
           class="absolute top-0 w-full h-full bg-center bg-cover bg-blueGray-700"
@@ -151,7 +154,7 @@
         <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
 
       </section>
-    </main>
+
       <footer class="relative bg-blueGray-200 pt-1 pb-6">
           <div class="container mx-auto px-4">
             <hr class="my-6 border-blueGray-300" />
@@ -174,6 +177,8 @@
 
           </div>
       </footer>
+
+    </main>
   </div>
 </template>
 <script>
@@ -182,6 +187,7 @@ import FooterComponent from "./Footer.vue";
 import SocialBoxes from "./SocialBoxes.vue";
 
 import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
+import ProfileNoDomain from './ProfileNoDomain.vue';
 
 export default {
   data() {
@@ -208,7 +214,32 @@ export default {
     };
   },
   mounted : function () {
-      let recaptchaScript = document.createElement('script')
+  },
+  created (){
+    this.loadDomainProfile();
+    this.loadChannels();
+  },
+  computed : {
+  },
+  methods : {
+    async loadDomainProfile (){
+      var resp = await this.$service.get('/partner/pub/domain',{
+        domain : this.front_domain,
+        tnt : "app"
+      });
+      this.domainProfile = resp.results[0];
+      if(this.domainProfile){
+        this.loadWebChat();
+      }
+    },
+    async loadChannels(){
+      var resp = await this.$service.get('/api/options/channels',{
+        tnt : this.$route.params.domain || this.$global.MyConst.tenant,
+      });
+      this.channels = resp.results || [];
+    },
+    async loadWebChat(){
+            let recaptchaScript = document.createElement('script')
       recaptchaScript.setAttribute('src', this.$global.MyConst.cdn + '/plugins/customer.js?theme=bubble');
       recaptchaScript.innerHTML = JSON.stringify({
           "domain" : [this.$global.MyConst.appDomain,this.$global.MyConst.config.PROP_SERVICE_SERVER].join("."),
@@ -237,31 +268,12 @@ export default {
             }
         });
       document.body.appendChild(recaptchaScript);
-  },
-  created (){
-    this.loadDomainProfile();
-    this.loadChannels();
-  },
-  computed : {
-  },
-  methods : {
-    async loadDomainProfile (){
-      var resp = await this.$service.get('/partner/pub/domain',{
-        domain : this.front_domain,
-        tnt : "app"
-      });
-      this.domainProfile = resp.results[0];
-    },
-    async loadChannels(){
-      var resp = await this.$service.get('/api/options/channels',{
-        tnt : this.$route.params.domain || this.$global.MyConst.tenant,
-      });
-      this.channels = resp.results || [];
     }
   },
   components: {
     Navbar,SocialBoxes,
     FooterComponent,
+    ProfileNoDomain,
   },
 };
 </script>
