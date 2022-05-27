@@ -47,8 +47,11 @@ var MAP = {
         'image/png' : ['fa fa-file-image'],
         '$' : function(value, status, meta){
             if(typeof meta == 'string'){
-               let file =  meta.split('.');  
+               let file =  meta.split('?')[0].split('.');  
                let ext = file[file.length-1];
+                if(!ext) {
+                    return ['fa fa-link']
+                } 
                switch(ext){
                     case 'xls':
                     case 'xlsx':
@@ -57,7 +60,7 @@ var MAP = {
                     case 'doc':
                        return this['application/word'];
                     case 'pdf':
-                       return this['application/pdf'];
+                       return this['application/pdf'];   
                }
             }
             return ['fa fa-file-alt'];

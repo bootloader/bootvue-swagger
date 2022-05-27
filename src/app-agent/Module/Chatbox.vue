@@ -848,7 +848,7 @@
                     });
                 }
                 return null;
-            }),
+            },100),
             onSessionChange : debounce(async function(){
                 console.log("onSessionChange : Session On Change")
                 this.activeChat = this.selectActiveChat();
@@ -889,6 +889,7 @@
                     }
                 } 
                 if(this.$route.params.sessionId){
+                    //console.error("No Session",this.$route.params.sessionId)
                     this.loadCurrentession();
                 }
                 return null;

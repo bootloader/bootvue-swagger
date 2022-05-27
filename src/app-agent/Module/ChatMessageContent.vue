@@ -6,7 +6,7 @@
          <span v-else>
             <span v-if="m.text" v-linkify="{ className: 'my-clickable-link'}" >{{m.text | striphtml | newlines}}</span>
             <div v-if="m.attachments"> 
-                <span v-if="m.template" ><span class="fa fa-paperclip"/>&nbsp;{{m.template}}</span>
+                <span v-if="m.template" ><span class="bi bi-code-square"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
                     <span class="my-attachment" :class="['mediaType-'+atch.mediaType]" v-for="(atch,i) in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
                         <img v-if="atch.mediaType == 'IMAGE'" :id="`attachment-${m.messageId}-${i}`"
@@ -28,9 +28,44 @@
                     </span>
                 </div>
             </div>
+            <div v-else-if="m.vccards && m.vccards.length">
+                <div class="input-group my-attachments">
+                    <span class="my-attachment mediaType-vccard text-white" 
+                        v-for="(atch,i) in m.vccards" v-bind:key="atch.mediaURL" >
+                        <div class="d-flex" v-if="atch.name && atch.name.firstName">
+                            <div class="vccard-icon">
+                                <img :src="$global.MyDict.profilePicFun(null,atch.name.firstName)" 
+                                    class="img-responsive img-circle user_img"/>
+                            </div>
+                            <div class="text-white vccard-details">
+                                <div class="mx-2 my-1 vccard-name">{{atch.name.firstName}} {{atch.name.lastName}}</div>
+                                <div v-if="atch.phones && atch.phones[0] && atch.phones[0].phone" 
+                                    class="mx-2 fa fa-phone text-center">&nbsp;{{atch.phones[0].phone}}</div>
+                                <div v-if="atch.emails && atch.emails[0] && atch.emails[0].email" 
+                                    class="mx-2 fa fa-envelop text-center">&nbsp;{{atch.emails[0].email}}</div>
+                            </div>
+                        </div> 
+                        <div class="" v-if="atch.locations && atch.locations.length">
+                            <a  target="_blank" v-for="(loc,i) in atch.locations" class="d-flex"
+                                v-bind:key="`attachment-${m.messageId}-${i}-loc`"
+                                :href="`http://maps.google.com/?ie=UTF8&hq=&ll=${loc.latitude},${loc.longitude}&z=18`">
+                                <div class="vccard-icon">
+                                    <span class="fas fa-map-marked-alt"></span>
+                                </div>
+                                <a class="text-white text-sm" 
+                                    v-bind:key="`vcard-location`+i" >
+                                    <span class="text-white">{{loc.name}}</span><br/>
+                                    <span class="text-white">{{loc.address}}</span><br/>
+                                </a>
+                            </a>    
+                        </div>       
+                        <div class="clearfix"></div>
+                    </span>
+                </div> 
+            </div>   
             <div v-else-if="m.template" class="my-msg-template-tag">
                 <span class="bi bi-code-square"></span>&nbsp;{{m.template}}
-            </div>
+            </div>  
          </span>
     </span>
 </template>
@@ -129,6 +164,22 @@
         padding: 14px;
         text-align: center;
         margin-bottom: 0px;
+    }
+    .my-attachments .my-attachment.mediaType-vccard {
+        max-width: 250px; min-width: 250px; 
+        min-height: 50px;   max-height: 100px;
+    }
+    .my-attachments .my-attachment.mediaType-vccard .vccard-icon {
+        width: 60px; height: 50px; 
+        font-size: 2em;;
+        text-align: center;
+    }
+    .my-attachments .my-attachment.mediaType-vccard .vccard-details {
+        width: 230px; height: 50px; 
+    }
+    .my-attachments .my-attachment.mediaType-vccard .vccard-details .vccard-name{
+        font-size: 15px;
+        line-height: 18px;
     }
 </style>
 <style type="text/css">

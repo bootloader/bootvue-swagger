@@ -241,14 +241,18 @@ const actions = {
   },
 
   async AddHistoryChat({ commit },chat) {
-    var sessions = state.chatHistory.sessions;
-    for(var c in sessions){
-      if(sessions[c].sessionId == chat.sessionId){
-        sessions[c].active = !!chat.active;
-        sessions[c] = chat;
+      var sessions = (state.chatHistory.sessions || []);
+      let found = false;
+      for(var c in sessions){
+        if(sessions[c].sessionId == chat.sessionId){
+          sessions[c].active = !!chat.active;
+          sessions[c] = chat;
+          found =  true;
+        }
       }
-    }
-    commit("setChatHistory", state.chatHistory);
+      state.chatHistory.sessions = sessions;
+      if(!found) state.chatHistory.sessions.push(chat);
+      commit("setChatHistory", state.chatHistory);
   },
 
   async SendChatPre({ commit,dispatch }, msg) {
@@ -557,8 +561,7 @@ const mutations = {
         //chats[c].msg.lastMsg = chats[c].msg.lastMsg || chats[c].lastmsg;
       }
       
-      if(
-          !state.chatsMessages[chats[c].sessionId] 
+      if(!state.chatsMessages[chats[c].sessionId] 
           || !state.chatsMessages[chats[c].sessionId].length
           || (
               chats[c].messages 

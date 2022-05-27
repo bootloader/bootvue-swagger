@@ -259,13 +259,13 @@
                         'my-selected opacity-10 bg-white:before bg-grey' : search.sortBy=='is_unattended',
                     }"></i>
                 <i class="contact_type bi bi-alarm-fill pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting_long')"
-                    v-tooltip="`Need Attention`"
+                    v-tooltip="`Show 'Need Attention' on top`"
                     v-bind:class="{
                         'my-selected opacity-10 bg-white:before bg-grey' : search.sortBy=='is_waiting_long'
                      }">
                 </i>
                 <i class="contact_type bi bi-phone-vibrate pointer text-red opacity-7 bg-greyish:before" @click="sortByTag('is_waiting')"
-                    v-tooltip="`Waiting for response`"
+                    v-tooltip="`Show 'Waiting for response' on top`"
                     v-bind:class="{
                         'my-selected opacity-10 bg-white:before bg-grey'  : search.sortBy=='is_waiting',
                     }">
