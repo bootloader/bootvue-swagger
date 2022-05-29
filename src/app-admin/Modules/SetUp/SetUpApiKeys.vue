@@ -15,7 +15,7 @@
               <my-icon type="chatmode" :value="row.item.appType">&nbsp;<small>{{row.item.appType}}</small></my-icon>
           </template>
           <template #cell(changelog)="row">
-              <small>Modified on {{row.item.updatedStamp | formatStamp}} by {{row.item.updatedBy}}</small>
+              <small v-if="row.item.updatedStamp">Modified on {{row.item.updatedStamp | formatStamp}} by {{row.item.updatedBy}}</small>
           </template>
           <template #cell(code)="row">
               {{row.item.code}} <span 
@@ -28,17 +28,23 @@
             </span> 
           </template>
           <template #cell(actions)="row">
-            <b-button :disabled="row.item.readOnly" 
+            <b-button  href="#" :disabled="row.item.readOnly"
                 size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-eye"></i>
             </b-button>
-            <b-button :disabled="row.item.readOnly"
+            <b-button  href="#" :disabled="row.item.readOnly" 
                 size="sm" @click="editItem(row.item, row.index, $event.target)"  class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
-                <i class="fas fa-edit"></i>
+                <i class="fas fa-cog"></i>
             </b-button>
-            <b-button :disabled="row.item.readOnly"
+            <b-button :href="`/admin/app/setup/appscript/${row.item.id}`" target="_blank"
+                :disabled="row.item.readOnly || !(row.item.appType=='APP_SCRIPT' || row.item.appType=='WEBHOOK')"
+                size="sm" class="mg-1"
+                v-tooltip="row.item.message" variant="outline-primary">
+                <i class="fab fa-codepen"></i>
+            </b-button>
+            <b-button  href="#" :disabled="row.item.readOnly"
                 size="sm" class="mg-1" variant="outline-primary"
                 @click="deleteItem(row.item, row.index, $event.target)"
                 v-tooltip="row.item.message" >

@@ -135,6 +135,12 @@ export default AppRouter.route({
             component: () => import('./Modules/SetUp/SetUpApiKeys.vue'),    
         },
         {
+            path : "/app/setup/appscript/:appId",
+            name: 'SetUpApiKeys',
+            meta : { layout : 'scriptus'},
+            component: () => import('./Modules/SetUp/ScriptusEditor.vue'),    
+        },
+        {
             path : "/app/setup/company-vars",
             name: 'SetUpCompanyVars',
             component: () => import('./Modules/SetUp/SetUpCompanyVars.vue'),    

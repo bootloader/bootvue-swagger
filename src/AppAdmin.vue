@@ -17,6 +17,7 @@
   import VueClipboard from 'vue-clipboard2';
 
   Vue.component('admin-default-layout', () => import('./app-admin/Layout/baseLayout.vue'));
+  Vue.component('admin-scriptus-layout', () => import('./app-admin/Layout/ScriptusLayout.vue'));
   Vue.component('admin-userpages-layout', () => import('./app-admin/Layout/pagesLayout.vue'));
   Vue.component('master-view', () => import('./app-admin/Layout/MasterView.vue'));
 
