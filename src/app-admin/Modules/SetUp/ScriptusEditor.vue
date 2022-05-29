@@ -5,9 +5,9 @@
           heading: heading,
           subheading: subheading,
           icon: icon,
-      }" :filters="[{ label : 'Save', name : 'saveScript'}]">
+      }" :filters="[{ label : state, name : 'saveScript'}]">
       <template #filter(saveScript)="{filter}">
-        <b-button variant="success" @click="saveScript">{{filter.label}}</b-button>&nbsp;
+        <b-button variant="success" :disabled="table.busy" @click="saveScript">{{filter.label}}</b-button>&nbsp;
       </template>
       <template #body>
         <div class="editor" >
@@ -68,6 +68,7 @@
             },
             modelName :  "MODAL_ADD_TEAM",
             content : "",
+            state : "Save",
             editorHeight : (window.document.body.scrollHeight-20) + 'px'
         }),
         computed : {
@@ -83,6 +84,7 @@
           async load (){
             try {
               this.table.busy = true;
+              this.state = "Loading...";
               let resp = await this.$service.get('/api/objects/appscript/'+this.$route.params.appId);
               console.log('load',resp)
               if(resp.results[0].data?.content){
@@ -90,11 +92,13 @@
               }
             } finally {
               this.table.busy = false;
+              this.state = "Save";
             }
           },
           async saveScript(){
             try {
               this.table.busy = true;
+              this.state = "Saving...";
               let resp = await this.$service.post('/api/objects/appscript/'+this.$route.params.appId,{
                 files : [{
                   name : "main",
@@ -103,6 +107,7 @@
               });
             } finally {
               this.table.busy = false;
+              this.state = "Save";
             }
           },
           dataSumit() {
