@@ -89,6 +89,9 @@ function eq(a,b) {
 		}
 		session.local.is_unattended = !agent || (session.local.is_waiting_long && session.local.is_offline_agent);
 
+		if(!session?.contact){
+			session.contact = {};
+		}
 		if(!session?.contact?.name){
 			session.contact.name = session.name;
 		}
