@@ -87,6 +87,10 @@
               this.state = "Loading...";
               let resp = await this.$service.get('/api/objects/appscript/'+this.$route.params.appId);
               console.log('load',resp)
+              if(resp.meta){
+                this.heading = resp.meta.appName;
+                this.subheading = resp.meta.appQueue;
+              }
               if(resp.results[0].data?.content){
                 this.content = resp.results[0].data.content;
               }
