@@ -489,11 +489,7 @@
                 }
             },
             "$global.MyFlags.agent.contactsTab" : function(newVal,oldVal){
-                if(
-                    this.$global.MyConst.config.SETUP.POSTMAN_AGENT_TAB_HISTORY_LAZY
-                    || (allTabs.indexOf(newVal) > allTabs.indexOf(oldVal))){
-                    this.changeSearchFilter();
-                }
+                this.changeSearchFilter();
             },
             "search.text" :  function (searchText) {
                   this.changeSearchFilter();

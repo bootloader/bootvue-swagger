@@ -313,8 +313,14 @@
             <base-input
                 class="mb-0" prependClass="btn btn-outline-primary"
                 prelabel label="Button Code" 
-                v-model="modalEditButton.item.key" :textLimit="20" required
-                rules="required|max:20" >
+                v-model="modalEditButton.item.key" :textLimit="200" required
+                rules="required|max:200" >
+            </base-input>
+            <base-input
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="Description" 
+                v-model="modalEditButton.item.desc" :textLimit="72" required
+                rules="required|max:72" >
             </base-input>
             </span>
 
