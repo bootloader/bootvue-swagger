@@ -96,16 +96,19 @@
             </ul>
         </div>
         <div class="card-body contacts_body" ref="scrollable">
-            <ul class="contacts contact-list" v-if="activeChats.length>0">
+            <ul class="contacts contact-list" v-if="activeChats.length>0" :class="'sort-state-'+search.sortBy">
                 <li v-for="(chat,index) in activeChats"  :key="index"
-                    v-bind:class="{
+                    v-bind:class="[{
                         data_assigned : chat.assignedToAgent,
                         data_unassigned : !chat.assignedToAgent,
                         active_contact : (contactId == chat.contactId && ticketHash == chat.ticketHash),
                         contact_attention : chat.local.is_waiting_long && (chat._tab == 'TEAM' ),
                         contact_waiting : chat.local.is_waiting,
+                        contact_is_unattended : chat.local.is_unattended,  contact_not_unattended : !chat.local.is_unattended,
+                        contact_is_waiting : chat.local.is_waiting, contact_not_waiting : !chat.local.is_waiting,
+                        contact_is_waiting_long : chat.local.is_waiting_long,  contact_not_waiting_long : !chat.local.is_waiting_long,
                         data_subjective : !!chat.subject
-                    }">
+                    },'sort-state-'+search.sortBy]">
                 <router-link tag="span" 
                     :id="chat.contactId"
                     :to="{ 
@@ -689,7 +692,44 @@
             content: "";
             display: none;
         }
-
+        .contact-list {
+            &.sort-state-is_waiting {
+                li.sort-state-is_waiting.contact_not_waiting::before  {
+                    content: "~"; display: block;               
+                }
+                li.sort-state-is_waiting.contact_is_waiting::before {
+                    content: "Waiting for Response"; display: block; 
+                }
+                li.contact_not_waiting ~ .contact_not_waiting::before,
+                li.contact_is_waiting ~ .contact_is_waiting::before{
+                    content: ""; display: none; 
+                }
+            }
+            &.sort-state-is_waiting_long {
+                li.sort-state-is_waiting_long.contact_not_waiting_long::before  {
+                    content: "~"; display: block;               
+                }
+                li.sort-state-is_waiting_long.contact_is_waiting_long::before {
+                    content: "Need Attention"; display: block; 
+                }
+                li.contact_not_waiting_long ~ .contact_not_waiting_long::before,
+                li.contact_is_waiting_long ~ .contact_is_waiting_long::before{
+                    content: ""; display: none; 
+                }
+            }
+            &.sort-state-is_unattended {
+                li.sort-state-is_unattended.contact_not_unattended::before  {
+                    content: "~"; display: block;               
+                }
+                li.sort-state-is_unattended.contact_is_unattended::before {
+                    content: "Un-Attended"; display: block; 
+                }
+                li.contact_not_unattended ~ .contact_not_unattended::before,
+                li.contact_is_unattended ~ .contact_is_unattended::before{
+                    content: ""; display: none; 
+                }
+            }
+        }
     }
 </style>
 
