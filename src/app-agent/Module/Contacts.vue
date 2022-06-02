@@ -85,7 +85,7 @@
                     Expired</span>
               </li>
               <li class="nav-item chat_tags position-relative p-1px p-1px" 
-                    v-tooltip="`Show only Agent Chats`"
+                    v-tooltip="searchMode == 'AGENT' ? `Show all Chats` : `Show only Agent Chats`"
                     v-if="$config.SETUP.POSTMAN_AGENT_TAB_NONAGENT && MyFlags.agent.contactsTab == 'ORG'">
                 <span class="fa fa-user-secret pointer" 
                     v-bind:class="[searchMode == 'AGENT' ? 'text-scheme:after text-scheme:before' : 'tag-lighter fa-x text-grey:after text-grey:before']"
@@ -194,7 +194,7 @@
 
                             <div id="'nm' + c.contactId" class="chat_flags">
                                 <span>
-                                    <b-icon v-if="chat._new" icon="circle-fill" class="new_message text-md" variant="red"
+                                    <b-icon v-if="chat._new" icon="circle-fill" class="new_message text-md" variant="online"
                                         v-tooltip="'You have unread messages from ' + (chat.name || chat.contactId)" ></b-icon>
                                 </span>
                                 <span class="">
@@ -934,7 +934,6 @@
     }
     .contacts li .new_message{
         font-size: 17px;
-        color: #4cd137;
         text-align: right;
         float: right;
     }
