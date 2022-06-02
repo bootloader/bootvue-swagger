@@ -19,6 +19,14 @@
         {
             "code": "UNATTENDED",
             "name": "UNATTENDED"
+        },
+        {
+            "code": "AGENT",
+            "name": "AGENT"
+        },
+        {
+            "code": "BOT",
+            "name": "BOT"
         }
     ]
  }

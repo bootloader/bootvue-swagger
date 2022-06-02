@@ -139,7 +139,6 @@
             // fetch the data when the view is created and the data is
             // already being observed
             this.loadLanes();
-            //MyFlags.agent.contactsTab = this.$route.params.contactsTab
             this.loadContacts();
 
         },

@@ -8,8 +8,10 @@ import {MyConst,MyFlags} from '../../services/global';
 
 import DataProcessor from '../../services/DataProcessor';
 import jskeeper from '../../services/jskeeper';
+import jscovery from '../../services/jscovery';
 
 import pebounce from 'pebounce';
+
 
 var guid = formatters.guid
 
@@ -27,15 +29,29 @@ var updateTimer = function(){
 const state = {
   user: null,agents : [],
   contacts : null,
-  chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null, chatsFetchStamp : 0,
+  chats : [], chatsMessages : {}, chatsVersion : 0, chatsSize : null,
   chatsCounter : 1, 
   meta : { isOnline : undefined, isAway : false, isLoadingChats : false},
   mediaOptions : [], quickActions : [], quickLabels : [],
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null },
-  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME', text : '', mode: null}
+  searchChat : { tokens : [],  status : 'ACTIVE', limit : 20,
+     tab : 'ME', text : '', mode: null, endGame : false,chatsFetchStamp : 0 }
 };
+
+var agentSearchCovery = jscovery.bind('agent.search',state.searchChat,function(to,from){
+  to.status = from.status;
+  to.tab = from.tab;
+  to.text = from.text;
+  to.mode = from.mode;
+}).reover({
+  status : 'ACTIVE',
+  tab : 'ME',
+  text : '',
+  mode: null
+});
+
 var tagFormat = function (argument) {
     return {
         id : argument.id,
@@ -80,7 +96,7 @@ const cache = {
         limit : state.searchChat.limit,
         ... (function(isTextQuery){
           return (!isTextQuery ? {
-              tab : MyFlags.agent.contactsTab,
+              tab : state.searchChat.tab,
               searchStatus : state.searchChat.status,
               search : (state.searchChat.mode ? ('MODE:'+state.searchChat.mode) : undefined),
           } : {
@@ -96,6 +112,7 @@ const cache = {
       }
     }).then(function(response){
       response.data.chatsFetchStamp = chatsFetchStamp;
+      state.searchChat.endGame = response.data.results.length < state.searchChat.limit;
       return response;
     });
   },
@@ -158,8 +175,8 @@ const actions = {
           dispatch("SetAgentOptionsStatus", response.data.details);
       }
       if(response.data && response.data.results){
-          if(response.data.chatsFetchStamp > state.chatsFetchStamp){
-            state.chatsFetchStamp = response.data.chatsFetchStamp;
+          if(response.data.chatsFetchStamp > state.searchChat.chatsFetchStamp){
+            state.searchChat.chatsFetchStamp = response.data.chatsFetchStamp;
             dispatch("updateChats", response.data.results);
           }
       }
@@ -617,6 +634,11 @@ const mutations = {
     state.agents = agents;
     updateTimer();
   },
+  setContactTab(state,tab){
+    state.searchChat.tab = tab;
+    state.searchChat = Object.assign({},state.searchChat);
+    agentSearchCovery.commit(state.searchChat);
+  },
   setSessionSearch(state,search){
       let searchText = (search.text || "").trim();  
       state.searchChat.text = searchText;
@@ -638,7 +660,8 @@ const mutations = {
       state.searchChat.limit = search.limit;
       state.searchChat.tab = search.tab;
       state.searchChat.mode = search.mode;
-      state.searchChat = Object.assign({},state.searchChat)
+      state.searchChat = Object.assign({},state.searchChat);
+      agentSearchCovery.commit(state.searchChat);
   },
   setUser(state, username) {
     state.user = username;

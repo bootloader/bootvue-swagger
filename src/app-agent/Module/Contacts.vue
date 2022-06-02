@@ -37,20 +37,20 @@
         <div class="card-header contact-tabs">
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="!isSearch">
               <li class="nav-item">
-                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ME')}" @click="MyFlags.agent.contactsTab = 'ME'">
+                <span class="nav-link btn-xs" v-bind:class="{ 'active' : (searchTab == 'ME')}" @click="search.tab = 'ME'">
                     <span class="fa fa-user"/> Me</span>
               </li>
               <li class="nav-item" >
                 <span class="nav-link btn-xs" v-bind:class="{ 
                     contact_attention : urgentChat, 
-                    'active' : (MyFlags.agent.contactsTab == 'TEAM')}" @click="MyFlags.agent.contactsTab = 'TEAM'">
+                    'active' : (searchTab == 'TEAM')}" @click="search.tab = 'TEAM'">
                     <span class="fa fa-user-friends"/> My Team</span>
               </li>
               <li v-if="$config.SETUP.POSTMAN_AGENT_TAB_ORG || $config.SETUP.POSTMAN_AGENT_TAB_ORG === undefined"
                     class="nav-item" >
                 <span class="nav-link btn-xs" 
-                    v-bind:class="{ 'active' : (MyFlags.agent.contactsTab == 'ORG')}" 
-                    @click="MyFlags.agent.contactsTab = 'ORG'">
+                    v-bind:class="{ 'active' : (searchTab == 'ORG')}" 
+                    @click="search.tab = 'ORG'">
                     <span class="fa fa-landmark"/> Others</span>
               </li>
              </ul>
@@ -86,7 +86,7 @@
               </li>
               <li class="nav-item chat_tags position-relative p-1px p-1px" 
                     v-tooltip="searchMode == 'AGENT' ? `Show all Chats` : `Show only Agent Chats`"
-                    v-if="$config.SETUP.POSTMAN_AGENT_TAB_NONAGENT && MyFlags.agent.contactsTab == 'ORG'">
+                    v-if="$config.SETUP.POSTMAN_AGENT_TAB_NONAGENT && search.tab == 'ORG'">
                 <span class="fa fa-user-secret pointer" 
                     v-bind:class="[searchMode == 'AGENT' ? 'text-scheme:after text-scheme:before' : 'tag-lighter fa-x text-grey:after text-grey:before']"
                     @click="search.mode = search.mode ? null : 'AGENT'">
@@ -245,6 +245,12 @@
                         <center v-if="activeChats.length==0 && !isLoading">
                             <small>No session </small>
                         </center>
+                        <center v-else-if="!isLoading && !searchEndGame" @mouseenter="loadMore">
+                            <b-button @click="loadMore"
+                                    variant="outline-grey" pill
+                                    class="btn-sm btn p-s1 text-sm"
+                                    >Load More</b-button>
+                        </center>
                         <loading :active.sync="isLoading" 
                             :can-cancel="false"  
                             :loader="'dots'"
@@ -320,7 +326,7 @@
         return c.code.toLowerCase();
     })];
 
-    var allTabs = ['ME','TEAM','HISTORY'];
+    var allTabs = ['ME','TEAM','ORG'];
 
     export default {
         components: {
@@ -351,7 +357,7 @@
                 let search = this.search;
                 let searchText = this.search.text.trim();
                 let searchTokens = this.$store.getters.SearchChat.tokens;
-                var tab = MyFlags.agent.contactsTab;
+                var tab = search.tab;
                 var status = this.$store.getters.SearchChat.status;
                 
                 //console.log("searchTokens",searchTokens)
@@ -441,12 +447,18 @@
             },
             searchMode(){
                 return this.$store.getters.SearchChat.mode;
+            },
+            searchTab(){
+                return this.$store.getters.SearchChat.tab;
+            },
+            searchEndGame(){
+                return this.$store.getters.SearchChat.endGame;
             }
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: {
-                status : 'ACTIVE', mode : null,
+                status : 'ACTIVE', mode : null, tab : "ME",
                 contactType : null,
                 text : "",
                 active : false,
@@ -478,10 +490,14 @@
              //chats : this.$store.getters.StateChats
         }),
         mounted () {
+            this.search.status = this.$store.getters.SearchChat.status;
+            this.search.mode = this.$store.getters.SearchChat.mode;
+            this.search.text = this.$store.getters.SearchChat.text;
+            this.search.tab = this.$store.getters.SearchChat.tab;
             // fetch the data when the view is created and the data is
             // already being observed
             this.loadChats();
-            //MyFlags.agent.contactsTab = this.$route.params.contactsTab
+            //search.tab = this.$route.params.contactsTab
             this.searchChat = debounce(this.searchChat,500);
             this.handleScroll = debounce(this.handleScroll,200);
             this.$refs.scrollable.addEventListener('scroll', this.handleScroll);
@@ -501,11 +517,17 @@
                     }
                 }
             },
-            "$global.MyFlags.agent.contactsTab" : function(newVal,oldVal){
+            "$store.getters.SearchChat.tab" : function(newVal,oldVal){
+                this.search.tab = newVal;
+            },
+            "$store.getters.SearchChat.chatsFetchStamp" : function(newVal,oldVal){
+                handleScrollElement(this.$refs.scrollable);
+            },
+            "search.tab" : function(newVal,oldVal){
                 this.changeSearchFilter();
             },
             "search.text" :  function (searchText) {
-                  this.changeSearchFilter();
+                this.changeSearchFilter();
             },
             "search.status" :  function (searchText) {
                 this.changeSearchFilter();
@@ -516,12 +538,14 @@
         },
         methods: {
             async changeSearchFilter(){
-                this.search.limit = 0;
-                this.loadSearchFilter();
+                this.search.limit = 20;
+                this.scrollPosition = 0;
+                this.searchFilterOnChange(true);
             },
-            async loadSearchFilter(){
+            async searchFilterOnChange(trigger){
                 this.$store.commit("setSessionSearch",this.search);
-                this.searchChat();
+                if(trigger)
+                    this.searchChat();
             },
             async searchChat(){
                 if(this.isLoadingChats || this.scheduleUpdate){
@@ -589,37 +613,30 @@
                 return await this.$store.dispatch('LoadQuickLabels');
             },
             onSwipeLeft(){
-                let curTab = MyFlags.agent.contactsTab;
-                switch (curTab) {
-                    case "ME":
-                        MyFlags.agent.contactsTab = "TEAM"
-                        break;
-                    case "TEAM":
-                        MyFlags.agent.contactsTab = "HISTORY"
-                        break;
-                }
+                let curTab = Math.min(2,allTabs.indexOf(this.search.tab)+1);
+                this.search.tab = allTabs[curTab];
             },
             onSwipeRight(){
-                let curTab = MyFlags.agent.contactsTab;
-                switch (curTab) {
-                    case "HISTORY":
-                        MyFlags.agent.contactsTab = "TEAM"
-                        break;
-                    case "TEAM":
-                        MyFlags.agent.contactsTab = "ME"
-                        break;
-                }
+                let curTab = Math.max(0,allTabs.indexOf(this.search.tab)-1);
+                this.search.tab =  allTabs[curTab];
             },
             async handleScroll (event){
-                let pos = (event.target.scrollTop + event.target.clientHeight)*100/event.target.scrollHeight;
-                if(pos > this.scrollPosition && pos >= 75){
-                    this.search.limit = this.$formatters.toNum(this.search.limit,20)+30;
-                    this.loadSearchFilter();
+                this.handleScrollElement(event.target);
+            },
+            async handleScrollElement(target){
+               let pos = (target.scrollTop + target.clientHeight)*100/target.scrollHeight;
+                if((pos > this.scrollPosition && pos >= 75) || pos > 90){
+                    await this.loadMore();
                 } else if(event.target.scrollTop == 0 || pos<25){
                     this.search.limit = 0;
+                    this.searchFilterOnChange();
                 }
                 this.scrollPosition = pos;
             },
+            async loadMore(){
+                this.search.limit = this.$formatters.toNum(this.search.limit,20)+30;
+                await this.searchFilterOnChange(true);
+            }
         },
         beforeUnmount : function (argument) {
             //this.tunnel.off();

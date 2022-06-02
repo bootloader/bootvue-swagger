@@ -916,7 +916,7 @@
                 
                 if( activeChat._tab && chatLocal.active){
                     console.log("Setting Tab to ",activeChat,activeChat._tab)
-                    MyFlags.agent.contactsTab = activeChat._tab;
+                    this.$store.commit('setContactTab',activeChat._tab);
                 }
                 
                 this.assignedToAgent = this.$store.getters.StateAgentOptions.filter(function (t) {
