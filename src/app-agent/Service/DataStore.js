@@ -34,7 +34,7 @@ const state = {
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null },
-  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME', text : ''}
+  searchChat : { tokens : [],  status : 'ACTIVE', limit : 0, tab : 'ME', text : '', mode: null}
 };
 var tagFormat = function (argument) {
     return {
@@ -81,9 +81,10 @@ const cache = {
         ... (function(isTextQuery){
           return (!isTextQuery ? {
               tab : MyFlags.agent.contactsTab,
-              searchStatus : state.searchChat.status
+              searchStatus : state.searchChat.status,
+              search : (state.searchChat.mode ? ('MODE:'+state.searchChat.mode) : undefined),
           } : {
-            search : state.searchChat.text,
+            search : state.searchChat.text + (state.searchChat.mode ? ('MODE:'+state.searchChat.mode) : ''),
           });
         })(!!state.searchChat.text),
         _search : state.searchChat.tokens.filter(function(tag){
@@ -636,6 +637,7 @@ const mutations = {
       state.searchChat.status = search.status;
       state.searchChat.limit = search.limit;
       state.searchChat.tab = search.tab;
+      state.searchChat.mode = search.mode;
       state.searchChat = Object.assign({},state.searchChat)
   },
   setUser(state, username) {

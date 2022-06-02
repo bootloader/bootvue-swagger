@@ -78,12 +78,19 @@
                     @click="search.status = 'CLOSED'">
                     Closed</span>
               </li>
-              <li class="nav-item chat_tags">
+              <li class="nav-item chat_tags"  v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000">
                 <span class="tag-chat-status" 
-                    v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000"
                     v-bind:class="[searchStatus == 'EXPIRED' ? 'tag-darker' : 'tag-lighter']"
                     @click="search.status = 'EXPIRED'">
                     Expired</span>
+              </li>
+              <li class="nav-item chat_tags position-relative p-1px p-1px" 
+                    v-tooltip="`Show only Agent Chats`"
+                    v-if="$config.SETUP.POSTMAN_AGENT_TAB_NONAGENT && MyFlags.agent.contactsTab == 'ORG'">
+                <span class="fa fa-user-secret pointer" 
+                    v-bind:class="[searchMode == 'AGENT' ? 'text-scheme:after text-scheme:before' : 'tag-lighter fa-x text-grey:after text-grey:before']"
+                    @click="search.mode = search.mode ? null : 'AGENT'">
+                    </span>
               </li>
              </ul>
              <ul class="nav nav-tabs nav-fill card-header-tabs"  v-if="isSearch">  
@@ -431,12 +438,15 @@
             },
             searchStatus(){
                 return this.$store.getters.SearchChat.status;
+            },
+            searchMode(){
+                return this.$store.getters.SearchChat.mode;
             }
         },
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: {
-                status : 'ACTIVE',
+                status : 'ACTIVE', mode : null,
                 contactType : null,
                 text : "",
                 active : false,
@@ -498,6 +508,9 @@
                   this.changeSearchFilter();
             },
             "search.status" :  function (searchText) {
+                this.changeSearchFilter();
+            },
+            "search.mode" :  function (searchText) {
                 this.changeSearchFilter();
             },
         },
