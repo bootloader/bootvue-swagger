@@ -401,6 +401,8 @@
                     unique[ticketHash] = true;
                     if(searchText){
                         return true
+                    } else if(status == chat.local.state){
+                        return true;
                     } else if(status == 'EXPIRED')
                         return chat.local.expired;
                     else if(status == 'CLOSED')
