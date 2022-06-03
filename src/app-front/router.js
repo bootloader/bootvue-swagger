@@ -52,6 +52,10 @@ export default AppRouter.route({
           component: () => import('./Index/IndexMore.vue'),
         },
         {
+          path: "/front/pub/read/:content",
+          component: () => import('./Index/ReadGuide.vue'),
+        },
+        {
           path: "/@:domain",
           component: () => import('./Index/Index.vue'),
         },
