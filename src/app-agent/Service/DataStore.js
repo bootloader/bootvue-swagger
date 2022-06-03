@@ -36,17 +36,17 @@ const state = {
   quickReplies : [],
   quickTags:[],
   chatHistory : { sessions : null },
-  searchChat : { tokens : [],  status : 'ACTIVE', limit : 20,
+  searchChat : { tokens : [],  state : 'ACTIVE', limit : 20,
      tab : 'ME', text : '', mode: null, endGame : false,chatsFetchStamp : 0 }
 };
 
 var agentSearchCovery = jscovery.bind('agent.search',state.searchChat,function(to,from){
-  to.status = from.status;
+  to.state = from.state;
   to.tab = from.tab;
   to.text = from.text;
   to.mode = from.mode;
 }).reover({
-  status : 'ACTIVE',
+  state : 'ACTIVE',
   tab : 'ME',
   text : '',
   mode: null
@@ -97,10 +97,10 @@ const cache = {
         ... (function(isTextQuery){
           return (!isTextQuery ? {
               tab : state.searchChat.tab,
-              searchStatus : state.searchChat.status,
-              search : (state.searchChat.mode ? ('MODE:'+state.searchChat.mode) : undefined),
+              searchStatus : state.searchChat.state,
+              search : (state.searchChat.mode ? (' MODE:'+state.searchChat.mode) : undefined),
           } : {
-            search : state.searchChat.text + (state.searchChat.mode ? ('MODE:'+state.searchChat.mode) : ''),
+            search : state.searchChat.text,
           });
         })(!!state.searchChat.text),
         _search : state.searchChat.tokens.filter(function(tag){
@@ -634,8 +634,11 @@ const mutations = {
     state.agents = agents;
     updateTimer();
   },
-  setContactTab(state,tab){
-    state.searchChat.tab = tab;
+  setContactTab(state,options){
+    if(options.tab)
+      state.searchChat.tab = options.tab;
+    if(options.state)
+      state.searchChat.state = options.state;
     state.searchChat = Object.assign({},state.searchChat);
     agentSearchCovery.commit(state.searchChat);
   },
@@ -655,8 +658,8 @@ const mutations = {
               _text : (tags[0] || tags[1]).toLowerCase().replaceAll("*","").trim()
           }
       });
-      console.log(" state.searchChat.status",search.status);
-      state.searchChat.status = search.status;
+      console.log(" state.searchChat.state",search.state);
+      state.searchChat.state = search.state;
       state.searchChat.limit = search.limit;
       state.searchChat.tab = search.tab;
       state.searchChat.mode = search.mode;

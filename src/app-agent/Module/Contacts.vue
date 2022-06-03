@@ -62,26 +62,26 @@
                 </li>
               <li class="nav-item chat_tags">
                 <span class="tag-chat-status" 
-                    v-bind:class="[searchStatus == 'ACTIVE' ? 'tag-darker' : 'tag-lighter']"
-                    @click="search.status = 'ACTIVE'">
+                    v-bind:class="[searchState == 'ACTIVE' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.state = 'ACTIVE'">
                      Active</span>
               </li>
               <li class="nav-item chat_tags">
                 <span class="tag-chat-status" 
-                    v-bind:class="[searchStatus == 'OUTBOUND' ? 'tag-darker' : 'tag-lighter']"
-                    @click="search.status = 'OUTBOUND'">
+                    v-bind:class="[searchState == 'OUTBOUND' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.state = 'OUTBOUND'">
                      Outbox</span>
               </li>
               <li class="nav-item chat_tags">
                 <span class="tag-chat-status" 
-                     v-bind:class="[searchStatus == 'CLOSED' ? 'tag-darker' : 'tag-lighter']"
-                    @click="search.status = 'CLOSED'">
+                     v-bind:class="[searchState == 'CLOSED' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.state = 'CLOSED'">
                     Closed</span>
               </li>
               <li class="nav-item chat_tags"  v-if="$config.SETUP.POSTMAN_AGENT_TAB_HISTORY_PERIOD > 86400000">
                 <span class="tag-chat-status" 
-                    v-bind:class="[searchStatus == 'EXPIRED' ? 'tag-darker' : 'tag-lighter']"
-                    @click="search.status = 'EXPIRED'">
+                    v-bind:class="[searchState == 'EXPIRED' ? 'tag-darker' : 'tag-lighter']"
+                    @click="search.state = 'EXPIRED'">
                     Expired</span>
               </li>
               <li class="nav-item chat_tags position-relative p-1px p-1px" 
@@ -358,7 +358,7 @@
                 let searchText = this.search.text.trim();
                 let searchTokens = this.$store.getters.SearchChat.tokens;
                 var tab = search.tab;
-                var status = this.$store.getters.SearchChat.status;
+                var status = this.$store.getters.SearchChat.state;
                 
                 //console.log("searchTokens",searchTokens)
                 console.log("activeChats",this.$store.getters.StateChats)
@@ -442,8 +442,8 @@
             isLoading(){
                 return this.$store.getters.StateMeta.isLoadingChats;
             },
-            searchStatus(){
-                return this.$store.getters.SearchChat.status;
+            searchState(){
+                return this.$store.getters.SearchChat.state;
             },
             searchMode(){
                 return this.$store.getters.SearchChat.mode;
@@ -458,7 +458,7 @@
         data:() => ({
              MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
              search: {
-                status : 'ACTIVE', mode : null, tab : "ME",
+                state : 'ACTIVE', mode : null, tab : "ME",
                 contactType : null,
                 text : "",
                 active : false,
@@ -490,7 +490,7 @@
              //chats : this.$store.getters.StateChats
         }),
         mounted () {
-            this.search.status = this.$store.getters.SearchChat.status;
+            this.search.state = this.$store.getters.SearchChat.state;
             this.search.mode = this.$store.getters.SearchChat.mode;
             this.search.text = this.$store.getters.SearchChat.text;
             this.search.tab = this.$store.getters.SearchChat.tab;
@@ -520,8 +520,12 @@
             "$store.getters.SearchChat.tab" : function(newVal,oldVal){
                 this.search.tab = newVal;
             },
+            "$store.getters.SearchChat.state" : function(newVal,oldVal){
+                this.search.state = newVal;
+            },
             "$store.getters.SearchChat.chatsFetchStamp" : function(newVal,oldVal){
-                handleScrollElement(this.$refs.scrollable);
+                if(!this.searchEndGame)
+                    this.handleScrollElement(this.$refs.scrollable);
             },
             "search.tab" : function(newVal,oldVal){
                 this.changeSearchFilter();
@@ -529,7 +533,7 @@
             "search.text" :  function (searchText) {
                 this.changeSearchFilter();
             },
-            "search.status" :  function (searchText) {
+            "search.state" :  function (searchText) {
                 this.changeSearchFilter();
             },
             "search.mode" :  function (searchText) {
@@ -627,7 +631,7 @@
                let pos = (target.scrollTop + target.clientHeight)*100/target.scrollHeight;
                 if((pos > this.scrollPosition && pos >= 75) || pos > 90){
                     await this.loadMore();
-                } else if(event.target.scrollTop == 0 || pos<25){
+                } else if(target.scrollTop == 0 || pos<25){
                     this.search.limit = 0;
                     this.searchFilterOnChange();
                 }

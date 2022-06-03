@@ -2,31 +2,51 @@
     "options": [
         {
             "code": "RESOLVED",
-            "name": "RESOLVED"
+            "name": "RESOLVED",
+            "type" : "STATUS",
+            "token" : "STATUS"
         },
         {
             "code": "EXPIRED",
-            "name": "EXPIRED"
+            "name": "EXPIRED",
+            "type" : "STATE",
+            "token" : "IS"
         },
         {
             "code": "WAITING",
-            "name": "WAITING"
+            "name": "WAITING",
+            "type" : "STATE",
+            "token" : "IS"
         },
         {
             "code": "NEED_ATTENTION",
-            "name": "NEED_ATTENTION"
+            "name": "NEED_ATTENTION",
+            "type" : "STATE",
+            "token" : "IS"
         },
         {
             "code": "UNATTENDED",
-            "name": "UNATTENDED"
+            "name": "UNATTENDED",
+            "type" : "STATE",
+            "token" : "IS"
         },
         {
             "code": "AGENT",
-            "name": "AGENT"
+            "name": "AGENT",
+            "type" : "MODE",
+            "token" : "TO"
         },
         {
             "code": "BOT",
-            "name": "BOT"
+            "name": "BOT",
+            "type" : "MODE",
+            "token" : "TO"
+        },
+        {
+            "code": "ME",
+            "name": "ME",
+            "type" : "TAB",
+            "token" : "IN"
         }
     ]
  }

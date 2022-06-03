@@ -47,10 +47,13 @@ function eq(a,b) {
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
 		  if(session.assignedToDept !== MyConst.dept){
 			session._tab = "ORG";
+			session.local.tab = "ORG";
 		  }	 else if((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent){
 		    session._tab = "ME";
+			session.local.tab = "ME";
 		  } else if(!((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent)){
 		     session._tab = "TEAM";
+			 session.local.tab = "TEAM";
 		  }
 		  if(!session.local.active){
 			//session._tab = "HISTORY";
@@ -88,6 +91,18 @@ function eq(a,b) {
 			session.local.is_offline_agent = (agent.session.isAvailableNot || !agent.session.isLoggedIn);
 		}
 		session.local.is_unattended = !agent || (session.local.is_waiting_long && session.local.is_offline_agent);
+
+
+		if(session.local.expired){
+			session.local.state = 'EXPIRED';
+		  } else  if(session.local.resolved){
+			session.local.state = 'CLOSED';
+		  } else  if(!session?.msg?.lastInBoundMsg){
+			session.local.state = 'OUTBOUND';
+		  } else if(session.local.active && !!session?.msg?.lastInBoundMsg){
+			session.local.state = 'ACTIVE';
+		  }
+
 
 		if(!session?.contact){
 			session.contact = {};
