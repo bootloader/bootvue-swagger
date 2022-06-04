@@ -24,7 +24,7 @@ export default AppRouter.route({
         },
         {
             path: '/:app/home/:mvu',
-            name: 'agent-action',
+            name: 'agentAction',
             component: () => import('./Module/Home.vue'),
         },
         {

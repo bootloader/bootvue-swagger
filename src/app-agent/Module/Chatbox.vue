@@ -53,6 +53,10 @@
 <div v-else-if="activeChat">
 
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
+        <div hidden>
+            is_SEND_NEW:{{is_SEND_NEW}}
+            > {{activeChat.contact.sessionId}} == {{$route.params.sessionId}}
+        </div>
         <div class="msg_card_body-bubbles-lane">
             <div>   
                 <small class="text-xs">Channel</small>
@@ -427,7 +431,8 @@
                 return this.winMode == "RECORD_AUDIO"
             },
             is_SEND_NEW : function () {
-                return (this.activeChat?.contact?.sessionId == this.$route.params.sessionId)
+                return (!this.activeChat?.contact?.sessionId ||
+                    (this.activeChat?.contact?.sessionId == this.$route.params.sessionId))
                     && this.isSendNewMessage;
             },
             chatsVersionGlobal : function(){
@@ -673,13 +678,14 @@
                 console.log("initNewMessage:1",init,this.$route.params.sendNewMessage);
                 if(init || this.$route.params.sendNewMessage){
                     console.log("initNewMessage:2",init,this.$route.params.sendNewMessage);
-                    if(this.activeChat.contact.sessionId && this.activeChat.contact.sessionId != this.$route.params.sessionId){
+                    if(this.activeChat.contact.sessionId && this.activeChat.contact.sessionId != this.$route.params.sessionId){ 
                         console.log("initNewMessage:3",this.activeChat.contact.sessionId,this.$route.params.sessionId);
                         this.$router.push({
                             name: 'defAgentViewLong', 
                                 params: { 
                                     sessionId : this.activeChat.contact.sessionId,
                                     profileId : this.$route.params.contactId,
+                                    mash : "PUSH_HSM"+Date.now(),
                                     sendNewMessage : true
                                 }
                         });
@@ -703,6 +709,7 @@
                 }
             },
             showPushNewHSM(){
+                console.log("showPushNewHSM:is_SEND_NEW",this.is_SEND_NEW)
                 if(this.is_SEND_NEW){
                     this.goToBack();
                     this.scrollToBottom(true);

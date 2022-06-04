@@ -25,7 +25,9 @@
                 </div>
                 <div class="input-group-append" v-if="MyConst.config.SETUP.POSTMAN_AGENT_CHAT_INIT_CONTACT">
                     <a class="input-group-text menu_btn new-chat fa fa-comment-medical" v-b-toggle
-                        @click="$router.push({ params: { mvu: 'COMPOSE' } })"
+                        @click="$router.push({ 
+                            name : 'agentAction',
+                            params: { mvu: 'COMPOSE', app : $route.params.app } })"
                         @click.prevent
                             v-tooltip="'Send New Message'"
                         >
