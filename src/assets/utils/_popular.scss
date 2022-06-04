@@ -132,3 +132,8 @@ $popular-list:(
         text-align:center;   
     }
 }
+
+.fa-flip-x {
+    -webkit-transform: rotate(-1);
+    transform: scaleX(-1);
+}

@@ -62,6 +62,12 @@ var tunnelClient = (function(win) {
 				if(typeof win.__onsocket_connect__ == 'function'){
 					win.__onsocket_connect__(frame);
 				}
+				for(var i in instances){
+					let details = {frame : frame, type : "CONNECTED"};
+					if(!instances[i].inactive && typeof instances[i].__change__ == 'function'){
+						instances[i].__change__(details);
+					}
+				}
 			});
 		}, function(error){
 			let details = {error : error,type : "ERROR"};
@@ -72,6 +78,11 @@ var tunnelClient = (function(win) {
 					$dfd = null;
 				   	connect();	
 				});
+				for(var i in instances){
+					if(!instances[i].inactive && typeof instances[i].__change__ == 'function'){
+						instances[i].__change__(details);
+					}
+				}
 			}
 		}, function(CloseEvent){
 			let details = {closeEvent : CloseEvent, type : "CLOSED"};
@@ -82,6 +93,11 @@ var tunnelClient = (function(win) {
 					$dfd = null;
 				   	connect();	
 				});
+			}
+			for(var i in instances){
+				if(!instances[i].inactive && typeof instances[i].__change__ == 'function'){
+					instances[i].__change__(details);
+				}
 			}
 		});
 		return $dfd.promise();
@@ -156,6 +172,8 @@ var tunnelClient = (function(win) {
 				this.ids[i].inactive=true;
 				this.ids[i].unsub.unsubscribe();
 			}
+			this.inactive = true;
+			console.log('tunnel:inactive')
 		},
 		reconnect : function(){
 			var THAT = this;
@@ -185,7 +203,11 @@ var tunnelClient = (function(win) {
                 console.log("PONG:",greeting);
             });
 			return this;
-        }
+        },
+		change: function(fun){
+			this.__change__ = fun;
+			return this;
+		}
 	}
 	
 
@@ -218,6 +240,14 @@ var tunnelClient = (function(win) {
 			setConnected(false);
 			console.log("Disconnected");
 			return this;
+		},
+		triggerChange :  function(type,event){
+			console.log('tunnel:triggerChange')
+			for(var i in instances){
+				if(!instances[i].inactive && typeof instances[i].__change__ == 'function'){
+					instances[i].__change__({type : type,event : event });
+				}
+			}
 		}
 	};
 })(this);

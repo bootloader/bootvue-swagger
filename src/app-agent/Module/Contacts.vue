@@ -301,11 +301,23 @@
                 <i class="contact_type fac-bg fa fa-chrome" @click="searchTag(':website')"
                     v-bind:class="{'my-selected' : search.text==':website' }"></i>
              -->
-            <span
-                 v-bind:class="{'toggle-active' : isOnline, 'fa-rotate-180' : !isOnline }" 
+             <span class="connection-wrapper">
+                <i class="connection-status fas fa-signal pointer"
+                    v-tooltip="`Signal strength is ${signal}`"
+                    v-bind:class="{
+                        'text-online'  : signal>0,
+                        'text-grey'  : signal==0,
+                        'opacity-10' : signal >2,
+                        'opacity-5' : signal >0
+                    }">
+                </i>
+                <span
+                 v-bind:class="{'toggle-active' : isAvailable, 'fa-flip-x' : !isAvailable }" 
                  @click="toggleOnline"
-                 v-tooltip="isOnline ? 'Availble' : 'Not Availble'"
+                 v-tooltip="isAvailable ? 'Availble' : 'Not Availble'"
                 class="online-toggle fa fa-toggle-on"></span>
+             </span>    
+
         </div>
     </div>
 </template>
@@ -426,7 +438,7 @@
                     return b?.local?.lastActivityStamp - a?.local?.lastActivityStamp;
                 });
             },
-            isOnline :  function (){
+            isAvailable :  function (){
                 if(this.$store.getters.StateMeta){
                     return this.$store.getters.StateMeta.isOnline;
                 }
@@ -490,8 +502,10 @@
             scrollPosition : 0,
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
+             signal : false
         }),
         mounted () {
+            let THAT = this;
             this.search.state = this.$store.getters.SearchChat.state;
             this.search.mode = this.$store.getters.SearchChat.mode;
             this.search.text = this.$store.getters.SearchChat.text;
@@ -503,6 +517,9 @@
             this.searchChat = debounce(this.searchChat,500);
             this.handleScroll = debounce(this.handleScroll,200);
             this.$refs.scrollable.addEventListener('scroll', this.handleScroll);
+            this.tunnel = this.$tunnel.pipe().change(function(event){
+                THAT.signal = THAT.$tunnel.strength();
+            });
         },
         watch: {
             '$route.params.sessionId': function (sessionId, sessionIdFrom) {
@@ -578,7 +595,7 @@
             async toggleOnline(){
                 await this.$store.dispatch('OnlineStatus', { 
                     type : "online",
-                    online : !this.isOnline 
+                    online : !this.isAvailable 
                 });
             },
             searchTag : function(searchTag) {
@@ -645,7 +662,7 @@
             }
         },
         beforeUnmount : function (argument) {
-            //this.tunnel.off();
+            this.tunnel.off();
           //clearInterval(this.intervalid1); 
             if(this.$refs?.scrollable)
                 this.$refs.scrollable.removeEventListener('scroll', this.handleScroll); 
@@ -910,11 +927,26 @@
         background-color: rgba(var(--scheme-color-rgba), 0.9)!important;
         text-transform: uppercase;
     }
-    .online-toggle {
+    .connection-wrapper {
         float: right;
-        font-size: 25px!important;
+        line-height: 25px!important;
+        font-size: 23px!important;
+    }
+    .connection-status {
+        /* line-height: 30px!important;
+        padding: 0px 0px 0px 0px; */
+        /* width: 25px;
+        height: 25px; */
+        font-size: 18px!important;
+        display: inline-block;
+        margin: 0px -1px;
+        padding: 0px;
+        opacity: 0.9;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    .online-toggle {
         border-radius: 48%;
-        line-height: 35px!important;
         cursor: pointer;
     }
     .online-toggle.fa-toggle-on {
@@ -922,6 +954,7 @@
     }
     .online-toggle.fa-toggle-on.toggle-active {
       color: #4cd137;
+      height: 33px;
     }
 
     @keyframes blinking {
