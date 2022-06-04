@@ -5,7 +5,8 @@ export default {
 	connected : false,
 	online : true,
 	strength : function(){
-		return 0 + (this.connected ? 2 : 0) + (this.online ? 1 : 0);
+		if(!this.online) return 0;
+		return 0 + (this.connected ? 1 : 0) + (this.online ? 2 : 0);
 	},
 	init : function () {
 	  if(!this.client){
