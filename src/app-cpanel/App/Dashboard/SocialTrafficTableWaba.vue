@@ -18,12 +18,12 @@
                     </b-media>
                 </template>
             </el-table-column>
-            <el-table-column label="Inbound Message"
+            <el-table-column label="User Initiated"
                              prop="I"
                              min-width="140px">
             </el-table-column>
 
-            <el-table-column label="Outbound Message"
+            <el-table-column label="Business Initiated"
                              min-width="170px"
                              prop="O">
             </el-table-column>
@@ -34,7 +34,7 @@
 <script>
   import { Table, TableColumn} from 'element-ui'
   export default {
-    name: 'social-traffic-table',
+    name: 'social-traffic-table-waba',
     components: {
       [Table.name]: Table,
       [TableColumn.name]: TableColumn

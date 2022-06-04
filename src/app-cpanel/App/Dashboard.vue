@@ -39,11 +39,28 @@
         <!--Tables-->
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
-            <social-traffic-table :tableData="getDataTable"></social-traffic-table>
+            <social-traffic-table headerTitle="Uses Data" :tableData="getDataTable"></social-traffic-table>
         </b-col>
       </b-row>
       <!--End tables-->
     </b-container>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <b-container fluid class="mt--9">
+        <!--Tables-->
+      <b-row class="mt-5">
+        <b-col xl="12" class="mb-5 mb-xl-0">
+            <social-traffic-table-waba headerTitle="WABA Uses Data" :tableData="getWabaDataTable"></social-traffic-table-waba>
+        </b-col>
+      </b-row>
+      <!--End tables-->
+    </b-container>
+    <br/>
+    <br/>
     <br/>
     <br/>
     <br/>
@@ -54,6 +71,7 @@
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
     import SocialTrafficTable from './Dashboard/SocialTrafficTable';
+    import SocialTrafficTableWaba from './Dashboard/SocialTrafficTableWaba';
 
    function initialModeState (){
        return { 
@@ -103,6 +121,13 @@
                 total:0,
                 mode: initialModeState(),
             },
+            waba: {
+                label: 'WABA',
+                icon: 'ni ni-chart-pie-35',
+                type: 'gradient-info',
+                total:0,
+                mode: initialModeState(),
+            },
             wags: {
                 label: 'WA_GUPSHUP',
                 icon: 'ni ni-chart-pie-35',
@@ -136,7 +161,8 @@
     export default {
         components: {
             StatsCard,
-            SocialTrafficTable
+            SocialTrafficTable,
+            SocialTrafficTableWaba
         },
         data() {
             return {
@@ -150,38 +176,7 @@
                 channelWiseSummaryCount: {},
                 summaryCount: {},
                 modes:["I","O"],
-                tableData: [
-                    {
-                        name: 'Facebook',
-                        visitors: '1,480',
-                        progress: 60,
-                        progressType: 'gradient-danger',
-                    },
-                    {
-                        name: 'LinkedIn',
-                        visitors: '5,480',
-                        progress: 70,
-                        progressType: 'gradient-success',
-                    },
-                    {
-                        name: 'Google',
-                        visitors: '4,807',
-                        progress: 80,
-                        progressType: 'gradient-primary',
-                    },
-                    {
-                        name: 'Instagram',
-                        visitors: '3,678',
-                        progress: 75,
-                        progressType: 'gradient-info',
-                    },
-                    {
-                        name: 'Twitter',
-                        visitors: '2,645',
-                        progress: 30,
-                        progressType: 'gradient-warning',
-                    }
-                    ]
+                wabaUsesData:initialChannelState()
             }
         },
         computed:{
@@ -201,7 +196,26 @@
                     }
                     
                 })
-                console.log("data",data);
+                return data;
+            },
+            getWabaDataTable(){
+                let data = [];
+                Object.entries(this.wabaUsesData).map(v=>{
+                    if(v[1].total){
+                        console.log("v",v);                        
+                        let row =  {
+                            name: v[1].label,
+                            visitors: '1, 480',
+                            progress: 60,
+                            progressType: 'gradient-danger',
+                            ...v[1].mode
+                        }
+                        data.push(row)
+                    }
+                    
+                })
+
+                console.log("datadata",data);
                 return data;
             }
         },
@@ -212,7 +226,7 @@
                 )
                 this.domainOptions = resp.results.map((v) => {
                     return {
-                        name: v.company.businessName,
+                        name: v.domain+" ("+v.company.businessName+")",
                         value: v.domain,
                     }
                 })
@@ -239,6 +253,11 @@
                     '/partnerdashboard/pub/monthwise-summary-save',
                     { ...this.model }
                 )
+                let wabaResp = await this.$service.get(
+                    '/partnerdashboard/pub/monthwise-summary/waba',
+                    { ...this.model }
+                )
+                console.log("wabaResp",wabaResp)
                 this.dateWiseSummaryCount = initialChannelState();
                 Object.entries(resp.results[0].dateWiseCountMap).map(
                     (v) => {
@@ -254,6 +273,18 @@
                         })
                     }
                 )
+                this.wabaUsesData = initialChannelState();
+                wabaResp.results.map( v => {
+                        let channel = 'waba'
+                        let mode = v.type == "user_initiated" ? "I" : "O";
+                        _THAT.wabaUsesData[channel].mode[mode] = _THAT.wabaUsesData[channel].mode[mode] + 1 ;
+                        _THAT.wabaUsesData[channel].total = _THAT.wabaUsesData[channel].total + 1;
+                        console.log("_THAT.wabaUsesData[channel].mode[mode]",_THAT.wabaUsesData[channel].mode[mode])
+                    }
+                )
+                
+
+
                 this.summaryCount = resp.results[0].summaryCount
             },
             domainOnChange() {
