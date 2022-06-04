@@ -36,7 +36,7 @@
                 <span class="fa fa-phone"/>&nbsp;<label>Phone</label> : <data>{{activeChat.contact.profile.mobile}}</data>
             </div>
 
-            <div v-for="label in activeChat.contact.profile.labels">
+            <div v-for="label in activeChat.contact.profile.labels" v-bind:key="label.key">
                 <span class="fa fa-tag"/>&nbsp;<label>{{label.name || label.key}}</label> : <data>{{label.value}}</data>
             </div>
 
@@ -48,15 +48,17 @@
     </div>
     <div class="card-footer">
             <div v-if="activeChat.contactType">
-                <p><span class="contact_type fac-bg fa" v-bind:class="MyDict.socialPrefix(activeChat.contactType)" />{{activeChat.name}}</p>
+                <p><span class="contact_type fac-bg fa" 
+                    v-bind:class="MyDict.socialPrefix(activeChat.contactType)" />
+                    {{myName}}</p>
             </div>
             
             <div>
-                <p v-if="activeChat.email"><span class="fa fa-envelope"/> {{activeChat.email}}</p>
+                <p v-if="myEmail"><span class="fa fa-envelope"/> {{myEmail}}</p>
             </div>
 
             <div>
-                <p v-if="activeChat.phone"><span class="fa fa-phone"/> {{activeChat.phone}}</p>
+                <p v-if="myPhone"><span class="fa fa-phone"/> {{myPhone}}</p>
             </div>
 
             <div v-if="activeChat" id="listGroups">
@@ -182,6 +184,15 @@
                     return tagFormat(argument);
                 });
             },
+            myName(){
+                return this.activeChat?.contact?.name || this.activeChat?.name
+            },
+            myPhone(){
+                return this.activeChat?.contact?.phone || this.activeChat?.phone
+            },
+            myEmail(){
+                return this.activeChat?.contact?.email || this.activeChat?.email
+            }
         }, 
         data: () => ({
             MyDict,MyFlags,MyConst,

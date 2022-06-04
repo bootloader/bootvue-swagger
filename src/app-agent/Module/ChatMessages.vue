@@ -1,27 +1,29 @@
 <template>
     <div v-if="activeChat">
-        <div v-for="(m,mindex) in messages"  v-bind:key="mindex" 
+        <div v-for="(m) in messages"  v-bind:key="`message-${activeChat.sessionId}-${m.messageId}`" 
             :id="`message-${activeChat.sessionId}-${m.messageId}`" ><!-- LOOP Start --><span v-if="m">
             <div v-if="$global.MyFunc.isInbound(m.type)"
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="msg_cotainer">
-                    <div v-if="m.replyIdExt || m.replyMessage">
+                    <div v-if="m.replyIdExt || m.replyId">
                         <div class="msg_cotainer_with_reply"
-                            @click="jumpFor(m)"
+                            @click="jumpFor(m)" @mouseenter="onReplyShow(m)"
                             :id="'reply-id-'+ m.replyIdExt + '-' + m.messageId" >
                             Reply to &nbsp;<i class="fa fa-chevron-right"/>
-                            <span hidden>{{m.replyMessage}}</span> 
+                            <span hidden>{{m.local.replyMessage}}</span>
                         </div>
-                        <b-popover triggers="hover focus" :target="'reply-id-'+ m.replyIdExt + '-' + m.messageId"
-                            custom-class="message-preview" placement="right" @show="onReplyShow(m)">
-                            <template #default class="message-preview"> 
-                                <ChatMessageContent v-if="m.replyMessage" :message="m.replyMessage"></ChatMessageContent>
-                                <span v-else>Loading
-                                </span>
-                                <loading :active="!m.replyMessage"
+                        <b-popover triggers="hover focus"  @show="onReplyShow(m)"
+                            :target="'reply-id-'+ m.replyIdExt + '-' + m.messageId"
+                            :delay="100"
+                            custom-class="message-preview" placement="right">
+                            <span class="message-preview"> 
+                                <ChatMessageContent v-if="m.local.replyMessage" :message="m.local.replyMessage">
+                                </ChatMessageContent>
+                                <span v-else>Loading</span>
+                                <loading :active="!m.local.replyMessage"
                                         :loader="'dots'" :opacity="0.3"
                                         :is-full-page="false"></loading>
-                            </template>
+                            </span>
                         </b-popover> 
                     </div>    
                     <ChatMessageContent :message="m"></ChatMessageContent>    
@@ -118,6 +120,9 @@
                     return sessionId == m.sessionId;
                 }).sort(function(a,b){
                     return a.timestamp - b.timestamp;
+                }).map(function(m){
+                    m.local = m.local || { counter : 0 };
+                    return m;
                 });
             }
         },
@@ -134,20 +139,24 @@
                 if(this.activeChat && this.activeChat.messages){
                     for(var i in this.activeChat.messages){
                         if(m.replyId && this.activeChat.messages[i].messageId == m.replyId){
-                            m.replyMessage = this.activeChat.messages[i];
+                            m.local.replyMessage = this.activeChat.messages[i];
                         } else if(m.replyIdExt && this.activeChat.messages[i].messageIdExt == m.replyIdExt){
-                            m.replyMessage = this.activeChat.messages[i];
+                            m.local.replyMessage = this.activeChat.messages[i];
                         }
                     }
-                    if(!m.replyMessage){
+                    if(!m.local.replyMessage){
                          let resp = await this.$service.get("/api/session/messages",{
                             sessionId : this.activeChat.sessionId,
                             messageId : m.replyId,
                             messageIdExt : m.replyIdExt
                         });
                         if(resp.results[0]){
-                            m.replyMessage = resp.results[0];
+                            m.local.replyMessage = resp.results[0];
+                            this.$forceUpdate();
                         }
+                    } else {
+                        //m.local = Object.assign({},m.local)
+                        this.$forceUpdate();
                     }
                 }
             },500),
@@ -159,19 +168,21 @@
             async jumpFor(m) {
                 await this.onReplyShow(m);
                 let contactId =  this.activeChat.contactId.replace('/','-');
-                if( m.replyMessage.sessionId == this.activeChat.sessionId){
-                    this.jumpTo(`#message-${this.activeChat.sessionId}-${m.replyMessage.messageId}`);
-                } else {
-                    this.$router.push({ 
-                        name: 'defAgentView', 
-                        params: { 
-                            contactId: contactId,
-                            sessionId : m.replyMessage.sessionId,
-                            profileId : contactId,
-                            mvu : 'CHATBOX',
-                            jumpTo : `#message-${m.replyMessage.sessionId}-${m.replyMessage.messageId}`
-                        }
-                    })
+                if(m.local.replyMessage){
+                    if(m.local.replyMessage.sessionId == this.activeChat.sessionId){
+                        this.jumpTo(`#message-${this.activeChat.sessionId}-${m.local.replyMessage.messageId}`);
+                    } else {
+                        this.$router.push({ 
+                            name: 'defAgentView', 
+                            params: { 
+                                contactId: contactId,
+                                sessionId : m.local.replyMessage.sessionId,
+                                profileId : contactId,
+                                mvu : 'CHATBOX',
+                                jumpTo : `#message-${m.local.replyMessage.sessionId}-${m.local.replyMessage.messageId}`
+                            }
+                        })
+                    }
                 }
             },
         },
