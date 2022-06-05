@@ -85,9 +85,9 @@ function eq(a,b) {
 		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
 
 		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
-		session.local.is_assigned = (session.mode == 'AGENT' && session.assignedToAgent);
+		session.local.is_assigned = (session.mode == 'AGENT' && !!session.assignedToAgent);
 		let agent = session?.local?.agent;
-		session.local.is_offline_agent = false;
+		session.local.is_offline_agent = !agent?.session;
 		if(agent?.session){
 			session.local.is_offline_agent = (agent.session.isAvailableNot || !agent.session.isLoggedIn);
 		}

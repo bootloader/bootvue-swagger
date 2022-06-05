@@ -58,6 +58,7 @@
             > {{activeChat.contact.sessionId}} == {{$route.params.sessionId}}
             > open:{{chatLocal.open}} closed:{{chatLocal.closed}} active:{{chatLocal.active}}
             > expired:{{chatLocal.expired}} live:{{chatLocal.live}}
+            > {{activeChat}}
         </pre>
         <div class="msg_card_body-bubbles-lane">
             <div>   
@@ -688,21 +689,24 @@
                 if(!this.activeChat || !this.activeChat.contactId){
                     return this.composeNewMessage();
                 } 
-                let resp = await this.$service.get('/api/session/compose',{
-                    contactId : this.activeChat.contactId
-                },{ toast : false, metaType : 'contact', dataType : 'session'});
-                console.log("initNewMessage:live", resp.results[0].live);
-                if(resp.results[0] && resp.results[0].local.live){
-                    this.$router.push({
-                        name: 'defAgentViewLong', 
-                            params: { 
-                                sessionId : resp.results[0].sessionId,
-                                profileId : resp.results[0].contactId,
-                                mash : "PUSH_HSM"+Date.now()
-                            }
-                    }); 
-                } else if(resp.meta) {
-                    this.composeNewMessage(resp.meta)
+                try {
+                    let resp = await this.$service.get('/api/session/compose',{
+                        contactId : this.activeChat.contactId
+                    },{ toast : false, metaType : 'contact', dataType : 'session'});
+                    if(resp.results[0] && resp.results[0].local.live){
+                        this.$router.push({
+                            name: 'defAgentViewLong', 
+                                params: { 
+                                    sessionId : resp.results[0].sessionId,
+                                    profileId : resp.results[0].contactId,
+                                    mash : "PUSH_HSM"+Date.now()
+                                }
+                        }); 
+                    } else if(resp.meta) {
+                        this.composeNewMessage(resp.meta)
+                    }
+                } catch(e){
+                    this.composeNewMessage(this.activeChat.contact);
                 }
             },
             composeNewMessage(contact){
@@ -717,55 +721,6 @@
             },
             async goToChat(){
                 this.composeNewMessage(this.activeChat.contact);
-            },
-            async initNewMessageDeperecated(init){
-                this.isSendNewMessage = false;
-                console.log("initNewMessage:1",init,this.$route.params.sendNewMessage);
-                if(init || this.$route.params.sendNewMessage){
-                    console.log("initNewMessage:2",init,this.$route.params.sendNewMessage);
-                    if(this.activeChat.contact.sessionId && this.activeChat.contact.sessionId != this.$route.params.sessionId){ 
-                        console.log("initNewMessage:3",this.activeChat.contact.sessionId,this.$route.params.sessionId);
-                        this.$router.push({
-                            name: 'defAgentViewLong', 
-                                params: { 
-                                    sessionId : this.activeChat.contact.sessionId,
-                                    profileId : this.$route.params.contactId,
-                                    mash : "PUSH_HSM"+Date.now(),
-                                    sendNewMessage : true
-                                }
-                        });
-                    } else {
-                        try{
-                            this.isSendNewMessage = true;
-                            let resp = await this.$service.get('/api/session/compose',{
-                                contactId : this.$route.params.contactId
-                            },{ toast : false, metaType : 'contact'});
-                            if(resp.results[0]){
-                                this.$router.push({
-                                    name: 'defAgentViewLong', 
-                                        params: { 
-                                            sessionId : resp.results[0].sessionId,
-                                            profileId : resp.results[0].contactId,
-                                            mash : "PUSH_HSM"+Date.now(),
-                                            sendNewMessage : true
-                                        }
-                                });
-                            } else if(resp.meta) {
-                                this.$router.push({ 
-                                    name : 'agentAction',
-                                    params: { 
-                                        mvu: 'COMPOSE', 
-                                        app : this.$route.params.app,
-                                        contact : resp.meta
-                                    }
-                                });                            
-                                this.isSendNewMessage = true;
-                            }
-                        } catch(e){
-                            this.isSendNewMessage = true;
-                        }
-                    }
-                }
             },
             showPushNewHSM(){
                 console.log("showPushNewHSM:is_SEND_NEW",this.is_SEND_NEW)

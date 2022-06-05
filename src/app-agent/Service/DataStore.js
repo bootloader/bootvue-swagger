@@ -172,7 +172,7 @@ const actions = {
       });
       state.meta.isLoadingChats =  false;
       if(response.data && response.data.details){
-          dispatch("SetAgentOptionsStatus", response.data.details);
+          await dispatch("SetAgentOptionsStatus", response.data.details);
       }
       if(response.data && response.data.results){
           if(response.data.chatsFetchStamp > state.searchChat.chatsFetchStamp){
