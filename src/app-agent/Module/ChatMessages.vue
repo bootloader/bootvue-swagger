@@ -1,7 +1,7 @@
 <template>
     <div v-if="activeChat">
-        <div v-for="(m) in messages"  v-bind:key="`message-${activeChat.sessionId}-${m.messageId}`" 
-            :id="`message-${activeChat.sessionId}-${m.messageId}`" ><!-- LOOP Start --><span v-if="m">
+        <div v-for="(m) in messages"  v-bind:key="`message-${activeChat.sessionId}-${m.messageId}-${m.messageIdRef}`" 
+            :id="`message-${activeChat.sessionId}-${m.messageId}-${m.messageIdRef}`" ><!-- LOOP Start --><span v-if="m">
             <div v-if="$global.MyFunc.isInbound(m.type)"
                     class="d-flex justify-content-start mb-4 chat-bubble" :title="m.tags ? m.tags.categories : null" >
                 <div class="msg_cotainer">

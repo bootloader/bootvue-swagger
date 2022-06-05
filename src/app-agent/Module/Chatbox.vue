@@ -229,6 +229,14 @@
                         v-on:vdropzone-queue-complete="fileUploadedAll"
                         ></vue-dropzone>
                     </div>
+                    <div class="caption_text_wrapper">
+                        <span>
+                        <input class="caption_text" ref="caption_text" 
+                             v-model="caption_text" placeholder="Enter Media Caption"
+                             @keydown.enter.exact.prevent
+                            @keyup.enter.exact="onSendMessage" />
+                        </span>
+                    </div>
                 </div>
                 
 
@@ -599,6 +607,7 @@
                     sender : MyConst.agent, name : MyConst.agent,
                     messageId : "",sessionId : sessionId,
                     subject : options.subject,
+                    caption : options.caption,
                     attachments : media ? [{
                         mediaType : media.type,
                         mediaId : media.id,
@@ -615,10 +624,10 @@
 
                 console.log("sendText:text",text);
                 if(this.winMode == "UPLOAD_MEDIA" && this.$refs.myVueDropzone.getQueuedFiles().length > 0){
-                    this.caption_text = text;
+                    //this.caption_text = text;
                     console.log("sendText:caption_text",this.caption_text);
                     await this.$refs.myVueDropzone.processQueue();
-                    text =  this.caption_text;
+                    //text =  this.caption_text;
                 } 
 
                 var msg = this.prepareMessage(text,media, action);
@@ -1093,16 +1102,19 @@
             },
             //DZ options
             async fileAdded(argument) {
+                 this.winMode = "UPLOAD_MEDIA";
                  //this.dz.file_dropped = true;
             },
             async fileUploading(file, xhr, formData) {
-                var msg = this.prepareMessage(this.caption_text, null,null,true,{
+                var msg = this.prepareMessage(null,null,null,true,{
                     subject : null
                 });
                 this.$store.dispatch("SendChatPre",msg);
                 console.log("fileUploading2",msg)
-                await formData.append('message', JSON.stringify(msg));
-                this.caption_text = null;
+                formData.append('message', JSON.stringify(msg));
+                if(this.caption_text)
+                    formData.append("caption",this.caption_text);
+                //this.caption_text = null;
             },
             async fileUploaded(file,resp) {
                 if(resp){
@@ -1112,6 +1124,7 @@
             },
             async fileUploadedAll(e){
                 this.toggleView("CHAT_BOX");
+                this.caption_text = null;
             },
             onSwipeRight(){
                 this.$router.push({
@@ -1301,7 +1314,7 @@
     }
 
     .upload_card_body-bubbles {
-        height: calc(100% - 35px);
+        height: calc(100% - 85px);
         background-color: #f5f5f5;
         overflow-y: auto;
     }
@@ -1351,6 +1364,31 @@
     .type_msg:focus{
         box-shadow:none !important;
         outline:0px !important;
+    }
+    .caption_text_wrapper {
+        background-color: rgb(255, 255, 255) !important;
+        height: 50px;
+        text-align: center;
+          padding: 5px;
+    }
+    .caption_text_wrapper span {
+       background-color: rgba(0, 0, 0, 0.447) !important;
+       padding: 5px;
+       border-radius: 15px 15px 15px 15px !important;
+        width: 80%;
+        display: inline-block;
+    }
+    .caption_text {
+      background-color: rgba(0, 0, 0, 0) !important;
+      border:0 !important; outline: 0;
+      color:rgb(255, 255, 255) !important;
+      min-height: 30px;
+      max-height: 60px;
+      width: 100%;
+      overflow-y: auto;
+    }
+    .caption_text::placeholder{
+      color:rgba(255, 255, 255, 0.68) !important;
     }
     .type_note {
         background-color: #fff9caf2 !important;
