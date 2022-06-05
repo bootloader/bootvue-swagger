@@ -8,7 +8,7 @@
                 <div  class="card-header-right">
                     <div class="quick-options">
                         <span class="float-right quick-option" 
-                            @click="$router.push({ params: { mvu: 'CONTACTS' } })"
+                            @click="$router.back()"
                             v-tooltip="'Cancel'" >
                             <i class="fa fa-times" aria-hidden="true"></i>
                         </span> 
@@ -49,7 +49,7 @@
                                 <div v-else class="text-center mt-5">
                                     <span class="fa fa-code fa-5x text-white-dirty" />
                                     <br/>
-                                    <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
+                                    <small> Any additional message you send to the customer beyond the Customer Care Window must be a Template Message,</small>
                                     <br/>
                                 </div> 
                         </div>   
@@ -110,6 +110,14 @@
             contact : null, 
             contacts : []
         }),
+        mounted(){
+            console.log("this.$route.params.contact",this.$route.params.contact)
+            if(this.$route.params.contact){
+                this.contacts.push(this.$route.params.contact);
+                this.model.contactId = this.$route.params.contact.contactId;
+            }
+            console.log("this.$route.params.contact",this.$refs.contactSelect.option());
+        },
         methods : {
             onContactOption (option){
                 this.contact = option ? option.item : null;

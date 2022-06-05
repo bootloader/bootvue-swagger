@@ -81,12 +81,26 @@ function path2key(path) {
     }).join("")
 }
 
-function processor(params,responseData) {
-  var _processor = params?._processor;
-  if(_processor && DataProcessor[_processor]){
+function processor(params,responseData,config) {
+  var dataType = config?.dataType || params?._processor;
+  if(dataType && DataProcessor[dataType]){
+    if(responseData.data){
+      responseData.data = DataProcessor[dataType](responseData.data);
+    }
     if(responseData.results){
       for(var i in responseData.results){
-        responseData.results[i] = DataProcessor[_processor](responseData.results[i]);
+        responseData.results[i] = DataProcessor[dataType](responseData.results[i]);
+      }
+    }
+  }
+  var metaType = config?.metaType;
+  if(metaType && DataProcessor[metaType]){
+    if(responseData.meta){
+      responseData.meta = DataProcessor[metaType](responseData.meta);
+    }
+    if(responseData.details){
+      for(var i in responseData.details){
+        responseData.details[i] = DataProcessor[metaType](responseData.details[i]);
       }
     }
   }
@@ -105,9 +119,10 @@ const DataService = {
   },
 
   _GET_X : {},
-  async getX(url,query) {
+  async getX(url,query,config) {
     url = slashUrl(url);
     var pathKey = path2key(url);
+    let _config = config || {};
 
     if(this._GET_X[pathKey]){
       await this._GET_X[pathKey];
@@ -121,7 +136,7 @@ const DataService = {
     this._GET_X[pathKey] = proms;
     let response = await proms;
     delete this._GET_X[pathKey];
-    let responseData = processor(query,response.data);
+    let responseData = processor(query,response.data,_config);
     let results = responseData.results ? responseData.results : responseData;
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",response.data)
@@ -134,15 +149,17 @@ const DataService = {
     let _config = config || {};
     _config.params = query;
     let response = await axios.get(url,_config);
-    return processor(query,response.data);
+    return processor(query,response.data,_config);
   },
   async post(url,params,config) {
     url = slashUrl(url);
-    let response = await axios.post(url, params,config);
-    return processor(params,response.data);
+    let _config = config || {};
+    let response = await axios.post(url, params,_config);
+    return processor(params,response.data,_config);
   },
   async submit(url,params,config) {
     url = slashUrl(url);
+    let _config = config || {};
     let SubmitForm = new URLSearchParams();
     for (var key in params) {
         if((params[key] !== null) && (params[key] !== undefined)){
@@ -150,11 +167,11 @@ const DataService = {
         }
     }
     try{
-      let response = await axios.post(url, SubmitForm,config);
-      return processor(params,response.data);
+      let response = await axios.post(url, SubmitForm,_config);
+      return processor(params,response.data,_config);
     } catch(e){
-        if(config && config.ref && typeof config.ref.setErrors == 'function'){
-          config.ref.setErrors(e.response.data.veeErrors);
+        if(_config && _config.ref && typeof _config.ref.setErrors == 'function'){
+          _config.ref.setErrors(e.response.data.veeErrors);
         }
         return Promise.reject(e);
     }
@@ -165,7 +182,7 @@ const DataService = {
     _config.params = query;
     //_config.data = query;
     let response = await axios.delete(url,_config);
-    return processor(query,response.data);
+    return processor(query,response.data,_config);
   },
   config (argument) {
     switch (argument) {

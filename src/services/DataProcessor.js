@@ -26,7 +26,7 @@ function eq(a,b) {
 		  };
 		  var expiryDateStamp = session._stamp-MyConst.config.chatSessionTimeout;
 
-		  session.local.activeInbound =  (session.lastInComingStamp>0 && session.lastInComingStamp > expiryDateStamp)
+		  session.local.live =  (session.lastInComingStamp>0 && session.lastInComingStamp > expiryDateStamp)
 		  session.local.expired = (
 			  	session.expired 
 				|| (session.lastInComingStamp>0 && session.lastInComingStamp < expiryDateStamp)) 
@@ -38,11 +38,12 @@ function eq(a,b) {
 
 		 	//Extra Derived 
 		  session.local.resolved = !!session.resolved;
-		  session.local.open = session.local.active && !session.local.expired && session.local.activeInbound;
+		  session.local.open = session.local.active && !session.local.expired && session.local.live;
 		  session.local.closed = session.local.expired || !session.local.active;
 		  session.local.isModeAgent = session.mode=='AGENT';
 		  session.local.isModeBot = session.mode=='BOT';
 		  session.local.isShowAgentPush = (session.local.closed || !session.local.isModeAgent);
+		  session.local.isAssignedToMe = ((session.assignedToAgent == MyConst.agent) || !session.assignedToAgent);
 
 		  session._assignedToMe = ((MyConst.agent == session.assignedToAgent) && !session.resolved)
 		  if(session.assignedToDept !== MyConst.dept){
@@ -110,10 +111,17 @@ function eq(a,b) {
 		if(!session?.contact?.name){
 			session.contact.name = session.name;
 		}
+		session.contact = this.contact(session.contact);
+		//session.contactId = session.contactId || session.contact.contactId;
+		//session.contact.contactId = session.contactId || session.contact.contactId;
 
 		session._searchText = [session?.contact?.name, session?.contact?.email, session?.contact?.phone, session?.contact?.csid].join(" ").toLowerCase();
 		return session;
  	},
+	contact(contact){
+		contact.name = contact.name || contact.email || contact.phone;
+		return contact;
+	},
 	appendMessage(session,m){
 		if(!m || m.length) return;
 		let chat = session;

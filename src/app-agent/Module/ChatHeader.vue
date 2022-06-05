@@ -19,7 +19,7 @@
                             <div class="user_info" 
                                 v-if="activeChat">
                                 <span class="user_name" @click="showContactProfile" v-if="activeChat.contact">
-                                    {{activeChat.contact.name}}
+                                    {{activeChat.contact.name || activeChat.contact.phone || activeChat.contact.email}}
                                 </span>
                                 <div class="user_assignment">
                                     <v-select v-if="chatLocal.active && chatLocal.isModeAgent" 

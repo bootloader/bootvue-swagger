@@ -53,10 +53,12 @@
 <div v-else-if="activeChat">
 
     <div v-if="activeChat.contact" class="msg_card_body-bubbles-header"> 
-        <div hidden>
+        <pre hidden>
             is_SEND_NEW:{{is_SEND_NEW}}
             > {{activeChat.contact.sessionId}} == {{$route.params.sessionId}}
-        </div>
+            > open:{{chatLocal.open}} closed:{{chatLocal.closed}} active:{{chatLocal.active}}
+            > expired:{{chatLocal.expired}} live:{{chatLocal.live}}
+        </pre>
         <div class="msg_card_body-bubbles-lane">
             <div>   
                 <small class="text-xs">Channel</small>
@@ -75,7 +77,24 @@
         <hr/>
     </div>  
     <div v-if="is_SEND_NEW" class="text-center">
-        <span v-if="chatLocal.isModeAgent || chatLocal.closed">
+         <span v-if="!chatLocal.isModeAgent || !chatLocal.isAssignedToMe">
+            <span class="fa fa-5x text-white-dirty"
+                :class="{
+                    'fa-user-secret' : chatLocal.isModeAgent,
+                    'fa-robot' : chatLocal.isModeBot,
+                    'openwebicons-webhooks' : !(chatLocal.isModeBot || chatLocal.isModeAgent)
+                }" />
+            <br/>
+                <small>This conversation is ACTIVE and in {{activeChat.mode}} Mode</small>
+            <br/>
+            <span class="msg_cotainer_smart" @click="$router.push({ 
+                    name : 'agentAction',
+                    params: { mvu: 'COMPOSE', app : $route.params.app, contact : activeChat.contact } })"
+                @click.prevent v-tooltip="'Send New Message'"> 
+                Compose new Message
+            </span>
+         </span>
+        <span v-else>
             <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
             <br/>
                 <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
@@ -89,16 +108,6 @@
                 </template>
             </ForEachOption>
         </span>
-         <span v-else-if="chatLocal.open">
-            <span class="fa fa-5x text-white-dirty"
-                :class="{
-                    'fa-robot' : chatLocal.isModeBot,
-                    'openwebicons-webhooks' : !chatLocal.isModeBot
-                }" />
-            <br/>
-                <small>This conersation is ACTIVE and in {{activeChat.mode}} Mode</small>
-            <br/>
-         </span>   
     </div> 
     <ChatMessages v-else
         :activeChat="activeChat"
@@ -294,8 +303,8 @@
                         <div v-if="!is_SEND_NEW && $config.SETUP.POSTMAN_AGENT_CHAT_INIT" 
                                 class="control-panel text-center">
                                 <b-button pill variant="outline-white-dirty" class="btn-sm text-white:hover"
-                                @click="initNewMessage(true)"> 
-                                    Send New Message
+                                @click="initNewMessage(true,'click:Send New Message')"> 
+                                  Send Message
                                 </b-button>
                         </div> 
                          <div v-else-if="is_SEND_NEW" class="control-panel text-center"> 
@@ -563,7 +572,8 @@
                 console.log("$route.params.sessionId",sessionId)
                 this.onSessionChange();
                 this.toggleView("CHAT_BOX");
-                this.initNewMessage();
+                this.isSendNewMessage = false;
+                //this.initNewMessage(undefined, 'watch:$route.params.sessionId');
             },
             '$store.getters.StateChatsVersion' : function(){
                 console.log("StateChatsVersion",this.$store.getters.StateChatsVersion)
@@ -673,7 +683,42 @@
                 this.sendText("/exit_chat");
                 this.$router.push("/app/chat")
             },
-            initNewMessage(init){
+            async initNewMessage(init,track){
+                console.log("initNewMessage", init,track,this.activeChat);
+                if(!this.activeChat || !this.activeChat.contactId){
+                    return this.composeNewMessage();
+                } 
+                let resp = await this.$service.get('/api/session/compose',{
+                    contactId : this.activeChat.contactId
+                },{ toast : false, metaType : 'contact', dataType : 'session'});
+                console.log("initNewMessage:live", resp.results[0].live);
+                if(resp.results[0] && resp.results[0].local.live){
+                    this.$router.push({
+                        name: 'defAgentViewLong', 
+                            params: { 
+                                sessionId : resp.results[0].sessionId,
+                                profileId : resp.results[0].contactId,
+                                mash : "PUSH_HSM"+Date.now()
+                            }
+                    }); 
+                } else if(resp.meta) {
+                    this.composeNewMessage(resp.meta)
+                }
+            },
+            composeNewMessage(contact){
+                this.$router.push({ 
+                    name : 'agentAction',
+                    params: { 
+                        mvu: 'COMPOSE', 
+                        app : this.$route.params.app,
+                        contact : contact
+                    }
+                }); 
+            },
+            async goToChat(){
+                this.composeNewMessage(this.activeChat.contact);
+            },
+            async initNewMessageDeperecated(init){
                 this.isSendNewMessage = false;
                 console.log("initNewMessage:1",init,this.$route.params.sendNewMessage);
                 if(init || this.$route.params.sendNewMessage){
@@ -690,22 +735,36 @@
                                 }
                         });
                     } else {
-                        this.isSendNewMessage = true;
+                        try{
+                            this.isSendNewMessage = true;
+                            let resp = await this.$service.get('/api/session/compose',{
+                                contactId : this.$route.params.contactId
+                            },{ toast : false, metaType : 'contact'});
+                            if(resp.results[0]){
+                                this.$router.push({
+                                    name: 'defAgentViewLong', 
+                                        params: { 
+                                            sessionId : resp.results[0].sessionId,
+                                            profileId : resp.results[0].contactId,
+                                            mash : "PUSH_HSM"+Date.now(),
+                                            sendNewMessage : true
+                                        }
+                                });
+                            } else if(resp.meta) {
+                                this.$router.push({ 
+                                    name : 'agentAction',
+                                    params: { 
+                                        mvu: 'COMPOSE', 
+                                        app : this.$route.params.app,
+                                        contact : resp.meta
+                                    }
+                                });                            
+                                this.isSendNewMessage = true;
+                            }
+                        } catch(e){
+                            this.isSendNewMessage = true;
+                        }
                     }
-                }
-            },
-            async goToChat(){
-                if(this.$route.params.profileId == this.$route.params.contactId){
-                    return this.initNewMessage(true);
-                } else {
-                    this.$router.push({
-                            name: 'defAgentView', 
-                                params: { 
-                                    sessionId : this.$route.params.sessionId,
-                                    contactId : this.$route.params.contactId,
-                                    profileId : this.$route.params.contactId
-                                } 
-                        });
                 }
             },
             showPushNewHSM(){
@@ -714,11 +773,13 @@
                     this.goToBack();
                     this.scrollToBottom(true);
                 } else {
-                    this.initNewMessage(true);
+                    this.isSendNewMessage = true;
+                    this.scrollToBottom(true);
+                    //this.initNewMessage(true,'showPushNewHSM');
                 }
             },
             goToBack(){
-                this.initNewMessage(false);
+                this.initNewMessage(false,'goToBack');
                 this.isSendNewMessage = false;
             },
             showContactProfile : function (type, type2) {
