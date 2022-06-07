@@ -236,8 +236,9 @@
             async loadTimeStamp() {
                 let resp = await this.$service.get(
                     '/partnerdashboard/pub/admin/fetch-month',
-                    { tnt: this.model.tnt.value }
+                    { tnt: this.model.tnt }
                 )
+                console.log("this.model.tnt.value",this.model.tnt);
                 this.monthOptions = resp.results.map((v) => {
                     return {
                         name: v.monthStr,
