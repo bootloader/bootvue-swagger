@@ -231,10 +231,17 @@
                     </div>
                     <div class="caption_text_wrapper">
                         <span>
-                        <input class="caption_text" ref="caption_text" 
-                             v-model="caption_text" placeholder="Enter Media Caption"
-                             @keydown.enter.exact.prevent
-                            @keyup.enter.exact="onSendMessage" />
+                            <textarea class="caption_text" ref="caption_text" 
+                                    v-model="caption_text" 
+                                    placeholder="Enter Media Caption"
+                                    autocomplete="off"
+                                    @keydown.enter.exact.prevent
+                                    @keyup.enter.exact="onSendMessage"
+                                    @keydown.enter.shift.exact="newline"
+                                    @input="onInputType"
+                                    rows="1"
+                             >
+                            </textarea>
                         </span>
                     </div>
                 </div>
@@ -552,7 +559,7 @@
                     THAT.scrollToBottom(true);
             }).on("/chat/session/delta", function(data){
                 if(THAT.activeChat.sessionId == data.sessionId
-                    && THAT.activeChat._tab == "ORG"){
+                    && (THAT.activeChat._tab == "ORG" || THAT.activeChat.local.tab == "ORG")){
                     THAT.loadCurrentession();
                 } else {
                     THAT.refreshActiveChat();
@@ -656,7 +663,8 @@
                 this.sendText(this.message_text,this.is_QUICK_MEDIA ?   this.selectedMedia : null);
                 this.message_text = "";
             }, newline : function (argument) {
-                this.value = `${this.message_text}\n`;
+                console.log("Do NOTHING")
+                //this.message_text = `${this.message_text}\n`;
             },
             sendQuickReply : function (argument) {
                 this.sendText(argument || event.target.innerText,this.is_QUICK_MEDIA ?   this.selectedMedia : null);
@@ -1369,26 +1377,30 @@
         background-color: rgb(255, 255, 255) !important;
         height: 50px;
         text-align: center;
-          padding: 5px;
+        padding: 3px;
     }
     .caption_text_wrapper span {
        background-color: rgba(0, 0, 0, 0.447) !important;
-       padding: 5px;
+       padding: 5px 15px;
        border-radius: 15px 15px 15px 15px !important;
         width: 80%;
         display: inline-block;
+        max-height: 44px;
     }
     .caption_text {
       background-color: rgba(0, 0, 0, 0) !important;
       border:0 !important; outline: 0;
       color:rgb(255, 255, 255) !important;
-      min-height: 30px;
-      max-height: 60px;
+      font-size: 12px; line-height: 13px;
+      min-height: 25px;
+      max-height: 38px;
       width: 100%;
       overflow-y: auto;
+      resize: none;
     }
     .caption_text::placeholder{
       color:rgba(255, 255, 255, 0.68) !important;
+      font-size: 15px;
     }
     .type_note {
         background-color: #fff9caf2 !important;

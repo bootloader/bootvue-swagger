@@ -1,5 +1,5 @@
 <template>
-    <span  v-if="m">
+    <span  v-if="m" class="m-chat-message-content">
         <span v-if="m.status == 'DELTD'" class="text-capitalize text-sm">
             <span class="fa fa-ban"></span>&nbsp;<i>message deleted&nbsp;</i>
         </span>
@@ -8,8 +8,10 @@
             <div v-if="m.attachments"> 
                 <span v-if="m.template" ><span class="bi bi-code-square"/>&nbsp;{{m.template}}</span>
                 <div class="input-group my-attachments">
-                    <span class="my-attachment" :class="['mediaType-'+atch.mediaType]" v-for="(atch,i) in m.attachments" v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
+                    <span class="my-attachment" :class="['mediaType-'+atch.mediaType]" v-for="(atch,i) in m.attachments" 
+                        v-viewer="viewerOptions" v-bind:key="atch.mediaURL">
                         <img v-if="atch.mediaType == 'IMAGE'" :id="`attachment-${m.messageId}-${i}`"
+                            :alt="atch.mediaCaption"
                             v-lazy="$formatters.https_thumburl(atch.mediaURL)" class="" :data-full-src="atch.mediaURL | https">
                         <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
                                 :file="atch.mediaURL"
@@ -93,7 +95,10 @@
         },
         data: () => ({
             viewerOptions : {
-                url: 'data-full-src'
+                url: 'data-full-src',
+                title: [4, (image, imageData) => `${image.alt}`],
+                className : "m-chat-message-content-viewer",
+                navbar : false,
             },
         }),
         props: {
@@ -191,5 +196,12 @@
         text-overflow: ellipsis;
         clear: none;
         white-space: nowrap
+    }
+    .m-chat-message-content-viewer.viewer-container .viewer-footer .viewer-title{
+       white-space: pre-wrap !important;
+       background-color: rgba(0, 0, 0, 0.802);
+       color: #FFF;
+       padding: 8px;
+       border-radius: 5px;
     }
 </style>
