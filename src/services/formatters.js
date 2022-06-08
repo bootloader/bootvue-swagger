@@ -156,22 +156,23 @@ var formatter = {
     if(!mediaUrl) return mediaUrl;
     return mediaUrl.replace("http://","https://");
   },
-  thumburl : function (mediaUrl) {
+  thumburl : function (mediaUrl,w,h) {
+      let _w = w || '100', _h=h || '100';
       if(!mediaUrl) return mediaUrl;
       if(mediaUrl.indexOf('data:') == 0) return;
       var m = mediaUrl.match(/(.+)\/(res.cloudinary.com)\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9]+)\/(upload)\/([a-zA-Z0-9,_-]+)\/(.*)/);
       if(m && m.length){
-        m[6] = "w_100,h_100";
+        m[6] = `w_${_w},h_${_h}`;
         return m.slice(1).join("/");
       } 
       var aws = mediaUrl.match(/(.+)\/(.+).(s3.amazonaws.com)\/(.+)/);
       if(aws && aws.length){
-        return `https://ik.imagekit.io/meherysoccom/${aws[2]}/${aws[4]}?tr=w-100,h-100`
+        return `https://ik.imagekit.io/meherysoccom/${aws[2]}/${aws[4]}?tr=w-${_w},h-${_h}`
       } 
       return mediaUrl;
   },
-  https_thumburl : function (mediaUrl) {
-    return this.thumburl(this.https(mediaUrl));
+  https_thumburl : function (mediaUrl,w,h) {
+    return this.thumburl(this.https(mediaUrl),w,h);
   },
   stripslash : function (url) {
     return (url||"").replace(/\/+$/g,'').replace(/^\/+/,'');
@@ -363,8 +364,8 @@ var formatter = {
         return THAT.https(mediaUrl);
     });
 
-    Vue.filter('thumburl', function (mediaUrl) {
-        return THAT.thumburl(mediaUrl);
+    Vue.filter('thumburl', function (mediaUrl,w,h) {
+        return THAT.thumburl(mediaUrl,w,h);
     });
 
     Vue.filter('contact_label', function (id) {

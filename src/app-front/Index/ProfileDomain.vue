@@ -45,11 +45,11 @@
                 <div
                   class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center"
                 >
-                  <div class="relative">
-                    <img
-                      alt="..."
-                      :src="domainProfile.social.logo"
-                      class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
+                  <div class="relative" v-lazy-container="{ selector: 'img' }">
+                    <img 
+                        :data-src="$formatters.https_thumburl(domainProfile.social.logo,150,150)"
+                        :data-error="defaultCompanyLogo"
+                      class="defaultCompanyLogo shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
                     />
                   </div>
                 </div>
@@ -186,12 +186,14 @@ import Navbar from "../Auth/AuthNavbar.vue";
 import FooterComponent from "./Footer.vue";
 import SocialBoxes from "./SocialBoxes.vue";
 
-import team2 from "@/assets/vendor/notus/img/company-profile-2.png";
+const defaultCompanyLogo = __webpack_public_path__ + '/_common/static/company-profile-1.png';
+//import defaultCompanyLogo from "@/assets/vendor/notus/img/company-profile-2.png";
 import ProfileNoDomain from './ProfileNoDomain.vue';
 
 export default {
   data() {
     return {
+      defaultCompanyLogo : defaultCompanyLogo,
       domainProfile : {
         domain : null,
         company : {
@@ -206,7 +208,7 @@ export default {
           websiteUrl : null
         },
         social : {
-          logo : team2
+          logo : defaultCompanyLogo
         }
       },
       channels :[],
@@ -283,8 +285,23 @@ export default {
   background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
   background-position: bottom;
 }
-
-
+.defaultCompanyLogo {
+  background-color: rgb(239, 239, 239);
+  min-width: 130px;
+  max-width: 140px;
+  &[lazy=loading]{
+    padding: 14px;
+    background-color: #304157;
+  }
+  &[lazy=loaded]{
+    padding: 1px;
+    background-color: #304157;
+  }
+  &[lazy=error]{
+    background-color: #f9f9f9;
+    padding: 14px;
+  }
+}
 .type-1 {
   min-width: 300px;
   font-family: "Open Sans", sans-serif;

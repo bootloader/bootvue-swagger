@@ -16,6 +16,18 @@
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
 
+
+  const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
+  const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
+  import VueLazyload from 'vue-lazyload'
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: errorimage,
+    loading: loadimage,
+    attempt: 1,
+    throttleWait : 200
+  });
+
   console.log("Front App is loaded")
   export default {
 
