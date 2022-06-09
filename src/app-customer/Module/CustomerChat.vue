@@ -11,7 +11,7 @@
       :open="openChat"
       :showEmoji="true"
       :showHeader="!config.header.disabled"
-      :showFile="false"
+      :showFile="true"
       :showTypingIndicator="showTypingIndicator"
       :showLauncher="true"
       :showCloseButton="true"
@@ -205,7 +205,8 @@
           }
         },
         addMessage : function (message) {
-          //message.type = message.data.file ? "file" : message.type; 
+            console.log("message",message);
+          message.type = message.data.file ? "file" : message.type; 
           if(!message){
               console.log("addMessage:message:undefined");
               return;
@@ -229,6 +230,23 @@
           message.data.type="I"; 
           message.data.timestamp = Date.now();
           this.addMessage(message);
+        
+        if(message.type == "file"){
+            let bodyFormData = new FormData();
+            bodyFormData.append("file",message.data.file, message.data.file.fileName);
+            let response = await this.$service.put(`ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}?from=${this.csid}`,
+                bodyFormData
+            );
+
+            var _msg = toMessage(response.results[0]);
+            if(!_msg){
+            console.log("onMessageWasSentAsync:if:_msg:undefined");
+            return;
+            }
+            message.id = _msg.id;
+            message.data.timestamp = _msg.data.timestamp;
+            message.data.attachments = _msg.data.attachments;
+        }
 
         if(this.options.channelId){
                 let resp = await this.$service.post(

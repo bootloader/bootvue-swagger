@@ -157,6 +157,12 @@ const DataService = {
     let response = await axios.post(url, params,_config);
     return processor(params,response.data,_config);
   },
+  async put(url,params,config) {
+    url = slashUrl(url);
+    let _config = config || {};
+    let response = await axios.put(url, params,_config);
+    return processor(params,response.data,_config);
+  },
   async submit(url,params,config) {
     url = slashUrl(url);
     let _config = config || {};
