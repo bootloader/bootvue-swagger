@@ -295,7 +295,7 @@
                                         class="input-group-text attach_btn">
                                         <i class="fa fa-microphone"></i></span>
 
-                                    <span v-tooltip="'Select File to upload'"
+                                    <span v-tooltip="'Select Emoji'"
                                         class="input-group-text attach_btn input-group-text">
                                         <EmojiIcon :on-emoji-picked="_handleEmojiPicked" color="#FFF" />
                                     </span>
