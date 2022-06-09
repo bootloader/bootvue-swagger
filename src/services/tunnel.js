@@ -16,13 +16,14 @@ export default {
 			context : window.CONST.APP_CONTEXT,
 		});
 		window.__onsocket_disconnect__  = function(error, reconnect){
-			console.log("MSG",error);
+			console.log("tunnel:__onsocket_disconnect__",error);
 			if(error.type == "CLOSED"){
 				THAT.connected = false;
 				reconnect();
 			}
 		};
 		window.__onsocket_connect__  = function(error, reconnect){
+			console.log("tunnel:__onsocket_connect__",error);
 			THAT.connected = true
 		};
 		window.addEventListener('offline', function(e) { 
@@ -38,6 +39,9 @@ export default {
 			THAT.client.global.ping();
 			THAT.online = !!navigator.onLine
 			THAT.client.triggerChange('online',e);
+		});
+		THAT.client.global.on("/stomp/tunnel/health" , function(greeting,h,g) {
+			console.log("health:",greeting,h,g.headers.subscription);
 		});
 	  }
 	  this.online = !!navigator.onLine;

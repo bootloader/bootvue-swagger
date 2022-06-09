@@ -367,7 +367,6 @@
             },
             activeChats : function(){ 
                 let unique = {};
-                console.log("activeChats",this.$store.getters.StateChats.length); 
                 let search = this.search;
                 let searchText = this.search.text.trim();
                 let searchTokens = this.$store.getters.SearchChat.tokens;
@@ -375,7 +374,6 @@
                 var status = this.$store.getters.SearchChat.state;
                 
                 //console.log("searchTokens",searchTokens)
-                console.log("activeChats",this.$store.getters.StateChats)
                 return (this.$store.getters.StateChats || []).filter(function (chat) {
                     return (chat._tab == tab) || searchText;
                 }).filter(function(chat){

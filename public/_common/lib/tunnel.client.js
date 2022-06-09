@@ -116,48 +116,64 @@ var tunnelClient = (function(win) {
 		}
 		return $connectd;
 	}
-	
+	function printSub(news,headline){
+		if(news && news.unsub)
+			console.log("tunnel:sub",news.linkId,news.unsub.id,headline);
+	}
 	function TunnelClient (){
 		this.ids = [];
 	}
 	TunnelClient.prototype = {
+		push : function(news,_linkId){
+			news.unsub = stompClient.subscribe(news.headline,function(greeting){
+				let body = JSON.parse(greeting.body);
+				console.log("tunnel:event", _linkId, greeting.headers.subscription, 
+				greeting.headers.destination, news.topic, body,greeting.headers);
+				news.sub(body,news.topic, greeting);
+			});
+			news.linkId = _linkId;
+			if(news.index === undefined){
+				this.ids.push(news);
+				news.index = this.ids.length-1;
+			}
+			printSub(news,news.headline);
+		},
 		on : function subscribe(topic, fun) {
+			console.log("tunnel:topic",topic);
 			var THAT = this;
-			let sub = function(greeting) {
-				console.log("TunnelClient:",topic,greeting);
-				fun(JSON.parse(greeting.body).data, topic, greeting);
+			let sub = function(body,topic, greeting) {
+				fun(body.data, topic, greeting);
 			};
 			onConnect().then(function(linkId) {
-				let headline = "/topic/" + tenantToken + topic;
-				THAT.ids.push({ 
-					linkId : linkId,
-					topic : topic, fun : fun,
-					headline : headline,sub : sub,
-					unsub : stompClient.subscribe(headline,sub)
-				});
+				THAT.push({ 
+					topic : topic,
+					headline : "/topic/_" + topic,
+					fun : fun, sub : sub,
+				},linkId);
 			});
 			onConnect().then(function(linkId) {
-				let headline = "/queue/" + sessionToken + topic;
-				THAT.ids.push({ 
-					linkId : linkId,
-					topic : topic,fun : fun,
-					headline : headline, sub : sub,
-					unsub : stompClient.subscribe(headline, sub)
-				});
+				THAT.push({ 
+					topic : topic, 
+					headline : "/topic/" + tenantToken + topic, 
+					fun : fun, sub : sub,
+				},linkId);
+			});
+			onConnect().then(function(linkId) {
+				THAT.push({ 
+					topic : topic,
+					headline : "/queue/" + sessionToken + topic, 
+					fun : fun, sub : sub,
+				},linkId);
 			});			
-			onConnect().then(function() {
+			onConnect().then(function(linkId) {
 				tagIds.map(function(tagId){
-					var headline = "/tag/" + (tenantToken + "/" + tagId) + topic;
-					console.log("@sub - ",headline)
-					THAT.ids.push({ 
-						linkId : linkId,
-						topic : topic, fun : fun,
-						headline : headline, sub : sub,
-						unsub : stompClient.subscribe(headline, sub)
-					});
+					THAT.push({ 
+						topic : topic,
+						headline : "/tag/" + (tenantToken + "/" + tagId) + topic,
+						fun : fun, sub : sub,
+					},linkId);
 				});
 			});
-	
 			return this;
 		},	
 		send : function send(topic, msg) {
@@ -171,6 +187,7 @@ var tunnelClient = (function(win) {
 			for(var i in this.ids){
 				this.ids[i].inactive=true;
 				this.ids[i].unsub.unsubscribe();
+				console.log("tunnel:unsubscribe",topic);
 			}
 			this.inactive = true;
 			console.log('tunnel:inactive')
@@ -180,7 +197,10 @@ var tunnelClient = (function(win) {
 			onConnect().then(function(linkId){
 				for(var i in THAT.ids){
 					if(!THAT.ids[i].inactive){
-						THAT.ids[i].unsub = stompClient.subscribe(THAT.ids[i].headline, THAT.ids[i].sub);
+						let headline = THAT.ids[i].headline;
+						console.log("tunnel:unsub",THAT.ids[i].linkId,THAT.ids[i].unsub.id,headline);
+						THAT.ids[i].unsub.unsubscribe();
+						THAT.push(THAT.ids[i],linkId);
 					}
 				}
 			});

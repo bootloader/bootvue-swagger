@@ -125,15 +125,16 @@ function eq(a,b) {
 	appendMessage(session,m){
 		if(!m || m.length) return;
 		let chat = session;
-		var index  = -1
+		var index  = -1;
 		for(var j in chat.messages){
 		  var msg = chat.messages[j];
-		  if(eq(msg.messageIdRef, m.messageIdRef)){
+		  if((!msg.messageId || !m.messageId) && eq(msg.messageIdRef, m.messageIdRef)){
 			msg.messageId = m.messageId;
 			msg.version = 1;
 		  }
 		  if(eq(msg.messageId,m.messageId) || eq(msg, m) 
-				|| eq(msg.messageIdExt,m.messageIdExt) || eq(msg.messageIdRef, m.messageIdRef)){
+				|| eq(msg.messageIdExt,m.messageIdExt) 
+				|| ((!msg.messageId || !m.messageId) && eq(msg.messageIdRef, m.messageIdRef))){
 			index = j;
 			if(m.version < msg.version){
 			  m=msg;

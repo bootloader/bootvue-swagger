@@ -286,15 +286,23 @@
                                     rows=1
                                     ></textarea>
                                 <div class="input-group-append">
-                                    <span
-                                        @click="onSendMessage" v-tooltip="'Send'" 
-                                    class="input-group-text send_btn"><i class="fa fa-location-arrow"></i></span>
-                                    <span 
-                                    @click="openFileUpload" v-tooltip="'Select File to upload'"
-                                    class="input-group-text attach_btn"><i class="fa fa-paperclip"></i></span>
-                                    <span 
-                                    @click="openAudioRecord" v-tooltip="'Send Voice Message'"
-                                    class="input-group-text attach_btn input-group-text-right"><i class="fa fa-microphone"></i></span>
+                                    <span @click="onSendMessage" v-if="is_TEXT_ENTER_REQUIRED"
+                                        v-tooltip="'Send'" 
+                                        class="input-group-text send_btn">
+                                        <i class="fa fa-location-arrow"></i></span>
+                                    <span @click="openAudioRecord" v-if="!is_TEXT_ENTER_REQUIRED"
+                                        v-tooltip="'Send Voice Message'"
+                                        class="input-group-text attach_btn">
+                                        <i class="fa fa-microphone"></i></span>
+
+                                    <span v-tooltip="'Select File to upload'"
+                                        class="input-group-text attach_btn input-group-text">
+                                        <EmojiIcon :on-emoji-picked="_handleEmojiPicked" color="#FFF" />
+                                    </span>
+
+                                    <span @click="openFileUpload" v-tooltip="'Select File to upload'"
+                                        class="input-group-text attach_btn input-group-text-right">
+                                        <i class="fa fa-paperclip"></i></span>
                                 </div>
                                 
                         </div>
@@ -388,6 +396,9 @@
     import AudioVisual from 'vue-audio-visual'
     import ChatHeader from './ChatHeader.vue';
     import ChatHeaderPlug from './ChatHeaderPlug.vue';
+    import Chat from '@cherrybase/cherry-webchat';
+    import EmojiIcon from '@cherrybase/cherry-webchat/src/icons/EmojiIcon.vue'
+
     Vue.use(AudioVisual);
 
     var sampleJson = {
@@ -402,15 +413,15 @@
             plug: Boolean,
         },
         components: {
-    Loading: Loading,
-    SlideUpDown,
-    vueDropzone: vue2Dropzone,
-    ChatMessages,
-    ForEachOption,
-    getUserMedia,
-    ChatHeader,
-    ChatHeaderPlug
-},
+            Loading: Loading,
+            SlideUpDown,
+            vueDropzone: vue2Dropzone,EmojiIcon,
+            ChatMessages,
+            ForEachOption,
+            getUserMedia,
+            ChatHeader,
+            ChatHeaderPlug
+        },
         computed : {
             chatLocal: function () {
                 return (this.activeChat ? this.activeChat.local : null) || {};
@@ -460,12 +471,12 @@
                     (this.activeChat?.contact?.sessionId == this.$route.params.sessionId))
                     && this.isSendNewMessage;
             },
+            is_TEXT_ENTER_REQUIRED : function(){
+                return !!this.message_text || this.is_QUICK_MEDIA || this.is_UPLOAD_MEDIA;
+            },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
             },
-           
-            
-            
         },
         data: () => ({
             message_text : "",quickReplies : null,sticky_note : null, caption_text : null,
@@ -566,6 +577,10 @@
                 }
             })
 
+            this.refreshActiveChat = debounce(this.refreshActiveChat,1000);
+
+            this.refreshActiveChatInterval = setInterval(()=>this.refreshActiveChat,10000);
+
             // const editor = new TextareaEditor(this.$refs.message_text);
             // this.textcomplete = new Textcomplete(editor,this.strategies, {
             //     dropdown :  { 
@@ -575,6 +590,7 @@
         },
         beforeUnmount (){
             this.tunnel.off();
+            clearInterval(this.refreshActiveChatInterval);
             //this.textcomplete.destroy()
         },
         watch: {
@@ -592,7 +608,6 @@
                 //this.initNewMessage(undefined, 'watch:$route.params.sessionId');
             },
             '$store.getters.StateChatsVersion' : function(){
-                console.log("StateChatsVersion",this.$store.getters.StateChatsVersion)
                 this.refreshActiveChat(true);
                 //this.$forceUpdate();
             }
@@ -871,7 +886,6 @@
                     quickReply._message = quickReply._message;
                     return quickReply
                 });
-                console.log("this.quickReplies",this.quickReplies);
                 this.scrollToBottom(true);
             },
             async loadSession(options){
@@ -890,7 +904,6 @@
                 return null;
             },100),
             onSessionChange : debounce(async function(){
-                console.log("onSessionChange : Session On Change")
                 this.activeChat = this.selectActiveChat();
 
                 if(this.activeChat == null && this.$route.params.contactId){
@@ -908,7 +921,6 @@
                 this.onSessionChange();
             },
             selectActiveChat () {
-                console.log("selectActiveChat");
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
                     if(this.$route.params.sessionId == chat.sessionId){
@@ -935,10 +947,15 @@
                 return null;
             },
             refreshActiveChat(force){
-                if(this.chatsVersionLocal != this.chatsVersionGlobal || force){
+                let stamp = Date.now()-5000;
+                let needRefresh = (this.activeChat?.snapshot < stamp)
+                    || (this.activeChat?.snapshot < this.activeChat?.local?.updatedStamp);
+                if(this.chatsVersionLocal != this.chatsVersionGlobal || force
+                    || needRefresh){
                     this.activeChat = this.selectActiveChat();
                     this.chatsVersionLocal = this.$store.getters.StateChatsVersion;
-                    if(!this.activeChat || !this.activeChat.messages || !this.activeChat.messages.length){
+                    if(!this.activeChat || !this.activeChat.messages || !this.activeChat.messages.length
+                    || needRefresh){
                         this.loadCurrentession();
                     }
                 }
@@ -1013,6 +1030,9 @@
                 this.$refs.quick_option_menu.show();
             },
 
+            _handleEmojiPicked(a){
+                this.message_text = this.message_text + ' ' +  a;
+            },
 
             async onpaste (event){
                 console.log("Paste",event)

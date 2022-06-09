@@ -108,32 +108,32 @@
       console.log("TUNNEL")
       this.tunnel = this.$tunnel.pipe()
         .on("/message/sent/new", function(msg){
-            console.log("/message/sent/new===",msg)
+            console.debug("/message/sent/new===",msg)
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
         }).on("/message/receive/new", function(msg){
             msg.version = 3;
-            console.log("/message/receive/new:msg===",msg);
+            console.debug("/message/receive/new:msg===",msg);
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
-            console.log("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
+            console.debug("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
              THAT.$store.dispatch('AddChat', testresponse);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/dept/onassign-__DEPT__", function(testresponse){
-            console.log("/dept/onassign-__DEPT__",testresponse);
+            console.debug("/dept/onassign-__DEPT__",testresponse);
             THAT.$store.dispatch('AddChat', testresponse);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/message/update/status", function(status){
-            console.log("/message/update/status===",status)
+            console.debug("/message/update/status===",status)
             THAT.$store.dispatch('UpdateChatMessageStatus', status);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/agent/session/update", function(status){
-            console.log("/agent/session/update",status)
+            console.debug("/agent/session/update",status)
             THAT.$store.dispatch('SetAgentOptionsStatus', [status]);
              THAT.$store.dispatch('RefeshTimer');
         }).on("/chat/session/update", function(chatSession){
-            console.log("/chat/session/update",chatSession)
+            console.debug("/chat/session/update",chatSession)
             THAT.$store.dispatch('ReadSession', [chatSession]);
             THAT.$store.dispatch('RefeshTimer');
         });

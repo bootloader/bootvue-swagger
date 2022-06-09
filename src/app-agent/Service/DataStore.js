@@ -86,7 +86,6 @@ const getters = {
 };
 const cache = {
   __RefeshSessionRequest : function({isOnline,isUpdate,isAway}){
-    console.log("__RefeshSessionRequest",state.searchChat);
     let chatsFetchStamp = Date.now();
     return axios.get("/api/sessions/assignments",{
       params : {
@@ -128,12 +127,9 @@ const cache = {
       x = (cache.__RefeshSessionRequest({
         isOnline,isUpdate,isAway
       })).then(function (response) {
-        console.log("_UpdateChats:success");
         return response;
       }).catch(function (error) {
-        console.log("_UpdateChats:error");
       }).then(function (response) {
-        console.log("_UpdateChats:always");
         setTimeout(function(){
           x = null;
         },MyConst.config.chatRefreshInterval);
@@ -276,9 +272,11 @@ const actions = {
   async SendChatPre({ commit,dispatch }, msg) {
       msg.messageIdRef = msg.messageIdRef || guid();
       msg.version=msg.version || 0;
+      console.log("Send:SendChatPre:",msg?.stamps?.session || msg);
       dispatch("ReadChatMessage",msg);
   },
   async SendChatPost({ commit,dispatch }, msg) {
+    console.log("Send:SendChatPost:",msg.stamps.session || msg);
     dispatch("ReadChatMessage",msg);
   },
   async SendChat({ commit,dispatch }, msg) {
@@ -310,7 +308,9 @@ const actions = {
     bodyFormData.append("message",JSON.stringify(msg.message));
     bodyFormData.append("file",msg.file, msg.fileName);
     let response = await axios.post("/api/sessions/message/upload",bodyFormData);
-    dispatch("ReadChatMessage",response.results[0]);                  
+    if(response.data.results && response.data.results[0]){
+      dispatch("ReadChatMessage",response.data.results[0]); 
+    }
     return response.data;
   },
   async UpdateChatMessageStatus({ commit,dispatch },msgStatus) {
@@ -339,10 +339,11 @@ const actions = {
   async ReadChatMessage({ commit,dispatch },m) {
       if(!m) return;
       m.messageIdRef = m.messageIdRef || guid();
+      console.log("Send:ReadChatMessage:",m?.stamps?.session || m);
       let sessionMeatch = false;
       for(var c in state.chats){
         var chat = state.chats[c];
-        sessionMeatch = m.sessionId == chat.sessionId
+        sessionMeatch = (m.sessionId == chat.sessionId);
         if(sessionMeatch){
             DataProcessor.appendMessage(chat,m);
             break;
@@ -510,9 +511,9 @@ const actions = {
     },"messages:"+options.sessionId);
     let session =  {
       ...response.data.meta,
+      snapshot : Date.now(),
       messages : response.data.results
     };
-    console.log("session",session)
     DataProcessor.session(session);
     if(session.local.active){
         dispatch("AddChat",session);
@@ -554,6 +555,7 @@ const actions = {
           );
       }
     }
+    console.log("Send:updateChats")
     commit("setChats",chats);
   }
 
@@ -564,7 +566,13 @@ const mutations = {
   setChats(state, chats) {
     for(var c in chats){
       chats[c].msg = chats[c].msg || {};
+
+      chats[c].local = chats[c].local || {
+			  active : false, expired : false, tags : {}, updatedStamp : 0
+		  };
+
       if(chats[c].messages){
+        let updatedStamp = Math.max(chats[c]?.updated?.stamp || 0,chats[c].updatedStamp || 0, chats[c]?.local?.updatedStamp || 0);
         for (var i = 0; i < chats[c].messages.length; i++) {
           if(chats[c].messages[i].type == 'I'){
             chats[c].msg.lastInBoundMsg = chats[c].messages[i];
@@ -572,8 +580,11 @@ const mutations = {
           if(["I","O"].indexOf(chats[c].messages[i].type) >=0 ){
             chats[c].msg.lastMsg = chats[c].messages[i];
           }
-          chats[c].messages[i].stamps = chats[c].messages[i].stamps || { }
+          chats[c].messages[i].stamps = chats[c].messages[i].stamps || { };
+          updatedStamp = Math.max(updatedStamp || 0, chats[c].messages[i].stamps?.session || 0);
+          console.log("Send:updatedStamp"+updatedStamp)
         }
+        chats[c].local.updatedStamp = updatedStamp;
       } else {
         //chats[c].msg.lastInBoundMsg = chats[c].msg.lastInBoundMsg || chats[c].ilastmsg;
         //chats[c].msg.lastMsg = chats[c].msg.lastMsg || chats[c].lastmsg;
@@ -588,10 +599,6 @@ const mutations = {
       ){
         state.chatsMessages[chats[c].sessionId] =  chats[c].messages || state.chatsMessages[chats[c].sessionId];
       }
-
-      chats[c].local = chats[c].local || {
-			  active : false, expired : false, tags : {}
-		  };
 
       if(chats[c].assignedToAgent && chats[c].local){
         chats[c].local.agent = state.agents.filter(function(agent){

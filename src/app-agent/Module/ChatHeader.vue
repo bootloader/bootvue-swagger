@@ -47,7 +47,7 @@
                                     <span v-else-if="!chatLocal.isModeAgent" class="vs__selected">
                                         Mode : {{activeChat.mode || 'NONE'}}
                                     </span>   
-                                    <span v-else class="vs__selected" :title="JSON.stringify(activeChat.local)">
+                                    <span v-else class="vs__selected" :title="JSON.stringify(activeChat.local)" hidden>
                                         - - - {{chatLocal}}
                                     </span> 
                                 </div>
@@ -107,9 +107,7 @@
                     </div> 
                     
                     <div class="clear-both card-header-lower d-none d-md-block"> 
-
                         <div class="chat_tags text-align-right float-right ">
-
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
                                 {{activeChat.status}}
@@ -122,7 +120,6 @@
                             </span>
                             <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
                           
-
                         </div>
                          
 

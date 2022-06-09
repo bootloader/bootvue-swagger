@@ -35,6 +35,18 @@ var CONTACT_TAGS_DICT = {};
     const DATE = new Date(timestamp);
     return moment(DATE).format('h:mm a DD MMM YY');
   }
+  function clock(timestamp,gap) {
+    const DATE = new Date(timestamp);
+    return moment(DATE).format('DD-MMM-YY h:mm:ss a');
+  }
+  function timeago(timestamp) {
+    const DATE = new Date(timestamp);
+    let diff = Math.round((Date.now()-timestamp)/1000);
+    if(diff < 60){
+      return diff + ' sec';
+    }
+    return moment(DATE).fromNow(true);
+  }
 
   var HOUR = 3600;
   var DAY = HOUR*24;
@@ -334,6 +346,9 @@ var formatter = {
 
     Vue.filter('formatDate', formatTime);
     Vue.filter('formatStamp', formatStamp);
+    Vue.filter('timeago', timeago);
+    Vue.filter('clock', clock);
+    
     Vue.filter('newlines', function (html_str) {
         return html_str.trim() ;//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
     });
