@@ -45,32 +45,41 @@
             </b-card>
             <b-card class="col-md-4 session-list" >
 
-                      <ValidationProvider v-slot="v" rules="required" tag="div" class="form-row">
                         <label>Template</label>
-                         <v-select :options="input.templates.values"  class="w-100"
-                                  v-model="input.templates.selected"
-                                  :searchable="false" :clearable="false"
-                                  placeholder="Select Account"
-                                  >
-                                  <template #selected-option="option">
-                                      {{ option.name }}    
-                                  </template>
-                                  <template #open-indicator="{ attributes }">
-                                    <span v-bind="attributes" class="fa fa-caret-down"></span>
-                                  </template>
-                                  <template #option="{ category, name }">
-                                       <small class="">{{category}}</small> &nbsp; {{ name }}
-                                  </template>
-                          </v-select>
-                      </ValidationProvider>
+                        <base-v-select class="w-100" ref="selectedTemplate"
+                          :options="input.templates.values"
+                           optionKey="code" optionLabel="title"
+                          v-model="input.templates.selected"
+                          :searchable="false" :clearable="false"
+                          placeholder="Select Account">
+                             <template #selected-option="{ item }">
+                                  <span class="">
+                                    <div> <my-icon type="messageType" :value="item.formatType"></my-icon>&nbsp;{{ item.desc}}</div>
+                                    <small class="btn btn-xs btn-outline-grey text-whites text-xxs mg-1">{{item.category}}</small>
+                                    <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
+                                  </span>  
+                              </template>
+                              <template #open-indicator="{ attributes }">
+                                <span v-bind="attributes" class="fa fa-caret-down"></span>
+                              </template>
+                              <template #option="{ item }">
+                                  <div class="text-bold"><my-icon type="messageType" :value="item.formatType"></my-icon>&nbsp;{{ item.desc}}</div>
+                                  <i class="d-block text-xs">{{ item.name }}</i>
+                                  <small class="btn btn-xs btn-outline-grey text-whites text-xxs mg-1">{{item.category}}</small>
+                                  <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
+                              </template>
+                        </base-v-select>
                       <br>
-                      <ValidationProvider v-slot="v" rules="required|phone"  class="form-row" vid="input_contact_number" 
+                      <ValidationProvider v-slot="v" 
+                          rules="required|phone"  class="form-row" vid="input_contact_number" 
                            name="Contact Number">
                           <label>Message Preview</label>
-                           <TemplatePreview v-if="input.templates.selected" :template="input.templates.selected" />
+                          <div class="w-100">
+                            <TemplatePreview v-if="input.templates.selected" 
+                                :template="selectedTemplate" />
+                          </div>  
                            <span class="v-input-error">{{ v.errors[0] }}</span>
                       </ValidationProvider> 
-
                       <br/>
                       <b-form-row>
                           <button @click="sendBulk"
@@ -78,6 +87,19 @@
                               class="form-control btn btn-primary">Send</button>
                       </b-form-row>
            </b-card>
+
+          <b-card class="col-md-4 session-list" >
+              <label>Placeholder</label>
+                <base-v-select class="w-100" ref="attachment"
+                  options="getx:/api/tmpl/quickmedia"
+                  optionKey="code" optionLabel="title"
+                  v-model="input.templates.attachment"
+                ></base-v-select>
+                <br>
+                {{input.templates.selected}}
+                =============================<br/>
+                {{selectedTemplate}}
+          </b-card>
 
            
           </div>
@@ -106,6 +128,7 @@
 
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
+import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
 
     function newItem() {
       return {
@@ -124,7 +147,8 @@
 
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview,
+                BaseVSelect
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -144,7 +168,9 @@
                 templates : {
                   values : [],
                   selected : null,
-                  sender : ""
+                  sender : "",
+                  attachment : null,
+                  data : {}
                 },
                 contacts : ""
             },
@@ -172,7 +198,7 @@
 
         }),
         computed : {
-            preview : function (argument) {
+           preview : function (argument) {
               if(!this.input.templates.selected || !this.input.templates.selected.template)
                 return { preview : "", text : ""};
               var content = this.input.templates.selected.template.split('---options---');
@@ -180,7 +206,26 @@
                 text : mustache.render(content[0], this.sample),
                 options : formatters.message_form_options(formatters.map_from_string(content[1]))
               };
-            }
+            },
+            attachments(){
+              if(this.input.templates.attachment ){
+                let attachment = this.$refs.attachment.selected().item;
+                return [{
+                        mediaType : attachment.type,
+                        mediaUrl : attachment.url
+                  }];
+              }
+              return null;
+            },
+            selectedTemplate(){
+              if(this.input.templates.selected){
+                return {
+                    ...this.$refs.selectedTemplate?.selected().item,
+                    attachments : this.attachments 
+                }
+              }
+              return null;  
+            },
         },
         created : function (argument) {
           this.loadLanes();
@@ -219,8 +264,9 @@
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,
               hsm : {
-                id: this.input.templates.selected.id
+                id: this.selectedTemplate.id
               },
+              attachments : this.attachments,
               "contact" : {
                 "contactType": this.input.lane.selected.contactType,
                 "lane" : this.input.lane.selected.lane,

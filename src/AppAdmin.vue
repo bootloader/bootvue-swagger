@@ -42,7 +42,7 @@
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
   Vue.component('MyAxon', () => import('./@common/custom/components/MyAxon.vue'));
   Vue.component('MyIcon', () => import('./@common/custom/components/MyIcon.vue'));
-
+  Vue.component('MyMedia', () => import('./@common/custom/components/MyMedia.vue'));
 
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)

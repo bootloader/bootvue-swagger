@@ -35,12 +35,12 @@
         </div>
         
         <my-v-select 
-            :id="'fmg-' + inputId"
+            :id="'fmg-' + inputId" ref="myVSelect"
             :placeholder="$attrs.placeholder"
             :value="value" 
             v-on="listeners"
             v-bind="$attrs" 
-            :options="options"
+            :options="options" :optionKey="optionKey" :optionLabel="optionLabel"
             :emptyDisplay="emptyDisplay"
             :valid="valid" 
             :required="required"
@@ -213,6 +213,14 @@
       },
       options : {
       },
+      optionKey : {
+          type : String,
+          default : "key"
+      },
+      optionLabel : {
+          type : String,
+          default : "label"
+      },
       filter : {
       },
       emptyDisplay :{},
@@ -289,7 +297,10 @@
       },
       onScore(evt) {
         this.$emit("score", evt);
-      }
+      },
+      selected :function (){
+          return this.$refs?.myVSelect?.selected();
+      },
     }
   };
 </script>

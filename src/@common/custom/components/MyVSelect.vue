@@ -102,8 +102,7 @@
         data: () => ({
             model : {
                 options: [],
-                value: null,
-                sender: '',
+                value: null
             },
             placement: 'top'
         }),
@@ -251,6 +250,9 @@
             },
             option :function (){
                 return this.model.value;
+            },
+            selected :function (){
+                return this.model?.value;
             },
             calculatePosition(dropdownList, component, {width, top, left}){
                 if(this.autoPosition){

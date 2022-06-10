@@ -15,12 +15,21 @@
       </MyVSelect>
 
       <div class="message-preview w-100" :class="local_format" v-if="templateConfig">
-          <span v-if="format=='WHATSAPP'">   
+          <span v-if="format=='WHATSAPP'">  
             <div class="message-text">
-              <div v-if="templateConfig.attachments && templateConfig.attachments[0]"
-                :class="['message-attachment-inline','attachment-'+templateConfig.attachments[0].mediaType]"
-              >
-              </div>
+              <div v-if="content.formatType == 'VIDEO' 
+                        || content.formatType == 'IMAGE' 
+                        || content.formatType == 'DOCUMENT'"
+                :class="['message-attachment-inline','attachment-'+content.formatType]">
+                <div v-if="templateConfig.attachments && templateConfig.attachments[0]"
+                  :class="['message-attachment-inline-original','attachment-'+templateConfig.attachments[0].mediaType]"
+                > 
+                  <my-media style="max-height:150px"
+                  :src="templateConfig.attachments[0].mediaUrl"
+                    auto width="100%" height="200px"
+                  />
+                </div>
+              </div> 
               <div v-if="content.header" class="message-title">{{content.header}}</div>
               <div class="message-body" :inner-html.prop="content.text | waMarkDown"></div>
               <div class="message-footer">{{templateConfig.footer}}</div>
@@ -99,10 +108,11 @@
         return  {
           text : contentArray[0],
           header : headerStr,
+          formatType : this.templateConfig?.formatType,
           options : Object.assign({},
             templateOptions,
             this.templateConfig.options,{
-              buttons : (templateOptions.buttons || []).concat(this.templateConfig.options.buttons || [])
+              buttons : (templateOptions?.buttons || []).concat(this.templateConfig?.options?.buttons || [])
             }
           )
         }
@@ -233,7 +243,7 @@
           }
           .message-attachment-inline {
             width: 100%;
-            height: 150px;
+            min-height: 150px;
             background-color: #ccd0d5;
             background-position: center center;
             background-repeat: no-repeat;
@@ -250,6 +260,10 @@
             &.attachment-DOCUMENT {
                 background-image: url('~@/assets/images/placeholder-doc.png');
             }
+          }
+          .message-attachment-inline-original {
+            max-height: 200px;
+            overflow: hidden;
           }
 
           .message-body {

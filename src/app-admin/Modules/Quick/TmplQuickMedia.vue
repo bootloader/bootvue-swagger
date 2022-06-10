@@ -15,6 +15,10 @@
                      :items="teams"
                      :fields="fields"
                      :tbody-tr-class="rowClass">
+                <template #cell(title)="row">
+                  <my-icon type="fileType" :value="row.item.type"/>
+                  {{row.item.title}}
+                </template>
 
                 <template #cell(actions)="row">
                   <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
@@ -59,7 +63,13 @@
                             </base-input>
 
                             <div v-if="newItem.id" class="row">
-                                <img :src="newItem.url"  class="position-relative form-group col-md-12">
+                                <MyMedia
+                                  :src="newItem.url" 
+                                  width="100%"
+                                  auto
+                                  :type="newItem.type"
+                                ></MyMedia>
+                                <!-- <img :src="newItem.url"  class="position-relative form-group col-md-12"> -->
                             </div>
 
                             <div v-if="!newItem.id" class="row">
@@ -130,7 +140,9 @@
             actions : [{
               label : "Add Quick Media", icon : "plus", name : "ADD_ITEM"
             }],
-            fields: [ { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
+            fields: [ { key : 'category', label : "Category" }, 
+              { key : 'title', label : "Title" }, 
+              { key : 'code', label : "Code" }, 
               { key: 'actions', label: 'Actions' }],
             newItem : newItem(),
             sample : {
