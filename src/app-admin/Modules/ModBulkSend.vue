@@ -76,7 +76,8 @@
                           <label>Message Preview</label>
                           <div class="w-100">
                             <TemplatePreview v-if="input.templates.selected" 
-                                :template="selectedTemplate" />
+                                :template="selectedTemplate"
+                                :model="input.templates.vars" />
                           </div>  
                            <span class="v-input-error">{{ v.errors[0] }}</span>
                       </ValidationProvider> 
@@ -89,16 +90,20 @@
            </b-card>
 
           <b-card class="col-md-4 session-list" >
-              <label>Placeholder</label>
+                <label>Placeholder</label>
                 <base-v-select class="w-100" ref="attachment"
                   options="getx:/api/tmpl/quickmedia"
                   optionKey="code" optionLabel="title"
                   v-model="input.templates.attachment"
                 ></base-v-select>
-                <br>
-                {{input.templates.selected}}
-                =============================<br/>
-                {{selectedTemplate}}
+                <br/>
+                <div class="vgrid-wrapper">
+                  <VGrid theme="default" class="w-100 position-relative"
+                      :columns="sampleVar.columns"
+                      :source="sampleVarData"
+                      @afteredit=afterEdit
+                  ></VGrid>
+                </div>  
           </b-card>
 
            
@@ -113,6 +118,8 @@
     import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
     import formatters from './../../services/formatters';
+    import TmplUtils from "@/@common/utils/TmplUtils";
+    import JsonXPath from "@/@common/utils/JsonXPath";
     import PageTitle from "../Components/PageTitle.vue";
     import mustache from 'mustache';
 
@@ -126,9 +133,10 @@
         faUsersSlash,faUsers,faStar
     );
 
+    import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
-import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
+    import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
 
     function newItem() {
       return {
@@ -148,7 +156,7 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
     export default {
         components: {
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview,
-                BaseVSelect
+                BaseVSelect,VGrid
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -170,7 +178,7 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
                   selected : null,
                   sender : "",
                   attachment : null,
-                  data : {}
+                  vars : {}
                 },
                 contacts : ""
             },
@@ -195,24 +203,21 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
             sample : sampleJson,
-
+            sampleVar : {
+              columns: [
+                { name: 'Variable', prop: "variable", readonly : true},
+                { name: 'Value', prop: "value"}] ,
+              contact : [],
+              data : []
+            } 
         }),
         computed : {
-           preview : function (argument) {
-              if(!this.input.templates.selected || !this.input.templates.selected.template)
-                return { preview : "", text : ""};
-              var content = this.input.templates.selected.template.split('---options---');
-              return  { 
-                text : mustache.render(content[0], this.sample),
-                options : formatters.message_form_options(formatters.map_from_string(content[1]))
-              };
-            },
             attachments(){
               if(this.input.templates.attachment ){
                 let attachment = this.$refs.attachment.selected().item;
                 return [{
                         mediaType : attachment.type,
-                        mediaUrl : attachment.url
+                        mediaURL : attachment.url
                   }];
               }
               return null;
@@ -225,6 +230,29 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
                 }
               }
               return null;  
+            },
+            sampleVarData(){
+              if(this.input.templates.selected){
+                let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer)
+                 let THAT = this;
+                  return TmplUtils.getVars(neVal,/({{((data|global)\.[\w\d\.]+)}})/g
+                  ).map(function(v,i){
+                    return {
+                        variable : v.variable,
+                        path : v.path,
+                        value : JsonXPath({path : '$.' +v.path,json : THAT.input.templates.vars})[0]
+                    }
+                });
+              }
+            },
+           preview : function (argument) {
+              if(!this.selectedTemplate)
+                return { preview : "", text : ""};
+              var content = this.selectedTemplate.template.split('---options---');
+              return  { 
+                text : mustache.render(content[0], this.sample),
+                options : formatters.message_form_options(formatters.map_from_string(content[1]))
+              };
             },
         },
         created : function (argument) {
@@ -259,12 +287,22 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
                 console.log("NoMapping",argument) 
             }
           },
+          afterEdit(e){
+              const rs = JsonXPath({
+                path : '$.' +e.detail.model.path,
+                json: this.input.templates.vars,
+                resultType: "all",
+                value : e.detail.model.value
+              });
+              this.input.templates.vars.__ob__.dep.notify()
+          },
           async sendBulk (argument) {
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,
               hsm : {
-                id: this.selectedTemplate.id
+                id: this.selectedTemplate.id,
+                data : this.input.templates.vars.data
               },
               attachments : this.attachments,
               "contact" : {
@@ -278,7 +316,7 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
                 return !!argument
               })
             });
-            this.$router.push("/app/moderate/bulk-push-jobs");
+           // this.$router.push("/app/moderate/bulk-push-jobs");
           }
 
         }
@@ -293,6 +331,14 @@ import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
   .session-list .b-table-sticky-header{
     max-height: calc(100vh - 263px);
     overflow-y: scroll;
+  }
+  .vgrid-wrapper {
+    width: 100%;
+    min-width: 50px;
+    position: relative;
+    min-height: 100px;
+    height: 300px;
+    background-color: rgba(139, 139, 139, 0.041);
   }
 </style>>
 

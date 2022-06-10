@@ -25,7 +25,7 @@
                   :class="['message-attachment-inline-original','attachment-'+templateConfig.attachments[0].mediaType]"
                 > 
                   <my-media style="max-height:150px"
-                  :src="templateConfig.attachments[0].mediaUrl"
+                  :src="templateConfig.attachments[0].mediaURL"
                     auto width="100%" height="200px"
                   />
                 </div>
