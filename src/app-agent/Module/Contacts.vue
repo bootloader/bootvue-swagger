@@ -529,7 +529,7 @@
                     var chat = activeChats[i];
                     if((sessionId == chat.sessionId) 
                         || (sessionIdFrom == chat.sessionId)){
-                        chat._lastReadStamp = chat.lastInComingStamp;
+                        chat.read[MyConst.agent] = chat.lastInComingStamp;
                         this.$service.store('readStamp',chat.sessionId,Date.now());
                         this.$store.dispatch('RefreshChats');
                         //this.$forceUpdate();

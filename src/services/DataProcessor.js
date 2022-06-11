@@ -80,9 +80,10 @@ function eq(a,b) {
 									|| (session.local.isInBound || !session.local.is_agent_responded));
 		  session._waitingstamp_en= formatters.timespan((session._stamp - session._waitingSinceStamp)/1000);
 		  session.local.is_waiting_long = session.local.is_waiting && (session.lastResponseStamp < session._gracestamp);
-		  session._new = (session.lastReadStamp < session.lastInComingStamp) 
+		  session.local.lastReadStamp = Math.max(session.read[MyConst.agent] || session.lastReadStamp || 0, session.local.lastReadStamp || 0);
+		  session._new = (session.local.lastReadStamp < session.lastInComingStamp) 
 		  				|| (session.local.is_waiting && (session.lastInComingStamp > MyConst.sessionLoadStamp) 
-		                && (!session._lastReadStamp || (session._lastReadStamp < session.lastInComingStamp)));
+		                && (!session.local.lastReadStamp || (session.local.lastReadStamp < session.lastInComingStamp)));
 
 		session.local.is_unassigned = (session.mode == 'AGENT' && !session.assignedToAgent);
 		session.local.is_assigned = (session.mode == 'AGENT' && !!session.assignedToAgent);
