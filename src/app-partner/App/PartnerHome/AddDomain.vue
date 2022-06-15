@@ -33,9 +33,9 @@
             </template>
             <template slot="footer">
               <a v-tooltip="`Open ${$config.PROP_SERVICE_NAME} page`" 
-                :href="`https://${model.domain}.${$config.PROP_SERVICE_SERVER}`" target="_blank">
+                :href="`https://${model.domain}.${model.server || $config.PROP_SERVICE_SERVER}`" target="_blank">
               <span class="text-success">https://</span>
-              <span class="text-nowrap text-dark">{{model.domain}}.{{$config.PROP_SERVICE_SERVER}}</span>
+              <span class="text-nowrap text-dark">{{model.domain}}.{{model.server || $config.PROP_SERVICE_SERVER}}</span>
               &nbsp; <span class="btn btn-sm btn-outline-primary fa fa-external-link-alt"> View</span>
               </a>
                 <hr style="margin:0.5em 0;"/>
@@ -451,6 +451,7 @@ export default {
           company : result.company,
           social : result.social || {},
           domain : result.domain,
+          server : result.server,
           id : result.id
         }
       });
