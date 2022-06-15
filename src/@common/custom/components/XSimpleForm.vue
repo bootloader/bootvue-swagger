@@ -16,6 +16,11 @@
                     :placeholder="input.meta.example || 'Select'"
                     searchable :clearable="!!input.meta.optional"
                     @change="onChange(input.meta,input.config)" >
+                    <template #help>
+                      <small class="text-xs" v-if="input.meta.desc">  
+                          &nbsp;  <MyIcon type="infoType" value="info"/> {{input.meta.desc}}
+                      </small>
+                    </template>    
                 </BaseVSelect>
                 <ButtonRadioGroup v-else-if="input.meta.inputType=='OPTIONS'"
                     :name="(input.meta.title || input.meta.key)"
@@ -26,7 +31,7 @@
                 />
                 <b-alert v-else-if="input.meta.inputType=='MESSAGE'" show
                     :variant="input.meta.messageType.toLowerCase()">
-                       <span> <MyIcon type="messageType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
+                       <span> <MyIcon type="infoType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
                       <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
                <base-input v-else  class="mb-0" :size="size"
@@ -38,6 +43,11 @@
                     :placeholder="input.meta.example"
                     @change="onChange(input.meta,input.config)"
                 >
+                    <template #help>
+                      <small class="text-xs" v-if="input.meta.desc">  
+                          &nbsp;  <MyIcon type="infoType" value="info"/> {{input.meta.desc}}
+                      </small>
+                    </template>  
                 </base-input>
                 <!-- <b-form-group v-else
                     class=""

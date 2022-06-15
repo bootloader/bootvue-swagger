@@ -21,7 +21,7 @@
                             <my-icon type="fileType" 
                                 :value="atch.mediaMimeType" 
                                 :status="atch.mediaMimeType"
-                                :meta="atch.mediaName" class=""/>
+                                :meta="atch.mediaURL" :class="[atch.mediaMimeType,atch.mediaName]"/>
                         </a>
                         <label class="my-attachment-title mediaCaption"  :for="`attachment-${m.messageId}-${i}`"
                             v-if="atch.mediaCaption && atch.mediaCaption !== m.text">{{atch.mediaCaption}}</label>

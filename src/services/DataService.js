@@ -119,6 +119,24 @@ const DataService = {
   },
 
   _GET_X : {},
+  async setX(url,responseData,query,config) {
+    url = slashUrl(url);
+    var pathKey = path2key(url);
+    let _config = config || {};
+    let results = responseData.results ? responseData.results : responseData;
+    if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
+      console.log("submitX",pathKey,results, responseData)
+      await store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    }
+    return results;
+  },
+  async get(url,query,config) {
+    url = slashUrl(url);
+    let _config = config || {};
+    _config.params = query;
+    let response = await axios.get(url,_config);
+    return processor(query,response.data,_config);
+  },
   async getX(url,query,config) {
     url = slashUrl(url);
     var pathKey = path2key(url);
@@ -139,17 +157,10 @@ const DataService = {
     let responseData = processor(query,response.data,_config);
     let results = responseData.results ? responseData.results : responseData;
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
-      console.log("getX",response.data)
-      store.dispatch('UpdateApiStore',{ pathKey : pathKey, data : results });
+      console.log("getX",pathKey,results, response.data)
+      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
     }
     return results;
-  },
-  async get(url,query,config) {
-    url = slashUrl(url);
-    let _config = config || {};
-    _config.params = query;
-    let response = await axios.get(url,_config);
-    return processor(query,response.data,_config);
   },
   async post(url,params,config) {
     url = slashUrl(url);
@@ -182,6 +193,18 @@ const DataService = {
         return Promise.reject(e);
     }
   },
+  async submitX(url,params,config) {
+    url = slashUrl(url);
+    var pathKey = path2key(url);
+    let _config = config || {};
+    let responseData = await this.submit(url,params,_config);
+    let results = responseData.results ? responseData.results : responseData;
+    if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
+      console.log("submitX",pathKey,results, responseData)
+      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    }
+    return results;
+  },
   async delete(url,query,config) {
     url = slashUrl(url);
     let _config = config || {};
@@ -189,6 +212,19 @@ const DataService = {
     //_config.data = query;
     let response = await axios.delete(url,_config);
     return processor(query,response.data,_config);
+  },
+  async deleteX(url,query,config) {
+    url = slashUrl(url);
+    var pathKey = path2key(url);
+    let _config = config || {};
+
+    let responseData = await this.delete(url,query,_config);
+    let results = responseData.results ? responseData.results : responseData;
+    if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
+      console.log("deleteX",pathKey,results, responseData)
+      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    }
+    return results;
   },
   config (argument) {
     switch (argument) {

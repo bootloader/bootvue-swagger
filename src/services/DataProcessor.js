@@ -73,6 +73,7 @@ function eq(a,b) {
 				session.local.is_agent_responded = true;
 			  }
 		  }
+		  session.read = session.read || {};
 		  session._gracestamp = session._stamp-MyConst.config.chatIdleTimeout;
 		  session._waitingSinceStamp = Math.max(session.lastResponseStamp,session.agentSessionStamp);
 		  session.local.is_waiting = session.local.isModeAgent && !session.local.resolved

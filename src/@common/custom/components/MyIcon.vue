@@ -1,5 +1,6 @@
 <template>
     <span><i :class="[myTypeClass[0], valueClass[0], myColorClass , statusClass[0]]"
+        :id="`${myTypeClass[0]} = ${valueClass[0]} = ${myColorClass} = ${statusClass[0]}`"
     /> <slot>
         </slot>
     </span>
@@ -28,7 +29,7 @@ var MAP = {
         'api' : ['openwebicons-webhooks'],
         'admin' : []
     },
-    messageType : {
+    infoType : {
         '_' : [''], '$' : ['fa fa-question-circle'],
          'primary' : ["fa fa-dot-circle"],
          'secondary' : ["fa fa-minus-circle"],
@@ -51,7 +52,7 @@ var MAP = {
         'application/csv' : ['fa fa-file-csv'],
         'image' : ['fa fa-file-image'],
         'image/png' : ['fa fa-file-image'],
-        'video' : ['fa fa-file-video'],
+        'video' : ['fa fa-file-video','text-info'],
         '$' : function(value, status, meta){
             if(typeof meta == 'string'){
                let file =  meta.split('?')[0].split('.');  
@@ -67,8 +68,12 @@ var MAP = {
                     case 'doc':
                        return this['application/word'];
                     case 'pdf':
-                       return this['application/pdf'];   
+                       return this['application/pdf'];  
+                    case 'mp4':
+                       return this['video']; 
                }
+            } else {
+
             }
             return ['fa fa-file-alt'];
         }

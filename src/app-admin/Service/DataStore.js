@@ -259,18 +259,6 @@ const actions = {
     commit("setQMeds", response.data.results);
   },
 
-  async GetQuickMeds({ commit }) {
-    let response = await axios.get("/api/tmpl/quickmedia");
-    commit("setQMeds", response.data.results);
-  },
-
-  async DeleteQuickMeds({ commit },qMeds) {
-    let response = await axios.delete("/api/tmpl/quickmedia?id=" + qMeds.name,{
-      data : {id : qMeds.id}
-     });
-    commit("setQMeds", response.data.results);
-  },
-
   // Chat
   async GetSessions({ commit },options) {
     let response = await axios.get( "/api/message/session",{ params : options });

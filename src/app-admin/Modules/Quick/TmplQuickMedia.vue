@@ -12,7 +12,7 @@
                      :dark=false
                      :fixed=false
                      :foot-clone=false
-                     :items="teams"
+                     :items="items"
                      :fields="fields"
                      :tbody-tr-class="rowClass">
                 <template #cell(title)="row">
@@ -78,6 +78,7 @@
                                  id="dropzone" :options="dropzoneOptions"
                                  v-on:vdropzone-sending="sendingEvent"
                                  v-on:vdropzone-file-added="fileAdded" 
+                                 v-on:vdropzone-success="fileUploadedSuccess"
                                  v-on:vdropzone-queue-complete="fileUploaded"></vue-dropzone>
                             </div>
                         </div> 
@@ -157,16 +158,10 @@
               maxFilesize: 5, maxFiles : 1,
               autoProcessQueue: false
             },
+            items : [],
             addedFileCount : 0
         }),
         computed : {
-            teams : function (argument) {
-              var THAT = this;
-              return (this.$store.getters.StateQMeds || []).map(function (op) {
-                  op.message = mustache.render(op.template || op.message || op.title || '', THAT.sample) || op.title;
-                  return op;
-              });
-            },
             templatePreview : function (argument) {
               if(!this.newItem.template)
                   return this.newItem.template;
@@ -186,12 +181,17 @@
               && (this.$refs.myVueDropzone.getQueuedFiles().length);
             } 
         },
-        created : function (argument) {
+        mounted : function (argument) {
           this.loadItems();
         },
         methods : {
           async loadItems (){
-            await this.$store.dispatch('GetQuickMeds');
+            await this.$service.getX('/api/tmpl/quickmedia');
+            let THAT = this;
+            this.items = (this.$store.getters.StateApi.TmplQuickmedia || []).map(function (op) {
+                  op.message = mustache.render(op.template || op.message || op.title || '', THAT.sample) || op.title;
+                  return op;
+              });
           },
           fileAdded : function (argument) {
             this.addedFileCount++;
@@ -202,7 +202,11 @@
             formData.append('content', this.newItem.title);
             formData.append('code', this.newItem.code);
           },
-          async fileUploaded () {
+          async fileUploadedSuccess(a,response){
+            await this.$service.setX('/api/tmpl/quickmedia', response);
+            await this.loadItems();
+          },
+          async fileUploaded (a,b,c,d) {
             await this.loadItems();
             this.newItem = newItem();
             this.$refs.form.reset();
@@ -211,17 +215,18 @@
           async updateItem () {
             let success = await this.$refs.form.validate();
             if(success === true){
-              await this.$store.dispatch('CreatQuickMeds', this.newItem);
+              await this.$service.submitX('/api/tmpl/quickmedia', this.newItem);
               this.newItem = newItem();
               this.$refs.form.reset();
               this.onAction({name : "CANCEL"});
+              this.loadItems();
             }
           },
           async createItem () {
             let success = await this.$refs.form.validate();
             if(success === true){
               //console.log(this.$refs.myVueDropzone.getQueuedFiles());
-             await this.$refs.myVueDropzone.processQueue();
+             let respData = await this.$refs.myVueDropzone.processQueue();
               //await this.$store.dispatch('CreatQuickReps', this.newItem);
               //this.newItem = newItem();
               //this.$refs.form.reset();
@@ -229,7 +234,8 @@
             }
           },
           async deleteItem(item) {
-             await this.$store.dispatch('DeleteQuickMeds', item);
+             await this.$service.deleteX('/api/tmpl/quickmedia', { id : item.id });
+             this.loadItems();
           }, 
           async cancelItem(item) {
              this.newItem = newItem();
