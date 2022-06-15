@@ -77,19 +77,19 @@
         <h6 class="navbar-heading p-0 text-muted">Links</h6>
 
         <b-nav class="navbar-nav mb-md-3">
+          <b-nav-item :href="'https://mehery.atlassian.net/'" target="_blank">
+              <i class="ni ni-support-16"></i>
+              <b-nav-text class="p-0">Support</b-nav-text>
+          </b-nav-item>
           <b-nav-item
                :href="$global.MyConst.config.PROP_SERVICE_DOCS_LINK"  target="_blank"
                >
               <i class="ni ni-paper-diploma"></i>
-              <b-nav-text class="p-0">Documentation</b-nav-text>
+              <b-nav-text class="p-0">Developer Guide</b-nav-text>
           </b-nav-item>
-          <b-nav-item :href="'/front/auth/login?app=agent'" target="_blank">
-              <i class="ni ni-chat-round"></i>
-              <b-nav-text class="p-0">Agent Panel</b-nav-text>
-          </b-nav-item>
-          <b-nav-item :href="'/front/auth/login?app=admin'" target="_blank">
-              <i class="ni ni-chart-bar-32"></i>
-              <b-nav-text class="p-0">Admin Panel</b-nav-text>
+          <b-nav-item :href="$global.MyConst.config.PROP_SERVICE_DOCS_LINK + '/server-xms/public2'" target="_blank">
+              <i class="ni ni-single-copy-04"></i>
+              <b-nav-text class="p-0">API Integration</b-nav-text>
           </b-nav-item>
           <b-nav-item :href="'/cpanel/app'" target="_blank" v-if="showLink('SUPER_DEV')">
               <i class="ni ni-chart-bar-32"></i>
