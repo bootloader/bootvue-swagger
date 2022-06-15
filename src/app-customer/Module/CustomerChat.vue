@@ -246,6 +246,7 @@
             message.id = _msg.id;
             message.data.timestamp = _msg.data.timestamp;
             message.data.attachments = _msg.data.attachments;
+            this.addMessage(_msg);
         }
 
         if(this.options.channelId){
@@ -533,5 +534,8 @@
   }
   .sc-message--avatar {
     display: none;
+  }
+  .sc-message--file-text{
+      display: none;
   }
 </style>
