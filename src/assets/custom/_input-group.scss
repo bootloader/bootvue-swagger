@@ -138,6 +138,16 @@
       flex: 1 1 auto;
     }
 
+    .v-select{
+      .vs__dropdown-toggle {
+        background-color: #FFF;
+      }
+      color: rgb(87, 87, 87) !important; 
+      .vs__selected{
+        color: rgb(87, 87, 87) !important;
+      }
+    }
+
   }
 
 

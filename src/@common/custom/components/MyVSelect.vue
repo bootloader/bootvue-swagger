@@ -73,6 +73,10 @@
                 type: String,
                 default: ""
             },
+            optionContext : {
+                type : String,
+                default : null
+            },
             optionKey : {
                 type : String,
                 default : "key"
@@ -166,8 +170,9 @@
                                 item : option
                             };
                         };
-                        let value = option[THIS.optionKey] || option.id || option.key || option.code || option.value || option.label || option.name;
-                        let label = option[THIS.optionLabel] || option.name || option.label || option.value || option.code || option.key || option.id;
+                        let context = THIS.optionContext ? option[THIS.optionContext] : option;
+                        let value = context[THIS.optionKey] || context.id || context.key || context.code || context.value || context.label || context.name;
+                        let label = context[THIS.optionLabel] || context.name || context.label || context.value || context.code || context.key || context.id;
                         return {
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),

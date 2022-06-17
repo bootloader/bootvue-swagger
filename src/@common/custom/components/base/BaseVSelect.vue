@@ -40,7 +40,7 @@
             :value="value" 
             v-on="listeners"
             v-bind="$attrs" 
-            :options="options" :optionKey="optionKey" :optionLabel="optionLabel"
+            :options="options" :optionKey="optionKey" :optionLabel="optionLabel" :optionContext="optionContext"
             :emptyDisplay="emptyDisplay"
             :valid="valid" 
             :required="required"
@@ -220,6 +220,8 @@
       optionLabel : {
           type : String,
           default : "label"
+      },
+      optionContext : {
       },
       filter : {
       },

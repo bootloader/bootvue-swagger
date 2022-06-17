@@ -1,6 +1,30 @@
 <template>
   <div>
 
+  <b-row  v-if="$global.User.isDuperUser" align-v="center" slot="header"  class="my-normalize-v2">
+    <b-col  cols="6">
+      <base-v-select options="getx:/partner/api/users"  class="d-block" 
+          layout="default" size="sm"
+          v-model="search.user" clearable
+          optionContext="contact" optionKey="email" optionLabel="name" 
+          @change="loadDetailsAsync"
+       >
+        <template #option="option">
+             <b>{{option.item.contact.name}}</b> &nbsp;-&nbsp; <small>{{option.item.contact.email}}</small>
+        </template>
+        <template #selected-option="option">
+              <b>{{option.item.contact.name}}</b> &nbsp;-&nbsp; <small>{{option.item.contact.email}}</small>
+        </template> 
+       </base-v-select>
+    </b-col> 
+     <b-col  cols="6">
+      <base-input  class="" layout="default" size="sm"
+          v-model="search.domain"
+          @change="loadDetailsAsync"
+       ></base-input>
+     </b-col> 
+  </b-row>
+
     <b-card v-if="domainUsersIndex>-1"  no-body class="shadow">
         <b-card-header class="bg-transparent border-0">
           <b-row align-v="center" slot="header" >
@@ -348,7 +372,8 @@ import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import formatters from '@/services/formatters';
 import PartnerUsers from './PartnerUsers.vue';
-
+import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
+import debounce from "debounce";
 export default {
   data() {
     return {
@@ -394,7 +419,10 @@ export default {
         //clickable : ".change_image",
         addRemoveLinks : false
       },
-
+      search : {
+        user : "", 
+        domain : ''
+      }
     };
   },
   computed : {
@@ -424,6 +452,7 @@ export default {
     that.$nextTick(function () {
       that.getDomainWidth()
     });
+    this.loadDetailsAsync = debounce(this.loadDetailsAsync);
   },
   updated(){
     const that = this
@@ -445,7 +474,9 @@ export default {
       this.selectedIndex=index;
     },
     async loadDetails(){
-      let resp = await this.$service.get("/partner/api/domain");
+      let resp = await this.$service.get("/partner/api/domain",{
+        user : this.search.user, domain : this.search.domain
+      });
       this.models = resp.results.map(function(result){
         return {
           company : result.company,
@@ -456,8 +487,13 @@ export default {
         }
       });
     },
+    async loadDetailsAsync(){
+      return this.loadDetails();
+    },
     async updateProfile() {
-       let resp = await this.$service.post("/partner/api/domain",this.model,{
+       let resp = await this.$service.post("/partner/api/domain",{
+          ...this.model
+        },{
          ref : this.$refs.formValidator
        });
        window.location.reload();
@@ -482,10 +518,12 @@ export default {
   },
   components : {
     vueDropzone : vue2Dropzone,
-    PartnerUsers
+    PartnerUsers,BaseVSelect
   }
 };
-</script>
+</script>,
+    BaseInput
+    BaseVSelect
 <style scoped>
   .add-domain {
     background-color: #fff;
