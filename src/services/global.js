@@ -46,9 +46,10 @@ export const MyConst = {
 export const User = (function(){
 	let user = {
 		isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
-		isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0
+		isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0,
+		isPartner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_PARTNER')>=0
 	}
-	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev);
+	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	return user;
 })();
 
