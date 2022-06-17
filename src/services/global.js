@@ -50,6 +50,7 @@ export const User = (function(){
 		isPartner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_PARTNER')>=0
 	}
 	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev || user.isPartner);
+	user.canAddOwner = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	return user;
 })();
 

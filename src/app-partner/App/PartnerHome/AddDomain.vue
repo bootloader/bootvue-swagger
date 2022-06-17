@@ -66,7 +66,7 @@
                 <button class="btn btn-link btn-sm text-nowrap fa fa-edit" v-tooltip="'Edit Domain Details'"
                   @click="editDomain(index)">&nbsp;Edit Domain Details</button>
                 <button 
-                  v-if=" $global.User.isMultiDomainUser"
+                  v-if=" $global.User.canAddOwner"
                   class="btn btn-link btn-sm text-nowrap fa fa-user-plus" v-tooltip="'Add Domain Owner'"
                   @click="showDomainOwners(index)"> Manage Domain Owners</button>
             </template>
