@@ -155,7 +155,7 @@
             dropzoneOptions: {
               url: MyConst.context + '/api/tmpl/quickmedia',
               thumbnailWidth: 150,
-              maxFilesize: 5, maxFiles : 1,
+              maxFilesize: 20, maxFiles : 1,
               autoProcessQueue: false
             },
             items : [],
