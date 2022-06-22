@@ -559,15 +559,7 @@
                             NZD: 'A$1,500',
                             AUD: 'A$1,500',
                         },
-                        additionalChannels:{
-                            INR: '₹ 8,000',
-                            USD: '$	100',
-                            EUR: '€ 110',
-                            IDR: 'IDR 1.50 mio',
-                            GBP: '£ 85',
-                            NZD: 'A$150',
-                            AUD: 'A$150',
-                        },
+                        additionalChannels:"NA",
                         setupFee: {
                             INR: '₹ 2,40,000',
                             USD: '$ 3,000',
@@ -653,15 +645,7 @@
                             NZD: 'A$1,500',
                             AUD: 'A$1,500',
                         },
-                        additionalChannels:{
-                            INR: '₹ 8,000',
-                            USD: '$	100',
-                            EUR: '€ 110',
-                            IDR: 'IDR 1.50 mio',
-                            GBP: '£ 85',
-                            NZD: 'A$150',
-                            AUD: 'A$150',
-                        },
+                        additionalChannels:"NA",
                         setupFee: {
                             INR: '₹ 2,40,000',
                             USD: '$ 3,000',
