@@ -12,6 +12,7 @@
       :showEmoji="true"
       :showHeader="!config.header.disabled"
       :showFile="true"
+      :showMic="true"
       :showTypingIndicator="showTypingIndicator"
       :showLauncher="true"
       :showCloseButton="true"
