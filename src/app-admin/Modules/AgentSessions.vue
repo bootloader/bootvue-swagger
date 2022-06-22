@@ -20,14 +20,6 @@
                     </span>
                 </template>
 
-                <!-- <template #filter(daterange)>
-                    <MyDatePicker 
-                      :daterange="input.daterange"
-                      @dateRangeOninit="dateRangeOnUpdate"
-                      @dateRangeOnUpdate="dateRangeOnUpdate"s
-                    > </MyDatePicker>
-                </template> -->
-
                 <template #top-row="row">
                       <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
                       <b-th><input type="text" v-model="filters.contactName"  class="form-control form-control-sm" /></b-th>
@@ -104,23 +96,27 @@
                       </span>
                 </template>
 
+                <template #filter(daterange)>
+                    <MyDatePicker 
+                      :daterange="input.daterange"
+                      @dateRangeOninit="dateRangeOnUpdate"
+                      @dateRangeOnUpdate="dateRangeOnUpdate"
+                    > </MyDatePicker>
+                </template>
         </master-view>
       <b-modal :id="modelName" :title="'Session Filter'" size="lg" hide-footer>
         <div class="filter-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <span class="action-wrapper text-center" >
-                <date-range-picker v-model="dateranegeinput.range" class="session-search-date-picker date-range-picker-mobile"
-                :opens="'right'"
-                :time-picker="false"
-                control-container-class="reportrange-text btn"
-                :ranges="dateranegeinput.ranges"
-                :date-range="dateranegeinput.daterange"
-                @select="onDateRangeSelect"
-                @update="onDateRangeUpdate">
-                    <!--    input slot (new slot syntax)-->
+               <MyDatePicker  class="session-search-date-picker date-range-picker-mobile"
+                      :daterange="input.daterange"
+                      :ranges="input.dataranges"
+                      @dateRangeOninit="dateRangeOnUpdate"
+                      @dateRangeOnUpdate="dateRangeOnUpdate" >
                     <template #input="picker" style="min-width: 350px;">
                         <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date }} - {{ picker.endDate | date }}
                     </template>
-                  </date-range-picker>
+                </MyDatePicker>
+
             </span>
             <br/>
             <div class="section-divider">
@@ -294,6 +290,7 @@
               fistResponseStamp:"",
             },
             input : {
+                dataranges : ['Today','Last 7 Days','Yesterday','This month','Last month'],
                 daterange : {
                     startDate : null,
                     endDate : null,
@@ -301,26 +298,6 @@
                 }
             },
             session : null,
-            dateranegeinput : (() => { 
-                var startDate = hour0(moment().subtract(7,"day")).toDate(),
-                endDate = hour24(moment()).toDate();
-
-                return {
-                    range: {startDate : startDate, endDate : endDate},
-                    ranges : {
-                        'Today': [ hour0(moment()).toDate(), hour24(moment()).toDate()],
-                        'Last 7 Days': [hour0(moment().subtract(7,"day")).toDate(), 
-                                            hour24(moment()).toDate()],
-                        'Yesterday': [hour0(moment().subtract(1,"day")).toDate(),
-                                            hour24(moment().subtract(1,"day")).toDate()],
-
-                        'This month': [hour0(moment().date(1)).toDate(), 
-                                            hour24(moment()).toDate()],
-                        'Last month': [hour0(moment().subtract(1,"month").date(1)).toDate(), 
-                                            hour24(moment().date(0)).toDate()]
-                    }
-                }
-            })(),
             filteron:true,
             formatters,
             modelName :  "MODAL_FILTER",
@@ -338,7 +315,7 @@
         },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
-          this.loadSessions();
+          //this.loadSessions();
         },
         methods: {
           openFilterPopup(){
@@ -354,18 +331,6 @@
               let sIndex = this.selectedStatus.indexOf(status);
                 sIndex != -1 ? this.selectedStatus.splice(sIndex, 1) : this.selectedStatus = [...this.selectedStatus, status];
               console.log("this.selectedStatus", this.selectedStatus, status, sIndex);
-          },
-          sanitizeDateRange : function (daterange) {
-                var startDate = moment(daterange.startDate);
-                var endDate = moment(daterange.endDate);
-                daterange.startDate = hour0(startDate).toDate();
-                daterange.endDate = hour24(endDate).toDate();
-                return daterange;
-            },
-          onDateRangeSelect : function (r) {
-                var range = this.sanitizeDateRange(r);
-                this.dateranegeinput.range.startDate = range.startDate;
-                this.dateranegeinput.range.endDate = range.endDate;
           },
           onDateRangeUpdate : function (r) {
               if(this.daterange){
@@ -395,8 +360,9 @@
                 "contactType": "MESSAGE_TWITTER",
                 status : this.selectedStatus, 
                 tags : tags,
-                startStamp : this.daterange.startDate?.getTime() || this.dateranegeinput.range.startDate.getTime(),
-                endStamp :  this.daterange.endDate?.getTime() || this.dateranegeinput.range.endDate.getTime()
+                rangeStamp : (this.input.daterange.endDate - this.input.daterange.startDate),
+                startStamp : this.input.daterange.startDate,
+                endStamp :  this.input.daterange.endDate
               });
               this.sessions.items = resp.results.map(function(session){
                 return DataProcessor.session(session);
@@ -408,7 +374,6 @@
             }
           },
           dateRangeOnUpdate : function (r) {
-              console.log("dateRangeOnUpdate",r);
               this.input.daterange.startDate = r.startDate;
               this.input.daterange.endDate = r.endDate;
               this.loadSessions();

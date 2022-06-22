@@ -296,6 +296,8 @@
             margin-left: 3px;
             display: block;
             float:left;
+        }
+
             input.form-control {
                 height: calc(2.25rem + 0px);
                 margin-top: 0px;
@@ -329,8 +331,7 @@
                 }
 
             }
-            
-        }
+
         .filter-wrapper{
             float: left;
             display: flex;

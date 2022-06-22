@@ -58,13 +58,8 @@
 
 <script>
 
-    import PageTitle from "../Components/PageTitle.vue";
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
-    import AgentChat from './AgentChat';
-
-    //import chart1 from './Analytics/chart1';
-    //import chart2 from './Analytics/chart2';
-    //import chart3 from './Analytics/chart3';
+    import PageTitle from "../../Components/PageTitle.vue";
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -93,7 +88,6 @@
         components: {
             PageTitle,
             'font-awesome-icon': FontAwesomeIcon,
-            AgentChat
            // chart1,chart2,chart3,
         },
         data: () => ({

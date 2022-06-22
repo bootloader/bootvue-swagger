@@ -116,11 +116,11 @@
 <script>
 
     import TemplatePreview from "@/@common/custom/components/TemplatePreview.vue";
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
-    import formatters from './../../services/formatters';
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
+    import formatters from '../../../services/formatters';
     import TmplUtils from "@/@common/utils/TmplUtils";
     import JsonXPath from "@/@common/utils/JsonXPath";
-    import PageTitle from "../Components/PageTitle.vue";
+    import PageTitle from "../../Components/PageTitle.vue";
     import mustache from 'mustache';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
@@ -136,7 +136,7 @@
     import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
-    import BaseVSelect from '../../@common/custom/components/base/BaseVSelect.vue';
+    import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
 
     function newItem() {
       return {
@@ -324,7 +324,7 @@
     }
 </script>
 <style lang="scss">
-  @import "./../../assets/demo-ui/_chat-preview.scss";
+  @import "@/assets/demo-ui/_chat-preview.scss";
 
 </style>
 <style type="text/css" scoped="">

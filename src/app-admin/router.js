@@ -25,12 +25,12 @@ export default AppRouter.route({
         {
             path: '/app/moderate/import-chat',
             name: 'ImportChat',
-            component: () => import('./Modules/ModImportChat.vue'),
+            component: () => import('./Modules/ImportChat/ModImportChat.vue'),
         },
         {
             path: '/app/moderate/imported-chat-logs',
             name: 'ModImportChatLogs',
-            component: () => import('./Modules/ModImportChatLogs.vue'),
+            component: () => import('./Modules/ImportChat/ModImportChatLogs.vue'),
         },
         {
             path: '/app/moderate/contacts',
@@ -42,17 +42,17 @@ export default AppRouter.route({
         {
             path: '/app/moderate/bulk-push-jobs',
             name: 'ModBulkJobs',
-            component: () => import('./Modules/ModBulkJobs.vue'),
+            component: () => import('./Modules/BulkMessages/ModBulkJobs.vue'),
         },
         {
             path: '/app/moderate/bulk-push-new',
             name: 'ModBulkSend',
-            component: () => import('./Modules/ModBulkSend.vue'),
+            component: () => import('./Modules/BulkMessages/ModBulkSend.vue'),
         },
         {
             path: '/app/moderate/bulk-push-msgs/:bulkSessionId',
             name: 'ModBulkMessages',
-            component: () => import('./Modules/ModBulkMessages.vue'),
+            component: () => import('./Modules/BulkMessages/ModBulkMessages.vue'),
         },
 
 //Agent Screens

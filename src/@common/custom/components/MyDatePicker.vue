@@ -9,11 +9,16 @@
         @select="onDateRangeSelect"
         @update="onDateRangeUpdate">
         <!--    input slot (new slot syntax)-->
-        <template #input="picker" style="min-width: 350px">
-            <i class="fa fa-calendar-alt" />&nbsp;{{
-                picker.startDate | date
-            }}
-            - {{ picker.endDate | date }}
+        <template  #input="picker" style="min-width: 350px">
+              <slot name="input" v-bind="picker">
+                    <i class="fa fa-calendar-alt" />&nbsp;{{
+                        picker.startDate | date
+                    }}
+                    - {{ picker.endDate | date }}
+              </slot>
+        </template>
+        <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="slotScope"></slot>
         </template>
     </date-range-picker>
 </template>
@@ -41,6 +46,9 @@
             options: {},
             value: {},
             daterange: {},
+            ranges : {
+                default : ()=>['Today','Last 7 Days','Yesterday','This month','Last month','This year','Last year'],
+            }
         },
         components: {
             DateRangePicker,
@@ -50,53 +58,60 @@
                 //DateRangeDateKeys
                 dateranegeinput: (() => {
                     if (!this.daterange) return null
-
                     var startDate =
                             this.daterange?.startDate ||
                             hour0(moment().subtract(7, 'day')).toDate(),
                         endDate =
                             this.daterange?.endDate || hour24(moment()).toDate()
 
+                    let rangeOptions = {
+                        TODAY: [
+                            hour0(moment()).toDate(),
+                            hour24(moment()).toDate(),
+                        ],
+                        'LAST7DAYS': [
+                            hour0(moment().subtract(7, 'day')).toDate(),
+                            hour24(moment()).toDate(),
+                        ],
+                        YESTERDAY: [
+                            hour0(moment().subtract(1, 'day')).toDate(),
+                            hour24(moment().subtract(1, 'day')).toDate(),
+                        ],
+
+                        'THISMONTH': [
+                            hour0(moment().date(1)).toDate(),
+                            hour24(moment()).toDate(),
+                        ],
+                        'LASTMONTH': [
+                            hour0(
+                                moment().subtract(1, 'month').date(1)
+                            ).toDate(),
+                            hour24(moment().date(0)).toDate(),
+                        ],
+                        'THISYEAR': [
+                            hour0(moment().month(0).date(1)).toDate(),
+                            hour24(moment()).toDate(),
+                        ],
+                        'LASTYEAR': [
+                            hour0(
+                                moment()
+                                    .subtract(1, 'year')
+                                    .month(0)
+                                    .date(1)
+                            ).toDate(),
+                            hour24(moment().month(0).date(0)).toDate(),
+                        ],
+                    };
+
                     let dateranegeinput =  {
                         range: { startDate: startDate, endDate: endDate },
-                        ranges: {
-                            Today: [
-                                hour0(moment()).toDate(),
-                                hour24(moment()).toDate(),
-                            ],
-                            'Last 7 Days': [
-                                hour0(moment().subtract(7, 'day')).toDate(),
-                                hour24(moment()).toDate(),
-                            ],
-                            Yesterday: [
-                                hour0(moment().subtract(1, 'day')).toDate(),
-                                hour24(moment().subtract(1, 'day')).toDate(),
-                            ],
-
-                            'This month': [
-                                hour0(moment().date(1)).toDate(),
-                                hour24(moment()).toDate(),
-                            ],
-                            'Last month': [
-                                hour0(
-                                    moment().subtract(1, 'month').date(1)
-                                ).toDate(),
-                                hour24(moment().date(0)).toDate(),
-                            ],
-                            'This year': [
-                                hour0(moment().month(0).date(1)).toDate(),
-                                hour24(moment()).toDate(),
-                            ],
-                            'Last year': [
-                                hour0(
-                                    moment()
-                                        .subtract(1, 'year')
-                                        .month(0)
-                                        .date(1)
-                                ).toDate(),
-                                hour24(moment().month(0).date(0)).toDate(),
-                            ],
-                        },
+                        ranges: (this.ranges || []).reduce(function(ranges,span){
+                            let key = span.replace(/\s/g,"").toUpperCase();
+                            if(rangeOptions[key]){
+                                ranges[span] = rangeOptions[key]
+                            }
+                            return ranges;
+                        },{})
                     };
 
                     if((typeof this.daterange.span == 'string') && dateranegeinput.ranges[this.daterange.span ]){

@@ -87,21 +87,9 @@
 
 <script>
 
-    import Vue from 'vue';
-    import {library} from '@fortawesome/fontawesome-svg-core'
-    import {
-        faTrashAlt,
-        faCheck,
-        faCalendarAlt,
-        faAngleDown,
-        faAngleUp,
-        faTh,
-        faWhatsapp
-    } from '@fortawesome/free-solid-svg-icons'
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-    import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import { MyFlags,MyDict,MyConst } from '../../../services/global';
     import Loading from 'vue-loading-overlay';
-    import mustache from 'mustache';
     import SlideUpDown from 'vue-slide-up-down'
 
     export default {
@@ -207,7 +195,7 @@
         text-align: center;
     }
     .msg_card_body-logo>span{
-        background-image: url(./../../assets/images/logo-long.png);
+        background-image: url(~/assets/images/logo-long.png);
         background-size: 200px auto;
         background-repeat: no-repeat;
         background-position: center;
