@@ -19,8 +19,8 @@ export default {
   },
   computed : {
     isDefaultDomain(){
-      console.log(this.$route.params.domain, this.$global.MyConst.tenant)
-      return this.$route.params.domain ? false : (this.$global.MyConst.tenant == 'app');
+      console.log("isDefaultDomain",this.$route.params.domain, this.$global.MyConst.tenant)
+      return this.$route.params.domain ? false : (this.$global.MyConst.appDomain == 'app');
     }
   },
   methods: {
