@@ -5,14 +5,20 @@
           heading: heading,
           subheading: subheading,
           icon: icon,
-      }" :filters="[{ label : state, name : 'saveScript'}]">
+      }" :filters="[
+            { label : state, name : 'saveScript'},
+          //  { label : 'Terminal', name : 'terminal' }
+      ]">
       <template #filter(saveScript)="{filter}">
         <b-button variant="success" :disabled="table.busy" @click="saveScript">{{filter.label}}</b-button>&nbsp;
       </template>
+      <template #filter(terminal)="{filter}">
+        <b-button variant="success" @click="terminal">{{filter.label}}</b-button>&nbsp;
+      </template>
       <template #body>
-        <div class="editor" >
+        <div class="editor pane" :style="{width:width}" >
           <AceEditor 
-              v-model="content" 
+              v-model="content"  ref="aceEditor"
               @init="editorInit" 
               lang="javascript" 
               theme="monokai" 
@@ -39,6 +45,8 @@
               ]"
               />
         </div>
+        <div class="pane" :style="{width:width,height : editorHeight}">
+        </div>  
       </template>  
       </master-view>
     </div>
@@ -69,7 +77,21 @@
             modelName :  "MODAL_ADD_TEAM",
             content : "",
             state : "Save",
-            editorHeight : (window.document.body.scrollHeight-20) + 'px'
+            editorHeight : (window.document.body.scrollHeight-20) + 'px',
+            width : '100%',
+
+            showTerminal : false, 
+            taskList: {
+                messages: [{ 
+                  time: new Date().toString(), 
+                  type: 'system', label: 'System', 
+                  message: 'Welcome to vTerminal, this is an example to show you what this project can do.' 
+                }] 
+            },
+            commandList: {
+                // your commands
+            }
+
         }),
         computed : {
         },
@@ -117,13 +139,29 @@
           dataSumit() {
               this.saveScript();
           },
-          editorInit: function () {
+          editorInit: function (editor) {
+              console.log("editor",editor)
               require('brace/ext/language_tools') //language extension prerequsite...
               require('brace/mode/html')                
               require('brace/mode/javascript')    //language
               require('brace/mode/less')
               require('brace/theme/monokai')
               require('brace/snippets/javascript') //snippet
+              // var snippetManager = require("brace");
+              // snippetManager.define(
+              //       'ace/snippets/ini',
+              //       ['require', 'exports', 'module'],
+              //       function (e, t, n) {
+              //           'use strict'
+              //           ;(t.snippetText = undefined), (t.scope = 'ini')
+              //       }
+              // );
+              //console.log("snippetManager",snippetManager)
+              //snippetManager.insertSnippet(editor, snippet);
+          },
+          terminal(){
+            this.showTerminal = !this.showTerminal;
+            this.width =  this.showTerminal ? '50%' : '100%';
           }
         }
     }
@@ -137,6 +175,9 @@
     }
     .editor {
       height: 100%;
+    }
+    .pane {
+      float: left;
     }
   }
 </style>
