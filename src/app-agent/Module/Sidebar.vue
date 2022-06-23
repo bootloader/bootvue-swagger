@@ -96,13 +96,15 @@
         props: {
             sidebarbg: String,
         },
-        data : () => ({
-            MyFlags : MyFlags, MyConst : MyConst,
-            logoStyle : {
-                "background-image" : "url("+MyConst.logo.full_inverse+")"
-            },
-            showSidebarOpening : false
-        }),
+        data () {
+            return {
+                MyFlags : MyFlags, MyConst : MyConst,
+                logoStyle : {
+                    "background-image" : "url("+this.$config.PROP_LOGO_BG_X_LOGO_W+")"
+                },
+                showSidebarOpening : false
+            }
+        },
         computed : {
             isOnline :  function (){
                 if(this.$store.getters.StateMeta){

@@ -245,7 +245,7 @@ export default {
       recaptchaScript.setAttribute('src', this.$global.MyConst.cdn + '/plugins/customer.js?theme=bubble');
       recaptchaScript.innerHTML = JSON.stringify({
           "domain" : [this.$global.MyConst.appDomain,this.$global.MyConst.config.PROP_SERVICE_SERVER].join("."),
-          "channelId" : "web:page",
+          "channelId" : "web:"+this.$global.MyConst.config.PROP_SERVICE_SERVER,
           "channelKey" : "1gdmxikhbf5fz56SR5JRDFY",
           "config" : {
                 "header.bg.color" : "#1e293b",

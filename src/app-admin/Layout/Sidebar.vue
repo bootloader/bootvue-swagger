@@ -4,7 +4,7 @@
         @mouseover="toggleSidebarHover('add', 'closed-sidebar-open')"
         @mouseleave="toggleSidebarHover('remove', 'closed-sidebar-open')">
         <div class="app-header__logo">
-            <div class="logo-src" />
+            <div class="logo-src"/>
             <div class="header__pane ml-auto">
                 <button
                     class="hamburger close-sidebar-btn hamburger--elastic"
@@ -22,6 +22,9 @@
                 <sidebar-menu showOneChild :menu="menu" hideToggle="true" />
             </VuePerfectScrollbar>
         </div>
+
+        <component :is="'style'" v-html="style">
+        </component>
 
     </div>
 </template>
@@ -61,7 +64,10 @@
             return {
                 isOpen: false,
                 sidebarActive: false,
-
+                logo : {
+                    short : './../../assets/images/logo-short.png',
+                    long : './../../assets/images/logo-long.png'
+                },
                 menu: menuFilter([
                     {
                         header: true,
@@ -413,6 +419,18 @@
         props: {
             sidebarbg: String,
         },
+        computed: {
+            style() {
+                return `
+                    .closed-sidebar .app-sidebar .logo-src {
+                        background : url('${this.$config.PROP_LOGO_BG_X_ICON}');
+                    }
+                    .closed-sidebar-open.closed-sidebar .app-sidebar .logo-src {
+                        background : url('${this.$config.PROP_LOGO_BG_X_LOGO}');
+                    }
+                    `;
+            }
+        },
         methods: {
 
             toggleBodyClass(className) {
@@ -470,14 +488,12 @@
     .closed-sidebar .app-sidebar .logo-src {
         width: 40px;
         height: 35px;
-        background: url('./../../assets/images/logo-short.png');
         background-size: 40px auto;
         background-repeat: no-repeat;
     }
     .closed-sidebar-open.closed-sidebar .app-sidebar .logo-src {
         width: 165px;
         height: 45px;
-        background: url('./../../assets/images/logo-long.png');
         background-size: 140px auto;
         background-repeat: no-repeat;
     }
