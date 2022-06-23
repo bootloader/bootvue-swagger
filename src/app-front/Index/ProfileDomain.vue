@@ -235,8 +235,9 @@ export default {
       }
     },
     async loadChannels(){
+      console.log("this.$config.APP_DOMAIN",this.$config.APP_DOMAIN)
       var resp = await this.$service.get('/api/options/channels',{
-        tnt : this.$route.params.domain || this.$global.MyConst.tenant,
+        tnt : this.front_domain,
       });
       this.channels = resp.results || [];
     },
