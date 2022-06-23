@@ -197,7 +197,6 @@
         text-align: center;
     }
     .msg_card_body-logo>span{
-        background-image: url(./../../assets/images/logo-long.png);
         background-size: 200px auto;
         background-repeat: no-repeat;
         background-position: center;

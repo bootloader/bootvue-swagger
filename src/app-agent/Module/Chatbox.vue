@@ -48,7 +48,7 @@
         :is-full-page="false"></loading>
 
 <div v-if="!activeChat" class="msg_card_body-logo">
-    <span class=""></span>
+    <span class="" :style="{'background-image': `url(${$config.PROP_LOGO_BG_X_LOGO})`}"></span>
 </div>
 <div v-else-if="activeChat">
 
@@ -1235,7 +1235,6 @@
         text-align: center;
     }
     .msg_card_body-logo>span{
-        background-image: url(./../../assets/images/logo-long.png);
         background-size: 200px auto;
         background-repeat: no-repeat;
         background-position: center;
