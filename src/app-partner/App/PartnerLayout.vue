@@ -77,7 +77,7 @@
         <h6 class="navbar-heading p-0 text-muted">Links</h6>
 
         <b-nav class="navbar-nav mb-md-3">
-          <b-nav-item :href="'https://mehery.atlassian.net/'" target="_blank">
+          <b-nav-item :href="'https://mehery.atlassian.net/servicedesk/customer/portals'" target="_blank">
               <i class="ni ni-support-16"></i>
               <b-nav-text class="p-0">Support</b-nav-text>
           </b-nav-item>
