@@ -56,7 +56,8 @@
             :user="terminal.user"  :logs="terminal.logs" :system="terminal.system">
             <template #terminalbar>
                 <setup-configuration-key class="text-white"
-                      configKey="postman.debug.contact">
+                      configKey="postman.debug.contact"
+                      @load="loadDebugContact">
                 </setup-configuration-key>
             </template> 
           </ScriptusTerminal>
@@ -118,8 +119,7 @@
           this.editorHeight =  (window.document.body.scrollHeight-80) + 'px';
           this.load();
           let THAT = this;
-          this.loadLogs();
-          this.loadDebugContact();
+          //this.loadDebugContact();
         },
         methods : {
           async load (){
@@ -140,18 +140,21 @@
               this.state = "Save";
             }
           },
-          async loadDebugContact(){
-            let resp = await this.$service.get("/api/config?key=postman.debug.contact");
-            this.terminal.user = resp.results[0]?.config?.value
+          async loadDebugContact(e){
+            console.log("loadDebugContact",e)
+            //let resp = await this.$service.get("/api/config?key=postman.debug.contact");
+            this.terminal.user = e?.config?.value;
+            this.loadLogs();
           },
           async loadLogs(){
             if(this.showTerminal){
               try {
+                if(this.terminal.user){
                 let resp = await this.$service.get('/api/objects/appscript/'+this.$route.params.appId+"/logs");
-                for(var i in resp.results){
-                  this.terminal.logs.push(resp.results[i].logs);
+                  for(var i in resp.results){
+                    this.terminal.logs.push(resp.results[i].logs);
+                  }
                 }
-                console.log(resp)
               } catch(e){
                   console.error(e);
               }

@@ -152,6 +152,7 @@
             for(var i in item){
               this.oneItem[i] = JSON.parse(JSON.stringify(item[i]));
             }
+            this.$emit("load",this.oneItem);
           },
           editItem : function(){
               this.oldHash = JSON.stringify(this.oneItem);
