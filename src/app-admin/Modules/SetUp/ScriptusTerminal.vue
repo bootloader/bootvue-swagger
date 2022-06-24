@@ -98,7 +98,7 @@
   height: 100%;
 
     .terminal {  
-      width: 70vw;  
+      width: 100%;  
       height: 100%;  
       box-shadow: 2px 4px 10px rgba(0,0,0,0.5);
     } 
@@ -169,6 +169,8 @@
     }
     .terminal__prompt--bling {  
       color: #dddddd;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
     .terminal__prompt--cursor {  
       display: block;  
