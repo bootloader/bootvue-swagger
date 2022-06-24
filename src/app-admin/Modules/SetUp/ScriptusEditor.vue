@@ -6,34 +6,40 @@
           subheading: subheading,
           icon: icon,
       }" :filters="[
+            { label : 'Terminal', name : 'terminalwin' },
             { label : state, name : 'saveScript'},
-          //  { label : 'Terminal', name : 'terminal' }
       ]">
       <template #filter(saveScript)="{filter}">
         <b-button variant="success" :disabled="table.busy" @click="saveScript">{{filter.label}}</b-button>&nbsp;
       </template>
-      <template #filter(terminal)="{filter}">
-        <b-button variant="success" @click="terminal">{{filter.label}}</b-button>&nbsp;
+      <template #filter(terminalwin)="{}">
+        <b-button :variant="showTerminal ? 'grey' : 'outline-grey'" 
+          @click="terminalwin"><i class="fas fa-terminal"></i></b-button>&nbsp;
       </template>
       <template #body>
-        <div class="editor pane" :style="{width:width}" >
+        <div class="editor pane" :style="{width:width,height : editorHeight}" >
           <AceEditor 
               v-model="content"  ref="aceEditor"
               @init="editorInit" 
               lang="javascript" 
               theme="monokai" 
-              width="100%" 
+              :width="editorWidth" 
               :height="editorHeight"
               :options="{
                   enableBasicAutocompletion: true,
                   enableLiveAutocompletion: true,
-                  fontSize: 14,
+                  fontSize: 12,
                   highlightActiveLine: true,
                   enableSnippets: true,
                   showLineNumbers: true,
                   tabSize: 2,
                   showPrintMargin: false,
                   showGutter: true,
+                  autoScrollEditorIntoView : true,
+                  wrapBehavioursEnabled : true,
+                  navigateWithinSoftTabs : true,
+                  hScrollBarAlwaysVisible : true,
+                  fixedWidthGutter : true,
               }"
               :commands="[
                   {
@@ -46,19 +52,32 @@
               />
         </div>
         <div class="pane" :style="{width:width,height : editorHeight}">
+          <ScriptusTerminal v-show="showTerminal"
+            :user="terminal.user"  :logs="terminal.logs" :system="terminal.system">
+            <template #terminalbar>
+                <setup-configuration-key class="text-white"
+                      configKey="postman.debug.contact">
+                </setup-configuration-key>
+            </template> 
+          </ScriptusTerminal>
         </div>  
       </template>  
       </master-view>
+
+
     </div>
 </template>
 
 <script>
 
     import AceEditor from 'vuejs-ace-editor';
+    import ScriptusTerminal from './ScriptusTerminal.vue';
+    import SetupConfigurationKey from './SetupConfigurationKey.vue';
 
     export default {
         components: {
-          AceEditor
+          AceEditor,ScriptusTerminal,
+            SetupConfigurationKey
         },
         data: () => ({
             heading: 'App Script',
@@ -78,19 +97,16 @@
             content : "",
             state : "Save",
             editorHeight : (window.document.body.scrollHeight-20) + 'px',
+            editorWidth : '100%',
             width : '100%',
 
             showTerminal : false, 
-            taskList: {
-                messages: [{ 
-                  time: new Date().toString(), 
-                  type: 'system', label: 'System', 
-                  message: 'Welcome to vTerminal, this is an example to show you what this project can do.' 
-                }] 
-            },
-            commandList: {
-                // your commands
-            }
+           terminal : {
+              system : '>',
+              user : "lt@someone",
+              logs : [
+              ]
+           }
 
         }),
         computed : {
@@ -100,7 +116,10 @@
         },
         mounted : function (argument) {
           this.editorHeight =  (window.document.body.scrollHeight-80) + 'px';
-          this.load()
+          this.load();
+          let THAT = this;
+          this.loadLogs();
+          this.loadDebugContact();
         },
         methods : {
           async load (){
@@ -120,6 +139,25 @@
               this.table.busy = false;
               this.state = "Save";
             }
+          },
+          async loadDebugContact(){
+            let resp = await this.$service.get("/api/config?key=postman.debug.contact");
+            this.terminal.user = resp.results[0]?.config?.value
+          },
+          async loadLogs(){
+            if(this.showTerminal){
+              try {
+                let resp = await this.$service.get('/api/objects/appscript/'+this.$route.params.appId+"/logs");
+                for(var i in resp.results){
+                  this.terminal.logs.push(resp.results[i].logs);
+                }
+                console.log(resp)
+              } catch(e){
+                  console.error(e);
+              }
+            }
+            clearTimeout( this.trail);
+            this.trail = setTimeout(()=> this.loadLogs(),2000);
           },
           async saveScript(){
             try {
@@ -159,15 +197,17 @@
               //console.log("snippetManager",snippetManager)
               //snippetManager.insertSnippet(editor, snippet);
           },
-          terminal(){
+          terminalwin(){
             this.showTerminal = !this.showTerminal;
             this.width =  this.showTerminal ? '50%' : '100%';
+            this.editorWidth = this.showTerminal ? '99%' : '100%';
           }
         }
     }
 </script>
 <style lang="scss">
-  #scriptus-editor {
+
+#scriptus-editor {
     .app-page-title {
         padding: 0px;
         margin: 0px 0px 0px;
@@ -175,6 +215,7 @@
     }
     .editor {
       height: 100%;
+      overflow-x: scroll;
     }
     .pane {
       float: left;
