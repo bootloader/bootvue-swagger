@@ -248,6 +248,7 @@
             message.data.timestamp = _msg.data.timestamp;
             message.data.attachments = _msg.data.attachments;
             this.addMessage(_msg);
+            return;
         }
 
         if(this.options.channelId){
@@ -286,6 +287,7 @@
 
         },
         onMessageWasSent (message) {
+            console.log("onMessageWasSent",message)
           var form = {};
           if(message.data.text && typeof message.data.text === "object"){
               form.reply_id = message.data.text.name;
@@ -301,7 +303,7 @@
               this.form_input = null;
           }
           
-          if(message.data.text || message.data.emoji ){
+          if(message.data.text || message.data.emoji || message.data.file){
               this.onMessageWasSentAsync(message,form);
           }
         },
