@@ -20,6 +20,9 @@
                 <span v-if="row.item.type=='SWITCH'">
                       [{{row.item.value|display(onOffOptions)}}]
                 </span>
+                <span v-if="row.item.type=='JSON'">
+                      &lt;Object&gt;
+                </span>
                 <span v-else>
                   {{row.item.value}}
                 </span>  
@@ -46,7 +49,7 @@
                 <base-v-select class="" size="sm" :disabled="!!oneItem.id && !!oneItem.type"
                       :clearable="false"
                       name="Variable Type" placeholder="TEXT"
-                      :options="['TEXT','NUMBER','SWITCH']"
+                      :options="['TEXT','NUMBER','SWITCH','JSON']"
                       v-model="oneItem.type">
                 </base-v-select>
 
@@ -60,7 +63,11 @@
                       rules="required|numeric" required
                       v-model="oneItem.value">
                 </base-input>
-                 <base-input class="" size="sm" v-else
+               <v-jsoneditor v-else-if="oneItem.type == 'JSON'"
+                    v-model="oneItem.value" :options="{
+                      mode : 'code', mainMenuBar : false
+                    }" :plus="false" height="400px" @error="onJsonError"/>
+                <base-input class="" size="sm" v-else
                       name="Variable Value" placeholder="ABC Pvt Ltd"
                       rules="required" required
                       v-model="oneItem.value">
@@ -81,7 +88,7 @@
 </template>
 
 <script>
-
+  import VJsoneditor from 'v-jsoneditor'
     function newItem() {
       return  {
           key : null,
@@ -94,6 +101,7 @@
     }
     export default {
         components: {
+          VJsoneditor
         },
         data: () => ({
             actions : [],
@@ -170,8 +178,9 @@
                 console.log("NoMapping",argument) 
             }
           },
-
-
+          onJsonError(e){
+            console.log("onJsonError",e)
+          }
 
         }
 

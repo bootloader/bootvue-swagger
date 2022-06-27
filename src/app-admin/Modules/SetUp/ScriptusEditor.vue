@@ -120,6 +120,7 @@
           this.load();
           let THAT = this;
           //this.loadDebugContact();
+          this.loadWebChat();
         },
         methods : {
           async load (){
@@ -204,6 +205,33 @@
             this.showTerminal = !this.showTerminal;
             this.width =  this.showTerminal ? '50%' : '100%';
             this.editorWidth = this.showTerminal ? '99%' : '100%';
+          },
+          async loadWebChat(){
+            console.log("this.$global.MyConst.cdn",this.$global.MyConst.cdn)
+            let recaptchaScript = document.createElement('script')
+            recaptchaScript.setAttribute('src', this.$global.MyConst.cdn + '/plugins/customer.js?theme=bubble');
+            recaptchaScript.innerHTML = JSON.stringify({
+                "domain" : [this.$global.MyConst.appDomain || this.$global.MyConst.tenant,this.$global.MyConst.config.PROP_SERVICE_SERVER].join("."),
+                "channelId" : "web:"+this.$global.MyConst.config.PROP_SERVICE_SERVER,
+                "channelKey" : "1gdmxikhbf5fz56SR5JRDFY",
+                "config" : {
+                      "header.bg.color" : "#1e293b",
+                      "header.text.color" : "#ffffff",
+                      "header.icon.url" : "https://cdn.jsdelivr.net/gh/mehery-soccom/mehery-web-dist@834bfa2c3b8060cac2ebcd7778758d6021be2dca/dist/logo/logo-tiny-o.png",
+                      "header.title.text" : "Support",
+                      //"header.disabled" : true,
+                      "launcher.bg.color" : "#1e293b",
+                      //"launcher.open" : true,
+                      "messageList.bg.color" : "#ffffff",
+                      "sentMessage.bg.color" : "#4e8cff",
+                      "sentMessage.text.color" : "#ffffff",
+                      "receivedMessage.bg.color" : "#eaeaea",
+                      "receivedMessage.text.color" : "#222222",
+                      "userInput.bg.color" : "#f4f7f9",
+                      "userInput.text.color" : "#565867"
+                  }
+              });
+            document.body.appendChild(recaptchaScript);
           }
         }
     }

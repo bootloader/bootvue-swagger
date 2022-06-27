@@ -143,7 +143,7 @@ export default AppRouter.route({
         {
             path : "/app/setup/company-vars",
             name: 'SetUpCompanyVars',
-            component: () => import('./Modules/SetUp/SetUpCompanyVars.vue'),    
+            component: () => import('./Modules/SetUp/SetUpGlobalVars.vue'),    
         },
         {
             path : "/app/setup/channels",
