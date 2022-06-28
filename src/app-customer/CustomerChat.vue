@@ -1,6 +1,6 @@
 <template>
   <div>
-    <beautiful-chat
+    <web-chat-launcher
       v-if="isConfigSet"
       :participants="participants"
       :onMessageWasSent="onMessageWasSent"
@@ -79,7 +79,7 @@
               {{suggestion.label}}
           </button>
       </template>
-    </beautiful-chat>
+    </web-chat-launcher>
 
   </div>
 </template>
@@ -87,12 +87,14 @@
 <script>
     import Vue from 'vue';
     //import Chat from 'vue-beautiful-chat'
-    import Chat from '@cherrybase/cherry-webchat';
-    Vue.use(Chat);
+    import WebChatLauncher from './Module/WebChatLauncher.vue';
     import AudioPlayer from '@/@common/custom/components/AudioPlayer';
     import { required, email,regex } from 'vee-validate/dist/rules';
-    import formatters from './../../services/formatters';
-    import tunnel from './../../services/tunnel';
+    import formatters from '../services/formatters';
+    import tunnel from '../services/tunnel';
+    
+    import AudioVisual from 'vue-audio-visual'
+    Vue.use(AudioVisual);
 
     var userAgent = window.navigator.userAgent.toLowerCase(),
     safari = /safari/.test( userAgent ),
@@ -126,7 +128,7 @@
     export default {
       name: 'app',
       components: {
-        AudioPlayer
+        AudioPlayer, WebChatLauncher
       },
       data() {
         return {

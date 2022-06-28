@@ -11,12 +11,8 @@
 
 <script>
   import Vue from 'vue';
-  import router from "./app-customer/router";
+  import router from "./router";
   
-  import { MyFlags,MyDict,MyConst } from './services/global';
-  import tunnel from './services/tunnel';
-  import formatters from './services/formatters';  
-
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
@@ -29,8 +25,7 @@
   })
 
   const default_layout = "default";
-  Vue.component('default-layout', () => import('./app-customer/Layout/DefaultLayout.vue'));
-  var LOADED_JS = {};
+  Vue.component('default-layout', () => import('./Layout/DefaultLayout.vue'));
   
   export default {
     name:"AppCustomer",
