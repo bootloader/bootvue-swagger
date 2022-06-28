@@ -9,7 +9,7 @@
     "build:tailwind": "tailwind build src/assets/vendor/notus/styles/index.css -o src/assets/vendor/notus/styles/tailwind.css"
   },
   "dependencies": {
-    "@cherrybase/cherry-webchat": "2.5.13",
+    "@cherrybase/cherry-webchat": "2.5.4",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
     "@fortawesome/free-solid-svg-icons": "^5.8.1",
@@ -89,16 +89,13 @@
     "vuejs-ace-editor": "^1.0.1",
     "vuewordcloud": "^18.7.12",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0",
-    "core-js": "^3.23.3"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.13.8",
-    "@babel/polyfill": "^7.12.1",
     "@vue/cli-plugin-babel": "^3.6.0",
     "@vue/cli-plugin-eslint": "^3.6.0",
     "@vue/cli-service": "^3.6.0",
-    "core-js": "^3.23.3",
     "autoprefixer": "^9.8.8",
     "babel-eslint": "^10.0.1",
     "babel-plugin-component": "^1.1.1",
