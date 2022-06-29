@@ -412,15 +412,16 @@
             plug: Boolean,
         },
         components: {
-            Loading: Loading,
-            SlideUpDown,
-            vueDropzone: vue2Dropzone,EmojiIcon,
-            ChatMessages,
-            ForEachOption,
-            getUserMedia,
-            ChatHeader,
-            ChatHeaderPlug
-        },
+    Loading: Loading,
+    SlideUpDown,
+    vueDropzone: vue2Dropzone,
+    ChatMessages,
+    ForEachOption,
+    getUserMedia,
+    ChatHeader,
+    ChatHeaderPlug,
+    EmojiIcon
+},
         computed : {
             chatLocal: function () {
                 return (this.activeChat ? this.activeChat.local : null) || {};
