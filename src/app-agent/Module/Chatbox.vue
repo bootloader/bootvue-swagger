@@ -396,7 +396,7 @@
     import AudioVisual from 'vue-audio-visual'
     import ChatHeader from './ChatHeader.vue';
     import ChatHeaderPlug from './ChatHeaderPlug.vue';
-    import EmojiIcon from '@/app-customer/Module/icons/EmojiIcon.vue'
+    import EmojiIcon from '@/@common/webchat/icons/EmojiIcon.vue'
 
     Vue.use(AudioVisual);
 

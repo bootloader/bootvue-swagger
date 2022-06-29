@@ -87,11 +87,11 @@
 <script>
     import Vue from 'vue';
     //import Chat from 'vue-beautiful-chat'
-    import WebChatLauncher from './Module/WebChatLauncher.vue';
+    import WebChatLauncher from '@/@common/webchat/WebChatLauncher.vue';
     import AudioPlayer from '@/@common/custom/components/AudioPlayer';
     import { required, email,regex } from 'vee-validate/dist/rules';
-    import formatters from '../services/formatters';
-    import tunnel from '../services/tunnel';
+    import formatters from '../../services/formatters';
+    import tunnel from '../../services/tunnel';
     
     import AudioVisual from 'vue-audio-visual'
     Vue.use(AudioVisual);

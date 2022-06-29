@@ -8,7 +8,7 @@ export default AppRouter.route({
         {
             path: '/app/chat',
             name: 'customer-chat',
-            component: () => import('./CustomerChat.vue'),
+            component: () => import('./Module/CustomerChat.vue'),
         }
     ]
 })
