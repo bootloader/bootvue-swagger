@@ -396,8 +396,7 @@
     import AudioVisual from 'vue-audio-visual'
     import ChatHeader from './ChatHeader.vue';
     import ChatHeaderPlug from './ChatHeaderPlug.vue';
-    import Chat from '@cherrybase/cherry-webchat';
-    import EmojiIcon from '@cherrybase/cherry-webchat/src/icons/EmojiIcon.vue'
+    import EmojiIcon from '@/app-customer/Module/icons/EmojiIcon.vue'
 
     Vue.use(AudioVisual);
 
