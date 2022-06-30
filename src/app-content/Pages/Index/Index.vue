@@ -271,8 +271,8 @@
                         meheryBranding: false,
                         botWorkflows: 'Basic',
                         nlpMachineLearning: false,
-
-                        facebookMessenger : true,
+                        whatsAppBizAccount:true,
+                        facebookMessenger : false,
                         instagramDM : false,
                         telegram : false,
                         twitterDM : false,
@@ -383,7 +383,7 @@
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
                         nlpMachineLearning: false,
-                        
+                        whatsAppBizAccount:true,
                         facebookMessenger : true,
                         instagramDM : true,
                         telegram : true,
@@ -480,8 +480,8 @@
                         meheryBranding: true,
                         botWorkflows: 'Basic',
                         nlpMachineLearning: false,
-
-                        facebookMessenger : true,
+                        whatsAppBizAccount:true,
+                        facebookMessenger : false,
                         instagramDM : false,
                         telegram : false,
                         twitterDM : false,
@@ -590,7 +590,7 @@
                         eCommercePluginForWA: true,
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
-
+                        whatsAppBizAccount:true,
                         facebookMessenger : true,
                         instagramDM : true,
                         telegram : true,
@@ -685,7 +685,7 @@
                         eCommercePluginForWA: true,
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
-
+                        whatsAppBizAccount:true,
                         facebookMessenger : true,
                         instagramDM : true,
                         telegram : true,
