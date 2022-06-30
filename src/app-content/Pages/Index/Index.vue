@@ -146,6 +146,47 @@
                         type: 'boolean',
                         hintText: '',
                     },
+                    channelSupported: { label: 'Channels Supported', type: 'header', hintText: '' },
+                    whatsAppBizAccount: {
+                        label: 'WhatsApp Business Account',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    facebookMessenger : {
+                        label: 'Facebook Messenger',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    instagramDM : {
+                        label: 'Instagram DM',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    telegram : {
+                        label: 'Telegram',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    twitterDM : {
+                        label: 'Twitter DM',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    webChat : {
+                        label: 'Web Chat',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    appChat : {
+                        label: 'App Chat',
+                        type: 'boolean',
+                        hintText: '',
+                    },
+                    email : {
+                        label: 'Email',
+                        type: 'boolean',
+                        hintText: '',
+                    },
                     addOn: { label: 'Add Ons', type: 'header', hintText: '' },
                     eachAdditionalAgent: {
                         label: 'Additional Agents',
@@ -189,6 +230,7 @@
                         type: 'boolean',
                         hintText: '',
                     },
+
                 },
                 apiPlanData: [
                     {
@@ -229,6 +271,15 @@
                         meheryBranding: false,
                         botWorkflows: 'Basic',
                         nlpMachineLearning: false,
+
+                        facebookMessenger : true,
+                        instagramDM : false,
+                        telegram : false,
+                        twitterDM : false,
+                        webChat : false,
+                        appChat : false,
+                        email : false,
+                        
                         eachAdditionalAgent: {
                             INR: '₹2,400',
                             USD: '$33',
@@ -332,6 +383,15 @@
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
                         nlpMachineLearning: false,
+                        
+                        facebookMessenger : true,
+                        instagramDM : true,
+                        telegram : true,
+                        twitterDM : true,
+                        webChat : true,
+                        appChat : false,
+                        email : false,
+
                         eachAdditionalAgent: 'NA',
                         apiSetup: {
                             INR: '₹ 50,000',
@@ -420,6 +480,15 @@
                         meheryBranding: true,
                         botWorkflows: 'Basic',
                         nlpMachineLearning: false,
+
+                        facebookMessenger : true,
+                        instagramDM : false,
+                        telegram : false,
+                        twitterDM : false,
+                        webChat : false,
+                        appChat : false,
+                        email : false,
+
                         eachAdditionalAgent: {
                             INR: '₹2,400',
                             USD: '$33',
@@ -521,6 +590,15 @@
                         eCommercePluginForWA: true,
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
+
+                        facebookMessenger : true,
+                        instagramDM : true,
+                        telegram : true,
+                        twitterDM : true,
+                        webChat : true,
+                        appChat : false,
+                        email : false,
+
                         nlpMachineLearning: false,
                         eachAdditionalAgent: 'NA',
                         apiSetup: {
@@ -607,6 +685,15 @@
                         eCommercePluginForWA: true,
                         meheryBranding: false,
                         botWorkflows: 'Advanced',
+
+                        facebookMessenger : true,
+                        instagramDM : true,
+                        telegram : true,
+                        twitterDM : true,
+                        webChat : true,
+                        appChat : true,
+                        email : true,
+
                         nlpMachineLearning: true,
                         eachAdditionalAgent: 'NA',
                         apiSetup: {
