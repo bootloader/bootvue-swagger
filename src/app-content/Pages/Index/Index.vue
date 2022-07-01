@@ -146,7 +146,7 @@
                         type: 'boolean',
                         hintText: '',
                     },
-                    channelSupported: { label: 'Channels Supported', type: 'header', hintText: '' },
+                    channelSupported: { label: 'Channels', type: 'header', hintText: '' },
                     whatsAppBizAccount: {
                         label: 'WhatsApp Business Account',
                         type: 'boolean',
