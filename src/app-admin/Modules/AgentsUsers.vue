@@ -85,7 +85,8 @@
 
                             <div class="row">
                               <div class="position-relative form-group col-md-6">
-                                  <base-input prepend="@" format-filter="item_code" :format-value="newItem.name" format-live
+                                  <base-input prepend="@" 
+                                    :format-value="newItem.id ? newItem.code : newItem.name" format-filter="item_code" format-live
                                     v-model="newItem.code" label="Username" :readonly="newItem.id"
                                     placeholder="john,sam2" autocomplete="off">
                                   </base-input>
@@ -102,8 +103,7 @@
                               <div class="col-md-6">
                                 <div class="position-relative form-group"><label for="exampleSelect" class="">Team</label>
                                   <select name="select" id="exampleSelect" class="form-control" v-model="newItem.dept_id">
-                                      <option v-for="team in teams"
-                                        v-if="team.isactive=='Y'" :value=team.id>
+                                      <option v-for="team in teams" v-bind:key="team.id" :value=team.id>
                                         {{team.name}}</option>
                                       </select>
                                 </div>
@@ -115,21 +115,6 @@
                               </div>
 
                               </div>
-                               <div class="col-md-6" hidden>
-                                  <div class="position-relative form-group">
-                                    <label for="exampleCustomMutlipleSelect" class="">Channels</label>
-                                    <label for="select-all-channel" class="float-right">Select All
-                                        <input type="checkbox" name="select-all-channel" @change="selectAllChannel"
-                                        v-model="isSelectAllChannel"></label>
-                                    
-                                    <select multiple="" type="select" id="exampleCustomMutlipleSelect"
-                                             name="customSelect" class="custom-select" @change="selectChannel"
-                                             v-model="newItem.channels">
-                                            <option v-for="channel in channels">{{channel}}</option>
-                                    </select>
-                                </div>
-                               </div>
-
                             </div>
  
                   </ValidationObserver>
@@ -167,8 +152,8 @@
       return {
               "name" : null,
               "agent_email": "", code : "",
-              "dept_id" : null,
-              "channels": [],"agent_channels" : "", admin : false
+              "dept_id" : null, agent_password : "",
+              admin : false
             };
     }
     export default {
@@ -189,7 +174,6 @@
                 { key : 'name', label : "Name" , sortable: true},
                 { key : 'code', label : "Username", sortable: true }, 
                 { key : 'agent_email', label : "Email" , sortable: true},
-              //    { key : 'channels', label : "Channels", class : "upper-case" },
                 { key : 'actions', label : "Action" }],
               busy : false,
               sortBy: 'name',
@@ -200,10 +184,8 @@
                code:"",
                agent_email:""
            },
-          channels : ["WHATSAPP","FACEBOOK","TWITTER","TELEGRAM","WEBSITE"],
           newItem : newItem(),
           modelName :  "MODAL_ADD_USERS",
-          isSelectAllChannel : false
         }),
         computed : {
             filtered() {
@@ -227,7 +209,9 @@
                     ];
             },
             teams : function (argument) {
-              return this.$store.getters.StateTeams;
+              return (this.$store.getters.StateTeams || []).filter(function(team){
+                return team.isactive=='Y';
+              });
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
@@ -282,7 +266,6 @@
               for(var i in item){
                 this.newItem[i] = item[i];
               }
-              this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },
@@ -290,7 +273,6 @@
             switch(argument.name){
               case "ADD_ITEM" :
                 this.oldHash = JSON.stringify(this.newItem);
-                this.selectChannel();
                 this.$bvModal.show(this.modelName)
                 console.log("ADD_ITEM",argument);
                 break;
@@ -305,15 +287,6 @@
               default:
                 console.log("NoMapping",argument) 
             }
-          },
-          //Customer function
-          selectAllChannel : function (argument) {
-            this.newItem.channels = (!this.isSelectAllChannel) ? [] : this.channels.map(function(ch) {
-              return ch
-            });
-          },
-          selectChannel : function () {
-             this.isSelectAllChannel = (this.newItem.channels.length == this.channels.length);
           }
         }
 
