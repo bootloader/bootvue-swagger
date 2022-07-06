@@ -19,7 +19,9 @@
         </div>
         <div class="app-sidebar-content">
             <VuePerfectScrollbar class="app-sidebar-scroll" v-once>
-                <sidebar-menu showOneChild :menu="menu" hideToggle="true" />
+                <sidebar-menu showOneChild rtl :menu="menu" 
+                hideToggle="true"
+                 />
             </VuePerfectScrollbar>
         </div>
 
@@ -504,8 +506,19 @@
     .v-sidebar-menu .vsm-icon.fab,
     .v-sidebar-menu .vsm-icon.fas,
     .v-sidebar-menu .vsm-icon.fa {
-        font-size: 18px !important;
+        font-size: 15px !important;
         opacity: 0.3;
     }
-
+    .v-sidebar-menu .vsm-item {
+        line-height: 1.6rem!important;
+    }
+    .v-sidebar-menu .vsm-link {
+        height: 1.6rem!important;
+        line-height: 1.6rem!important;
+    }
+    .v-sidebar-menu .vsm-title {
+        font-size: 14px !important;
+        line-height: 1.6rem;
+        height: 1.6rem;
+    }
 </style>

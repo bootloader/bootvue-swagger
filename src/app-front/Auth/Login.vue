@@ -161,6 +161,7 @@
                   <input name="domainId" :value="model.domainId" type="hidden"/>
                   <input name="domainToken" :value="model.domainToken" type="hidden"/>
                   <input name="domainUser" :value="model.domainUser" type="hidden"/>
+                  <input name="domainUserEmail" :value="model.domainUserEmail" type="hidden"/>
               </form>
             </div>
           </div>
@@ -300,7 +301,9 @@ export default {
           this.model.domainId = resp.data.domainId;
           this.model.domainToken = resp.data.domainToken;
           this.model.domainUser = resp.data.domainUser;
+          this.model.domainUserEmail = resp.data.domainUserEmail;
           var THAT = this;
+          console.log("formUrl",this.formUrl);
           if(this.model.domainToken){
             setTimeout(function(){
                THAT.$refs.loginForm.submit();
