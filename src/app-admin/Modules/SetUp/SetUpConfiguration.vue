@@ -114,6 +114,7 @@
                           <BaseVSelect v-else class="w-100"
                             v-model="oneItem.config.value" size="sm"
                             :options="oneItem.meta.options"
+                             clearable searchable filterable
                             placeholder="Select Language"
                         />
                     </span>
