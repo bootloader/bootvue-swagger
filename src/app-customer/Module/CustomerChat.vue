@@ -39,9 +39,9 @@
             v-if="message.data.attachments && message.data.attachments.length>0">
             <span  v-for="atch in message.data.attachments" :key="atch.mediaURL">
                 <img v-if="atch.mediaType == 'IMAGE'"  
-                    :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https">
+                    :src="atch.mediaURL | https | thumburl" class="" :data-full-src="atch.mediaURL | https" @click="e => downloadImage(e,atch.mediaURL)">
                 <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
-                                :file="atch.mediaURL"
+                                :file="atch.mediaURL | https"
                             ></audio-player>
                 <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
                 <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
@@ -201,6 +201,11 @@
         }
       },
       methods: {
+        downloadImage(e,url){
+            let nUrl = new URL(url);
+            nUrl.protocol = "https:";
+            window.open(nUrl, '_blank');
+        },
         sendMessage (text) {
           if (text.length > 0) {
             this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1;
@@ -249,7 +254,7 @@
             message.id = _msg.id;
             message.data.timestamp = _msg.data.timestamp;
             message.data.attachments = _msg.data.attachments;
-            this.addMessage(_msg);
+            ///this.addMessage(_msg);
             return;
         }
 

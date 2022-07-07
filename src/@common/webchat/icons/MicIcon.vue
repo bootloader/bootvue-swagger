@@ -88,12 +88,12 @@ export default {
     openAudioRecord: function () {
       this.isActive = !this.isActive
       let chunks = []
-      let _THAT = this
+      let _THAT = this;
       getUserMedia({audio: true})
         .then(function (stream) {
           _THAT.media = stream
-          const mime = 'audio/webm;codecs=opus'
-          _THAT.mediaRecorder = new MediaRecorder(_THAT.media, {mimeType: mime})
+          const mime = 'video/mp4; codecs="avc1.424028, mp4a.40.2"'
+          _THAT.mediaRecorder = new MediaRecorder(_THAT.media)
           _THAT.mediaRecorder.start()
           _THAT.mediaRecorder.onstop = function (e) {
             if (_THAT.uploadRecording) {
@@ -101,22 +101,14 @@ export default {
               _THAT.media.getTracks().forEach((track) => track.stop())
               chunks = []
               _THAT.mediaRecorder = null
-              // let reqObj = {
-              //   message: _THAT.prepareMessage(null, null, null, true),
-              //   file: blob,
-              //   fileName: 'Recording.mp3'
-              // }
               let audioFile = new File([blob], "Recording.mp3", {
                 type: 'audio/mpeg'
               });
               _THAT.onChange(audioFile);
-              // _THAT.$store.dispatch('SendFile', reqObj)
-              _THAT.winMode = 'CHAT_BOX'
             } else {
               _THAT.media.getTracks().forEach((track) => track.stop())
               chunks = []
               _THAT.mediaRecorder = null
-              _THAT.winMode = 'CHAT_BOX'
             }
           }
           _THAT.mediaRecorder.ondataavailable = function (e) {
@@ -124,7 +116,7 @@ export default {
           }
         })
         .catch(function (error) {
-          Vue.$toast.error('Please enable Microphone')
+          console.error(error);
         })
     },
     onSendRecording() {

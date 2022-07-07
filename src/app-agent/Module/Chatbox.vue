@@ -1088,8 +1088,7 @@
                     .then(function(stream) {
                         _THAT.winMode = "RECORD_AUDIO";
                         _THAT.media = stream;
-                        const mime = "audio/webm;codecs=opus"
-                        _THAT.mediaRecorder = new MediaRecorder(_THAT.media, {mimeType: mime});
+                        _THAT.mediaRecorder = new MediaRecorder(_THAT.media);
                         _THAT.mediaRecorder.start();
                         _THAT.mediaRecorder.onstop = function(e) {
                             if(_THAT.uploadRecording){
