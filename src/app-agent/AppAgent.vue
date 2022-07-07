@@ -26,7 +26,7 @@
   import 'viewerjs/dist/viewer.css'
   import Viewer from 'v-viewer'
   Vue.use(Viewer)
-
+  import notyAudioUrl from "@/assets/sound/alert.mp3";
   import VueScrollTo from 'vue-scrollto';
   Vue.use(VueScrollTo);
 
@@ -67,7 +67,8 @@
       }
     },
     data: () => ({
-      refreshTimer :0 
+      refreshTimer :0 ,
+      notyAudio: new Audio(notyAudioUrl)
     }),
     methods : {
       async refresh(){
@@ -80,7 +81,14 @@
         this.refreshTimer = window.setTimeout(function () {
            THIS.refresh();
         }, (this.$tunnel.connected ? 10000 : 1000));
-      }
+      },
+      playNotification(){
+        const promise = this.notyAudio.play();
+
+        if (promise !== undefined) {
+            promise.then(() => {}).catch(error => console.error);
+        }
+      },
     },
     created (){
       this.$store.registerModule("DataStore",DataStore);
@@ -116,6 +124,7 @@
             console.debug("/message/receive/new:msg===",msg);
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
+            THAT.playNotification();
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
             console.debug("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
              THAT.$store.dispatch('AddChat', testresponse);

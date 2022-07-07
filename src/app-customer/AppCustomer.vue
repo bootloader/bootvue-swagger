@@ -23,7 +23,12 @@
     attempt: 1,
     throttleWait : 1000
   })
-
+  import VueNativeNotification from 'vue-native-notification'
+  Vue.use(VueNativeNotification, {
+    // Automatic permission request before
+    // showing notification (default: true)
+    requestOnNotify: true
+  });
   const default_layout = "default";
   Vue.component('default-layout', () => import('./Layout/DefaultLayout.vue'));
   
