@@ -141,7 +141,11 @@ export default {
   max-width: calc(100% - 120px);
   word-wrap: break-word;
 }
-
+@media screen and (max-width: 479px){
+    .sc-message--content.sent .sc-message--text {
+        max-width: 100%;
+    }
+}
 .sc-message--content.received .sc-message--text {
   color: #263238;
   background-color: #f4f7f9;
