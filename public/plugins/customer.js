@@ -60,8 +60,6 @@
                 }
                 .myChatDivOpen#myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 
-                    width:100%;
-                    height:100%;
                 }
                 .myChatDivOpen#myChatDiv #myChatTitleBar {
                     display : none;
@@ -72,12 +70,12 @@
                     height: calc(100vh - 55px);
                     max-height: ${maxHeight}px;
                 }
-                @media (max-width: 479px) {
+                @media (max-width: 450px) {
                     .myChatDivOpen#myChatDiv,
                     .myChatDivOpen#myChatDiv #myChatFrame #myChatIFrame-${UNIQUEID} {
-                        width: 100%;
-                        height: 100%;
-                        max-height: 100%;
+                        width: 100vw;
+                        height: 100vh;
+                        max-height: 100vh;
                         right: 0;
                         bottom: 0;
                         border-radius: 0px!important;

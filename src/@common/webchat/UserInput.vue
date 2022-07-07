@@ -339,7 +339,7 @@ export default {
   border-bottom-left-radius: 10px;
   box-sizing: border-box;
   padding: 18px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.33;
   white-space: pre-wrap;
   word-wrap: break-word;
