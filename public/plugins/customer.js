@@ -38,14 +38,15 @@
             <style>
                 #myChatDiv {
                     height: ${minHeight+2}px; width: ${minWidth+2}px; 
-                    position: fixed; bottom: 0px; right:0px; z-index: 1000; 
+                    position: fixed; bottom: 0px; right:0px; z-index: 100000; 
                     background-color: transparent; 
-                    overflow:hidden;
                     padding:0px!important; 
                     margin:0px!important
                 }
                 #myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 
+                    position:relative;
+                    bottom:0;
                 }
                 #myChatDiv #myChatFrame #myChatIFrame-${UNIQUEID} {
                     border-width: 0px; 
