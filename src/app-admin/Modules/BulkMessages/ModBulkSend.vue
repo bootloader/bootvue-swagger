@@ -316,7 +316,7 @@
                 return !!argument
               })
             });
-           // this.$router.push("/app/moderate/bulk-push-jobs");
+            this.$router.push("/app/moderate/bulk-push-jobs");
           }
 
         }
