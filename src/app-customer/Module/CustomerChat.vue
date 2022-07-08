@@ -488,6 +488,10 @@
             myChatEvent.options.config = null;
             delete myChatEvent.options.config;
             this.options = Object.assign({},this.options,myChatEvent.options);
+            if(!this.options.channelId){
+              this.options.channelId = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL;
+              this.options.channelKey = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_KEY;
+            }
             this.onOptionSet();
         }
       },

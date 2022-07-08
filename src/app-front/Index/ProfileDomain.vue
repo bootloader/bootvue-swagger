@@ -246,8 +246,8 @@ export default {
       recaptchaScript.setAttribute('src', this.$global.MyConst.cdn + '/plugins/customer.js?theme=bubble');
       recaptchaScript.innerHTML = JSON.stringify({
           "domain" : [this.$global.MyConst.appDomain,this.$global.MyConst.config.PROP_SERVICE_SERVER].join("."),
-          "channelId" : "web:"+this.$global.MyConst.config.PROP_SERVICE_SERVER,
-          "channelKey" : "1gdmxikhbf5fz56SR5JRDFY",
+          //"channelId" :  this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL,
+          //"channelKey" : this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_KEY,
           "config" : {
                 "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",
