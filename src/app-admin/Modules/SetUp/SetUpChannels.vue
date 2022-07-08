@@ -281,7 +281,7 @@
                   config : { 
                     key : meta.key,
                     path : meta.path,
-                    value : JsonXPath({ path : '$.'+key,json : item})[0] || meta.defaultValue || ""
+                    value : JsonXPath({ path : '$.'+key,json : item})[0]
                   }
                 }
               });

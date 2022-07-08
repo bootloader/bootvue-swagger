@@ -24,7 +24,9 @@
                 </BaseVSelect>
                 <ButtonRadioGroup v-else-if="input.meta.inputType=='OPTIONS'"
                     :name="(input.meta.title || input.meta.key)"
-                        v-model="input.config.value" size="sm"
+                        v-model="input.config.value"
+                        :value="input.meta.defaultValue"
+                         size="sm"
                         :options="input.meta.options"
                         :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                         @change="onChange(input.meta,input.config)"
