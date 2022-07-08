@@ -302,7 +302,7 @@
             let paths = (path||"").split("/");
             let script =  (
 `       <!-- Add this snippt as last tag in body -->
-<script src='https://cdn.jsdelivr.net/gh/cherrybase/cherrybase.github.io@gh-pages/plugins/customer.js?theme=bubble'>
+<script src='https://mehery.pages.dev/plugins/customer.js'>
 {
   "domain" : "${this.$global.MyConst.tenant}.${this.$global.MyConst.config.PROP_SERVICE_SERVER}",
   "channelId" : "${paths[6]}",
