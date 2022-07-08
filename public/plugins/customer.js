@@ -81,6 +81,7 @@
                         bottom: 0;
                         border-radius: 0px!important;
                         transition: .1s ease-in-out;
+                        z-index:100000;
                     }
                 }
 
