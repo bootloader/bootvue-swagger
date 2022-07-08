@@ -38,7 +38,7 @@
             <style>
                 #myChatDiv {
                     height: ${minHeight+2}px; width: ${minWidth+2}px; 
-                    position: fixed; bottom: 0px; right:0px; z-index: 100000; 
+                    position: fixed; bottom: 0px; right:0px; z-index:1000000; 
                     background-color: transparent; 
                     padding:0px!important; 
                     margin:0px!important
