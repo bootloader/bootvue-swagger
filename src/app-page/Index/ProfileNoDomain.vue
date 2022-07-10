@@ -33,7 +33,7 @@
 <script>
 import socialBgBottomRight from "@/assets/vendor/notus/img/social-bg-bottom-right.png";
 import socialBgBottom from "@/assets/vendor/notus/img/social-bg-bottom.png";
-import FooterSmall from "./../Auth/FooterSmall.vue";
+import FooterSmall from "./FooterSmall.vue";
 
 export default {
   components: {

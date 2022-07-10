@@ -182,7 +182,7 @@
   </div>
 </template>
 <script>
-import Navbar from "../Auth/AuthNavbar.vue";
+import Navbar from "./ProfileNavbar.vue";
 import FooterComponent from "./Footer.vue";
 import SocialBoxes from "./SocialBoxes.vue";
 

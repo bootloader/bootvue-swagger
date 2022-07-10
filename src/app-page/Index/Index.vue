@@ -1,14 +1,10 @@
 <template>
   <div>
-    <ProfileApp v-if="isDefaultDomain">
-    </ProfileApp>
-    <ProfileDomain v-else>
+    <ProfileDomain>
     </ProfileDomain>
-
   </div>
 </template>
 <script>
-import ProfileApp from "./ProfileApp.vue";
 import ProfileDomain from "./ProfileDomain.vue";
 
 export default {
@@ -29,7 +25,6 @@ export default {
     },
   },
   components: {
-    ProfileApp,
     ProfileDomain,
   },
 };

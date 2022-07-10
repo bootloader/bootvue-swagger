@@ -11,10 +11,6 @@ export default AppRouter.route({
           name : "app"
         },
         {
-          path: "/page/more",
-          component: () => import('./Index/IndexMore.vue'),
-        },
-        {
           path: "/page/pub/read/:content",
           component: () => import('./Index/ReadGuide.vue'),
         },
