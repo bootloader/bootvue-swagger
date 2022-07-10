@@ -46,6 +46,13 @@ module.exports = {
     },
 
     pages : {
+      'page' : {
+        entry: './src/main.js',
+        template: 'public/app-page.html',
+        filename: 'app-page.html',
+        title: 'Page',
+        chunks: ['chunk-vendors', 'chunk-common', 'page']
+      },
       'front' : {
         entry: './src/main.js',
         template: 'public/app-front.html',

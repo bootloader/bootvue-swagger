@@ -99,7 +99,7 @@ import AppWrapper from './AppWrapper';
 		component : () => import('./app-front/AppFront.vue')
 	},
 	"page" : { //Account App
-		component : () => import('./app-front/AppFront.vue')
+		component : () => import('./app-page/AppPage.vue')
 	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
