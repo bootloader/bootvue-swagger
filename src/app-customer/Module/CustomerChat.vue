@@ -142,7 +142,7 @@
           config : {
             header : {
               icon : {
-                url: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png'
+                url: this.$global.MyConst.cdn + "/_common/static/support.png",
               },
               title : {
                 text : "Support"

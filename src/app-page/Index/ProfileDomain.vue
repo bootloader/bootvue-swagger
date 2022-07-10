@@ -251,7 +251,7 @@ export default {
           "config" : {
                 "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",
-                "header.icon.url" : "https://cdn.jsdelivr.net/gh/mehery-soccom/mehery-web-dist@834bfa2c3b8060cac2ebcd7778758d6021be2dca/dist/logo/logo-tiny-o.png",
+                //"header.icon.url" : this.$global.MyConst.cdn + "/_common/static/support.png",
                 "header.title.text" : "Support",
                 //"header.disabled" : true,
 

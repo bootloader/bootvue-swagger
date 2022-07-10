@@ -87,7 +87,7 @@
   </nav>
 </template>
 <script>
-import LoginDropdown from "./../Index/LoginDropdown.vue";
+import LoginDropdown from "./LoginDropdown.vue";
 
 export default {
   data() {
