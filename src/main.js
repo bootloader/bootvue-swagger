@@ -98,6 +98,9 @@ import AppWrapper from './AppWrapper';
 	"front" : { //Account App
 		component : () => import('./app-front/AppFront.vue')
 	},
+	"page" : { //Account App
+		component : () => import('./app-front/AppFront.vue')
+	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
 	},
