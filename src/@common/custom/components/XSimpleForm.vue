@@ -36,10 +36,6 @@
                        <span> <MyIcon type="infoType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
                       <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
-                <!-- <vue-json-editor v-else-if="input.meta.inputType == 'JSON'"
-                        v-model="input.config.value" :show-btns="false" 
-                        :expandedOnStart="true" 
-                        @json-change="onChange(input.meta,input.config)"></vue-json-editor> -->
                 <v-jsoneditor v-else-if="input.meta.inputType == 'JSON'"
                     v-model="input.config.value" :options="{
                       mode : 'code', mainMenuBar : false,
@@ -79,11 +75,10 @@
 <script>
 
     import VJsoneditor from 'v-jsoneditor'
-      import vueJsonEditor from 'vue-json-editor'
     export default {
         name: "x-simple-form",
         components: {
-            VJsoneditor,vueJsonEditor
+            VJsoneditor
         },
         props: {
             inputs: {
