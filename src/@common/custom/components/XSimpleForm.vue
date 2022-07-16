@@ -36,7 +36,17 @@
                        <span> <MyIcon type="infoType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
                       <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
-               <base-input v-else  class="mb-0" :size="size"
+                <!-- <vue-json-editor v-else-if="input.meta.inputType == 'JSON'"
+                        v-model="input.config.value" :show-btns="false" 
+                        :expandedOnStart="true" 
+                        @json-change="onChange(input.meta,input.config)"></vue-json-editor> -->
+                <v-jsoneditor v-else-if="input.meta.inputType == 'JSON'"
+                    v-model="input.config.value" :options="{
+                      mode : 'code', mainMenuBar : false,
+                      onChange : ()=>onChange(input.meta,input.config)
+                    }" :plus="false" height="400px" @error="onJsonError"
+                    />
+                <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)"
                     v-model="input.config.value" 
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
@@ -68,9 +78,12 @@
 
 <script>
 
+    import VJsoneditor from 'v-jsoneditor'
+      import vueJsonEditor from 'vue-json-editor'
     export default {
         name: "x-simple-form",
         components: {
+            VJsoneditor,vueJsonEditor
         },
         props: {
             inputs: {
@@ -109,6 +122,9 @@
             },
             getOutput() {
                 return inputs;
+            },
+            onJsonError(e){
+                console.log("onJsonError",e)
             }
         }
     };

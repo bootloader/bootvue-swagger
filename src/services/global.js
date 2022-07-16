@@ -158,9 +158,19 @@ export const MyFunc  = {
 	}
 }
 
+export const Event = {
+	fp(callback){
+		if(window.CONST.fp){
+			callback(window.CONST.fp);
+		} else {
+			setTimeout(()=>Event.fp(callback),1500);
+		}
+	}
+};
+
 Vue.prototype.$config = MyConst.config;
 Vue.prototype.$global = {
-	MyConst,MyFlags,MyDict,MyFunc,User,
+	MyConst,MyFlags,MyDict,MyFunc,User,Event,
 	//Flags
 	isMobileApp : (window.CONST.APP_VIEW == "mobile")
 };

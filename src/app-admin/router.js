@@ -146,6 +146,11 @@ export default AppRouter.route({
             component: () => import('./Modules/SetUp/SetUpGlobalVars.vue'),    
         },
         {
+            path : "/app/setup/token-keys",
+            name: 'SetUpTokenKeys',
+            component: () => import('./Modules/SetUp/SetUpTokenKeys'),    
+        },
+        {
             path : "/app/setup/channels",
             name: 'SetUpChannels',
             component: () => import('./Modules/SetUp/SetUpChannels.vue'),    

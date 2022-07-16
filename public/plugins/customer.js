@@ -6,6 +6,7 @@
     var minWidth = 70;
     var UNIQUEID = '3ix5ju9kqbtr2W';
     var OPTIONS = {};
+    var EVENTS = {};
 
     var myChat = {
         init : function (options) {
@@ -103,18 +104,20 @@
 
 
         },
-
         open : function(){
             this.postMessage( { event : "CHAT_TOGGLE" });
         },
         ON_CHAT_LOAD : function () {
            this.postMessage({event : "SET_OPTIONS", options : OPTIONS });
+           if(EVENTS.load)  EVENTS.load(OPTIONS);
         },
         chatOnClose : function (argument) {
             this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivOpen",'myChatDivClose');
+            if(EVENTS.close)  EVENTS.close(argument);
         },
         chatOnOpen : function (argument) {
             this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivClose",'myChatDivOpen');
+            if(EVENTS.open)  EVENTS.open(argument);
         },
         postMessage : function (obj) {
             var msg = JSON.stringify({myChatEvent : obj});
@@ -127,6 +130,10 @@
             } else if (element.attachEvent) {
                 element.attachEvent('on' + eventName, eventHandler);
             }
+        },
+        on : function(event,callback){
+            EVENTS[event] = callback;
+            return this;
         }
     };
 

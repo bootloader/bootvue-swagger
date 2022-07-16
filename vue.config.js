@@ -53,6 +53,13 @@ module.exports = {
         title: 'Page',
         chunks: ['chunk-vendors', 'chunk-common', 'page']
       },
+      'contak' : {
+        entry: './src/main.js',
+        template: 'public/app-contak.html',
+        filename: 'app-contak.html',
+        title: 'contak',
+        chunks: ['chunk-vendors', 'chunk-common', 'contak']
+      },
       'front' : {
         entry: './src/main.js',
         template: 'public/app-front.html',

@@ -1,8 +1,9 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
     :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size]">
-    <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
+    <b-form-group class="form-group-input" :label-for="'fmg-' + inputId"
       :class="[
+        label+name+inputId,
         {'is-question': question }
       ]">
       <slot name="label">
@@ -69,13 +70,14 @@
             <b-button v-clipboard:copy="value" 
                 variant="outline-success fa fa-clipboard"></b-button>
         </div> 
-        <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
+        <div v-if="append || appendIcon || $slots.append || textLimit>0" class="input-group-append">
           <span class="input-group-text">
-              <slot name="append">
+              <slot name="append" >
                   <span v-if="textLimit>0" class="">
                     {{value ? value.length : 0}}/{{textLimit}}
                   </span>
-                  <i v-else :class="appendIcon"></i>
+                  <i v-else-if="appendIcon" :class="appendIcon"></i>
+                  <span v-else-if="append">{{append}}</span>
               </slot>
           </span>
         </div>
@@ -86,7 +88,7 @@
             {{helpMessage || $attrs.placeholder}}
           </div>
       </slot>
-      <password-meter v-show="strengthBar" :password="value" @score="listeners.score" />
+      <password-meter v-show="strengthBar" :password="`${value}`" @score="listeners.score" />
       <slot name="success">
         <div class="valid-feedback" v-if="valid && validated && successMessage">
           {{successMessage}}
@@ -199,6 +201,8 @@
       appendIcon: {
         type: String,
         description: "Append icon (right)"
+      },
+      append : {
       },
       prepend : {
          type: String

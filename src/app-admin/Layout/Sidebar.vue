@@ -233,6 +233,12 @@
                     },
                     {
                         enabled: true,
+                        href: '/app/setup/token-keys',
+                        title: 'Token & Keys',
+                        icon: 'pe-7s-key fa fa-code',
+                    },
+                    {
+                        enabled: true,
                         href: '/app/setup/client-api-keys',
                         title: 'Client Apps',
                         icon: 'pe-7s-key fa fa-th-large',

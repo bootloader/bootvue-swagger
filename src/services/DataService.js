@@ -32,7 +32,7 @@ let myRespInterceptor = axios.interceptors.response.use(
     //console.log("myRespInterceptor:error",error.response,s);
     let response  = error.response;
     let config = error.config;
-    if(config.toast!==false  && response.data && response.data.message){
+    if(config.toast!==false && response.data && response.data.message){
       if(Vue.$toast && Vue.$toast.error)
         Vue.$toast.error(response.data.message)
     }
@@ -235,6 +235,16 @@ const DataService = {
   },
   async store( namespace,key,item){
     store.dispatch('UpdateLocalStore',{ namespace : namespace, key : key, data : item })
+  },
+  localStorage : {
+    get(key){
+      return JSON.parse(window.localStorage.getItem('service.storage.'+key) || '{}').value;
+    },
+    set(key,value){
+      window.localStorage.setItem('service.storage.'+key,JSON.stringify({
+        value : value
+      }));
+    }
   }
 };
 

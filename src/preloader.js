@@ -20,6 +20,8 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 	window.CONST.APP = "front";
 }else if(pathname.indexOf("/page") == 0){
 	window.CONST.APP = "page";
+}else if(pathname.indexOf("/contak") == 0){
+	window.CONST.APP = "contak";
 }
 window.callMobileEventListener = function(options){
 	console.log("callMobileEventListener",options)

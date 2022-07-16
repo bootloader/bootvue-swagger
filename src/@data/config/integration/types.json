@@ -1,0 +1,16 @@
+{
+    "options": [
+        {
+            "code": "text",
+            "name": "Plan Text"
+        },
+        {
+            "code": "json",
+            "name": "Plain JSON"
+        },
+        {
+            "code": "wit",
+            "name": "WIT.ai"
+        }
+    ]
+ }
