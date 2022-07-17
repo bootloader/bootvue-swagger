@@ -70,8 +70,9 @@
             <b-button v-clipboard:copy="value" 
                 variant="outline-success fa fa-clipboard"></b-button>
         </div> 
-        <div v-if="append || appendIcon || $slots.append || textLimit>0" class="input-group-append">
-          <span class="input-group-text">
+        <div v-if="append || appendIcon || $slots.append || (textLimit>0) ||  $slots.actions" class="input-group-append">
+          <span v-if="append || appendIcon || $slots.append || (textLimit>0)" 
+            class="input-group-text">
               <slot name="append" >
                   <span v-if="textLimit>0" class="">
                     {{value ? value.length : 0}}/{{textLimit}}
@@ -80,6 +81,8 @@
                   <span v-else-if="append">{{append}}</span>
               </slot>
           </span>
+          <slot name="actions" >
+          </slot>  
         </div>
         <slot name="infoBlock"></slot>
       </div>

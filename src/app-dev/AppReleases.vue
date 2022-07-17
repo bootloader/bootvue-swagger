@@ -69,6 +69,28 @@
                     </b-card-body>
                 </b-card>
             </b-tab>
+            <b-tab title="Controller">
+               <b-card no-body class="bg-secondary border-0 " >
+                    <b-card-body class="px-lg-5 py-lg-2" >
+                        <base-input size="sm" label="Config" prelabel readonly
+                            value=" Clear all config cache">
+                            <template #actions>
+                                <b-button class="w-20" @click="clearCache"
+                                    variant="outline-success">
+                                    Clear</b-button>
+                            </template>    
+                        </base-input>
+                         <base-input size="sm" label="CDN" prelabel readonly
+                            value=" Reset to master Config">
+                            <template #actions>
+                                <b-button class="w-20" @click="resetCDN"
+                                    variant="outline-success">
+                                    Reset</b-button>
+                            </template>    
+                        </base-input>
+                    </b-card-body>
+                </b-card>
+            </b-tab>
         </b-tabs>
         </div>
 
@@ -82,12 +104,14 @@
 </template>
 <script>
     import BaseCopy from "@/@common/argon/components/BaseCopy.vue";
+import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
 
     //let baseUrl = "https://pure-citadel-90943.herokuapp.com/https://api.github.com/";
   let baseUrl = "https://api.github.com/";
   export default {
       components : {
-          BaseCopy
+          BaseCopy,
+            BaseInput
       },
       data : () => ({
           tab : null,
@@ -256,6 +280,16 @@
                 }).catch(function(e){
                     console.error(e);
                 });
+        },
+        async clearCache(){
+            fetch(new Request(`/pub/amx/config/shared/clear/all`, {
+                method: 'GET'
+            }))
+        },
+        async resetCDN(){
+            fetch(new Request(`/api/config?key=mry.cdn.url`, {
+                method: 'DELETE'
+            }))
         }
       }
   }
