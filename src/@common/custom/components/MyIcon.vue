@@ -21,6 +21,40 @@ var MAP = {
         'agent' : ['fa fa-user-secret'],
         'webhook' : ['openwebicons-webhooks']
     },
+    channel : {
+        '_' : [''],
+        'twitter' : ['fa fa-twitter'],
+        'facebook' : ["fa fa-facebook"],
+        'telegram' : ['fa fa-telegram'],
+        'whatsapp' : ['fa fa-whatsapp'],
+        'instagram' : ['fa fa-instagram'],
+        'email' : ['fas fa-envelope'],
+        'website' : ['fa fa-chrome'],
+        '$' : function(value, status, meta){
+		    value = value || "";
+            if(this[value]){
+                return this[value];
+            }
+            let prefix = value.split(":")[0];
+            switch(prefix){
+                case 'tw':
+                    return this['twitter'];
+                case 'fb':
+                    return this['facebook'];
+                case 'tg':
+                    return this['telegram'];
+                case 'wa360':
+                case 'wa':
+                    return this['whatsapp'];
+                case 'ig':
+                    return this['instagram'];
+                case 'mailto':
+                    return this['email'];
+                default:
+                    return this['website'];
+            }
+        }
+    },
     senderType : {
         '_' : [''],  '$' : ['fa fa-th-large'],
         'bot' : ["fa fa-robot"],

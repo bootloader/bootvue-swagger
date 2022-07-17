@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-mod-bulk-send">
         <page-title :heading=heading :subheading=subheading :icon=icon :actions=actions
         @action="onAction"></page-title>
 
@@ -57,6 +57,14 @@
                                     <div> <my-icon type="messageType" :value="item.formatType"></my-icon>&nbsp;{{ item.desc}}</div>
                                     <small class="btn btn-xs btn-outline-grey text-whites text-xxs mg-1">{{item.category}}</small>
                                     <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
+                                    <small class="text-md mg-2 btn-xs" 
+                                      v-for="link in item.approved" v-bind:key="link.templateId"
+                                      v-show="link.channelId == input.lane.selected.channelId"
+                                      >
+                                      <my-icon type="channel" :value="link.channelId" :status="link.status"
+                                        v-tooltip="`This template is ${link.status} for channel ${link.channelId}`"
+                                      ></my-icon>  
+                                    </small>
                                   </span>  
                               </template>
                               <template #open-indicator="{ attributes }">
@@ -67,6 +75,14 @@
                                   <i class="d-block text-xs">{{ item.name }}</i>
                                   <small class="btn btn-xs btn-outline-grey text-whites text-xxs mg-1">{{item.category}}</small>
                                   <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
+                                  <small class="text-md mg-2 btn-xs float-right" 
+                                    v-for="link in item.approved" v-bind:key="link.templateId"
+                                    v-show="link.channelId == input.lane.selected.channelId"
+                                    >
+                                    <my-icon type="channel" :value="link.channelId" :status="link.status"
+                                      v-tooltip="`This template is ${link.status} for channel ${link.channelId}`"
+                                    ></my-icon>  
+                                  </small>
                               </template>
                         </base-v-select>
                       <br>
@@ -137,6 +153,7 @@
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
     import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
+import SmartConversations from '../../../app-content/Pages/Pricing/SmartConversations.vue';
 
     function newItem() {
       return {
@@ -156,7 +173,8 @@
     export default {
         components: {
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview,
-                BaseVSelect,VGrid
+                BaseVSelect,VGrid,
+                SmartConversations
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -326,6 +344,12 @@
 <style lang="scss">
   @import "@/assets/demo-ui/_chat-preview.scss";
 
+ .m-mod-bulk-send {
+  .vs__dropdown-option.vs__dropdown-option--highlight {
+      background: rgb(225, 225, 225) !important;
+      color: #000!important;
+  }
+ }
 </style>
 <style type="text/css" scoped="">
   .session-list .b-table-sticky-header{

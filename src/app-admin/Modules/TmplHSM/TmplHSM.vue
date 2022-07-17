@@ -90,6 +90,13 @@
                   </router-link>
 
                 </template>
+                <template #cell(status)="row">
+                    <span v-for="link in row.item.approved" v-bind:key="link.templateId">
+                      <my-icon type="channel" :value="link.channelId" :status="link.status"
+                         v-tooltip="`This template is ${link.status} for channel ${link.channelId}`"
+                      ></my-icon>  
+                    </span>
+                </template>  
         </master-view>    
 
         <master-view v-if="mode=='edit' && newItem"  ref="templatesEdit"
@@ -375,6 +382,8 @@
 
     import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
     import JsonUtils from '../../../@common/utils/JsonUtils';
+import MyStatus from '../../../@common/custom/components/MyStatus.vue';
+import MyIcon from '../../../@common/custom/components/MyIcon.vue';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -402,7 +411,9 @@
         components: {
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,TemplatePreview,
             vSelect,ModalSelector,
-            VGrid
+            VGrid,
+                MyStatus,
+                MyIcon
         },
         data: () => ({
                   input : {
@@ -426,7 +437,8 @@
                               { key : 'category', label : "Grouping Category", sortable : true }, 
                               { key : 'desc', label : "Description",sortable : true  }, 
                               { key : 'categoryType', label : "Message Type" , sortable : true }, 
-                              { key: 'actions', label: 'Actions' }    ],
+                              { key: 'actions', label: 'Actions' },
+                              { key : 'status', label : 'Status'}    ],
                     items : [],
                     perPage: 25,
                     currentPage: 1,
