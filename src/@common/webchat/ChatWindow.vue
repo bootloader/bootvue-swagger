@@ -147,9 +147,9 @@ export default {
   },
   computed: {
     messages() {
-      let messages = this.messageList
+      let messages = this.messageList;
 
-      return messages
+      return messages.reverse();
     }
   },
   methods: {

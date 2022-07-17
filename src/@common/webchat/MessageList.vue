@@ -120,5 +120,7 @@ export default {
   overflow-y: auto;
   background-size: 100%;
   padding: 40px 20px;
+  display: flex;
+  flex-direction: column-reverse;
 }
 </style>

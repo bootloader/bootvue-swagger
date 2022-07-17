@@ -14,8 +14,6 @@
                 entity : "api", // After which chat is expired
             },options);
             OPTIONS = options;
-            window.visualViewport.addEventListener('scroll', this.viewportHandler);
-            window.visualViewport.addEventListener('resize', this.viewportHandler);
             options.domain =  options.domain || [options.entity,".mehery.com"].join("");
             options.path = ["https://", options.domain ,"/postman/ext/plugin/customer/app/chat/"].join("");
 
@@ -50,6 +48,8 @@
                     maring: 0px 0px 0px 0px; 
                     position:relative;
                     bottom:0;
+                    width:100%;
+                    height:100%;
                 }
                 #myChatDiv #myChatFrame #myChatIFrame-${UNIQUEID} {
                     border-width: 0px; 
@@ -77,9 +77,9 @@
                 @media (max-width: 450px) {
                     .myChatDivOpen#myChatDiv,
                     .myChatDivOpen#myChatDiv #myChatFrame #myChatIFrame-${UNIQUEID} {
-                        width: 100vw;
-                        height: 100vh;
-                        max-height: 100vh;
+                        width: 100%;
+                        height: 100%;
+                        max-height: 100%;
                         right: 0;
                         bottom: 0;
                         border-radius: 0px!important;
@@ -104,11 +104,6 @@
 
 
 
-        },
-        viewportHandler : function (event) {
-            var viewport = event.target;
-            console.log('viewport.height', viewport.height,viewport.width);
-            document.querySelector('#myChatDiv').style.maxHeight = viewport.height+1+"px";
         },
         open : function(){
             this.postMessage( { event : "CHAT_TOGGLE" });
