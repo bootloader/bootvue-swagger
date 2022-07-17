@@ -14,7 +14,8 @@
                 entity : "api", // After which chat is expired
             },options);
             OPTIONS = options;
-
+            window.visualViewport.addEventListener('scroll', this.viewportHandler);
+            window.visualViewport.addEventListener('resize', this.viewportHandler);
             options.domain =  options.domain || [options.entity,".mehery.com"].join("");
             options.path = ["https://", options.domain ,"/postman/ext/plugin/customer/app/chat/"].join("");
 
@@ -103,6 +104,11 @@
 
 
 
+        },
+        viewportHandler : function (event) {
+            var viewport = event.target;
+            console.log('viewport.height', viewport.height,viewport.width);
+            document.querySelector('#myChatDiv').style.maxHeight = viewport.height+1+"px";
         },
         open : function(){
             this.postMessage( { event : "CHAT_TOGGLE" });
