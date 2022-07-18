@@ -148,8 +148,7 @@ export default {
   computed: {
     messages() {
       let messages = this.messageList;
-
-      return messages.reverse();
+      return messages;
     }
   },
   methods: {

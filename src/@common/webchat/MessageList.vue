@@ -6,7 +6,7 @@
     @scroll="handleScroll"
   >
     <Message
-      v-for="(message, idx) in messages"
+      v-for="(message, idx) in messagesList"
       :key="idx"
       :message="message"
       :user="profile(message.author)"
@@ -82,6 +82,10 @@ export default {
   computed: {
     defaultChatIcon() {
       return chatIcon
+    },
+    messagesList(){
+        let msgList = this.messages.slice().reverse();
+        return msgList;
     }
   },
   mounted() {
