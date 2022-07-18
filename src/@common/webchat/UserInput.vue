@@ -349,7 +349,11 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
-
+.sc-user-input--text * {
+    display: inline !important;
+    color: #565867 !important;
+    font-size: 16px;
+}
 .sc-user-input--text:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
