@@ -349,11 +349,6 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
-.sc-user-input--text * {
-    display: inline !important;
-    color: #565867 !important;
-    font-size: 16px;
-}
 .sc-user-input--text:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
@@ -398,5 +393,18 @@ export default {
 
 .icon-file-message {
   margin-right: 5px;
+}
+</style>
+<style>
+.sc-user-input .sc-user-input--text * {
+    display: inline !important;
+    color: #565867 !important;
+    font-size: 16px !important;
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 none !important;
+    box-shadow: none !important;
+    cursor: text !important;
 }
 </style>
