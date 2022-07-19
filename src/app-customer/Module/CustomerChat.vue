@@ -194,6 +194,9 @@
           alwaysScrollToBottom: true, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
           messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown),
           csid : null,
+          webSession : {
+            key : null, id : null
+          },
           form_input :  null,
 
           //Flag to Determin if Plugin is SetOptions
@@ -201,6 +204,10 @@
         }
       },
       methods: {
+        filterReponse(resp){
+              this.webSession.key = resp.meta.webSessionIdKey || this.webSession.key;
+              this.webSession.id = resp.meta.webSessionId || this.webSession.id;
+        },
         downloadImage(e,url){
             let nUrl = new URL(url);
             nUrl.protocol = "https:";
@@ -242,10 +249,13 @@
         if(message.type == "file"){
             let bodyFormData = new FormData();
             bodyFormData.append("file",message.data.file, message.data.file.fileName);
-            let response = await this.$service.put(`ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}?from=${this.csid}`,
+            let response = await this.$service.put(
+                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`
+                `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
                 bodyFormData
             );
-
+              
+            this.filterReponse(response);
             var _msg = toMessage(response.results[0]);
             if(!_msg){
             console.log("onMessageWasSentAsync:if:_msg:undefined");
@@ -260,11 +270,13 @@
 
         if(this.options.channelId){
                 let resp = await this.$service.post(
-                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`,
+                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
+                `?${this.webSession.key}=${this.webSession.id}`,
                 {
                   message : (message.data.text || message.data.emoji || "") , from : this.csid,
                   form : form
                 });
+              this.filterReponse(resp);
               var _msg = toMessage(resp.results[0]);
               if(!_msg){
                 console.log("onMessageWasSentAsync:if:_msg:undefined");
@@ -281,6 +293,7 @@
                 message : (message.data.text || message.data.emoji || "") , from : this.csid,
                 form : form
               });
+              this.filterReponse(resp);
               var _msg = toMessage(resp);
               if(!_msg){
                 console.log("onMessageWasSentAsync:else:_msg:undefined");
@@ -356,16 +369,16 @@
               this.addMessage(toMessage(rsp.results[i]));
           }
           if(window.CONST.STOMP_ENABLED){
-              this.subscibeMessage();
+              this.subscibeMessage(rsp.meta);
           } else {
               this.pollMessage();
           }
           this.closeLoading();
         },
-        async subscibeMessage(){
+        async subscibeMessage(meta){
             var THAT =  this;
             console.log("TUNNEL")
-            this.tunnel = tunnel.init().instance()
+            this.tunnel = tunnel.init({session : meta}).instance()
             .on("/message/receive/new", function(msg){
                   console.log("/message/receive/new",msg);
                   THAT.onMessageRecvd(toMessage(msg));

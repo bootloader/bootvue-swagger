@@ -1,6 +1,8 @@
+import storage from 'local-storage-fallback';
+
 var jscovery  = {
     getItem(key,defObject){
-        let str = localStorage.getItem('jscovery.'+key);
+        let str = storage.getItem('jscovery.'+key);
         if(!str) {
             return defObject || {};
         } else {
@@ -12,7 +14,7 @@ var jscovery  = {
         }
     },
     setItem(key,value){
-        localStorage.setItem('jscovery.'+key,JSON.stringify(value));
+        storage.setItem('jscovery.'+key,JSON.stringify(value));
     },
     bind (storeName,object,fun){
         let jscovery = this;

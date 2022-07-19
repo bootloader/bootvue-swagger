@@ -3,7 +3,8 @@ var tunnelClient = (function(win) {
 		context : "/offsite",
 		user : "guest",
 		token : guid(),
-		reconnect : false
+		reconnect : false,
+		options : {}
 	};
 	var $connectd = null, $dfd = null;
 	var sessionToken = null;
@@ -27,8 +28,12 @@ var tunnelClient = (function(win) {
 		}
 	}
 	
-	if(win.sessionStorage && win.sessionStorage.getItem)
+	try{
+		if(win.sessionStorage && win.sessionStorage.getItem)
 		TUNNEL_DEBUG = !!win.sessionStorage.getItem("TUNNEL_DEBUG");
+	} catch(e) {
+		console.error("Error Captured, but we can live without it",e)
+	}
 	
 	function connect() {
 		$dfd = $dfd || jQuery.Deferred();
@@ -43,15 +48,23 @@ var tunnelClient = (function(win) {
 		if(!TUNNEL_DEBUG){
 			stompClient.debug = () => {};
 		}
-
+		let xSessionId = config.options?.session?.xsessionId || document.querySelector('meta[name="xsessionid"]')?.content;
+		let jSessionId = config.options?.session?.jsessionId || document.querySelector('meta[name="jsessionid"]')?.content;
+		console.log("XFLICT",xSessionId, config.options?.session?.xsessionId)
 		stompClient.connect({
 			user : config.user,
-			token : config.token
+			token : config.token,
+			xSessionId : xSessionId
 		}, function(frame) {
 			console.log('Connected: ', frame);
-			stompClient.subscribe("/app/stomp/tunnel/meta" , function(greeting) {
+			let url = 	["/app/stomp/tunnel/meta"];
+			if(xSessionId && jSessionId){
+				url.push(xSessionId);
+				url.push(jSessionId);
+			}		
+			stompClient.subscribe(url.join("/") , function(greeting) {
 				var resp = JSON.parse(greeting.body);
-				console.log("@SubscribeMapping",resp);
+				console.log("@SubscribeMapping:XFLICT",resp);
 				sessionToken = resp["x-session-uid"];
 				tenantToken = resp["x-tenant-token"];
 				tagIds = resp["tags"] || [];
@@ -235,6 +248,10 @@ var tunnelClient = (function(win) {
 		debug : false,
 		global : null, 
 		config : function (_config){
+			_config.options = {
+				...config.options,
+				..._config.options
+			}
 			for(var key in _config){
 				config[key] = _config[key]
 			}

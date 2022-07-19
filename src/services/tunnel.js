@@ -8,12 +8,13 @@ export default {
 		if(!this.online) return 0;
 		return 0 + (this.connected ? 1 : 0) + (this.online ? 2 : 0);
 	},
-	init : function () {
+	init : function (options) {
 	  if(!this.client){
 		let THAT = this;
 		this.client =  window.tunnelClient.config({
 			user : window.CONST.APP_USER,
 			context : window.CONST.APP_CONTEXT,
+			options : {...options}
 		});
 		window.__onsocket_disconnect__  = function(error, reconnect){
 			console.log("tunnel:__onsocket_disconnect__",error);

@@ -29,4 +29,18 @@ window.callMobileEventListener = function(options){
 window.parent.postMessage("SocComApp", '*');
 console.log("preloader",window.CONST);
 
+try{
+	window.localStorage.getItem;
+} catch(e){
+	console.error("localStorage not accible but its ok",e)
+	window.localStorage = {
+		getItem(key){
+			return window.localStorageFallback.getItem(key)
+		},setItem(k,v){
+			return window.localStorageFallback.setitem(k,v)
+		}
+	}
+}
+
+
 

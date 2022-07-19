@@ -8,6 +8,7 @@ import DataProcessor from "./DataProcessor";
 import { i18n } from "./i18n";
 import formatter from "./formatters";
 import tunnel from './/tunnel';
+import storage from 'local-storage-fallback';
 
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
@@ -238,10 +239,10 @@ const DataService = {
   },
   localStorage : {
     get(key){
-      return JSON.parse(window.localStorage.getItem('service.storage.'+key) || '{}').value;
+      return JSON.parse(storage.getItem('service.storage.'+key) || '{}').value;
     },
     set(key,value){
-      window.localStorage.setItem('service.storage.'+key,JSON.stringify({
+      storage.setItem('service.storage.'+key,JSON.stringify({
         value : value
       }));
     }

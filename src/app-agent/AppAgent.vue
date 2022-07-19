@@ -116,12 +116,12 @@
       console.log("TUNNEL")
       this.tunnel = this.$tunnel.pipe()
         .on("/message/sent/new", function(msg){
-            console.debug("/message/sent/new===",msg)
+            console.info("/message/sent/new===",msg)
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
         }).on("/message/receive/new", function(msg){
             msg.version = 3;
-            console.debug("/message/receive/new:msg===",msg);
+            console.info("/message/receive/new:msg===",msg);
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
             THAT.playNotification();

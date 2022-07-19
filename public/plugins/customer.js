@@ -14,7 +14,8 @@
                 entity : "api", // After which chat is expired
             },options);
             OPTIONS = options;
-            options.domain =  options.domain || [options.entity,".mehery.com"].join("");
+            options.domain =  'socnect.local.com';
+            //options.domain =  options.domain || [options.entity,".mehery.com"].join("");
             options.path = ["https://", options.domain ,"/postman/ext/plugin/customer/app/chat/"].join("");
 
             if(options.local){
@@ -22,7 +23,7 @@
             }
 
             //local-kwt.amxremit.com:8083/agent/app/home
-            //options.query = ["CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true"]
+            options.query = ["CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true"].join('&')
             console.log("init",options);
             var div = document.createElement("div");
             document.getElementsByTagName('body')[0].appendChild(div);
@@ -32,7 +33,7 @@
                      style='height: ${minHeight}px; width: ${minWidth}px; position:fixed; cursor: pointer;'></div>
                 <div id='myChatFrame' style='margin: 0px 0px 0px 0px;'>
                     <iframe id="myChatIFrame-${UNIQUEID}" 
-                        allow="camera https://${options.domain}; microphone https://${options.domain}"
+                        allow="camera https://${options.domain}; microphone https://${options.domain}; geolocation https://${options.domain}"
                             src=${options.path}?${options.query}></iframe>
                 <div>
             </div>

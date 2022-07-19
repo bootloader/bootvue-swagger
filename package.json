@@ -41,6 +41,7 @@
     "jsonpath-plus": "^6.0.1",
     "kind-of": "6.0.3",
     "libphonenumber-js": "^1.9.42",
+    "local-storage-fallback": "^4.1.2",
     "marked": "^4.0.16",
     "minimist": "1.2.3",
     "moment": "^2.29.1",
