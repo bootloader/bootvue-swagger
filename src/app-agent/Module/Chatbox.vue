@@ -58,6 +58,7 @@
             > {{activeChat.contact.sessionId}} == {{$route.params.sessionId}}
             > open:{{chatLocal.open}} closed:{{chatLocal.closed}} active:{{chatLocal.active}}
             > expired:{{chatLocal.expired}} live:{{chatLocal.live}}
+            > POSTMAN_AGENT_CHAT_FREETEXT_CC : {{$global.MyConst.config.SETUP.POSTMAN_AGENT_CHAT_FREETEXT_CC}}
             > {{activeChat}}
         </pre>
         <div class="msg_card_body-bubbles-lane">
@@ -254,7 +255,6 @@
                             class="msg_cotainer_smart">  {{quickAction.title}}</span>
                          <hr/>
                     </slide-up-down>
-
                     <!-- If chat is ACTIVE -->
                     <div v-if="chatLocal.active && chatLocal.isModeAgent"> 
                         <!-- If chat is NOT Actionable -->
@@ -433,7 +433,8 @@
                return (!!this.$route.params.contactId && this.chatLocal.active)
                && (this.$route.params.profileId == this.$route.params.contactId)
                && ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent)
-               && this.chatLocal.open && this.chatLocal.isModeAgent;
+               && this.chatLocal.isModeAgent
+               && (this.chatLocal.open || this.$global.MyConst.config.SETUP.POSTMAN_AGENT_CHAT_FREETEXT_CC);
             },
             isAssignedToMe : function () {
                return ((this.activeChat.assignedToAgent == MyConst.agent) || !this.activeChat.assignedToAgent);
