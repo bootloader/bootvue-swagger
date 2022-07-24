@@ -294,9 +294,10 @@ const actions = {
                         hsm : Object.assign({
                           id : msg.templateId,
                           code : msg.templateCode,
-                        },msg.template),
+                        },msg.template, msg.hsm),
                         action : msg.action,
                         contact : msg.contact,
+                        data : msg.data,
                         messageIdRef : msg.messageIdRef
                     });
     dispatch("SendChatPost",response.data.results[0]);

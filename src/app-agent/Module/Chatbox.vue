@@ -96,7 +96,7 @@
                 Compose new Message
             </span>
          </span>
-        <span v-else>
+        <span v-else-if="is_INLINE_HSM">
             <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
             <br/>
                 <small> Any additional message you send to the customer beyond the Customer Care Window must be a Templated Message,</small>
@@ -109,6 +109,12 @@
                     </span>
                 </template>
             </ForEachOption>
+        </span>
+        <span v-else>
+            <span class="fa fa-hourglass-end fa-5x text-white-dirty" />
+            <br/>
+                <small> Please wait...</small>
+            <br/>
         </span>
     </div> 
     <ChatMessages v-else
@@ -475,6 +481,9 @@
             is_TEXT_ENTER_REQUIRED : function(){
                 return !!this.message_text || this.is_QUICK_MEDIA || this.is_UPLOAD_MEDIA;
             },
+            is_INLINE_HSM(){
+                return false;
+            },
             chatsVersionGlobal : function(){
                 return this.$store.getters.StateChatsVersion;
             },
@@ -763,7 +772,8 @@
                 } else {
                     this.isSendNewMessage = true;
                     this.scrollToBottom(true);
-                    //this.initNewMessage(true,'showPushNewHSM');
+                    this.initNewMessage(true,'showPushNewHSM');
+
                 }
             },
             goToBack(){
@@ -1080,7 +1090,6 @@
                 this.$refs.myVueDropzone.$el.click();
                 this.winMode = "UPLOAD_MEDIA";
             },
-
 
             openAudioRecord : function () {
                 let chunks = [];

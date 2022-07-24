@@ -1,7 +1,8 @@
 <template>
         <my-source :options="configs">
                 <template #data="{options}">
-                    <x-simple-form size="sm" :readonly="readonly"
+                    <x-simple-form size="sm" 
+                        :readonly="readonly" :prelabel="prelabel" :variant="variant"
                         :inputs="options.map(function({item}){
                             let key = (item.path || item.key);
                             return {
@@ -43,7 +44,9 @@
             },
             readonly : {
                 type : Boolean, default : false
-            }
+            },
+            prelabel : { type : Boolean, default : false },
+            variant : { type: String,  default : 'outline-success' }
         },
         data() {
             return {

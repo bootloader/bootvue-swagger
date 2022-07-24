@@ -46,10 +46,16 @@
   Vue.component('app-agent-layout', () => import('./Layout/DefaultAgentLayout.vue'));
   Vue.component('plug-agent-layout', () => import('./Layout/DefaultAgentLayoutPlug.vue'));
 
+  import { ValidationProvider, ValidationObserver } from 'vee-validate';
+  Vue.component('ValidationProvider', ValidationProvider);
+  Vue.component('ValidationObserver', ValidationObserver);
+
+  Vue.component('BaseInput', () => import('@/@common/argon/components/Inputs/BaseInput.vue'));
 
   Vue.component('MySource', () => import('@/@common/custom/components/MySource.vue'));
   Vue.component('MyText', () => import('@/@common/custom/components/MyText.vue'));
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
+  
 
   var LOADED_JS = {};
 

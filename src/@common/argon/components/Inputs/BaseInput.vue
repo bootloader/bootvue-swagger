@@ -3,7 +3,6 @@
     :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size]">
     <b-form-group class="form-group-input" :label-for="'fmg-' + inputId"
       :class="[
-        label+name+inputId,
         {'is-question': question }
       ]">
       <slot name="label">
@@ -31,7 +30,7 @@
         <div v-if="prependIcon || prelabel || $slots.prepend || prepend" class="input-group-prepend">
           <slot name="prepend">
             <span v-if="prepend" class="input-group-text">{{prepend}}</span>
-            <b-button  v-else-if="prelabel" variant="outline-success">
+            <b-button  v-else-if="prelabel" :variant="variant">
               {{label || name}}
             </b-button>
             <span v-else :class="prependClass">
@@ -67,8 +66,8 @@
             <a target="_blank" :href="value" class="btn btn-outline-success fa fa-external-link"></a>
         </div> 
         <div v-if="copy" class="input-group-append input-group-append-copy">
-            <b-button v-clipboard:copy="value" 
-                variant="outline-success fa fa-clipboard"></b-button>
+            <b-button v-clipboard:copy="value" :variant="variant" class="fa fa-clipboard"
+            ></b-button>
         </div> 
         <div v-if="append || appendIcon || $slots.append || (textLimit>0) ||  $slots.actions" class="input-group-append">
           <span v-if="append || appendIcon || $slots.append || (textLimit>0)" 
@@ -245,7 +244,8 @@
       formatLive : {
         type : Boolean,
         default : false
-      }
+      },
+      variant : { type: String,  default : 'outline-success' }
     },
     data() {
       return {

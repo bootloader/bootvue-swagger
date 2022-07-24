@@ -148,12 +148,14 @@ export default {
 			if(this.$refs.audio){
 				if (this.$refs.audio.readyState >= 2) {
 					this.loaded = true;
-					while(this.$refs.audio.duration === Infinity) {
+					while(this.$refs.audio && this.$refs.audio.duration === Infinity) {
 						await new Promise(r => setTimeout(r, 1000));
-						this.$refs.audio.currentTime = 10000000*Math.random();
+						this.$refs.audio && (this.$refs.audio.currentTime = 10000000*Math.random());
 					}
-					this.durationSeconds = parseInt(this.$refs.audio.duration);
-					this.$refs.audio.currentTime = 0;
+					if(this.$refs.audio){
+						this.durationSeconds = parseInt(this.$refs.audio.duration);
+						this.$refs.audio.currentTime = 0;
+					}
 					return this.playing = this.autoPlay;
 				}
 				console.error('Failed to load sound file.');

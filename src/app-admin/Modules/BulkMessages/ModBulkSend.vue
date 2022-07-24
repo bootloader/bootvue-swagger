@@ -153,7 +153,7 @@
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
     import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
-import SmartConversations from '../../../app-content/Pages/Pricing/SmartConversations.vue';
+    import SmartConversations from '../../../app-content/Pages/Pricing/SmartConversations.vue';
 
     function newItem() {
       return {

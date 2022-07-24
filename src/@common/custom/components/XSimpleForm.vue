@@ -43,7 +43,7 @@
                     }" :plus="false" height="400px" @error="onJsonError"
                     />
                 <base-input v-else  class="mb-0" :size="size"
-                    :label="(input.meta.title || input.meta.key)"
+                    :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
                     v-model="input.config.value" 
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :value="input.meta.defaultValue"
@@ -96,7 +96,9 @@
             },
             readonly : {
                 type : Boolean, default : false
-            }
+            },
+            prelabel : { type : Boolean, default : false },
+            variant : { type: String,  default : 'outline-success' }
         },
         data() {
             return {
