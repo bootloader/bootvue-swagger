@@ -50,18 +50,18 @@
       ></div>
       <div class="sc-user-input--buttons">
         <div v-if="showEmoji && !isEditing" class="sc-user-input--button">
-          <EmojiIcon :on-emoji-picked="_handleEmojiPicked" :color="colors.userInput.text" />
+          <EmojiIcon :on-emoji-picked="_handleEmojiPicked" :color="colors.userInput.button" />
         </div>
         <slot name="input-buttons"></slot>
         <div v-if="showMic" class="sc-user-input--button">
-          <MicIcon :on-change="_handleAudioSubmit" :color="colors.userInput.text" />
+          <MicIcon :on-change="_handleAudioSubmit" :color="colors.userInput.button" />
         </div>
         <div v-if="showFile && !isEditing" class="sc-user-input--button">
-          <FileIcons :on-change="_handleFileSubmit" :color="colors.userInput.text" />
+          <FileIcons :on-change="_handleFileSubmit" :color="colors.userInput.button" />
         </div>
         <div v-if="isEditing" class="sc-user-input--button">
           <UserInputButton
-            :color="colors.userInput.text"
+            :color="colors.userInput.button"
             tooltip="Cancel"
             @click.native.prevent="_editFinish"
           >
@@ -71,7 +71,7 @@
         <div class="sc-user-input--button">
           <UserInputButton
             v-if="isEditing"
-            :color="colors.userInput.text"
+            :color="colors.userInput.button"
             tooltip="Edit"
             @click.native.prevent="_editText"
           >
@@ -79,7 +79,7 @@
           </UserInputButton>
           <UserInputButton
             v-else
-            :color="colors.userInput.text"
+            :color="colors.userInput.button"
             tooltip="Send"
             @click.native.prevent="_submitText"
           >
@@ -185,6 +185,7 @@ export default {
     }
   },
   mounted() {
+    console.log("colors.userInput.button",this.colors.userInput.button)
     this.$root.$on('focusUserInput', () => {
       if (this.$refs.userInput) {
         this.focusUserInput()

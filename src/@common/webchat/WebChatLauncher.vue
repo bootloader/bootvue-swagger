@@ -190,12 +190,15 @@ export default {
         'text' in c.receivedMessage &&
         'userInput' in c &&
         'bg' in c.userInput &&
-        'text' in c.userInput,
+        'text' in c.userInput &&
+        'button' in c.userInput &&
+        'close' in c.userInput,
       default: function () {
         return {
           header: {
             bg: '#4e8cff',
-            text: '#ffffff'
+            text: '#ffffff',
+            close:"#4e8cff"
           },
           launcher: {
             bg: '#4e8cff'
@@ -213,7 +216,8 @@ export default {
           },
           userInput: {
             bg: '#f4f7f9',
-            text: '#565867'
+            text: '#565867',
+            button:'#565867'
           }
         }
       }

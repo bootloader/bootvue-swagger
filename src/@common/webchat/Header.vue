@@ -8,51 +8,59 @@
       <div v-else class="sc-header--title">{{ title }}</div>
     </slot>
     <div v-if="showCloseButton" class="sc-header--close-button" @click="$emit('close')">
-      <img :src="icons.close.img" :alt="icons.close.name" />
+      <UserInputButton
+            :color="colors.header.close"
+            tooltip="Close"
+          >
+        <IconCross />
+    </UserInputButton>
     </div>
   </div>
 </template>
 
 <script>
 import {mapState} from './store/'
-import CloseIcon from '@/assets/vendor/webchat/close-icon-big.png'
+import CloseIcon from '@/assets/vendor/webchat/close.svg'
+import UserInputButton from './UserInputButton.vue'
+import IconCross from './components/icons/IconCross.vue';
 
 export default {
-  props: {
-    icons: {
-      type: Object,
-      default: function () {
-        return {
-          close: {
-            img: CloseIcon,
-            name: 'default'
-          }
+    props: {
+        icons: {
+            type: Object,
+            default: function () {
+                return {
+                    close: {
+                        img: CloseIcon,
+                        name: "default"
+                    }
+                };
+            }
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        colors: {
+            type: Object,
+            required: true
         }
-      }
     },
-    title: {
-      type: String,
-      required: true
+    data() {
+        return {
+            inUserList: false
+        };
     },
-    colors: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      inUserList: false
-    }
-  },
-  computed: {
-    ...mapState(['disableUserListToggle', 'titleImageUrl', 'showCloseButton'])
-  },
-  methods: {
-    toggleUserList() {
-      this.inUserList = !this.inUserList
-      this.$emit('userList', this.inUserList)
-    }
-  }
+    computed: {
+        ...mapState(["disableUserListToggle", "titleImageUrl", "showCloseButton"])
+    },
+    methods: {
+        toggleUserList() {
+            this.inUserList = !this.inUserList;
+            this.$emit("userList", this.inUserList);
+        }
+    },
+    components: { UserInputButton, IconCross }
 }
 </script>
 
@@ -100,6 +108,8 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   margin-left: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .sc-header--close-button:hover {

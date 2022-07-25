@@ -8,7 +8,7 @@
     role="presentation"
   >
     <title :id="iconName" lang="en">{{ iconName }}</title>
-    <g :fill="iconColor">
+    <g :fill="color">
       <slot />
     </g>
   </svg>
@@ -36,7 +36,11 @@ export default {
     iconColor: {
       type: String,
       default: 'currentColor'
-    }
+    },
+    color: {
+      type: String,
+      default: 'currentColor'
+    },
   }
 }
 </script>
