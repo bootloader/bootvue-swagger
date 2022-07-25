@@ -90,8 +90,8 @@
                                         </my-model-form>  
                                     </div>    
                                     <div  class="template-attachment position-relative m-1" v-if="hasAttachment">
-                                        <vue-dropzone ref="myVueDropzone" class="m-2"
-                                            id="dropzone" :options="dz"
+                                        <vue-dropzone ref="myVueDropzone" class="m-2" v-bind:key="acceptedFiles"
+                                            id="dropzone" :options="{...dz,acceptedFiles}"
 
                                             v-on:vdropzone-drag-enter="dragEnter" 
                                             v-on:vdropzone-drag-over="dragEnter" 
@@ -185,6 +185,18 @@
             hasAttachment(){
                 return this.selectedTemplate.formatType && !(this.selectedTemplate.formatType == 'TEXT')
             },
+            acceptedFiles(){
+                switch(this.selectedTemplate.formatType){
+                    case "IMAGE":
+                        return 'image/png, image/jpeg';
+                    case "VIDEO":
+                        return 'video/*';
+                    case "AUDIO":
+                        return 'audio/*';
+                    default :
+                        return '*/*';
+                }
+            },
             sampleVarData(){
               if(this.model.templateId){
                 let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer)
@@ -216,7 +228,7 @@
               url: MyConst.context + '/api/sessions/message/upload',
               thumbnailWidth: 150,
               maxFilesize: 10, 
-              //maxFiles : 1,
+              maxFiles : 1,
               autoProcessQueue: false,
               addRemoveLinks : true,
 
@@ -409,7 +421,6 @@
                     margin: 10px;
                 }
                 .template-attachment, #dropzone{
-                    height: 100px!important;
                     min-height: 100px!important;
                 }
             }

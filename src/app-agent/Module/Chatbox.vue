@@ -735,6 +735,7 @@
                     let resp = await this.$service.get('/api/session/compose',{
                         contactId : this.activeChat.contactId
                     },{ toast : false, metaType : 'contact', dataType : 'session'});
+                    console.log("initNewMessage:compose",resp);
                     if(resp.results[0] && resp.results[0].local.live){
                         this.$router.push({
                             name: 'defAgentViewLong', 
@@ -744,7 +745,8 @@
                                     mash : "PUSH_HSM"+Date.now()
                                 }
                         }); 
-                    } else if(resp.meta) {
+                    } 
+                    if(resp.meta) {
                         this.composeNewMessage(resp.meta)
                     }
                 } catch(e){
@@ -773,7 +775,6 @@
                     this.isSendNewMessage = true;
                     this.scrollToBottom(true);
                     this.initNewMessage(true,'showPushNewHSM');
-
                 }
             },
             goToBack(){
