@@ -22,7 +22,7 @@
         Business User ?
       </span>
       <a
-        href="/partner/auth"
+        :href="`${base_url}/partner/auth`"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Domain Manager
@@ -34,13 +34,13 @@
         Login to workspace
       </span>
       <a
-        :href="`/front/auth/?app=admin&domain=${front_domain}`"
+        :href="`${base_url}/front/auth/?app=admin&domain=${front_domain}`"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Admin panel
       </a>
       <a
-        :href="`/front/auth/?app=agent&domain=${front_domain}`"
+        :href="`${base_url}/front/auth/?app=agent&domain=${front_domain}`"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
       >
         Agent panel
