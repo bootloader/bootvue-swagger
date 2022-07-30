@@ -45,7 +45,7 @@
                     padding:0px!important; 
                     margin:0px!important
                 }
-                #myChatDiv.myChatDivOpen{
+                #myChatDiv.myChatDivOpen, #myChatDiv.myChatDivClose{
                     bottom: 0px; right:0px;
                 }
                 #myChatDiv.myChatDivOpen.left-bottom, #myChatDiv.myChatDivOpen.left-sticky{
