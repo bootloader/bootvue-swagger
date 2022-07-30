@@ -14,14 +14,15 @@
       :showFile="true"
       :showMic="true"
       :showTypingIndicator="showTypingIndicator"
-      :showLauncher="true"
+      :showLauncher="!config.launcher.disabled"
       :showCloseButton="true"
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :disableUserListToggle="false"
       :messageStyling="messageStyling"
       @onType="handleOnType"
-      @edit="editMessage" 
+      @edit="editMessage"
+      :launcherPosition="config.launcher.position"
       >
 
       <template v-slot:header>
@@ -150,7 +151,9 @@
               disabled : false,
             },
             launcher : {
-              open : false
+              open : false,
+              disabled:false,
+              position:"right-bottom"
             }
           },
           options : {

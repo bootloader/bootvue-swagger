@@ -28,7 +28,7 @@
             var div = document.createElement("div");
             document.getElementsByTagName('body')[0].appendChild(div);
             div.outerHTML = `
-            <div id='myChatDiv' class="myChatDivClose">
+            <div id='myChatDiv' class="myChatDivClose ${options.config["launcher.position"]}">
                 <div id='myChatTitleBar' 
                      style='height: ${minHeight}px; width: ${minWidth}px; position:fixed; cursor: pointer;'></div>
                 <div id='myChatFrame' style='margin: 0px 0px 0px 0px;'>
@@ -40,11 +40,31 @@
             <style>
                 #myChatDiv {
                     height: ${minHeight+2}px; width: ${minWidth+2}px; 
-                    position: fixed; bottom: 0px; right:0px; z-index:1000000; 
+                    position: fixed; z-index:1000000; 
                     background-color: transparent; 
                     padding:0px!important; 
                     margin:0px!important
                 }
+                #myChatDiv.myChatDivOpen{
+                    bottom: 0px; right:0px;
+                }
+                #myChatDiv.myChatDivOpen.left-bottom, #myChatDiv.myChatDivOpen.left-sticky{
+                    bottom: 0px; left:0px; right:auto;
+                }
+                #myChatDiv.myChatDivClose.right-bottom{
+                    bottom: 0px; right:0px;
+                }
+                #myChatDiv.myChatDivClose.left-bottom{
+                    bottom: 0px; left:0px;
+                }
+                #myChatDiv.myChatDivClose.right-sticky{
+                    bottom: calc(50% - 20px); right:0px;
+                }
+
+                #myChatDiv.myChatDivClose.left-sticky{
+                    bottom: calc(50% - 20px); left:0px;
+                }
+                
                 #myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 
                     position:relative;
@@ -107,6 +127,9 @@
 
         },
         open : function(){
+            this.postMessage( { event : "CHAT_TOGGLE" });
+        },
+        close : function(){
             this.postMessage( { event : "CHAT_TOGGLE" });
         },
         ON_CHAT_LOAD : function () {

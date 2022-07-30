@@ -3,7 +3,7 @@
     <div
       v-if="showLauncher"
       class="sc-launcher"
-      :class="{opened: isOpen}"
+      :class="[{opened: isOpen}, launcherPosition]"
       :style="{backgroundColor: colors.launcher.bg}"
       @click.prevent="isOpen ? close() : openAndFocus()"
     >
@@ -172,6 +172,10 @@ export default {
       type: String,
       default: () => ''
     },
+    launcherPosition:{
+      type: String,
+      default: 'right-bottom'
+    },
     colors: {
       type: Object,
       validator: (c) =>
@@ -278,6 +282,21 @@ export default {
   box-shadow: none;
   transition: box-shadow 0.2s ease-in-out;
   cursor: pointer;
+}
+.sc-launcher.right-sticky{
+    right: 0 !important;
+    border-radius: 50% 0 0 50%;
+}
+.sc-launcher.right-sticky .sc-open-icon{
+    padding: 20px 10px 20px 30px;
+}
+
+.sc-launcher.left-sticky{
+    left: 0 !important;
+    border-radius: 0 50% 50% 0 ;
+}
+.sc-launcher.left-sticky .sc-open-icon{
+    padding: 20px 30px 20px 10px;
 }
 
 .sc-launcher:before {
