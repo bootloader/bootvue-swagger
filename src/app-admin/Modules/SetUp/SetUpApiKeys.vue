@@ -74,7 +74,7 @@
                       v-model="oneItem.code" :textLimit="60" required
                       rules="required|min:4|max:512" >
                   </base-input>
-                  <BaseVSelect class="mb-0" size="sm" :disabled="oneItem.id && oneItem.code"
+                  <BaseVSelect class="mb-0" size="sm" :disabled="!!oneItem.id && !!oneItem.code"
                     name="App Type" :clearable="false"
                     options="getx:/api/meta/app_types"
                     v-model="oneItem.appType"
@@ -158,7 +158,8 @@
           name : item?.name || "",
           code : item?.code ||  "", 
           appType : item?.appType ||  "WEBHOOK", 
-          webhook : item?.webhook || null, key : item?.key || null,
+          webhook : item?.webhook || null, outboundhook : item?.outboundhook || null, 
+          key : item?.key || null,
           props : item?.props || {}, secret : item?.secret || {}
       };
     }
@@ -231,6 +232,7 @@
                 key : (reset==true) ? '' : "**********",
                 appType : this.oneItem.appType,
                 webhook : this.oneItem.webhook,
+                outboundhook : this.oneItem.outboundhook,
                 props : this.oneItem.props,
                 secret : this.oneItem.secret,
               });
