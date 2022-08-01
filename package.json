@@ -38,6 +38,7 @@
     "imagemin": "^6.1.0",
     "increase-memory-limit": "^1.0.6",
     "install": "^0.13.0",
+    "json2csv": "^5.0.7",
     "jsonpath-plus": "^6.0.1",
     "kind-of": "6.0.3",
     "libphonenumber-js": "^1.9.42",

@@ -244,7 +244,7 @@ var formatter = {
   },
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -274,6 +274,10 @@ var formatter = {
           return 'errors.ValidPhonesPerLine';
     }
     return true;
+  },
+  csvFile : function phoneValidator (file) {
+    console.log("file",file, typeof file);
+    return file.type === "text/csv";
   },
   HBPrefixedVar :  function(contents,values){
     values = values || [];

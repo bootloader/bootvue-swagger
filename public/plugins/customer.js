@@ -184,6 +184,31 @@
     var myScript = scripts[index];
     var serviceUrl = myScript.src; 
     try {
+        // let config = {
+        //     "domain" : "demo.mehery.xyz",
+        //     "channelId" : "web:mainsite",
+        //     "channelKey" : "1g8kjp23sj8qxQE8QY2T89U",
+        //     "config":{
+        //        "header.bg.color":"#ffffff",
+        //        "header.text.color":"#000000",
+        //        "header.close.color":"#000ffffff000",
+        //        "header.icon.url":"https://stg-cms.jazeeraairways.com/getattachment/781c850b-47d3-4e0a-a73b-5e6dcfa2b776/jazeera-logo.svg",
+        //        "header.title.text":"Need Help?",
+        //        "launcher.bg.color":"#0072bc",
+        //        "messageList.bg.color":"#ffffff",
+        //        "sentMessage.bg.color":"#0167aa",
+        //        "sentMessage.text.color":"#ffffff",
+        //        "receivedMessage.bg.color":"#009bde",
+        //        "receivedMessage.text.color":"#ffffff",
+        //        "userInput.bg.color":"#183a8d",
+        //        "userInput.text.color":"#ffffff",
+        //        "userInput.button.color":"#ffffff",
+        //        "launcher.disabled":false,
+        //        "launcher.position":"left-sticky",
+        //        "externalcss.url":"https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+        //     }
+        //  }
+        // myChat.init(config);
         myChat.init(JSON.parse(myScript.innerHTML));
         win.myChat = myChat;
     } catch(e){

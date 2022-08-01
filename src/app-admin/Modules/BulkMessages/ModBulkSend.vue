@@ -29,23 +29,8 @@
                                   </template>
                           </v-select>
                       </ValidationProvider>
-
                       <br>
-                      <ValidationProvider v-slot="v" rules="required|phoneML"  class="form-row" vid="input_contact_number" 
-                           name="Contact Number" mode="lazy">
-                          <label>Contacts</label>
-                            <textarea class="form-control" rows="10" v-model="input.contacts" >
-
-                            </textarea>
-                           <span class="v-input-error">{{ v.errors[0] }}</span>
-                      </ValidationProvider> 
-
-
-                 
-            </b-card>
-            <b-card class="col-md-4 session-list" >
-
-                        <label>Template</label>
+                      <label>Template</label>
                         <base-v-select class="w-100" ref="selectedTemplate"
                           :options="input.templates.values"
                            optionKey="code" optionLabel="title"
@@ -97,13 +82,8 @@
                           </div>  
                            <span class="v-input-error">{{ v.errors[0] }}</span>
                       </ValidationProvider> 
-                      <br/>
-                      <b-form-row>
-                          <button @click="sendBulk"
-                              name="password" id="examplePassword" :disabled="invalid"
-                              class="form-control btn btn-primary">Send</button>
-                      </b-form-row>
-           </b-card>
+            </b-card>
+            
 
           <b-card class="col-md-4 session-list" >
                 <label>Placeholder</label>
@@ -121,7 +101,44 @@
                   ></VGrid>
                 </div>  
           </b-card>
+        <b-card class="col-md-4 session-list contact-list" >
+            <b-tabs card>
+                <b-tab title="Copy/Paste" active>
+                    <ValidationProvider    v-slot="v" :rules="input.contactCSV == '' ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
+                        name="Contact Number" mode="lazy">
+                        <label>Contacts</label>
+                        <textarea class="form-control" rows="10" v-model="input.contacts" >
 
+                        </textarea>
+                        <span class="v-input-error">{{ v.errors[0] }}</span>
+                    </ValidationProvider> 
+                </b-tab>
+                <b-tab title="Upload CSV">
+                    <b-card-text>
+                        
+                        <b-form-row>
+                            <button @click="downloadCSVtemplate"
+                                class="form-control btn btn-primary">Download CSV Template​</button>
+                                <br/> <br/><i>This will download a cvs file with all the variables associated with the chosen template​</i><br/>
+                        </b-form-row>
+
+                            <ValidationProvider :rules="input.contacts == '' ? 'required':''" persist="true"  class="form-row" vid="input_contact_csv" 
+                        name="Contact Number" mode="lazy" v-slot="{ validate, errors }">
+                                <b-form-file placeholder="Upload CSV file​" accept=".csv" v-model="input.contactCSV" @change="validate($event)"></b-form-file>
+                                <span class="v-input-error">{{ errors[0] }}</span>
+                            </ValidationProvider>
+                            <i>Upload csv file with all the variables associated with each contact. Incomplete files, will not be accepted.​​</i>
+                    </b-card-text>
+                </b-tab>
+            </b-tabs>
+                        
+            <br/>
+            <b-form-row>
+                <button @click="sendBulk"
+                    name="password" id="examplePassword" :disabled="invalid"
+                    class="form-control btn btn-primary">Send</button>
+            </b-form-row>
+           </b-card>
            
           </div>
          
@@ -138,7 +155,7 @@
     import JsonXPath from "@/@common/utils/JsonXPath";
     import PageTitle from "../../Components/PageTitle.vue";
     import mustache from 'mustache';
-
+    import {Parser} from 'json2csv';
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUsersSlash,faUsers,faStar
@@ -198,7 +215,8 @@
                   attachment : null,
                   vars : {}
                 },
-                contacts : ""
+                contacts : "",
+                contactCSV:""
             },
             table : {
               fields: [ 
@@ -276,6 +294,7 @@
         created : function (argument) {
           this.loadLanes();
           this.loadTemplates();
+          
         },
         methods : {
           async loadLanes (){
@@ -315,6 +334,9 @@
               this.input.templates.vars.__ob__.dep.notify()
           },
           async sendBulk (argument) {
+            let success = await this.$refs.session_form.validate();
+            console.log("success",success, this.input.contactCSV);
+            if(!success) return;
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,
@@ -328,14 +350,37 @@
                 "lane" : this.input.lane.selected.lane,
                 "channel" : this.input.lane.selected.channel
               },
-              "to": this.input.contacts.match(/[^\r\n\,]+/g).map(function(item) {
+              "to": this.input.contacts!= "" ? this.input.contacts.match(/[^\r\n\,]+/g).map(function(item) {
                   return item.trim()
               }).filter(function (argument) {
                 return !!argument
-              })
+              }) : this.input.contactCSV
             });
             this.$router.push("/app/moderate/bulk-push-jobs");
+          },
+          downloadCSVtemplate(){
+            if(this.sampleVarData && typeof this.sampleVarData == "object"){
+                let csvData = {contacts:""};
+                this.sampleVarData.map(v=>{
+                    let newKay = v.path.split(".")[1];
+                    csvData[newKay] = ""
+                })
+
+                if(Object.keys(csvData).length){
+                    const json2csvParser = new Parser();
+                    const csv = json2csvParser.parse(csvData);
+                    console.log("csv",csv);
+                    let csvContent = "data:text/csv;charset=utf-8,"+csv;
+                    var encodedUri = encodeURI(csvContent);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "bulk_upload_format.csv");
+                    document.body.appendChild(link); // Required for FF
+                    link.click();
+                }
+            }
           }
+
 
         }
 
@@ -364,5 +409,20 @@
     height: 300px;
     background-color: rgba(139, 139, 139, 0.041);
   }
-</style>>
-
+  
+</style>
+<style lang="scss">
+.m-mod-bulk-send{
+    .contact-list{
+        .nav-item{
+            flex-grow: 1;
+            .nav-link {
+                border: 1px solid;
+                border-radius: 5px !important;
+                margin: 0 5px;
+                text-align: center;
+            }
+        }
+    }
+}
+</style>

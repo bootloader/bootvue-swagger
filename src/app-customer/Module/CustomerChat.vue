@@ -155,6 +155,9 @@
               open : false,
               disabled:false,
               position:"right-bottom"
+            },
+            externalcss:{
+                url:false
             }
           },
           options : {
@@ -194,8 +197,7 @@
               bg: '#f4f7f9',
               text: '#565867',
               button:'#565867'
-            },
-            
+            }
           }, // specifies the color scheme for the component
           alwaysScrollToBottom: true, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
           messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown),
@@ -461,6 +463,8 @@
             if(this.config.launcher.open){
               this.openChat();
             }
+            console.log("this.config.externalcss.url",this.config.externalcss.url);
+            if(this.config.externalcss.url) this.loadCss();
         },
         //Chat Windwo
         publishChatWindowStatus : function () {
@@ -542,6 +546,13 @@
               this.options.channelKey = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_KEY;
             }
             this.onOptionSet();
+        },
+        loadCss : function(){
+            var lnk=document.createElement('link');
+            lnk.href=this.config.externalcss.url;
+            lnk.rel='stylesheet';
+            lnk.type='text/css';
+            (document.head||document.documentElement).appendChild(lnk);
         }
       },
       //Component Events
