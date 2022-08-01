@@ -379,8 +379,9 @@
           }
           if(window.CONST.STOMP_ENABLED){
               this.subscibeMessage(rsp.meta);
+              let THAT = this;
               setInterval(() => {
-                this.fetchMessage();
+                THAT.fetchMessage();
               }, 10000);
 
           } else {
