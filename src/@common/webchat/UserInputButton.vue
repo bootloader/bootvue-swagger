@@ -22,7 +22,8 @@ export default {
   props: {
     color: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     tooltip: {
       type: String,

@@ -182,6 +182,7 @@ export default {
         'header' in c &&
         'bg' in c.header &&
         'text' in c.header &&
+        'close' in c.header &&
         'launcher' in c &&
         'bg' in c.launcher &&
         'messageList' in c &&
@@ -195,8 +196,7 @@ export default {
         'userInput' in c &&
         'bg' in c.userInput &&
         'text' in c.userInput &&
-        'button' in c.userInput &&
-        'close' in c.userInput,
+        'button' in c.userInput,
       default: function () {
         return {
           header: {
