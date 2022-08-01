@@ -257,7 +257,7 @@
             let bodyFormData = new FormData();
             bodyFormData.append("file",message.data.file, message.data.file.fileName);
             let response = await this.$service.put(
-                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`
+                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
                 `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
                 bodyFormData
             );
