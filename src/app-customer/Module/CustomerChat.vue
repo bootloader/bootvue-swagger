@@ -427,7 +427,7 @@
             .on("/message/receive/new", function(msg){
                   console.log("/message/receive/new",msg);
                   THAT.onMessageRecvd(toMessage(msg));
-                  this.fetchMessage();
+                  THAT.fetchMessage();
             });
         },
         async pollMessage (){
