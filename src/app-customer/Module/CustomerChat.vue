@@ -206,7 +206,8 @@
           form_input :  null,
 
           //Flag to Determin if Plugin is SetOptions
-          isConfigSet : false
+          isConfigSet : false,
+          swagger : null
         }
       },
       methods: {
@@ -378,21 +379,43 @@
               this.subscibeMessage(rsp.meta);
               setInterval(() => {
                 this.fetchMessage();
-              }, 5000);
+              }, 10000);
 
           } else {
               this.pollMessage();
           }
+          try{
+            let swagger = await this.$service.get("/v2/api-docs?group=latest");
+            if(swagger){
+              this.swagger = swagger;
+            }
+          } catch(e){
+            console.error("apis fetch error",e);
+          }
           this.closeLoading();
         },
         fetchMessage : pebounce(async function (){
-              let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
-                number : this.csid,  csid : this.csid,
-                user : window.CONST.APP_USER,
-                channelId : this.options.channelId,
-              });
-              if(rsp)
-                this.onMessageRecvd(toMessage(rsp));
+              if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
+                  let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
+                    number : this.csid,  csid : this.csid,
+                    user : window.CONST.APP_USER,
+                    channelId : this.options.channelId,
+                  });
+                  if(rsp){
+                      this.onMessageRecvd(toMessage(rsp));
+                  }
+              } else {
+                let rsp = await this.$service.get("/ext/plugin/outbound/web/callback/v2",{
+                  number : this.csid,  csid : this.csid,
+                  user : window.CONST.APP_USER,
+                  channelId : this.options.channelId,
+                });
+                if(rsp){
+                  for(var i in rsp.results){
+                    this.onMessageRecvd(toMessage(rsp.results[i]));
+                  }
+                }
+              }
         },2000),
         async subscibeMessage(meta){
             var THAT =  this;
@@ -431,7 +454,6 @@
                 //THAT.sendPostMessage({event : "NO_FP_AND_CH"})
               }
           },1000);
-
         },
         onOptionSet : function(){
             console.log("this.options",this.options);
