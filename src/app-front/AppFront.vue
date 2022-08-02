@@ -9,9 +9,10 @@
   import "@/assets/vendor/notus/styles/tailwind.css";
   import ReadMore from 'vue-read-more';
   import { ValidationProvider,ValidationObserver } from 'vee-validate';
-  import mixin from './Service/mixin.js'
   
+  import mixin from './../services/mixin.js'
   mixin.init();
+
   Vue.use(ReadMore);
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);

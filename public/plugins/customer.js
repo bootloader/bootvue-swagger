@@ -1,5 +1,14 @@
 (function (win) {
 
+    function create_UUID(){
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (dt + Math.random()*16)%16 | 0;
+            dt = Math.floor(dt/16);
+            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    }
     var maxHeight = 500;
     var minHeight = 70;
     var maxWidth = 400;
@@ -7,6 +16,7 @@
     var UNIQUEID = '3ix5ju9kqbtr2W';
     var OPTIONS = {};
     var EVENTS = {};
+    var VISIT_ID = create_UUID();
 
     var myChat = {
         init : function (options) {
@@ -22,8 +32,16 @@
                 options.path = [options.local, "/ext/plugin/customer/app/chat/"].join("");
             }
 
+            let VISITOR_ID = localStorage.getItem(`${options.domain}-visitor`) || VISIT_ID;
+            localStorage.setItem(`${options.domain}-visitor`,VISITOR_ID);
+
             //local-kwt.amxremit.com:8083/agent/app/home
-            //options.query = ["CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true"].join('&')
+            options.query = [
+               // "CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true",
+               `channelId=${options.channelId}`,
+               `visitor_id=${VISITOR_ID}`,
+               `visit_id=${VISIT_ID}`
+            ].join('&')
             console.log("init",options);
             var div = document.createElement("div");
             document.getElementsByTagName('body')[0].appendChild(div);
