@@ -371,7 +371,9 @@
             csid : this.csid,
             user : window.CONST.APP_USER,
             channelId : this.options.channelId,
-            channelKey : this.options.channelKey
+            channelKey : this.options.channelKey,
+            visitorId : window.CONST.VISITOR_ID,
+            visitId : window.CONST.VISIT_ID
           });
           console.log(rsp);
           var results =  rsp.results;
