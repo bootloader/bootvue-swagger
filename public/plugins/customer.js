@@ -39,8 +39,8 @@
             options.query = [
                // "CDN_URL=http://127.0.0.1:8080&CDN_DEBUG=true",
                `channelId=${options.channelId}`,
-               `visitor_id=${VISITOR_ID}`,
-               `visit_id=${VISIT_ID}`
+               `visitorId=${VISITOR_ID}`,
+               `visitId=${VISIT_ID}`
             ].join('&')
             console.log("init",options);
             var div = document.createElement("div");
