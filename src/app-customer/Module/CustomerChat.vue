@@ -177,7 +177,8 @@
           colors: {
             header: {
               bg: '#000',
-              text: '#ffffff'
+              text: '#ffffff',
+              close : '#ffffff'
             },
             launcher: {
               bg: '#000'
