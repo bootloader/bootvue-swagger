@@ -460,7 +460,6 @@
           }
         },
         init : function () {
-          console.log("FP:init")
           var THAT = this;
           clearTimeout(this.fploader);
           this.fploader = setTimeout(function() {
