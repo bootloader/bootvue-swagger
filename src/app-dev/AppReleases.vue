@@ -182,9 +182,10 @@ import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
       }, 
       mounted(){
           this.clientOnChange();
-          for(var i in this.deployed.servers){
+          setInterval(()=> { for(var i in this.deployed.servers){
               this.clientInf(this.deployed.servers[i]);
-          }
+          }},3000);
+          
       },
       methods : {
         async clientOnChange(){

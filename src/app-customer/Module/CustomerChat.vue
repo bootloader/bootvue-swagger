@@ -173,6 +173,8 @@
           messageMap : {},
           newMessagesCount: 0,
           isChatOpen: false, // to determine whether the chat window should be open or closed
+          isChatOpened : false,
+          isChatLoaded : false,
           showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
           colors: {
             header: {
@@ -344,7 +346,9 @@
         },
         openChat () {
           // called when the user clicks on the fab button to open the chat
-          this.isChatOpen = true
+          this.isChatOpen = true;
+          this.isChatOpened = true;
+          this.start();
           this.newMessagesCount = 0
           this.publishChatWindowStatus();
         },
@@ -366,6 +370,7 @@
           m.data.text = message.data.text;
         },
         async loadChats(){
+          this.loading(true);
           let rsp = await this.$service.get("../" + window.CONST.POSTMAN + "/ext/plugin/outbound/web/auth/v2",{
             number : this.csid,
             csid : this.csid,
@@ -398,7 +403,7 @@
           } catch(e){
             console.error("apis fetch error",e);
           }
-          this.closeLoading();
+          this.loading(false);
         },
         fetchMessage : pebounce(async function (){
               if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
@@ -443,23 +448,34 @@
               },2000)
           }
         },
-        closeLoading : function (argument) {
+        loading : function (show) {
             var element = document.getElementsByTagName("html")[0];
-            element.className = element.className.replace(/\loading\b/g, "")
+            if(show) element.className = element.className.replace(/\loaded\b/g, "loading"); 
+            else element.className = element.className.replace(/\loading\b/g, "loaded");
+        },
+        async start(){
+          if(window.CONST.fp && this.options.channelId && this.isChatOpened && !this.isChatLoaded){
+            this.isChatLoaded = true;
+            await this.loadChats();
+          }
         },
         init : function () {
+          console.log("FP:init")
           var THAT = this;
           clearTimeout(this.fploader);
           this.fploader = setTimeout(function() {
+              console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
               if(window.CONST.fp && THAT.options.channelId){
                 THAT.csid = (window.CONST.fp + "00");
-                THAT.loadChats();
+                THAT.loading(false);
+                THAT.start();
+                //THAT.loadChats();
               } else {
-                console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
+                THAT.loading(true);
                 THAT.init();
                 //THAT.sendPostMessage({event : "NO_FP_AND_CH"})
               }
-          },1000);
+          },1500);
         },
         onOptionSet : function(){
             console.log("this.options",this.options);

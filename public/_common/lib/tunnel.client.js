@@ -50,6 +50,7 @@ var tunnelClient = (function(win) {
 		}
 		let xSessionId = config.options?.session?.xsessionId || document.querySelector('meta[name="xsessionid"]')?.content;
 		let jSessionId = config.options?.session?.jsessionId || document.querySelector('meta[name="jsessionid"]')?.content;
+		let tenant = config.options?.session?.tnt || document.querySelector('meta[name="tenant"]')?.content;
 		console.log("XFLICT",xSessionId, config.options?.session?.xsessionId)
 		stompClient.connect({
 			user : config.user,
@@ -58,6 +59,9 @@ var tunnelClient = (function(win) {
 		}, function(frame) {
 			console.log('Connected: ', frame);
 			let url = 	["/app/stomp/tunnel/meta"];
+			if(tenant){
+				url.push(tenant);
+			}
 			if(xSessionId && jSessionId){
 				url.push(xSessionId);
 				url.push(jSessionId);
