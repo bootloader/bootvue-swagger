@@ -202,7 +202,7 @@ export default {
           header: {
             bg: '#4e8cff',
             text: '#ffffff',
-            close:"#4e8cff"
+            close:"#ffffff"
           },
           launcher: {
             bg: '#4e8cff'
