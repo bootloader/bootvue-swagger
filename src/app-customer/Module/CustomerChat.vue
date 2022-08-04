@@ -483,7 +483,8 @@
               this.openChat();
             }
             console.log("this.config.externalcss.url",this.config.externalcss.url);
-            if(this.config.externalcss.url) this.loadCss();
+            if(this.options.stylesheet) this.loadCss(this.options.stylesheet);
+            if(this.config.externalcss.url) this.loadCss(this.config.externalcss.url);
         },
         //Chat Windwo
         publishChatWindowStatus : function () {
@@ -563,12 +564,14 @@
             if(!this.options.channelId){
               this.options.channelId = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL;
               this.options.channelKey = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_KEY;
-            }
+              this.options.stylesheet = this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_STYLESHEET;
+            }  
+            this.options.stylesheet = this.options.stylesheet || window.CONST.WEB_CHANNEL_STYLESHEET;
             this.onOptionSet();
         },
-        loadCss : function(){
+        loadCss : function(cssUrl){
             var lnk=document.createElement('link');
-            lnk.href=this.config.externalcss.url;
+            lnk.href=cssUrl;
             lnk.rel='stylesheet';
             lnk.type='text/css';
             (document.head||document.documentElement).appendChild(lnk);
