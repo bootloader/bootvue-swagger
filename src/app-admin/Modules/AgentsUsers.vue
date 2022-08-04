@@ -15,10 +15,10 @@
       @action="onAction"
       >
         <template #top-row="row">
-              <b-th><input type="text" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
-              <b-th><input type="text" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
-              <b-th><input type="text" v-model="filters.code"  class="form-control form-control-sm" /></b-th>
-              <b-th><input type="text" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="search" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="search" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="search" v-model="filters.code"  class="form-control form-control-sm" /></b-th>
+              <b-th><input type="search" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
               <b-th>&nbsp;</b-th>
         </template>
         <template #cell(actions)="row">

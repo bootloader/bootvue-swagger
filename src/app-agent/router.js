@@ -7,7 +7,7 @@ export default AppRouter.route({
         // Dashboards
         {
             path: '/',
-            redirect: '/app/home/CHATBOX',
+            redirect: '/app/home/CONTACTS',
             name : "app"
         },
         {

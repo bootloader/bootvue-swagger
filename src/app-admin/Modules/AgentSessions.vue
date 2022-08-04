@@ -21,8 +21,8 @@
                 </template>
 
                 <template #top-row="row">
-                      <b-th><input type="text" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
-                      <b-th><input type="text" v-model="filters.contactName"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="search" v-model="filters.assignedToAgent"  class="form-control form-control-sm" /></b-th>
+                      <b-th><input type="search" v-model="filters.contactName"  class="form-control form-control-sm" /></b-th>
                       <b-th>&nbsp;</b-th>
                       <b-th>&nbsp;</b-th>
                       <b-th>
@@ -599,5 +599,9 @@
         90% {
             transform: translateX(-8px);
         }
-        }
+    }
+
+    input[type=search]::-webkit-search-cancel-button {
+        -webkit-appearance: searchfield-cancel-button;
+    }
 </style>
