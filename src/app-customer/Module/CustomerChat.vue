@@ -204,6 +204,7 @@
           }, // specifies the color scheme for the component
           alwaysScrollToBottom: true, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
           messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown),
+          browserfp : null,
           csid : null,
           webSession : {
             key : null, id : null
@@ -219,6 +220,7 @@
         filterReponse(resp){
               this.webSession.key = resp.meta.webSessionIdKey || this.webSession.key;
               this.webSession.id = resp.meta.webSessionId || this.webSession.id;
+              this.csid = resp.meta.csid || this.csid;
         },
         downloadImage(e,url){
             let nUrl = new URL(url);
@@ -371,22 +373,30 @@
         },
         async loadChats(){
           this.loading(true);
-          let rsp = await this.$service.get("../" + window.CONST.POSTMAN + "/ext/plugin/outbound/web/auth/v2",{
-            number : this.csid,
-            csid : this.csid,
+          let rsp = await this.$service.submit("../" + window.CONST.POSTMAN + "/ext/plugin/outbound/web/auth/v2",{
+            number : this.browserfp,
+            csid : this.browserfp,
+            browserfp : this.browserfp,
             user : window.CONST.APP_USER,
             channelId : this.options.channelId,
             channelKey : this.options.channelKey,
             visitorId : window.CONST.VISITOR_ID,
-            visitId : window.CONST.VISIT_ID
+            visitId : window.CONST.VISIT_ID,
+            userProfileId : this.options?.user?.profileId || this.options?.user?.profile_id,
+            userProfileToken : this.options?.user?.profileToken,
+            userName : this.options?.user?.name,
+            userEmail : this.options?.user?.email,
+            userPhone : this.options?.user?.phone,
           });
-          console.log(rsp);
+          this.filterReponse(rsp);
           var results =  rsp.results;
           for(var i in results){
-              this.addMessage(toMessage(rsp.results[i]));
+              let _msg = toMessage(rsp.results[i])
+              this.addMessage(_msg);
+              this.onMessageRecvd(_msg);
           }
           if(window.CONST.STOMP_ENABLED){
-              this.subscibeMessage(rsp.meta);
+              this.subscibeMessage(rsp.meta.stomp);
               let THAT = this;
               setInterval(() => {
                 THAT.fetchMessage();
@@ -406,6 +416,7 @@
           this.loading(false);
         },
         fetchMessage : pebounce(async function (){
+              return; // Polling can wait
               if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
                   let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
                     number : this.csid,  csid : this.csid,
@@ -465,7 +476,7 @@
           this.fploader = setTimeout(function() {
               console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
               if(window.CONST.fp && THAT.options.channelId){
-                THAT.csid = (window.CONST.fp + "00");
+                THAT.browserfp = (window.CONST.fp + "");
                 THAT.loading(false);
                 THAT.start();
                 //THAT.loadChats();
