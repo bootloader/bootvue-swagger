@@ -28,18 +28,16 @@
                 <div class="card-body msg_card_body" v-show="!showMediaOptions">
 
                     <div class="msg_card_body-bubbles">
+                        <loading :active.sync="isLoading" 
+                        :can-cancel="false"  
+                        :loader="'dots'" :opacity="0.3"
+                        :is-full-page="false"></loading>
 
-        <loading :active.sync="isLoading" 
-        :can-cancel="false"  
-        :loader="'dots'" :opacity="0.3"
-        :is-full-page="false"></loading>
-
-<div v-if="!activeChat" class="msg_card_body-logo">
-    <span class=""></span>
-</div>
-    <ChatMessages v-else
-        :activeChat="activeChat"
-    />
+                        <div v-if="!activeChat" class="msg_card_body-logo">
+                            <span class=""></span>
+                        </div>
+                            <ChatMessages v-else
+                                :activeChat="activeChat" />
                     </div>
 
                 </div>
