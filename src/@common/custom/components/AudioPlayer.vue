@@ -58,7 +58,7 @@
                         </a>
                     </div>
 			</div>
-			<audio :loop="looping" ref="audio" :src="file" v-on:timeupdate="update" v-on:loadeddata="load" v-on:pause="playing = false" v-on:play="playing = true" preload="auto" style="display: none;"></audio>
+			<audio :loop="looping" ref="audio" :src="file" v-on:timeupdate="update" v-on:loadeddata="load" v-on:pause="playing = false" v-on:play="playing = true" preload="auto" style="opacity:0.01; position: absolute;" controls></audio>
 		</div>
 </template>
 

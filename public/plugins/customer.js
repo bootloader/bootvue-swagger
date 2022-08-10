@@ -100,6 +100,7 @@
                     height: ${maxHeight}px; width: ${maxWidth}px; 
                     height: calc(100vh - 55px);
                     max-height: ${maxHeight}px;
+                    box-shadow:0 0 15px -7px #000;
                 }
                 .myChatDivOpen#myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 

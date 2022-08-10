@@ -65,8 +65,8 @@ export default {
     messageText() {
         if(this.message.data.text){
             const escaped = escapeGoat.escape(this.message.data.text)
-
-            return Autolinker.link(this.messageStyling ? fmt(escaped) : escaped, {
+            console.log("escaped",escaped,this.message.data.text);
+            return Autolinker.link(this.messageStyling ? fmt(escaped, {italic: {delmiter: '///', tag: 'em'}}) : escaped, {
                 className: 'chatLink',
                 truncate: {length: 50, location: 'smart'}
             })
