@@ -11,6 +11,10 @@
         {
             "code": "wit",
             "name": "WIT.ai"
+        },
+        {
+            "code": "navitaire",
+            "name": "navitaire"
         }
     ]
  }
