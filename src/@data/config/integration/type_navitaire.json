@@ -1,0 +1,97 @@
+{
+    "options": [
+        {
+            "title": "Navitaire",
+            "key": null,
+            "desc": "Configurations for Navitaire platform",
+            "group": "About Config",
+            "path": null,
+            "defaultValue": null,
+            "example": null,
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "order": null,
+            "max": null,
+            "min": null,
+            "inputType": "MESSAGE",
+            "dataType": null,
+            "converterType": null,
+            "messageType": "INFO",
+            "options": null,
+            "filter": null,
+            "optionsKey": null,
+            "optionsLabel": null,
+            "optionsSource": null
+        },
+        {
+            "title": "Host End Point",
+            "path": "value.host",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        },
+        {
+            "title": "Username",
+            "path": "secret.username",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        },
+        {
+            "title": "Password",
+            "path": "secret.password",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        },
+        {
+            "title": "Navitare Domain",
+            "path": "value.domain",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        },
+        {
+            "title": "Navitare Channel Type",
+            "path": "value.channelType",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        },
+        {
+            "title": "Alternate Identifier",
+            "path": "value.alternateIdentifier",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
+        }
+    ]
+}
