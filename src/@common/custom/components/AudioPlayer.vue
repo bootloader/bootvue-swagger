@@ -148,7 +148,7 @@ export default {
 			if(this.$refs.audio){
 				if (this.$refs.audio.readyState >= 2) {
 					this.loaded = true;
-					while(this.$refs.audio && this.$refs.audio.duration === Infinity) {
+					while(this.$refs.audio) {
 						await new Promise(r => setTimeout(r, 1000));
 						this.$refs.audio && (this.$refs.audio.currentTime = 10000000*Math.random());
 					}
