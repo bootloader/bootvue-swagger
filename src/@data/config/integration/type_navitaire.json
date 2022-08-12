@@ -92,6 +92,17 @@
             "hidden": false,
             "deprecated": false,
             "inputType": "TEXT"
+        },
+        {
+            "title": "Application Name",
+            "path": "value.applicationName",
+            "optional": false,
+            "readonly": false,
+            "createonly": false,
+            "writeonly": false,
+            "hidden": false,
+            "deprecated": false,
+            "inputType": "TEXT"
         }
     ]
 }

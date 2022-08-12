@@ -35,10 +35,22 @@
               <div class="message-footer">{{templateConfig.footer}}</div>
             </div>
             <div class="message-buttons" v-if="content.options">
-                <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
-                  <i v-if="button.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
-                  <i v-if="button.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>{{button.label}}
-                </div>
+               <span v-if="content.options.is_list || (content.options.buttons.length>3)">
+                  <div class="message-button list-style" v-for="(button,key) in content.options.buttons" v-bind:key="key">
+                      <div class="mb-0">{{button.label}}</div>
+                      <small class="text-grey">{{button.desc}}</small><input class="text-right float-right" name="list-option" type="radio"/>
+                  </div>
+                  <div class="message-button">
+                      <i class="fa fa-list-ul">&nbsp;</i>
+                        {{content.options.list_option_title || 'Menu'}}
+                  </div>
+               </span>
+               <span v-else>
+                  <div class="message-button" v-for="(button,key) in content.options.buttons" v-bind:key="key">
+                    <i v-if="button.type=='URL'" class="fa fa-external-link-alt">&nbsp;</i>
+                    <i v-if="button.type=='PHONE_NUMBER'" class="fa fa-phone-alt">&nbsp;</i>{{button.label}}
+                  </div>
+               </span> 
             </div>
           </span>
           <span v-else>   
@@ -333,6 +345,16 @@
         text-overflow: ellipsis;
         font-family: sans-serif !important;
 
+        &.list-style {
+          text-align: left;
+          height: 54px;
+          line-height: 25px;
+          border-radius: 0px;
+          margin-top: 1px;
+          &:first-of-type{
+            border-radius: 7.5px 7.5px 0px 0px;
+          }
+        }
       }
     }
 

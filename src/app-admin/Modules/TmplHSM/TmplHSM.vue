@@ -351,6 +351,12 @@
                 v-model="newItem.options.more_option_title" :textLimit="20" required
                 rules="required|max:20" >
             </base-input>
+            <ButtonRadioGroup
+                class="mb-0" prependClass="btn btn-outline-primary"
+                prelabel label="More Option Title" 
+                :options="[{label : 'Always', value : true},{ label : 'If-Required',value : false}]"
+                v-model="newItem.options.is_list">
+            </ButtonRadioGroup>
             <template #modal-footer="{ok}">
                   <button @click="ok"
                     class="btn btn-primary">Ok</button>
@@ -384,6 +390,7 @@
     import JsonUtils from '../../../@common/utils/JsonUtils';
 import MyStatus from '../../../@common/custom/components/MyStatus.vue';
 import MyIcon from '../../../@common/custom/components/MyIcon.vue';
+import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -413,7 +420,8 @@ import MyIcon from '../../../@common/custom/components/MyIcon.vue';
             vSelect,ModalSelector,
             VGrid,
                 MyStatus,
-                MyIcon
+                MyIcon,
+                BaseRadio
         },
         data: () => ({
                   input : {
