@@ -354,7 +354,7 @@
             <ButtonRadioGroup
                 class="mb-0" prependClass="btn btn-outline-primary"
                 prelabel label="More Option Title" 
-                :options="[{label : 'Always', value : true},{ label : 'If-Required',value : false}]"
+                :options="[{label : 'Always List', value : true},{ label : 'List If-Required',value : false}]"
                 v-model="newItem.options.is_list">
             </ButtonRadioGroup>
             <template #modal-footer="{ok}">
