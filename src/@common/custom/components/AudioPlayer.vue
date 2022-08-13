@@ -9,10 +9,14 @@
                         </a>
                     </div>
                     <div id="play">
-                        <a v-on:click.prevent="playing = !playing" :title="(playing) ? 'Pause' : 'Play'" href="#">
+                        <a v-on:click.prevent="play" :title="(playing) ? 'Pause' : 'Play'" href="#" v-if="!playing">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path v-if="!playing" fill="currentColor" d="M15,10.001c0,0.299-0.305,0.514-0.305,0.514l-8.561,5.303C5.51,16.227,5,15.924,5,15.149V4.852c0-0.777,0.51-1.078,1.135-0.67l8.561,5.305C14.695,9.487,15,9.702,15,10.001z"/>
-                                <path v-else fill="currentColor" d="M15,3h-2c-0.553,0-1,0.048-1,0.6v12.8c0,0.552,0.447,0.6,1,0.6h2c0.553,0,1-0.048,1-0.6V3.6C16,3.048,15.553,3,15,3z M7,3H5C4.447,3,4,3.048,4,3.6v12.8C4,16.952,4.447,17,5,17h2c0.553,0,1-0.048,1-0.6V3.6C8,3.048,7.553,3,7,3z"/>
+                                <path  fill="currentColor" d="M15,10.001c0,0.299-0.305,0.514-0.305,0.514l-8.561,5.303C5.51,16.227,5,15.924,5,15.149V4.852c0-0.777,0.51-1.078,1.135-0.67l8.561,5.305C14.695,9.487,15,9.702,15,10.001z"/>
+                            </svg>
+                        </a>
+                        <a v-on:click.prevent="pause" :title="(playing) ? 'Pause' : 'Play'" href="#" v-if="playing">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill="currentColor" d="M15,3h-2c-0.553,0-1,0.048-1,0.6v12.8c0,0.552,0.447,0.6,1,0.6h2c0.553,0,1-0.048,1-0.6V3.6C16,3.048,15.553,3,15,3z M7,3H5C4.447,3,4,3.048,4,3.6v12.8C4,16.952,4.447,17,5,17h2c0.553,0,1-0.048,1-0.6V3.6C8,3.048,7.553,3,7,3z"/>
                             </svg>
                         </a>
                     </div>
@@ -58,7 +62,7 @@
                         </a>
                     </div>
 			</div>
-			<audio :loop="looping" ref="audio" :src="file" v-on:timeupdate="update" v-on:loadeddata="load" v-on:pause="playing = false" v-on:play="playing = true" preload="metadata" style="opacity:0.01; position: absolute;" controls></audio>
+			<audio :loop="looping" ref="audio" :src="file" v-on:timeupdate="update" v-on:loadeddata="load" v-on:loadedmetadata="load" v-on:ended="pause" preload="auto" style="opacity:0.01; top:0; z-index: -1; position: absolute;" controls></audio>
 		</div>
 </template>
 
@@ -107,7 +111,8 @@ export default {
 		playing: false,
 		previousVolume: 35,
 		showVolume: false,
-		volume: 100
+		volume: 100,
+        myInterval:null
 	}),
 	computed: {
 		muted() {
@@ -121,7 +126,8 @@ export default {
 		},
 		volumeTitle() {
 			return `Volume (${this.volume}%)`;
-		}
+		},
+        
 	},
 	filters: {
 		convertTimeHHMMSS(val) {
@@ -131,20 +137,33 @@ export default {
 		}
 	},
 	watch: {
-		playing(value) {
-			if (value) { return this.$refs.audio.play(); }
-			this.$refs.audio.pause();
-		},
 		volume(value) {
 			this.$refs.audio.volume = this.volume / 100;
 		}
 	},
 	methods: {
+        pause(){
+            this.playing=false;
+            this.$refs.audio.pause();
+        },
+        play(){
+            this.playing=true;
+            this.$refs.audio.play();
+        },
+        isMobile() {
+            if ('maxTouchPoints' in navigator)
+                return navigator.maxTouchPoints > 0 ? true : false
+            else
+                return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                    navigator.userAgent
+                )
+        },
 		download() {
 			this.stop();
 			window.open(this.file, 'download');
 		},
-		async load() {
+		async load(arg) {
+            console.log("###########################",arg, this.$refs.audio, this.$refs.audio.readyState);
 			if(this.$refs.audio){
 				if (this.$refs.audio.readyState >= 2) {
 					this.loaded = true;
@@ -156,8 +175,14 @@ export default {
 						this.durationSeconds = parseInt(this.$refs.audio.duration);
 						this.$refs.audio.currentTime = 0;
 					}
-					return this.playing = this.autoPlay;
-				}
+				} else if(this.$refs.audio.readyState == 1){
+                    if(this.$refs.audio && this.$refs.audio.readyState == 1) {
+						await new Promise(r => setTimeout(r, 1000));
+						this.$refs.audio && (this.$refs.audio.currentTime = 10000000*Math.random());
+						this.$refs.audio && (this.$refs.audio.currentTime = 0);
+                        this.durationSeconds = parseInt(this.$refs.audio.duration);
+					}
+                }
 				console.error('Failed to load sound file.');
 			}
 		},
@@ -187,6 +212,7 @@ export default {
 	},
 	created() {
 		this.looping = this.loop;
+        
 	}
 }
 </script>

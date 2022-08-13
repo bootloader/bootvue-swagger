@@ -158,6 +158,7 @@ export default {
   right: 0;
   bottom: 55px;
   background-color: #1e293b;
+  z-index: 1;
 }
 .av-media {
   display: flex;
