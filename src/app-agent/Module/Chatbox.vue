@@ -1107,23 +1107,26 @@
                         _THAT.mediaRecorder.start();
                         _THAT.mediaRecorder.onstop = function(e) {
                             if(_THAT.uploadRecording){
-                                let mimeType = _THAT.mediaRecorder.mimeType;
-                                mimeType = 'audio/mpeg';
-                                let blob = new Blob(chunks, { 'type' : mimeType });
-                                _THAT.media.getTracks().forEach(track => track.stop());
-                                chunks= [];
-                                _THAT.mediaRecorder = null;
-                                let reqObj = {
-                                    message:_THAT.prepareMessage(null, null,null,true),
-                                    file: blob,
-                                    fileName: "audio." + ({
-                                        "audio/webm;codecs=opus" : 'webm',
-                                        "audio/opus" : 'opus',
-                                        'audio/mpeg' : 'mp3'
-                                    }[mimeType] || 'mp3')
-                                }
-                                _THAT.$store.dispatch("SendFile",reqObj);                  
-                                _THAT.winMode="CHAT_BOX";
+                                let blob = new Blob(chunks);
+                                const fileExt = audioInfo.ext;
+                                const file = new File([blob], `recording.${fileExt}`, {
+                                    type: blob.type
+                                });
+                                downsampleToWav(file, function (buffer) {
+                                    const mp3Buffer = encodeMp3(buffer);
+                                    const mp3blob = new Blob(mp3Buffer, { type: "audio/mp3" });
+                                    _THAT.media.getTracks().forEach(track => track.stop());
+                                    chunks= [];
+                                    _THAT.mediaRecorder = null;
+                                    let reqObj = {
+                                        message:_THAT.prepareMessage(null, null,null,true),
+                                        file: mp3blob,
+                                        fileName:"Recording.mp3"
+                                    }
+                                    _THAT.$store.dispatch("SendFile",reqObj);                  
+                                    _THAT.winMode="CHAT_BOX";
+                                });
+                                
                             } else {
                                 _THAT.media.getTracks().forEach(track => track.stop());
                                 chunks= [];
