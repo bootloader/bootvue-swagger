@@ -1103,14 +1103,20 @@
                         _THAT.mediaRecorder.start();
                         _THAT.mediaRecorder.onstop = function(e) {
                             if(_THAT.uploadRecording){
-                                let blob = new Blob(chunks, { 'type' : "audio/mpeg" });
+                                let mimeType = _THAT.mediaRecorder.mimeType;
+                                mimeType = 'audio/mpeg';
+                                let blob = new Blob(chunks, { 'type' : mimeType });
                                 _THAT.media.getTracks().forEach(track => track.stop());
                                 chunks= [];
                                 _THAT.mediaRecorder = null;
                                 let reqObj = {
                                     message:_THAT.prepareMessage(null, null,null,true),
                                     file: blob,
-                                    fileName:"Recording.mp3"
+                                    fileName: "audio." + ({
+                                        "audio/webm;codecs=opus" : 'webm',
+                                        "audio/opus" : 'opus',
+                                        'audio/mpeg' : 'mp3'
+                                    }[mimeType] || 'mp3')
                                 }
                                 _THAT.$store.dispatch("SendFile",reqObj);                  
                                 _THAT.winMode="CHAT_BOX";
