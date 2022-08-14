@@ -403,7 +403,7 @@
     import ChatHeader from './ChatHeader.vue';
     import ChatHeaderPlug from './ChatHeaderPlug.vue';
     import EmojiIcon from '@/@common/webchat/icons/EmojiIcon.vue'
-
+    import { downsampleToWav, encodeMp3, getAudioInfo } from "@/@common/utils/WebAudioUtils";
     Vue.use(AudioVisual);
 
     var sampleJson = {
@@ -1099,7 +1099,11 @@
                     .then(function(stream) {
                         _THAT.winMode = "RECORD_AUDIO";
                         _THAT.media = stream;
-                        _THAT.mediaRecorder = new MediaRecorder(_THAT.media);
+                        let audioInfo = getAudioInfo();
+                        _THAT.mediaRecorder = new MediaRecorder(_THAT.media,{
+                            audioBitsPerSecond: "128000",
+                            mimeType: audioInfo.mimeType
+                        });
                         _THAT.mediaRecorder.start();
                         _THAT.mediaRecorder.onstop = function(e) {
                             if(_THAT.uploadRecording){

@@ -57,6 +57,7 @@
 
 <script>
 import getUserMedia from 'get-user-media-promise';
+import { downsampleToWav, encodeMp3, getAudioInfo } from "../../utils/WebAudioUtils";
 
 export default {
   components: {getUserMedia},
@@ -91,20 +92,31 @@ export default {
       let _THAT = this;
       getUserMedia({audio: true})
         .then(function (stream) {
-          _THAT.media = stream
-          const mime = 'video/mp4; codecs="avc1.424028, mp4a.40.2"'
-          _THAT.mediaRecorder = new MediaRecorder(_THAT.media)
+          _THAT.media = stream;
+          let audioInfo = getAudioInfo();
+          _THAT.mediaRecorder = new MediaRecorder(_THAT.media,{
+                audioBitsPerSecond: "128000",
+                mimeType: audioInfo.mimeType
+            });
           _THAT.mediaRecorder.start()
           _THAT.mediaRecorder.onstop = function (e) {
             if (_THAT.uploadRecording) {
-              let blob = new Blob(chunks, {type: 'audio/mpeg'})
-              _THAT.media.getTracks().forEach((track) => track.stop())
-              chunks = []
-              _THAT.mediaRecorder = null
-              let audioFile = new File([blob], "Recording.mp3", {
-                type: 'audio/mpeg'
-              });
-              _THAT.onChange(audioFile);
+                let blob = new Blob(chunks);
+                const fileExt = audioInfo.ext;
+                const file = new File([blob], `recording.${fileExt}`, {
+                    type: blob.type
+                });
+                downsampleToWav(file, function (buffer) {
+                    const mp3Buffer = encodeMp3(buffer);
+                    const mp3blob = new Blob(mp3Buffer, { type: "audio/mp3" });
+                    _THAT.media.getTracks().forEach((track) => track.stop())
+                    chunks = []
+                    _THAT.mediaRecorder = null
+                    let audioFile = new File([mp3blob], "Recording.mp3", {
+                        type: 'audio/mpeg'
+                    });
+                    _THAT.onChange(audioFile);
+                });
             } else {
               _THAT.media.getTracks().forEach((track) => track.stop())
               chunks = []
