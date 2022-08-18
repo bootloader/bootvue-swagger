@@ -289,6 +289,7 @@ const actions = {
                         id : msg.id,
                         message : msg.message || msg.text,
                         template : msg.template,
+                        subject : msg.subject,
                         attachments : msg.attachments,
                         sessionId : msg.sessionId,
                         hsm : Object.assign({

@@ -56,7 +56,7 @@
             :user="terminal.user"  :logs="terminal.logs" :system="terminal.system">
             <template #terminalbar>
                 <setup-configuration-key class="text-white"
-                      configKey="postman.debug.contact"
+                      configKey="postman.debug.contact" readable editable
                       @load="loadDebugContact">
                 </setup-configuration-key>
             </template> 

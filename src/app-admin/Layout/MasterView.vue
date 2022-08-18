@@ -31,7 +31,8 @@
               :isLoading.sync="isbusy"
               :styleClass="'vgt-table condensed striped ' + table.tableClass"
               :pagination-options="{
-                enabled: true
+                enabled: true,
+                perPage: table.perPage || 25,
               }"
             >
               <template slot="table-row" slot-scope="props">

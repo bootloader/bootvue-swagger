@@ -420,7 +420,8 @@
           this.loading(false);
         },
         fetchMessage : pebounce(async function (){
-              return; // Polling can wait
+              if(window.CONST.STOMP_ENABLED)
+                return; // Polling can wait if stomp is working
               if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
                   let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
                     number : this.csid,  csid : this.csid,
