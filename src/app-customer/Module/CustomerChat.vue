@@ -31,7 +31,6 @@
         <div class="sc-header--title">{{ config.header.title.text }}</div>
       </template>
 
-
       <template v-slot:text-message-body="{ message,messageText, messageColors}">
         <p class="sc-message--text-content" v-html="messageText" dir="auto"></p>
 
@@ -81,7 +80,9 @@
           </button>
       </template>
     </web-chat-launcher>
-
+    <div v-if="isLoading"  class="sc-loader-backdrop">
+      Loading
+    </div>
   </div>
 </template>
 
@@ -213,7 +214,9 @@
 
           //Flag to Determin if Plugin is SetOptions
           isConfigSet : false,
-          swagger : null
+          swagger : null,
+          updatedOn : 0,
+          isLoading : false
         }
       },
       computed : {
@@ -301,6 +304,7 @@
                 return;
               }
               message.id = _msg.id;
+              console.log("message.id",message.id)
               message.data.timestamp = _msg.data.timestamp;
               message.data.attachments = _msg.data.attachments;
           } else { 
@@ -322,6 +326,10 @@
               message.data.attachments = _msg.data.attachments;
             ///}@Deprecated
           }
+          this.messageList = this.messageList.filter(function(a) {
+              return a.id != message.id;
+          });
+          this.addMessage(message);
 
         },
         onMessageWasSent (message) {
@@ -420,7 +428,8 @@
           this.loading(false);
         },
         fetchMessage : pebounce(async function (){
-              if(window.CONST.STOMP_ENABLED)
+              let diff = Date.now() - this.updatedOn;
+              if(window.CONST.STOMP_ENABLED && diff<2000)
                 return; // Polling can wait if stomp is working
               if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
                   let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
@@ -436,6 +445,7 @@
                   number : this.csid,  csid : this.csid,
                   user : window.CONST.APP_USER,
                   channelId : this.options.channelId,
+                  sessionId : this.webSession.id
                 });
                 if(rsp){
                   for(var i in rsp.results){
@@ -449,6 +459,7 @@
             console.log("TUNNEL")
             this.tunnel = tunnel.init({session : meta}).instance()
             .on("/message/receive/new", function(msg){
+                  THAT.updatedOn = Date.now();
                   console.log("/message/receive/new",msg);
                   THAT.onMessageRecvd(toMessage(msg));
                   THAT.fetchMessage();
@@ -468,6 +479,7 @@
             var element = document.getElementsByTagName("html")[0];
             if(show) element.className = element.className.replace(/\loaded\b/g, "loading"); 
             else element.className = element.className.replace(/\loading\b/g, "loaded");
+            this.isLoading = !!show;
         },
         async start(){
           if(window.CONST.fp && this.options.channelId && this.isChatOpened && !this.isChatLoaded){
@@ -649,5 +661,13 @@
   }
   .sc-message--file-text{
       display: none;
+  }
+  .sc-loader-backdrop {
+    top:0;
+    bottom: 0;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.22);
   }
 </style>
