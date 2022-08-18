@@ -240,7 +240,6 @@
           }
         },
         addMessage : function (message) {
-            console.log("message",message);
           message.type = message.data.file ? "file" : message.type; 
           if(!message){
               console.log("addMessage:message:undefined");
@@ -429,7 +428,10 @@
         },
         fetchMessage : pebounce(async function (){
               let diff = Date.now() - this.updatedOn;
-              if(window.CONST.STOMP_ENABLED && diff<2000)
+              if(
+                (window.CONST.STOMP_ENABLED && diff<2000)
+                || !this.isChatOpen
+              )
                 return; // Polling can wait if stomp is working
               if(this.swagger && !this.swagger.paths['/ext/plugin/outbound/web/callback/v2']){
                   let rsp = await this.$service.get("/ext/plugin/outbound/web/callback",{
