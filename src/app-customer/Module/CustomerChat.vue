@@ -266,46 +266,35 @@
           message.data.timestamp = Date.now();
           this.addMessage(message);
         
-        if(message.type == "file"){
-            let bodyFormData = new FormData();
-            bodyFormData.append("file",message.data.file, message.data.file.fileName);
-            let response = await this.$service.put(
-                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
-                `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
-                bodyFormData
-            );
-              
-            this.filterReponse(response);
-            var _msg = toMessage(response.results[0]);
-            if(!_msg){
-              console.log("onMessageWasSentAsync:if:_msg:undefined");
-              return;
-            }
-            message.id = _msg.id;
-            message.data.timestamp = _msg.data.timestamp;
-            message.data.attachments = _msg.data.attachments;
-            ///this.addMessage(_msg);
-            return;
-        }
-
         if(this.options.channelId){
-                let resp = await this.$service.post(
-                `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
-                `?${this.webSession.key}=${this.webSession.id}`,
-                {
-                  message : (message.data.text || message.data.emoji || "") , from : this.csid,
-                  form : form
-                });
-              this.filterReponse(resp);
-              var _msg = toMessage(resp.results[0]);
-              if(!_msg){
-                console.log("onMessageWasSentAsync:if:_msg:undefined");
-                return;
+              let resp = null;
+              if(message.type == "file"){
+                  let bodyFormData = new FormData();
+                  bodyFormData.append("file",message.data.file, message.data.file.fileName);
+                  resp= await this.$service.put(
+                        `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
+                        `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
+                        bodyFormData
+                    );
+              } else {
+                  resp = await this.$service.post(
+                    `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
+                    `?${this.webSession.key}=${this.webSession.id}`, {
+                      message : (message.data.text || message.data.emoji || "") , from : this.csid,
+                      form : form
+                    });
               }
-              message.id = _msg.id;
-              console.log("message.id",message.id)
-              message.data.timestamp = _msg.data.timestamp;
-              message.data.attachments = _msg.data.attachments;
+              if(resp){
+                this.filterReponse(resp);
+                var _msg = toMessage(resp.results[0]);
+                if(!_msg){
+                  console.log("onMessageWasSentAsync:if:_msg:undefined");
+                  return;
+                }
+                message.id = _msg.id;
+                message.data.timestamp = _msg.data.timestamp;
+                message.data.attachments = _msg.data.attachments;
+              }
           } else { 
             ///{@Deprecated
               let resp = await this.$service.post(
