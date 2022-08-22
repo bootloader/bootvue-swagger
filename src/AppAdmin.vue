@@ -24,6 +24,7 @@
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
   Vue.component('BaseInput', () => import('./@common/argon/components/Inputs/BaseInput.vue'));
+  Vue.component('BaseCheckbox', () => import('./@common/argon/components/Inputs/BaseCheckbox.vue'));
   Vue.component('BaseTextArea', () => import('./@common/argon/components/Inputs/BaseTextArea.vue'));
   Vue.component('BaseSelect', () => import('./@common/argon/components/Inputs/BaseSelect.vue'));
   Vue.component('ButtonRadioGroup', () => import('./@common/argon/components/ButtonRadioGroup.vue'));

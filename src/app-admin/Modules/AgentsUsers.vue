@@ -11,9 +11,14 @@
         items :filtered
       }"
       :actions=actions
+      :filters="[{ label : 'Show In-Active', name : 'showInActive'}]"
       :busy="table.busy"
       @action="onAction"
       >
+        <template #filter(showInActive)="{filter}">
+          <base-checkbox type="danger" v-model="includeInActive" class="m-2"> {{filter.label}}</base-checkbox>
+        </template>
+
         <template #top-row="row">
               <b-th><input type="search" v-model="filters.deptname"  class="form-control form-control-sm" /></b-th>
               <b-th><input type="search" v-model="filters.name"  class="form-control form-control-sm" /></b-th>
@@ -186,12 +191,16 @@
            },
           newItem : newItem(),
           modelName :  "MODAL_ADD_USERS",
+          includeInActive : false
         }),
         computed : {
             filtered() {
+                let includeInActive = this.includeInActive;
                 let items = this.$store.getters.StateAgents;
                 if(!items?.length) return [];
-                const filtered = items.filter(item => {
+                const filtered = items.filter(item=>{
+                  return includeInActive || (item.isactive =="Y")
+                }).filter(item => {
                   return Object.keys(this.filters).every(key =>{
                         if(key === 'deptname'){
                             return String(item["dept"].name).toLowerCase().includes(this.filters[key].toLowerCase())
@@ -209,7 +218,7 @@
                     ];
             },
             teams : function (argument) {
-              return (this.$store.getters.StateTeams || []).filter(function(team){
+              return (this.$store.getters.StateApi.AdminsDept || []).filter(function(team){
                 return team.isactive=='Y';
               });
             },
@@ -221,20 +230,22 @@
             }
         },
         created : function (argument) {
-          this.loadAgents();
+          this.loadAgents(true);
           this.loadAgentTeams()
         },
         methods : {
-          async loadAgents (){
+          async loadAgents (loader){
             try {
-              this.table.busy = true;
+              this.table.busy = true && loader;
               await this.$store.dispatch('GetAgents');
             } finally {
-              this.table.busy = false;
+              this.table.busy = false && loader;
             }
           },
           async loadAgentTeams (){
-            await this.$store.dispatch('GetTeams');
+              return await this.$service.getX('/api/admins/dept',{
+                includeInActive : true
+              });
           },
           async createItem () {
             let success = await this.$refs.form.validate();

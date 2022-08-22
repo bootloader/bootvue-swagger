@@ -11,8 +11,14 @@
         items :teams
       }"
       :actions=actions
+      :filters="[{ label : 'Show In-Active', name : 'showInActive'}]"
       :busy="table.busy"
       @action="onAction">
+
+      <template #filter(showInActive)="{filter}">
+        <base-checkbox type="danger" v-model="includeInActive" class="m-2"> {{filter.label}}</base-checkbox>
+      </template>
+
         <template #cell(actions)="row">
             <b-button size="sm" @click="enableTeam(row.item, row.index, $event.target)" variant="outline-primary"
               v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'">
@@ -105,25 +111,31 @@
             },
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
+            includeInActive : false,
         }),
         computed : {
-            teams : function (argument) {
-              return this.$store.getters.StateTeams
+            teams (){
+              let includeInActive = this.includeInActive;
+              return (this.$store.getters.StateApi.AdminsDept || []).filter(function(dept){
+                  return includeInActive || (dept.isactive =="Y")
+              });
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
             } 
         },
         created : function (argument) {
-          this.loadAgentTeams();
+          this.loadAgentTeams(true);
         },
         methods : {
-          async loadAgentTeams (){
+          async loadAgentTeams (loader){
             try {
-              this.table.busy = true;
-              await this.$store.dispatch('GetTeams');
+              this.table.busy = true && loader;
+              return await this.$service.getX('/api/admins/dept',{
+                includeInActive : true
+              },{refresh :  true});
             } finally {
-              this.table.busy = false;
+              this.table.busy = false && loader;
             }
           },
           async createTeam () {
@@ -133,11 +145,13 @@
             this.onAction({name : "CANCEL"});
           },
           async enableTeam(item) {
-             item.isactive = item.isactive == "Y" ? "N" : "Y";
-             await this.$store.dispatch('CreatTeam', item);
+              item.isactive = item.isactive == "Y" ? "N" : "Y";
+              await this.$store.dispatch('CreatTeam', item);
+              await this.loadAgentTeams();
           },
           async setItemDefault(item) {
              await this.$store.dispatch('SetTeamsDefault', item);
+             await this.loadAgentTeams();
           },
           async cancelReps(item) {
              this.newItem = newItem();

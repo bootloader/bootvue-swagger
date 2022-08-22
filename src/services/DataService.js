@@ -147,7 +147,7 @@ const DataService = {
       await this._GET_X[pathKey];
     }
 
-    if(store.getters.StateApi[pathKey]){
+    if(store.getters.StateApi[pathKey] && !_config.refresh){
       return store.getters.StateApi[pathKey];
     }
 
