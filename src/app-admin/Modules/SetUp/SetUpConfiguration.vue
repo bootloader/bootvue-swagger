@@ -60,14 +60,17 @@
                 { key : 'value', label : "Value" },
                //{ key : 'meta.key', label : "key" },
                 //{ key : 'config.value', label : "Value" },
-                { key : 'config.description', label : "Desc" },
-                { key : 'actions', label : "Action" }],
+                { key : 'config.description', label : "Desc",sortable: false },
+                { key : 'actions', label : "Action" ,sortable: false}],
               items : [],
               perPage: 100,
               currentPage: 1,
               rows : 0,
               groupBy : 'meta.group',
-              busy : false
+              busy : false,
+              paginationOptions:{
+                 enabled: false,
+              }
             },
         }),
         computed : {

@@ -32,7 +32,9 @@
               <span v-if="row.item.defaultValue" class="fas fa-star"/>
             </button>
           </template>
-
+            <template #cell(isactive)="row">
+                {{row.item.isactive=="Y" ? "Active" : "Inactive"}}
+            </template>
       </master-view>
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' Team '"
@@ -103,9 +105,11 @@
               label : "Add Team", icon : "plus", name : "ADD_ITEM"
             }],
             table : {
-              fields: [ { key : 'name', label : "Name" }, { key : 'code', label : "Code" }, 
-                //{ key : 'dept_email', label : "Email" },
-                { key: 'actions', label: 'Actions' }],
+              fields: [ 
+                { key : 'name', label : "Name" }, 
+                { key : 'code', label : "Code" }, 
+                { key: 'actions', label: 'Actions' },
+                { key : 'isactive', label : "Status" ,sortable: true}],
               busy : false,
               sortBy: 'name',
             },

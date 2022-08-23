@@ -14,12 +14,26 @@
                      :foot-clone=false
                      :per-page="sessions.perPage"
                      :current-page="sessions.currentPage"
-                     :items="sessions.items"
+                     :items="filtered"
                      :fields="sessions.fields">
                 <template #cell(assignedToAgent)="row">
                     <font-awesome-icon v-if="row.item.mode=='BOT'" icon="robot" :style="{ color: 'grey' }" />
                     <font-awesome-icon v-if="row.item.mode=='AGENT'" icon="user" :style="{ color: 'grey' }" />
                     &nbsp;{{ row.item.assignedToAgent}}
+                </template>
+                <template #top-row="row">
+                    <b-th><input type="search" v-model="filters.lane"  class="form-control form-control-sm" /></b-th>
+                    <b-th>&nbsp;</b-th>
+                    <b-th>&nbsp;</b-th>
+                    <b-th><input type="search" v-model="filters.createdBy"  class="form-control form-control-sm" /></b-th>
+                    <b-th>&nbsp;</b-th>
+                    <b-th>
+                        <select class="form-control form-control-sm" v-model="filters.status" @click.stop.prevent>
+                            <option value="">--</option>
+                            <option :value="option.value" v-for="option in statusOptions" :key="option.value">{{ option.label }}</option>
+                        </select>
+                    </b-th>
+                    <b-th>&nbsp;</b-th>
                 </template>
                 <template #cell(contact)="row">
                     <i  class="fab"  v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
@@ -120,21 +134,31 @@
               type : "link"
             }],
             input : {
+                dataranges : ['Today','Last 7 Days','Yesterday','This month','Last month'],
                 daterange : {
-                    hidden : true,
                     startDate : null,
                     endDate : null,
+                    span : "Today"
                 }
             },
+            filters:{
+              lane:"",
+              createdBy:"",
+              status:"",
+            },
+            statusOptions:[
+              {label : "RESOLVED", value:"RESOLVED"},
+              {label : "COMPLETED", value:"COMPLETED"}
+            ],
             sessions : {
                 fields: [ 
-                    { key : 'contact', label : "Account" },
-                    { key : 'bulkSessionId', label : "SessionId" },
-                    { key : 'template', label : "Template" },
-                    { key : 'createdBy', label : "by" },
-                    { key : 'createdStamp', label : "@" },
-                    { key : 'status', label : "Status" },
-                    { key : 'message', label : "Messages" },
+                    { key : 'contact', label : "Account", sortable: true },
+                    { key : 'bulkSessionId', label : "SessionId", sortable: true },
+                    { key : 'template', label : "Template", sortable: true },
+                    { key : 'createdBy', label : "by", sortable: true },
+                    { key : 'createdStamp', label : "Sent@" , sortable: true},
+                    { key : 'status', label : "Status" , sortable: true},
+                    { key : 'message', label : "Messages", sortable: true },
                     //{ key : 'lastInComingStamp', label : "lastInComingStamp" },
                     //{ key : 'lastResponseStamp', label : "lastResponseStamp" },
                     //{ key : 'closeSessionStamp', label : "Closed@" },
@@ -147,6 +171,34 @@
             },
             session : null,
         }),
+        computed:{
+            filtered(){
+                if(!this.sessions.items.length) return [];
+                const filtered = this.sessions.items.filter(item => {
+                  return Object.keys(this.filters).every(key =>{
+                    if(key === "status"){
+                       switch (this.filters[key]) {
+                        case "COMPLETED": 
+                          return item[key] == "COMPLETED";
+                        case "RESOLVED":
+                         return item[key] == "RESOLVED";
+                        default:
+                          return true;
+                       }
+                    } else if(key === "contactName"){ 
+                        return String(item._searchText).toLowerCase().includes(this.filters[key].toLowerCase())
+                    } else{
+                      return String(item[key]).toLowerCase().includes(this.filters[key].toLowerCase())
+                    }
+                  }
+                  );
+                });
+                return filtered.length > 0
+                  ? filtered
+                  : [
+                    ];
+              }
+        },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
           this.getItems();

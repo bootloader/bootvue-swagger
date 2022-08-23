@@ -4,9 +4,10 @@
         :header=header
         :actions=actions
         :table=table
+        goodTable
       >
 
-      <template #cell(contact)="row">
+      <template #cell(name)="row">
           <i  class="fab" v-bind:class="MyDict.socialPrefix(row.item.contactType)"> </i>
             {{row.item.name || row.item.csid}}
       </template>
@@ -49,7 +50,7 @@
             actions : [
             {
               label : "Search", name : "LANE_SELECT",
-              type : "search", selectFirst : true
+              type : "search", selectFirst : true, placeholder:"Search by phone number"
             },{
               label : "Select Account", name : "LANE_SELECT",
               type : "lane", selectFirst : true
@@ -66,9 +67,14 @@
             },
             table : {
                 fields: [ 
-                    { key : 'contact', label : "Contact" },
-                    { key : 'phone', label : "Phone" },
-                    { key : 'email', label : "Email" },
+                    { key : 'name', label : "Contact", sortable: true, 
+                        filterOptions:{
+                            enabled:true,
+                            
+                        }
+                    },
+                    { key : 'phone', label : "Phone" , filterOptions:{enabled:true}},
+                    { key : 'email', label : "Email" , filterOptions:{enabled:true}},
                     { key : 'createdStamp', label : "Joined" },
                     { key : 'lastInBoundStamp', label : "LastIn" },
                     { key : 'lastOutBoundStamp', label : "LastOut" },

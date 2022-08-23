@@ -86,6 +86,7 @@
                       {{ row.value | formatDate}}
                 </template>   
                 <template #cell(actions)="row">
+                    <span class="text-center">
                     <span class="far fa-comment-alt mg-1 pointer text-primary text-bold" 
                       v-tooltip="'View Chat'"
                      @click="showChat(row.item, row.index, $event.target)" ></span>
@@ -93,6 +94,7 @@
                         class="bi bi-emoji-smile mg-1 pointer text-primary text-bold" 
                         v-tooltip="row.item.feedback.tag">
                         {{row.item.feedback.score}}
+                      </span>
                       </span>
                 </template>
 
@@ -526,6 +528,10 @@
    .note{
        font-size: 12px;
    }
+   .text-center{
+        text-align: center;
+        display: block;
+    }
 </style>
 
 <style lang="scss">
@@ -604,4 +610,9 @@
     input[type=search]::-webkit-search-cancel-button {
         -webkit-appearance: searchfield-cancel-button;
     }
+    
+    .agent-session-list .row td:nth-child(3){
+        text-align: center;
+    }
+    
 </style>

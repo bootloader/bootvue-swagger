@@ -33,6 +33,7 @@
               :pagination-options="{
                 enabled: true,
                 perPage: table.perPage || 25,
+                ...table.paginationOptions
               }"
             >
               <template slot="table-row" slot-scope="props">

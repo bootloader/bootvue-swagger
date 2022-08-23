@@ -45,3 +45,31 @@
         },
     }
 </script>
+
+<style lang="scss">
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgb(115, 115, 115);
+  opacity: 1; /* Firefox */
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: rgb(115, 115, 115);
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+   color: rgb(115, 115, 115);
+  font-style: italic;
+  font-size: 0.8em;
+}
+.form-group{
+    label{
+        color: #333;
+    }
+}
+body{color: #333;}
+</style>

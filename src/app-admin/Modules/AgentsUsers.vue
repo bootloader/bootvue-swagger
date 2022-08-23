@@ -26,6 +26,9 @@
               <b-th><input type="search" v-model="filters.agent_email"  class="form-control form-control-sm" /></b-th>
               <b-th>&nbsp;</b-th>
         </template>
+        <template #cell(dept.name)="row">
+            {{row.item.dept.name + "(" + row.item.dept.code + ")"}}
+        </template>
         <template #cell(actions)="row">
           <b-button size="sm" @click="enableItem(row.item, row.index, $event.target)" variant="outline-primary"
             v-tooltip="row.item.isactive == 'Y' ? 'De-Activate' : 'Activate'" class="fa-stack fa-1x">
@@ -171,7 +174,7 @@
             subheading: 'Add edit users',
             icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-user-friends',
             actions : [{
-              label : "Add User", icon : "fa fa-plus", name : "ADD_ITEM"
+              label : "Add User", name : "ADD_ITEM"
             }],
             table : {
               fields: [ 

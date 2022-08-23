@@ -78,7 +78,7 @@
                             </div>
 
                             <div v-else-if="action.type == 'search'" class="d-inline-flex">
-                                <input class="form-control" type="text" name="" v-model="input.search.value">
+                                <input class="form-control" type="text" name="" v-model="input.search.value" :placeholder="action.placeholder">
                             </div>
 
                             <div  v-else-if="action.type == 'apply'"  class="d-inline-flex" >
