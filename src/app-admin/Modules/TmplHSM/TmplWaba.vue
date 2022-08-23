@@ -764,6 +764,7 @@
             },
             deleteButton : function (index) {
                 this.templateSimple.buttons.buttons.splice(index,1);
+                this.templateSimple.varMap.buttons.splice(index,1);
             },
             fixit :  debounce(function(params) {
                 this.newLanguage = null;
@@ -787,7 +788,16 @@
                         }
                     });
                     THAT.templateSimple.examples[component+"_preview"] = body_preview; 
-                })
+                });
+                 (THAT.templateSimple?.buttons?.buttons ||[]).map(function(btn){
+                    if(btn.type == "URL"){
+                       THAT.templateSimple.varMap.buttons.map(function(btnVar){
+                            if(btnVar.sample){
+                                THAT.templateSimple.examples["button_url"] = btnVar.sample; 
+                            }
+                       })
+                    }
+                 });
             },
             afterVarEdit(e){
                 let path = e.detail.model.path || "data." + e.detail.model.component + "_var_"+ e.detail.model.numVar.replace(/(\{\{)|(\}\})/g, '');

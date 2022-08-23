@@ -2,6 +2,7 @@ import formatters from '@/services/formatters';
 
 import TmplUtils from './TmplUtils';
 import JsonXPath from './JsonXPath';
+import mustache from 'mustache';
 
 function toHSM(waba){
     console.log("toHSMs",waba);
@@ -29,7 +30,7 @@ function cloneWABATmplSample(template,hsm) {
     hsm = hsm || {};
     let bodyText = null,headerText;
     let templateRaw = (hsm?.body || hsm?.template || "").split("---options---");
-    let varMap = {};
+    let varMap = {buttons : []};
 
     
     if(templateRaw[0]){
@@ -56,6 +57,36 @@ function cloneWABATmplSample(template,hsm) {
             }
         }
     }
+
+    if(hsm?.options?.buttons){
+        hsm?.options?.buttons.map(function(btn){
+            let buttonVars = [];
+            if(btn.type == "URL"){
+                let btnTmpl = TmplUtils.convertToOrderedVars(btn.url);
+                btn.urlWaba = btnTmpl.text;
+                buttonVars = btnTmpl.vars;
+                if(hsm?.model){
+                    for(var i in buttonVars){
+                        buttonVars[i].component = "button";
+                        buttonVars[i].sample = mustache.render(btn.urlWaba, hsm?.model);
+                    }
+                }
+            } else if(btn.type == "QUICK_REPLY"){
+                let btnTmpl = TmplUtils.convertToOrderedVars(btn.code || btn.key);
+                btn.codeWaba = btnTmpl.text;
+                buttonVars = btnTmpl.vars;
+                if(hsm?.model){
+                    for(var i in buttonVars){
+                        buttonVars[i].component = "button";
+                        buttonVars[i].sample = mustache.render(btn.codeWaba, hsm?.model);
+                    }
+                }
+            }
+            varMap.buttons.push(buttonVars);
+            return btn;
+        });
+    }
+
     let templateOptions = formatters.message_form_options(formatters.map_from_string(templateRaw[1]));
 
     return {
@@ -110,7 +141,7 @@ function cloneWABATmplSample(template,hsm) {
                         return {
                             type : button.type || "QUICK_REPLY",
                             text : button.label,
-                            url : button.url,
+                            url :  button.urlWaba || button.url,
                             phone_number : button.phone_number
                         }
                     }),
@@ -188,7 +219,9 @@ function createWABATmplSimple(template) {
         model : TmplUtils.sampleModel()
     }
 
-    if(template && template.template && template.template.components){
+    //console.log("template.template.components",template?.template)
+    
+    if(template && template.template && template.template){
         template.template.components.map(function(cmp){
             if (cmp.type == "HEADER"){
                 templateSimple.header = cmp;
@@ -198,6 +231,12 @@ function createWABATmplSimple(template) {
                 templateSimple.footer = cmp;
             } else if(cmp.type == "BUTTONS"){
                 templateSimple.buttons = cmp;
+                //console.log("templateSimple.buttons",templateSimple?.buttons)
+                templateSimple.buttons.buttons.map(function(btn){
+                    if(btn.type == "URL"){
+                        //templateSimple.examples.button_url = 
+                    }
+                })
             }
         });
         console.log("template.varMap",template.varMap)

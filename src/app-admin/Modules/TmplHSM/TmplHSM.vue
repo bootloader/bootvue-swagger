@@ -159,7 +159,7 @@
 
                                         <BaseVSelect class="col-md-3" size="sm"
                                           name="Message Language"
-                                          filterable searchable
+                                          filterable searchable clearable
                                           options="data:languages"
                                           :filter="{
                                               '!!waba'  : true
@@ -683,7 +683,13 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
               this.newItem.__ob__.dep.notify()
           },
           templateTextChange(){
-            let neVal = (this.newItem.header + this.newItem.template + this.newItem.footer)
+            console.log("this.newItem.options",this.newItem.options)
+            let neVal = (this.newItem.header + this.newItem.template + this.newItem.footer
+            + (this.newItem?.options?.buttons || []).map(function(btn){
+              return btn.code + " " + btn.url;
+            }).join(" ")
+            
+            )
             let newItem = this.newItem;
             this.sampleVar.data = TmplUtils.getVars(
                 neVal,/({{((data|global)\.[\w\d\.]+)}})/g).map(function(v,i){

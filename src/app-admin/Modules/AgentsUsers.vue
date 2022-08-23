@@ -113,15 +113,48 @@
                                   <select name="select" id="exampleSelect" class="form-control" v-model="newItem.dept_id">
                                       <option v-for="team in teams" v-bind:key="team.id" :value=team.id>
                                         {{team.name}}</option>
-                                      </select>
+                                  </select>
                                 </div>
 
                                 <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
-                                  v-model="newItem.admin">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Admin Access</label>
+                                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                                    v-model="newItem.admin">
+                                  <label class="form-check-label" for="flexSwitchCheckDefault">Admin Access</label>
+                                </div>
+
                               </div>
 
+                              <div class="col-md-6">
+                                    <vue-tags-input
+                                        v-model="labelInput"
+                                        :tags="labels"
+                                        :add-only-from-autocomplete="true"
+                                        :autocomplete-items="quickLabels"
+                                        :autocomplete-min-length="0"
+                                        :placeholder="'Select Labels'"
+                                        @tags-changed="onLabelChange">
+
+                                        <div slot="autocomplete-item"
+                                            slot-scope="props"
+                                            class="my-item"
+                                            @click="props.performAdd(props.item)" >
+                                        
+                                            <i v-bind:style="{ 'background-color': '#' + props.item.color }">&nbsp;</i>&nbsp;
+
+                                            <i class="material-icons" >
+                                          {{ props.item.category }}
+                                            </i> {{ props.item.title }}
+                                        </div>
+
+
+                                        <div slot="tag-left"
+                                            slot-scope="props"
+                                            class="my-tag-left"
+                                            @click="props.performOpenEdit(props.index)">
+                                            <i v-bind:style="{ 'background-color': '#' + props.tag.color }">&nbsp;</i>&nbsp;
+                                        </div>
+
+                                    </vue-tags-input>
                               </div>
                             </div>
  
@@ -131,8 +164,13 @@
                       <div class="position-relative form-group">
                         <button @click="createItem"
                           name="password" id="examplePassword" :disabled="!(isChanged && isValid)"
-                          class="form-control btn btn-primary">Create</button>
+                          class="form-control btn btn-primary">{{ newItem.id ?`Save`:`Create`}}</button>
                         </div>
+
+ <div class="position-relative form-group">
+  {{newItem}}
+ </div>
+
                   </template>
 
         </b-modal>
@@ -145,12 +183,14 @@
 
     import PageTitle from "../Components/PageTitle.vue";
     import { MyFlags,MyDict,MyConst } from './../../services/global';
+    import VueTagsInput from '@johmun/vue-tags-input';
+    import formatters from '../../services/formatters';
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUserSlash,faUser,faUserSecret,faUserCog,faEye,faSlash
     } from '@fortawesome/free-solid-svg-icons';
-    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
     library.add(
         faUserSlash,faUser,faUserSecret,faUserCog,faEye, faSlash
@@ -161,12 +201,22 @@
               "name" : null,
               "agent_email": "", code : "",
               "dept_id" : null, agent_password : "",
-              admin : false
+              admin : false,
+              quicktags : []
             };
+    }
+    var tagFormat = function (argument) {
+        return {
+            id : argument.id,
+            category : argument.category,
+            title : argument.title,
+            text : argument.title,
+            color : formatters.hexacode(argument.category)
+        };
     }
     export default {
         components: {
-            PageTitle, 'font-awesome-icon': FontAwesomeIcon,MyDict
+            PageTitle, 'font-awesome-icon': FontAwesomeIcon,MyDict,VueTagsInput
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -194,7 +244,8 @@
            },
           newItem : newItem(),
           modelName :  "MODAL_ADD_USERS",
-          includeInActive : false
+          includeInActive : false,
+          labelInput : "", newLabels : null
         }),
         computed : {
             filtered() {
@@ -230,11 +281,32 @@
             },
             isValid : function (argument) {
               return this.newItem.name && this.newItem.code && this.newItem.agent_email;
-            }
+            },
+            labels  : function (argument) {
+                var THAT = this;
+                let TmplQuicktags = this.$store.getters.StateApi.TmplQuicktags;
+                if(this.newItem.code)
+                    return (THAT.newItem.quicktags || []).map(function (quicktag) {
+                        let label = TmplQuicktags.filter(t => {
+                            return t.id == quicktag;
+                        })[0];
+                        return label ? tagFormat(label) : null;
+                    }).filter(v=>v);
+                return [];
+            },
+            quickLabels : function(){ 
+              let TmplQuicktags = this.$store.getters.StateApi.TmplQuicktags;
+                return (TmplQuicktags|| []).filter(i => {
+                  return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
+                }).map(function (argument) {
+                    return tagFormat(argument);
+                });
+            },
         },
         created : function (argument) {
           this.loadAgents(true);
-          this.loadAgentTeams()
+          this.loadAgentTeams();
+          this.$service.getX("/api/tmpl/quicktags");
         },
         methods : {
           async loadAgents (loader){
@@ -249,6 +321,9 @@
               return await this.$service.getX('/api/admins/dept',{
                 includeInActive : true
               });
+          },
+          onLabelChange : function (newLabels) {
+              this.newItem.quicktags = newLabels; 
           },
           async createItem () {
             let success = await this.$refs.form.validate();
@@ -301,7 +376,9 @@
               default:
                 console.log("NoMapping",argument) 
             }
-          }
+          },
+
+
         }
 
 
