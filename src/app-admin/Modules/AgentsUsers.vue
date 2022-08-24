@@ -167,7 +167,7 @@
                           class="form-control btn btn-primary">{{ newItem.id ?`Save`:`Create`}}</button>
                         </div>
 
- <div class="position-relative form-group">
+ <div class="position-relative form-group" hidden>
   {{newItem}}
  </div>
 
