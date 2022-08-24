@@ -131,7 +131,7 @@
                                         :add-only-from-autocomplete="true"
                                         :autocomplete-items="quickLabels"
                                         :autocomplete-min-length="0"
-                                        :placeholder="'Select Labels'"
+                                        :placeholder="'Select Session Tags'"
                                         @tags-changed="onLabelChange">
 
                                         <div slot="autocomplete-item"
@@ -195,15 +195,16 @@
     library.add(
         faUserSlash,faUser,faUserSecret,faUserCog,faEye, faSlash
     );
-
-    function newItem() {
+    function newItem(item) {
       return {
-              "name" : null,
-              "agent_email": "", code : "",
-              "dept_id" : null, agent_password : "",
-              admin : false,
-              quicktags : []
-            };
+          "name" : null,
+          "agent_email": "", code : "",
+          "dept_id" : null, agent_password : "",
+          admin : false,
+          ...item,
+          quicktags : (item?.quicktags) || [],
+          quicklabels : (item?.quicklabels) || []
+      };
     }
     var tagFormat = function (argument) {
         return {
@@ -288,7 +289,7 @@
                 if(this.newItem.code)
                     return (THAT.newItem.quicktags || []).map(function (quicktag) {
                         let label = TmplQuicktags.filter(t => {
-                            return t.id == quicktag;
+                            return t.id == quicktag.id;
                         })[0];
                         return label ? tagFormat(label) : null;
                     }).filter(v=>v);
@@ -323,7 +324,8 @@
               });
           },
           onLabelChange : function (newLabels) {
-              this.newItem.quicktags = newLabels; 
+            console.log("newLabels",newLabels)
+            this.newItem.quicktags = newLabels; 
           },
           async createItem () {
             let success = await this.$refs.form.validate();
@@ -351,10 +353,7 @@
              this.onAction({name : "CANCEL"});
           }, 
           async editItem(item) {
-              this.newItem = newItem();
-              for(var i in item){
-                this.newItem[i] = item[i];
-              }
+              this.newItem = newItem(item);
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
           },

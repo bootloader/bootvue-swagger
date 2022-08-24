@@ -269,7 +269,11 @@
             },
             sampleVarData(){
               if(this.input.templates.selected){
-                let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer)
+                let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer
+                + (this.selectedTemplate?.options?.buttons || []).map(function(btn){
+                    return btn.code + " " + btn.url;
+                  }).join(" ")
+                )
                  let THAT = this;
                   return TmplUtils.getVars(neVal,/({{((data|global)\.[\w\d\.]+)}})/g
                   ).map(function(v,i){
