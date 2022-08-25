@@ -109,6 +109,11 @@ export default AppRouter.route({
             component: () => import('./Modules/Quick/TmplQuickMedia.vue'),    
         },
         {
+            path : "/app/admins/tmpl/quickskill",
+            name: 'quickskill',
+            component: () => import('./Modules/Quick/TmplQuickSkills.vue'),    
+        },
+        {
             path : "/app/admins/tmpl/pushtemplate/:mode/:itemId",
             name: 'pushtemplate',
             component: () => import('./Modules/TmplHSM/TmplHSM.vue'),    

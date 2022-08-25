@@ -131,7 +131,7 @@
                                         :add-only-from-autocomplete="true"
                                         :autocomplete-items="quickLabels"
                                         :autocomplete-min-length="0"
-                                        :placeholder="'Select Session Tags'"
+                                        :placeholder="'Add Agent Skills'"
                                         @tags-changed="onLabelChange">
 
                                         <div slot="autocomplete-item"
@@ -167,9 +167,9 @@
                           class="form-control btn btn-primary">{{ newItem.id ?`Save`:`Create`}}</button>
                         </div>
 
- <div class="position-relative form-group" hidden>
-  {{newItem}}
- </div>
+                    <div class="position-relative form-group" hidden>
+                      {{newItem}}
+                    </div>
 
                   </template>
 
@@ -198,17 +198,19 @@
     function newItem(item) {
       return {
           "name" : null,
-          "agent_email": "", code : "",
+          "agent_email": "", code : item?.code || "",
           "dept_id" : null, agent_password : "",
           admin : false,
           ...item,
           quicktags : (item?.quicktags) || [],
-          quicklabels : (item?.quicklabels) || []
+          quicklabels : (item?.quicklabels) || [],
+          quickskills : (item?.quickskills) || []
       };
     }
     var tagFormat = function (argument) {
         return {
             id : argument.id,
+            code : argument.code,
             category : argument.category,
             title : argument.title,
             text : argument.title,
@@ -285,19 +287,19 @@
             },
             labels  : function (argument) {
                 var THAT = this;
-                let TmplQuicktags = this.$store.getters.StateApi.TmplQuicktags;
+                let TmplQuickskills = this.$store.getters.StateApi.TmplQuickskills;
                 if(this.newItem.code)
-                    return (THAT.newItem.quicktags || []).map(function (quicktag) {
-                        let label = TmplQuicktags.filter(t => {
-                            return t.id == quicktag.id;
+                    return (THAT.newItem.quickskills || []).map(function (quickskill) {
+                        let label = TmplQuickskills.filter(t => {
+                            return t.id == quickskill.id;
                         })[0];
                         return label ? tagFormat(label) : null;
                     }).filter(v=>v);
                 return [];
             },
             quickLabels : function(){ 
-              let TmplQuicktags = this.$store.getters.StateApi.TmplQuicktags;
-                return (TmplQuicktags|| []).filter(i => {
+              let TmplQuickskills = this.$store.getters.StateApi.TmplQuickskills;
+                return (TmplQuickskills|| []).filter(i => {
                   return i.title.toLowerCase().indexOf(this.labelInput.toLowerCase()) !== -1;
                 }).map(function (argument) {
                     return tagFormat(argument);
@@ -307,7 +309,7 @@
         created : function (argument) {
           this.loadAgents(true);
           this.loadAgentTeams();
-          this.$service.getX("/api/tmpl/quicktags");
+          this.$service.getX("/api/tmpl/quickskills");
         },
         methods : {
           async loadAgents (loader){
@@ -324,8 +326,7 @@
               });
           },
           onLabelChange : function (newLabels) {
-            console.log("newLabels",newLabels)
-            this.newItem.quicktags = newLabels; 
+            this.newItem.quickskills = newLabels; 
           },
           async createItem () {
             let success = await this.$refs.form.validate();

@@ -1,10 +1,10 @@
 <template>
     <div>
-      <master-view id="quick-actions-list"  ref="masterView"
+      <master-view id="agent-skills-list"  ref="masterView"
         :header="header"
         :table="table"
         :filters="[
-            { label : 'Add '+header.name, icon : 'plus', name : 'ADD_ITEM'}
+            { label : 'Add Skill', icon : 'plus', name : 'ADD_ITEM'}
         ]"
         :newItem="newItem"
         :busy="table.busy" >
@@ -30,17 +30,17 @@
             <ValidationObserver ref="form" v-if="itemCopy">
                 <base-input class="mx-0 px-0"
                       v-model="itemCopy.category" label="Category" autocomplete="off" rules="required"
-                      placeholder="eg : country, customerType">
+                      placeholder="eg : Treatment">
                 </base-input>
 
                 <base-input class="mx-0 px-0"
                       v-model="itemCopy.title" label="Title" autocomplete="off" rules="required"
-                      placeholder="eg: Platiinum, Verified, India">
+                      placeholder="eg: Ortho, Dental">
                 </base-input>
 
                 <base-input class="mx-0 px-0" format-filter="item_code" :format-value="itemCopy.title" format-live
-                      v-model="itemCopy.code" label="Code" autocomplete="off" rules="required"
-                      placeholder="eg:- PLATINUM, VERFD, IND">
+                      v-model="itemCopy.code" label="Skill Code" autocomplete="off" rules="required"
+                      placeholder="eg:- ORTHO, DENTAL">
                 </base-input>
             </ValidationObserver>
         </template>  
@@ -57,20 +57,19 @@
         },
         data: () => ({
             header : {
-              name : "Quick Action",
-              heading: 'Quick Actions',
-              subheading: 'are used by agents to trigger functionalty in core business app ',
-              icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-location-arrow',
+              heading: 'Agent Skills',
+              subheading: 'Skills can be used to decide who can handle what',
+              icon: 'pe-7s-browser icon-gradient bg-tempting-azure fa fa-user-tag',
             },
             table :{
               fields: [ 
                 { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
-                { key : 'code', label : "Action Code" },
+                { key : 'code', label : "Code" },
                 { key: 'actions', label: 'Options' }
               ],
               busy : false,
               sortBy: 'name',
-              api : "api/tmpl/quickaxn"
+              api : "api/tmpl/quickskills"
             },
             newItem : {
                   "category":"",

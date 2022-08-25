@@ -9,7 +9,7 @@
                 </span>
             </template>
             <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
-              <slot :name="slotName" v-bind="{apply,loadNext,loadPrev,...slotScope}"></slot>
+              <slot :name="slotName" v-bind="{apply,loadNext,loadPrev,createItem,...slotScope}"></slot>
             </template>
           <template #subheading>
               <slot name="header-subheading">
@@ -89,7 +89,11 @@
                         show-empty
                         filter>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
-                  <slot :name="slotName" v-bind="{openView:()=>openView(slotScope),...slotScope}"></slot>
+                  <slot :name="slotName" v-bind="{
+                      openView:()=>openView(slotScope),
+                      removeItem:() => removeItem(slotScope),
+                      editItem:() => editItem(slotScope),
+                    ...slotScope}"></slot>
                 </template>
                 <template #empty>
                     <div class="center-box">
@@ -163,6 +167,20 @@
             </slot>  
       </b-modal>
 
+      <b-modal :id="viewid+'_EDIT'" 
+        :title="(selectedItemMode == 'EDIT' ? 'Edit' : 'Add') + ` ${header.name} `" 
+            size="lg" @hidden="editItemCancelled">
+          <slot name="modal(edit)" v-bind="selectedItem">
+              <pre v-if="selectedItem">{{selectedItem.itemCopy | json}}</pre>
+          </slot>  
+          <template #modal-footer>
+                <button @click="editItemCancel" class="btn btn-warning">Cancel</button>
+                &nbsp;
+                <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
+                      class="btn btn-primary">{{selectedItem.itemCopy.id ? 'Update' : 'Create'}}</button>
+          </template>
+      </b-modal>
+
     </div>
 
 </template>
@@ -220,6 +238,12 @@
           busy : {
               type: Boolean,
               default : false
+          },
+          newItem : {
+            type : [Boolean,Object],
+            default: function () {
+                return { }
+            }
           }
         },
         data: () => ({
@@ -236,7 +260,8 @@
             session : null,
             busyintenral : false,
             selectedItem : null,
-            viewid : 'v'+ Date.now()
+            viewid : 'v'+ Date.now(),
+            oldHash : "",
         }),
         computed : {
           isbusy : {
@@ -279,7 +304,13 @@
             } else {
               return this.table.items;
             }
-          }
+          },
+          selectedItemMode(){
+            return (this.selectedItem?.itemCopy?.id) ? 'EDIT' : 'CREATE';
+          },
+          selectedItemChanged :  function (argument) {
+            return this.oldHash !== JSON.stringify(this.selectedItem?.itemCopy);
+          } 
         },
         mounted : function (argument) {
           if(this.goodTable)
@@ -331,6 +362,8 @@
           async apply(){
             this.loadItems();
           },
+
+
           onActionINT : function (argument) {
             console.log("onAction",argument)
             switch(argument.type){
@@ -365,6 +398,41 @@
           openView(row){
             this.selectedItem = row;
             this.$bvModal.show(this.viewid + "_VIEW")
+          },
+          createItem(item){
+            if(item){
+            } else if(typeof this.newItem == 'function'){
+              item  = this.newItem();
+            } else {
+              item  = this.newItem;
+            }
+            this.editItem({item})
+          },
+          editItem(row){
+              this.selectedItem = { 
+                ...row,
+                itemCopy : JSON.parse(JSON.stringify(row.item))
+              };
+              this.oldHash = JSON.stringify(this.selectedItem.itemCopy);
+              this.$bvModal.show(this.viewid + "_EDIT")
+          },
+          async editItemSave ({item,index}) {
+              await this.$service.post(this.table.api, this.selectedItem.itemCopy);
+              await this.loadItems();
+              this.editItemCancel();
+          },
+          async removeItem({item,index}){
+             await this.$service.delete(this.table.api, item);
+             this.loadItems();
+          },
+          async editItemCancel() {
+              await this.$bvModal.hide(this.viewid + "_EDIT")
+          },
+          editItemCancelled(){
+              this.selectedItem = null;
+          },
+          getSelectedItem(){
+            return this.selectedItem;
           }
 
         }

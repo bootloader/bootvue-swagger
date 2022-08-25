@@ -188,6 +188,11 @@
                                 href: '/app/admins/tmpl/quickmedia',
                                 title: 'Quick Media',
                             },
+                            {   
+                                enabled : true,
+                                href: '/app/admins/tmpl/quickskill',
+                                title: 'Agent Skills',
+                            },
                         ],
                     },
                     {
