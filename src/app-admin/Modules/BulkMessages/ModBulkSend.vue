@@ -127,6 +127,12 @@
                                 <b-form-file placeholder="Upload CSV file​" accept=".csv" v-model="input.contactCSV" @change="validate($event)"></b-form-file>
                                 <span class="v-input-error">{{ errors[0] }}</span>
                             </ValidationProvider>
+                            <div v-if="input.csvUploadError.length">
+                                <div class="v-input-error">Error:</div>
+                                <ol>
+                                    <li class="v-input-error" v-for="error in input.csvUploadError">{{error}}</li>
+                                </ol>
+                            </div>
                             <i>Upload csv file with all the variables associated with each contact. Incomplete files, will not be accepted.​​</i>
                     </b-card-text>
                 </b-tab>
@@ -216,7 +222,8 @@
                   vars : {}
                 },
                 contacts : "",
-                contactCSV:""
+                contactCSV:"",
+                csvUploadError:[]
             },
             table : {
               fields: [ 
@@ -301,6 +308,19 @@
           
         },
         methods : {
+            async uploadCsv(){
+                let bodyFormData = new FormData();
+                bodyFormData.append("file",this.input.contactCSV);
+                bodyFormData.append("templateId",this.selectedTemplate.id);
+                let resp = await this.$service.post('/pub/message/bulk/push/csv/read',bodyFormData)
+                console.log("resp",resp);
+                if(resp.results[0].referenceKey){
+                    return resp.results[0].referenceKey;
+                } else{
+                    this.input.csvUploadError = resp.results[0].lstErrors
+                }
+                return false;
+            },
           async loadLanes (){
             let resp = await this.$service.get('/api/options/channels');
             this.input.lane.values = resp.results.filter(function (lane) {
@@ -341,9 +361,15 @@
             let success = await this.$refs.session_form.validate();
             console.log("success",success, this.input.contactCSV);
             if(!success) return;
+            let referenceKey;
+            if(this.input.contactCSV){
+                referenceKey = await this.uploadCsv();
+            }
+            if(this.input.contactCSV && !referenceKey) return;
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,
+              "referenceKey":referenceKey,
               hsm : {
                 id: this.selectedTemplate.id,
                 data : this.input.templates.vars.data
