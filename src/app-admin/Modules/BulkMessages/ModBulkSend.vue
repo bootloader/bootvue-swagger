@@ -384,7 +384,7 @@
                   return item.trim()
               }).filter(function (argument) {
                 return !!argument
-              }) : this.input.contactCSV
+              }) : ""
             });
             this.$router.push("/app/moderate/bulk-push-jobs");
           },
