@@ -318,7 +318,17 @@
                  @click="toggleOnline"
                  v-tooltip="isAvailable ? 'Availble' : 'Not Availble'"
                 class="online-toggle fa fa-toggle-on"></span>
-             </span>    
+             </span> 
+             
+             <span class="connection-wrapper toggle-active">
+                <i class="connection-status fa pointer"
+                    @click="notificationControl"
+                    v-bind:class="{
+                        'fa-volume-up text-online'  : enableAudioNotification == true,
+                        'fa-volume-mute text-grey'  : enableAudioNotification == false,
+                    }">
+                </i>             
+            </span> 
 
         </div>
     </div>
@@ -401,7 +411,7 @@
                                     return chat.local.expired;
                                 default :
                                     return true;
-``                            }
+                            }
                         } else {
                             return ((chat._searchText || "").toLowerCase().indexOf(searchToken._text) > -1);
                         }
@@ -502,7 +512,9 @@
             scrollPosition : 0,
              //contactsTab : "ME",
              //chats : this.$store.getters.StateChats
-             signal : false
+             signal : false,
+             enableAudioNotification:(localStorage.getItem("AUDIO_NOTIFICATION") == 'true'),
+             soundNotificationEvent : new CustomEvent('soundNotification')
         }),
         mounted () {
             let THAT = this;
@@ -560,6 +572,12 @@
             },
         },
         methods: {
+            notificationControl(){
+                this.enableAudioNotification = !this.enableAudioNotification;
+                console.log("this.mute",this.enableAudioNotification);
+                localStorage.setItem("AUDIO_NOTIFICATION",this.enableAudioNotification);
+                document.dispatchEvent(this.soundNotificationEvent);
+            },
             async changeSearchFilter(){
                 this.search.limit = 20;
                 this.scrollPosition = 0;

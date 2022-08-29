@@ -74,7 +74,8 @@
     },
     data: () => ({
       refreshTimer :0 ,
-      notyAudio: new Audio(notyAudioUrl)
+      notyAudio: new Audio(notyAudioUrl),
+      enableAudioNotification:(localStorage.getItem("AUDIO_NOTIFICATION") == 'true')
     }),
     methods : {
       async refresh(){
@@ -95,6 +96,13 @@
             promise.then(() => {}).catch(error => console.error);
         }
       },
+      storageListener(){
+        console.log("storageListener");
+        this.enableAudioNotification = (localStorage.getItem("AUDIO_NOTIFICATION") == 'true')
+      }
+    },
+    beforeDestroy() {
+        document.removeEventListener("soundNotification", this.storageListener);
     },
     created (){
       this.$store.registerModule("DataStore",DataStore);
@@ -130,7 +138,7 @@
             console.info("/message/receive/new:msg===",msg);
             THAT.$store.dispatch('ReadChatMessage', msg);
             THAT.$store.dispatch('RefeshTimer');
-            THAT.playNotification();
+            THAT.enableAudioNotification ? THAT.playNotification() : "";
         }).on("/dept/onassign-"+window.CONST.APP_DEPT, function(testresponse){
             console.debug("/dept/onassign-"+window.CONST.APP_DEPT,testresponse);
              THAT.$store.dispatch('AddChat', testresponse);
@@ -161,6 +169,7 @@
           });
 
       this.refresh();
+      document.addEventListener("soundNotification", this.storageListener);
     },
     beforeUnmount (){
         this.tunnel.off();
