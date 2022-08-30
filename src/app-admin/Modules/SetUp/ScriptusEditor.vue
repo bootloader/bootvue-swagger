@@ -74,6 +74,7 @@
     import AceEditor from 'vuejs-ace-editor';
     import ScriptusTerminal from './ScriptusTerminal.vue';
     import SetupConfigurationKey from './SetupConfigurationKey.vue';
+    import botfun from './snippets/botfun';
 
     export default {
         components: {
@@ -182,24 +183,18 @@
               this.saveScript();
           },
           editorInit: function (editor) {
-              console.log("editor",editor)
+              //botfun();
+              require('brace/ext/searchbox')
               require('brace/ext/language_tools') //language extension prerequsite...
               require('brace/mode/html')                
               require('brace/mode/javascript')    //language
               require('brace/mode/less')
               require('brace/theme/monokai')
               require('brace/snippets/javascript') //snippet
-              // var snippetManager = require("brace");
-              // snippetManager.define(
-              //       'ace/snippets/ini',
-              //       ['require', 'exports', 'module'],
-              //       function (e, t, n) {
-              //           'use strict'
-              //           ;(t.snippetText = undefined), (t.scope = 'ini')
-              //       }
-              // );
-              //console.log("snippetManager",snippetManager)
-              //snippetManager.insertSnippet(editor, snippet);
+              var langTools = ace.acequire("ace/ext/language_tools");
+              editor.setOptions({enableBasicAutocompletion: true});
+              langTools.addCompleter(botfun);
+              
           },
           terminalwin(){
             this.showTerminal = !this.showTerminal;
