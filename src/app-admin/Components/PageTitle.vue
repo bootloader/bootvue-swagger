@@ -6,9 +6,10 @@
                     <i :class="icon"/>
                 </div>
                 <div>
-                    {{heading}}
-                    <div
-                        class="page-title-subheading">
+                    <slot name="heading">
+                          {{heading}}
+                    </slot>
+                    <div class="page-title-subheading">
                         <slot name="subheading">
                             {{subheading}}
                         </slot>
@@ -23,9 +24,6 @@
                     </span>
               </slot>
         </span>
-
-        
-
 
         <span class="action-wrapper" v-if="dateranegeinput && !dateranegeinput.hidden" >
             <date-range-picker v-model="dateranegeinput.range" class=""

@@ -11,6 +11,11 @@
             <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
               <slot :name="slotName" v-bind="{apply,loadNext,loadPrev,createItem,...slotScope}"></slot>
             </template>
+          <template #heading>
+              <slot name="header-heading">
+                  {{header.heading}}
+              </slot>
+          </template>
           <template #subheading>
               <slot name="header-subheading">
                   {{header.subheading}}

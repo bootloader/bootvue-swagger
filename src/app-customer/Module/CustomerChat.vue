@@ -482,7 +482,7 @@
           var THAT = this;
           clearTimeout(this.fploader);
           this.fploader = setTimeout(function() {
-              console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
+              //console.log(`FP:${window.CONST.fp}, CH:${THAT.options.channelId}`);
               if(window.CONST.fp && THAT.options.channelId){
                 THAT.browserfp = (window.CONST.fp + "");
                 THAT.loading(false);

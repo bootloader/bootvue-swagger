@@ -9,8 +9,19 @@
             { label : 'Terminal', name : 'terminalwin' },
             { label : state, name : 'saveScript'},
       ]">
+      <template #header-heading>
+        {{heading}}  <small class="text-md">&lcub; {{subheading}} &rcub;</small>
+      </template>
+      <template #header-subheading>
+        <base-select size="sm" class="file-selector" :options="fileNames" v-model="fileSelected" ></base-select>
+        <span class="btn btn-outline-danger btn-xs mg-1" v-tooltip="`Delete ${fileSelected}`" v-if="fileSelected"
+          @click="removeSelectedFile"><span class="fa fa-trash"></span></span>
+        <span class="btn btn-outline-success btn-xs mg-1" v-tooltip="`Add New File`"
+          @click="addNewFile"
+        ><span class="fa fa-plus"></span></span>
+      </template>
       <template #filter(saveScript)="{filter}">
-        <b-button variant="success" :disabled="table.busy" @click="saveScript">{{filter.label}}</b-button>&nbsp;
+        <b-button  variant="success" :disabled="table.busy" @click="saveScript">{{filter.label}}</b-button>&nbsp;
       </template>
       <template #filter(terminalwin)="{}">
         <b-button :variant="showTerminal ? 'grey' : 'outline-grey'" 
@@ -19,7 +30,7 @@
       <template #body>
         <div class="editor pane" :style="{width:width,height : editorHeight}" >
           <AceEditor 
-              v-model="content"  ref="aceEditor"
+              v-model="selectedFile.content"  ref="aceEditor"
               @init="editorInit" 
               lang="javascript" 
               theme="monokai" 
@@ -51,7 +62,7 @@
               ]"
               />
         </div>
-        <div class="pane" :style="{width:width,height : editorHeight}">
+        <div class="pane" :style="{width:width,height : editorHeight}"  v-show="showTerminal">
           <ScriptusTerminal v-show="showTerminal"
             :user="terminal.user"  :logs="terminal.logs" :system="terminal.system">
             <template #terminalbar>
@@ -72,14 +83,18 @@
 <script>
 
     import AceEditor from 'vuejs-ace-editor';
+    import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue';
     import ScriptusTerminal from './ScriptusTerminal.vue';
     import SetupConfigurationKey from './SetupConfigurationKey.vue';
     import botfun from './snippets/botfun';
+    import debounce from 'debounce';
+    import bindow from '@/@common/utils/bindow';
 
     export default {
         components: {
           AceEditor,ScriptusTerminal,
-            SetupConfigurationKey
+            SetupConfigurationKey,
+                BaseSelect
         },
         data: () => ({
             heading: 'App Script',
@@ -98,30 +113,46 @@
             modelName :  "MODAL_ADD_TEAM",
             content : "",
             state : "Save",
-            editorHeight : (window.document.body.scrollHeight-20) + 'px',
+            editorHeight : (window.document.body.scrollHeight-70) + 'px',
             editorWidth : '100%',
             width : '100%',
-
             showTerminal : false, 
-           terminal : {
+            terminal : {
               system : '>',
               user : "lt@someone",
               logs : [
               ]
-           }
-
+           },
+           files : [], fileSelected : "",
         }),
         computed : {
+           fileNames(){
+             return this.files.map(function(file){
+                return file.name;
+              });
+           },
+           selectedFile (){
+              let fileSelected = this.fileSelected; 
+              return this.files.filter(function(file){
+                return file.name == fileSelected;
+              })[0] || {};
+           }
         },
         created : function (argument) {
          // console.log("created",this.$refs.editor.clientHeight)
         },
         mounted : function (argument) {
-          this.editorHeight =  (window.document.body.scrollHeight-80) + 'px';
+          this.onWindowResize = debounce(this.onWindowResize,2);
+          window.addEventListener("resize", this.onWindowResize);
+
+          this.onWindowResize();
           this.load();
           let THAT = this;
           //this.loadDebugContact();
           this.loadWebChat();
+        },
+        destroyed : function(){
+            window.removeEventListener("resize", this.onWindowResize);
         },
         methods : {
           async load (){
@@ -134,9 +165,18 @@
                 this.heading = resp.meta.appName;
                 this.subheading = resp.meta.appQueue;
               }
-              if(resp.results[0].data?.content){
+              if(resp.results[0]?.data?.content){
                 this.content = resp.results[0].data.content;
               }
+              let files = resp.results[0]?.data?.files;
+              if(!files || !files?.length){
+                files = [{name : "main", content : ""}]
+              }
+              this.files = files.map(function(file){
+                  return file;
+              });
+              this.fileSelected = this.fileNames[0];
+
             } finally {
               this.table.busy = false;
               this.state = "Save";
@@ -164,15 +204,34 @@
             clearTimeout( this.trail);
             this.trail = setTimeout(()=> this.loadLogs(),2000);
           },
+          removeSelectedFile(){
+            let fileSelected = this.fileSelected;
+            this.files = this.files.filter(function(file){
+                return fileSelected!==file.name;
+            });
+            this.fileSelected = this.fileNames[0];
+          },
+          addNewFile(){
+            let fileName = window.prompt("File Name");
+            if(fileName === null) return; 
+            for(var i in this.fileNames){
+              if(!fileName || this.fileNames[i] == fileName){
+                this.addNewFile();
+                return;
+              }
+            }
+            this.files.push({
+              name : (fileName || "").toLowerCase(),
+              content : ""
+            });
+            this.fileSelected = fileName || this.fileSelected || this.fileNames[0];
+          },
           async saveScript(){
             try {
               this.table.busy = true;
               this.state = "Saving...";
               let resp = await this.$service.post('/api/objects/appscript/'+this.$route.params.appId,{
-                files : [{
-                  name : "main",
-                  content : this.content
-                }] 
+                files : this.files
               });
             } finally {
               this.table.busy = false;
@@ -196,10 +255,15 @@
               langTools.addCompleter(botfun);
               
           },
-          terminalwin(){
-            this.showTerminal = !this.showTerminal;
+          onWindowResize(){
+            let size = bindow.size();
             this.width =  this.showTerminal ? '50%' : '100%';
             this.editorWidth = this.showTerminal ? '99%' : '100%';
+            this.editorHeight = (size.height-70) + 'px';
+          },
+          terminalwin(){
+            this.showTerminal = !this.showTerminal;
+            this.onWindowResize();
           },
           async loadWebChat(){
             console.log("this.$global.MyConst.cdn",this.$global.MyConst.cdn)
@@ -245,6 +309,20 @@
     }
     .pane {
       float: left;
+    }
+    .file-selector {
+      text-align: left;
+      float: left;
+      min-width: 150px;
+      padding-right: 5px;
+      .form-group {
+        margin: 0px 0px 2px 0px;
+        .form-control{
+          height: 24px;
+          margin: 0px;
+          padding: 0px;
+        }
+      }
     }
   }
 </style>

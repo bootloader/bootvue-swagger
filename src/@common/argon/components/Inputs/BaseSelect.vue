@@ -2,7 +2,7 @@
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}">
     <b-form-group class="form-group-select" label-for="'fmg-' + inputId"
       :class="[
-        {'is-question': question }
+        {'is-question': question }, 'text-' + size
       ]">
       <slot name="label">
         <label v-if="label || name" 
@@ -44,14 +44,15 @@
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, 
               {'none-value': !value},
+              'text-' + size,
               inputClasses]">
-              <option v-if="!question && ($attrs.placeholder || label || name)" 
+              <option v-if="!question && ($attrs.placeholder || label || name)" :class="'text-' + size"
               value="" disabled selected hidden >{{$attrs.placeholder || label || name}}</option>
               <slot name="default"> 
-                <option v-for="option in selectOptions" :value="option.id" v-bind:key="option.id">
+                <option v-for="option in selectOptions" :value="option.id" v-bind:key="option.id" :class="'text-' + size">
                     {{option.name}}
                 </option>
-                <option v-if="!selectOptions" value="other">Other</option>
+                <option v-if="!selectOptions" value="other" :class="'text-' + size" >Other</option>
               </slot>
             </select>
         </slot>
@@ -171,6 +172,10 @@
       options:{
         description: 'Input name options',
         default: ''
+      },
+      size:{
+        description: 'size',
+        default: ''
       }
     },
     data() {
@@ -234,11 +239,13 @@
               return {
                 id : option, name : option
               };
-            } else {
+            } else if(option){
               return {
                 id : option.id || option.key || option.code || option.value || option.label || option.name, 
                 name : option.name || option.label || option.value || option.code || option.key || option.id
               };
+            } else {
+              return {id : option , name : option}
             }
           });
       },
