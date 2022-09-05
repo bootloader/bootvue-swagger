@@ -1,5 +1,5 @@
 import { extend, configure } from "vee-validate";
-import { required, email, min,max,regex,numeric } from "vee-validate/dist/rules";
+import { required, email, min,max,regex,numeric,min_value,max_value } from "vee-validate/dist/rules";
 import { i18n } from "./i18n";
 import formatters from './../services/formatters'; 
 
@@ -9,6 +9,8 @@ extend("regex", regex);
 extend("min", min);
 extend("max", max);
 extend("numeric", numeric);
+extend("min_value", min_value);
+extend("max_value", max_value);
     // Override the default message.
 extend('required', {
     ...required,

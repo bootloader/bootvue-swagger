@@ -59,36 +59,34 @@
         <b-modal v-if="oneItems.length" :id="modelName" :title="'Update Property '" size="md"
           @hidden="cancelItem">
               <span v-for="(oneItem,index) in oneItems" v-bind:key="index">
-                  <div class="form-row">
-                        <input name="agent_name" id="examplePassword"
-                        placeholder="John Doe" type="text"
-                          class="form-control" v-model="oneItem.meta.title" readonly>
-                  </div>
-                  <br/>
-                <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
-                      <span v-if="oneItem.meta.optionsSource" class="w-100">
-                        <BaseVSelect class="w-100"
-                          :optionKey="oneItem.meta.optionsKey" 
-                          :optionLabel="oneItem.meta.optionsLabel"
-                          :options="oneItem.meta.optionsSource" 
-                          v-model="oneItem.config.value"
-                          clearable searchable filterable
-                          >
-                        </BaseVSelect>
-                      </span>
-                      <span v-else>
-                          <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
-                            v-model="oneItem.config.value" size="sm"
-                            :options="oneItem.meta.options"
-                          />
-                            <BaseVSelect v-else class="w-100"
-                              v-model="oneItem.config.value" size="sm"
-                              :options="oneItem.meta.options"
-                              placeholder="Select Language"
-                          />
-                      </span>
+                  <div  v-if="oneItem.meta.inputType=='OPTIONS'" class="form-row">   
+                        <span v-if="oneItem.meta.optionsSource" class="w-100">
+                            <BaseVSelect class="w-100" size="sm"
+                              :label="oneItem.meta.title"
+                              :optionKey="oneItem.meta.optionsKey" 
+                              :optionLabel="oneItem.meta.optionsLabel"
+                              :options="oneItem.meta.optionsSource" 
+                              v-model="oneItem.config.value"
+                              clearable searchable filterable
+                              >
+                            </BaseVSelect>
+                        </span>
+                        <span v-else>
+                              <ButtonRadioGroup v-if="oneItem.meta.options.length < 5"
+                                v-model="oneItem.config.value" size="sm"
+                                :options="oneItem.meta.options"
+                                :name="oneItem.meta.title"
+                              />
+                              <BaseVSelect v-else class="w-100"
+                                v-model="oneItem.config.value" size="sm"
+                                :options="oneItem.meta.options"
+                                placeholder="Select Language"
+                                :label="oneItem.meta.title"
+                              />
+                        </span>
                   </div>
                   <div  v-else-if="oneItem.meta.inputType=='COLOR'" class="form-row"> 
+                        <small>{{oneItem.meta.title}}</small>
                         <v-swatches class="d-flex justify-content-center"
                           v-model="oneItem.config.value"
                           show-fallback
@@ -104,6 +102,7 @@
                         ></v-swatches>
                   </div>
                   <div  v-else-if="oneItem.meta.inputType=='COLOR_PALLETE'" class="form-row"> 
+                        <small>{{oneItem.meta.title}}</small>
                         <v-swatches class="d-flex justify-content-center"
                           v-model="oneItem.config.value.primary"
                           show-fallback
@@ -145,21 +144,28 @@
                         ></v-swatches>
                   </div>
 
-                  <div  v-else class="">
-                    <base-input
+                  <div  v-else class="form-row">
+                    <base-input size="sm" :rules="`${
+                      [
+                        oneItem.meta.inputType=='NUMBER' ? 'numeric' : '',
+                        oneItem.meta.min ? ('min_value:'+ oneItem.meta.min) : '',
+                        oneItem.meta.max ? ('max_value:'+ oneItem.meta.max) : '',
+                      ].join('|')
+                    }`"
+                        :label="oneItem.meta.title"
                         v-model="oneItem.config.value"
                         :help-message="oneItem.meta.desc">
                     </base-input>        
                   </div>
               </span>
  
-                  <template #modal-footer>
-                      <div class="position-relative form-group">
-                        <button @click="saveItem"
-                          name="password" id="examplePassword" :disabled="!(isChanged) || invalid"
-                          class="form-control btn btn-primary">Save</button>
-                        </div>
-                  </template>
+              <template #modal-footer>
+                  <div class="position-relative form-group">
+                    <button @click="saveItem"
+                      name="password" id="examplePassword" :disabled="!(isChanged) || invalid"
+                      class="form-control btn btn-primary">Save</button>
+                    </div>
+              </template>
 
         </b-modal>
       </ValidationObserver>
