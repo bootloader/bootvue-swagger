@@ -1,4 +1,5 @@
 <template>
+
   <SlideYUpTransition :duration="animationDuration">
     <b-modal class="modal fade"
         ref="app-modal"

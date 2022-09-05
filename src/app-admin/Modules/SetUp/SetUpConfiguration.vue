@@ -10,8 +10,7 @@
           :table=table
           :actions=actions
           :filters="[{ label : 'Refresh', name : 'sync'}]"
-          :busy="table.busy"
-          @action="onAction">
+          :busy="table.busy">
 
           <template #filter(sync)>
               <span class="btn btn-success" @click="loadItems">
@@ -24,16 +23,21 @@
                 {{ group.item.label }}
               </span>
           </template>
+        
+          <template #cell(title)="row">
+            <span class="text-md">{{row.item.title}} &nbsp;
+              <i v-if="row.item.desc" v-tooltip="row.item.desc" class="fa fa-info-circle pointer"/></span>
+          </template>
 
           <template #cell(value)="row">
-            <setup-configuration-key class="text" v-bind:key="'read'+row.item.meta.key"
-                  :configuration="row.item" readable
+            <setup-configuration-key class="text" v-bind:key="'read'+row.item.key"
+                  :configurations="row.item.items" readable
                   @saved="loadItems">
             </setup-configuration-key>
           </template>
           <template #cell(actions)="row">
-            <setup-configuration-key class="text-primary" v-bind:key="'edit'+row.item.meta.key"
-                  :configuration="row.item" editable
+            <setup-configuration-key class="text-primary" v-bind:key="'edit'+row.item.key"
+                  :configurations="row.item.items" editable
                   @saved="loadItems">
             </setup-configuration-key>
           </template>
@@ -56,17 +60,17 @@
             actions : [],
             table : {
               fields: [ 
-                { key : 'meta.title', label : "Property" },
+                { key : 'title', label : "Property" },
                 { key : 'value', label : "Value" },
                //{ key : 'meta.key', label : "key" },
                 //{ key : 'config.value', label : "Value" },
-                { key : 'config.description', label : "Desc",sortable: false },
+                //{ key : 'config.description', label : "Desc",sortable: false },
                 { key : 'actions', label : "Action" ,sortable: false}],
               items : [],
               perPage: 100,
               currentPage: 1,
               rows : 0,
-              groupBy : 'meta.group',
+              groupBy : 'group',
               busy : false,
               paginationOptions:{
                  enabled: false,
@@ -84,12 +88,40 @@
               this.table.busy = true;
               this.table.items = [];
               let resp = await this.$store.dispatch('GetConfigs');
+              let mapped = {};
               this.table.items = resp.results.map(function(item){
                 if(item.config.value  === null || item.config.value  === undefined){
                     item.config.value  = item.meta.defaultValue;
                 }
                 return item;
-              });
+              }).reduce(function(list,item){
+                let superKey = item?.meta?.superKey;
+                if(!superKey){
+                  list.push({
+                    title : item?.meta?.title,
+                      desc : item?.meta?.desc,
+                    key : item?.meta?.key,
+                    group : item?.meta?.group,
+                    items : [item],
+                  });
+                } else if(mapped[superKey]){
+                  mapped[superKey].items.push(item);
+                  console.log(superKey,item.meta.key);
+                  if(superKey == item.meta.key){
+                     mapped[superKey].title = item?.meta?.title;
+                  }
+                } else {
+                  mapped[superKey] = {
+                    title : item?.meta?.title,
+                    desc : item?.meta?.desc,
+                    key : superKey,
+                    group : item?.meta?.group,
+                    items : [item],
+                  }
+                  list.push( mapped[superKey]);
+                }
+                return list;
+              },[]);
             } finally {
               this.table.busy=false
             }
