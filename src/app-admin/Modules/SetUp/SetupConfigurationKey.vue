@@ -2,17 +2,25 @@
   <span>
     <span v-if="editable" class="fa fa-edit" pointer @click="editItem"/>
     <span v-if="readable">
-      <span v-for="(oneItem,index) in oneItems" v-bind:key="index" class="text-comma">
+      <span v-for="(oneItem,index) in oneItems" v-bind:key="index" class="text-commas">
+        &nbsp;
         <span v-if="oneItem.meta.inputType=='OPTIONS'">
               <span v-if="oneItem.meta.optionsSource">
-                <MySource
-                  :value="oneItem.config.value"
-                  :options="oneItem.meta.optionsSource"
-                  :optionKey="oneItem.meta.optionsKey">
-                </MySource>  
+                <my-icon :value="oneItem.config.value" type="switch"
+                      :options="oneItem.meta.options">
+                      <template #notype>
+                        <MySource
+                          :value="oneItem.config.value"
+                          :options="oneItem.meta.optionsSource"
+                          :optionKey="oneItem.meta.optionsKey">
+                        </MySource>  
+                      </template>  
+                </my-icon> 
               </span>
               <span v-else>
-                  [ {{oneItem.config.value|display(oneItem.meta.options)}} ]
+                  <my-icon :value="oneItem.config.value" type="switch"
+                      :options="oneItem.meta.options">
+                  </my-icon>  
               </span>
           </span>
           <span v-else-if="oneItem.meta.inputType=='COLOR'">

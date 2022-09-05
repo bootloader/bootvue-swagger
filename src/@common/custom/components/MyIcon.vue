@@ -1,7 +1,10 @@
 <template>
-    <span><i :class="[myTypeClass[0], valueClass[0], myColorClass , statusClass[0]]"
-        :id="`${myTypeClass[0]} = ${valueClass[0]} = ${myColorClass} = ${statusClass[0]}`"
-    /> <slot>
+    <span><span :class="[myTypeClass[0], valueClass[0], myColorClass , statusClass[0]]"
+        :id="`${myTypeClass[0]} = ${valueClass[0]} = ${myColorClass} = ${statusClass[0]}`">
+        <slot v-if="noType" name="notype">
+            {{valued|display(options)}}
+        </slot>
+    </span> <slot>
         </slot>
     </span>
 </template>
@@ -14,6 +17,15 @@ var MAP = {
         'submitted' : ['text-warning'],
         'true' : ['text-success'],
         'false' : ['text-danger'],
+    },
+    switch : {
+        '_' : [''], '$' : ['no-type-status text-success border-success'],
+        'on' : ["fa fa-toggle-on",'text-success'],
+        'true' : ["fa fa-toggle-on",'text-success'],
+        'off' : ['fa fa-toggle-off', 'text-danger'],
+        'false' : ['fa fa-toggle-off', 'text-danger'],
+        'null' : ['fa fa-toggle-off'],
+        'none' : ['fa fa-toggle-off','text-danger']
     },
     chatmode : {
         '_' : [''],  '$' : ['fa fa-th-large'],
@@ -139,6 +151,8 @@ export default {
         noColor : {
             type : Boolean,
             default : false
+        },
+        options : {
         }
     },
     computed : {
@@ -148,8 +162,14 @@ export default {
         myTypeClass(){
             return this.typeClass || this.myType._ || [""];
         },
+        valued(){
+            return (`${this.value}`).toLowerCase();
+        },
+        noType(){
+            return this.valued && !this.myType[this.valued];
+        },
         valueClass(){
-            return this.myType[(this.value || '').toLowerCase()] 
+            return this.myType[this.valued] 
                 || (typeof this.myType["$"] == 'function' ? this.myType["$"](this.value,this.status,this.meta) : this.myType["$"]) 
                 || "";
         },
@@ -168,3 +188,24 @@ export default {
     }
 }
 </script>
+<style scoped>
+    .no-type-status {
+    background: #ffffff00;
+    color: #fff;
+    border-radius: 6px;
+    padding: 1px 5px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 22px!important;
+
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 18px!important;
+    border: 1px solid transparent;
+    border-radius: 2em;
+    margin-right: 4px;
+    cursor: pointer;
+    }
+</style>
