@@ -6,7 +6,7 @@
         &nbsp;
         <span v-if="oneItem.meta.inputType=='OPTIONS'">
               <span v-if="oneItem.meta.optionsSource">
-                <my-icon :value="oneItem.config.value" type="switch"
+                <my-icon :value="oneItem.config.value" type="switch" show-no-type
                       :options="oneItem.meta.options">
                       <template #notype>
                         <MySource
@@ -18,7 +18,7 @@
                 </my-icon> 
               </span>
               <span v-else>
-                  <my-icon :value="oneItem.config.value" type="switch"
+                  <my-icon :value="oneItem.config.value" type="switch" show-no-type
                       :options="oneItem.meta.options">
                   </my-icon>  
               </span>
@@ -85,9 +85,10 @@
                                 :options="oneItem.meta.options"
                                 :name="oneItem.meta.title"
                               />
-                              <BaseVSelect v-else class="w-100"
+                              <BaseVSelect v-else class="w-100" 
                                 v-model="oneItem.config.value" size="sm"
                                 :options="oneItem.meta.options"
+                                clearable searchable filterable
                                 placeholder="Select Language"
                                 :label="oneItem.meta.title"
                               />

@@ -189,8 +189,7 @@ import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
             }
           }  
         update();
-        setInterval(()=> update(),3000);
-          
+        //setInterval(()=> update(),3000);
       },
       methods : {
         async clientOnChange(){

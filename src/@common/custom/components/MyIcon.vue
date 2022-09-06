@@ -19,7 +19,7 @@ var MAP = {
         'false' : ['text-danger'],
     },
     switch : {
-        '_' : [''], '$' : ['no-type-status text-success border-success'],
+        '_' : [''], '$' : ['no-type-status', 'text-success border-success'],
         'on' : ["fa fa-toggle-on",'text-success'],
         'true' : ["fa fa-toggle-on",'text-success'],
         'off' : ['fa fa-toggle-off', 'text-danger'],
@@ -153,7 +153,11 @@ export default {
             default : false
         },
         options : {
-        }
+        },
+        showNoType : {
+            type : Boolean,
+            default : false
+        },
     },
     computed : {
         myType(){
@@ -166,7 +170,7 @@ export default {
             return (`${this.value}`).toLowerCase();
         },
         noType(){
-            return this.valued && !this.myType[this.valued];
+            return  this.showNoType && this.valued && !this.myType[this.valued];
         },
         valueClass(){
             return this.myType[this.valued] 
@@ -190,22 +194,22 @@ export default {
 </script>
 <style scoped>
     .no-type-status {
-    background: #ffffff00;
-    color: #fff;
-    border-radius: 6px;
-    padding: 1px 5px;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 22px!important;
+        background: #ffffff00;
+        color: #fff;
+        border-radius: 6px;
+        padding: 1px 5px;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 22px!important;
 
-    display: inline-block;
-    padding: 0 10px;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 18px!important;
-    border: 1px solid transparent;
-    border-radius: 2em;
-    margin-right: 4px;
-    cursor: pointer;
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 18px!important;
+        border: 1px solid transparent;
+        border-radius: 2em;
+        margin-right: 4px;
+        cursor: pointer;
     }
 </style>
