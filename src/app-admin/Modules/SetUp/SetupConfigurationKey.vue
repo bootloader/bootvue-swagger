@@ -255,7 +255,7 @@
             if(this.configKey){
               let resp = await this.$service.get("/api/config?key="+this.configKey);
               this.addConfig(resp.results[0]);
-              this.$emit("load",this.oneItem);
+              this.$emit("load",resp.results[0]);
             } else if(this.configuration){
               console.log("this.configuration",this.configuration);
               this.addConfig(this.configuration);
