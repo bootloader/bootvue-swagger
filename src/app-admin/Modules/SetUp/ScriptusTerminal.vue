@@ -171,6 +171,7 @@
       color: #dddddd;
       word-break: break-word;
       overflow-wrap: break-word;
+      white-space: pre;
     }
     .terminal__prompt--cursor {  
       display: block;  

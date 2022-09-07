@@ -25,7 +25,7 @@
                       v-tooltip="row.item.disabled ? 'Connect' : 'Disconnect'"
                       :disabled="row.item.readOnly">
                       <i class="fas fa-plug" :class="{
-                          'fa-x' : !row.item.disabled
+                          'fa-x' : !!row.item.disabled
                         }"></i>
                   </b-button>
                 </b-button-group>  
