@@ -26,8 +26,10 @@
       >
 
       <template v-slot:header>
-        <img v-if="config.header.icon.url" class="sc-header--img" :src="config.header.icon.url" alt="" 
-          style="width:34px;height:34px ;" />
+        <span class="sc-header-image">
+          <img v-if="config.header.icon.url" class="sc-header--img-v2" :src="config.header.icon.url" alt="" 
+            style="width:34px;height:34px ;" />
+        </span>  
         <div class="sc-header--title">{{ config.header.title.text }}</div>
       </template>
 
@@ -661,4 +663,17 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.22);
   }
+  .sc-header-image{
+    /* background-image: url("https://cdn.jsdelivr.net/gh/chatthemes/jazeeraairways@latest/chatlogo.jpg"); */
+    background-size: cover;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    align-self: center;
+    display: inline-block;
+    padding: 10px
+  }
+   .sc-header-image img{
+      padding: 0px
+   }
 </style>
