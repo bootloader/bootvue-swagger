@@ -114,6 +114,10 @@
                 label="API Endpoint"
                 :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_SERVER}/xms`">
             </base-copy>
+            <base-copy class="mt-3" size="sm" v-if="lastItem.appHook"
+                label="APP Hook"
+                :value="lastItemAppHook">
+            </base-copy>
             <base-copy class="mt-3" size="sm" v-if="lastItem.webhook"
                 label="Webhook URL"
                 :value="lastItem.webhook">
@@ -143,6 +147,7 @@
 
     import MasterView from "../../Layout/MasterView.vue";
     import { MyFlags,MyDict,MyConst } from '../../../services/global';
+        import mustache from 'mustache';
 
     import VSwatches from 'vue-swatches'
 
@@ -159,7 +164,7 @@
           code : item?.code ||  "", 
           appType : item?.appType ||  "WEBHOOK", 
           webhook : item?.webhook || null, outboundhook : item?.outboundhook || null, 
-          key : item?.key || null,
+          key : item?.key || null, appHook : item?.appHook || null,
           props : item?.props || {}, secret : item?.secret || {}
       };
     }
@@ -201,6 +206,13 @@
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.oneItem);
+            },
+            lastItemAppHook(){
+              return mustache.render(this.lastItem.appHook, {
+                ...this.lastItem,
+                domain : MyConst.tenant,
+                server : MyConst.config.PROP_SERVICE_SERVER
+              });
             }
         },
         watch : {
