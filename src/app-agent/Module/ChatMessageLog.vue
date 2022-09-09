@@ -12,8 +12,12 @@
         </div>
         <div v-else class="msg_cotainer_action">
             {{m.timestamp|formatDate}}&nbsp;&nbsp;<span class="msg_user">{{m.name | blank3dash}}</span>&nbsp;<span class="fa fa-long-arrow-alt-right"/>&nbsp;{{m.action | striphtml | newlines}}
-            <span v-if="m.logs"><i v-for="(log,index) in m.logs" class="prepend-comma" v-bind:key="index">
-                &nbsp;{{log | log_option(m.action)| striphtml | newlines}}</i></span>
+            <span v-if="m.logs">
+                <i v-for="(log,index) in m.logs" class="prepend-comma" v-bind:key="index">
+                    &nbsp;<i v-if="log && log.length>0">{{log | log_option(m.action)| striphtml | newlines}}</i>
+                    <i v-else-if="log" class="fa fa-info-circle" v-tooltip="$f.text_from_map(log,undefined, 2)" ></i>
+                </i>
+            </span>
         </div>
     </div> 
 </template>

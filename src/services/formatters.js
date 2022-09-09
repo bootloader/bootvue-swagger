@@ -243,6 +243,13 @@ var formatter = {
     return options;
   },
 
+  text_from_map : function(options){
+    return Object.keys(options).map(function(key){
+      return key + " : " + options[key];
+    }).join("\n");
+  },
+
+
   //Validators
   validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile"],
   alphanum : function alphanumValidator (value) {
@@ -433,4 +440,5 @@ var formatter = {
 
 formatter.init();
 Vue.prototype.$formatters = formatter;
+Vue.prototype.$f = formatter;
 export default formatter;
