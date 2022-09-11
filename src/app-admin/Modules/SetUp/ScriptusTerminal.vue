@@ -9,7 +9,7 @@
                   <button class="bar__button">&#9472;</button>                
                   <button class="bar__button">&#9723;</button>          
                 </div>          
-                <p class="bar__user">{{user}}: ~</p>        
+                <p class="bar__user">{{user}}: ~</p>   
             </slot>          
           </section>        
           <!-- Terminal Body -->        
@@ -112,6 +112,7 @@
       border-top-left-radius: 0px;  
       border-top-right-radius: 0px;  
       background: linear-gradient(#504b45 0%,#3c3b37 100%);
+      justify-content: space-between;
     } 
     .bar__buttons {  
       display: flex;  

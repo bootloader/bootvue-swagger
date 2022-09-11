@@ -62,7 +62,7 @@
               ]"
               />
         </div>
-        <div class="pane" :style="{width:width,height : editorHeight}"  v-show="showTerminal">
+        <div class="pane" :style="{width:width,height : editorHeight}"  v-show="showRightPane">
           <ScriptusTerminal v-show="showTerminal"
             :user="terminal.user"  :logs="terminal.logs" :system="terminal.system">
             <template #terminalbar>
@@ -70,6 +70,9 @@
                       configKey="postman.debug.contact" readable editable
                       @load="loadDebugContact">
                 </setup-configuration-key>
+                <span class="float-right fas fa-ban pointer text-red" 
+                      v-tooltip="`Clear Logs`"
+                      @click="terminal.logs = []"></span>
             </template> 
           </ScriptusTerminal>
         </div>  
@@ -136,6 +139,9 @@
               return this.files.filter(function(file){
                 return file.name == fileSelected;
               })[0] || {};
+           },
+           showRightPane(){
+            return this.showTerminal;
            }
         },
         created : function (argument) {
@@ -170,7 +176,7 @@
               }
               let files = resp.results[0]?.data?.files;
               if(!files || !files?.length){
-                files = [{name : "main", content : ""}]
+                files = [{name : "main", content : "", config : {}, setup : []}]
               }
               this.files = files.map(function(file){
                   return file;

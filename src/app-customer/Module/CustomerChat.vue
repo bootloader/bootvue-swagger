@@ -83,7 +83,6 @@
       </template>
     </web-chat-launcher>
     <div v-if="isLoading"  class="sc-loader-backdrop">
-      Loading
     </div>
   </div>
 </template>
@@ -662,6 +661,10 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.22);
+    text-align: center;
+    line-height: 100vh;
+    color: #0000005e;
+    font-size: .5em;
   }
   .sc-header-image{
     /* background-image: url("https://cdn.jsdelivr.net/gh/chatthemes/jazeeraairways@latest/chatlogo.jpg"); */
