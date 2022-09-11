@@ -172,6 +172,7 @@
       word-break: break-word;
       overflow-wrap: break-word;
       white-space: pre;
+      white-space: pre-line
     }
     .terminal__prompt--cursor {  
       display: block;  
