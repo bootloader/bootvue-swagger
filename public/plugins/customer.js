@@ -228,7 +228,19 @@
         //     }
         //  }
         // myChat.init(config);
-        myChat.init(JSON.parse(myScript.innerHTML));
+        let configString = myScript.innerHTML.trim();
+
+        if(!configString){
+            for(var i in scripts){
+                if(scripts[index].id == 'mychatscript'){
+                    configString = scripts[index].innerHTML.trim();
+                    break;
+                }
+            }
+        }
+        if(configString){
+            myChat.init(JSON.parse(myScript.innerHTML));
+        }
         win.myChat = myChat;
     } catch(e){
         console.error(e);
