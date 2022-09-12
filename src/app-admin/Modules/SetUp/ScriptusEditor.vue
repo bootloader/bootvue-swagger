@@ -13,8 +13,8 @@
         {{heading}}  <small class="text-md">&lcub; {{subheading}} &rcub;</small>
       </template>
       <template #header-subheading>
-        <base-select size="sm" class="file-selector" :options="fileNames" v-model="fileSelected" ></base-select>
-        <span class="btn btn-outline-danger btn-xs mg-1" v-tooltip="`Delete ${fileSelected}`" v-if="fileSelected"
+        <base-select size="sm" class="file-selector" :options="fileNames" v-model="script.fileSelected" ></base-select>
+        <span class="btn btn-outline-danger btn-xs mg-1" v-tooltip="`Delete ${script.fileSelected}`" v-if="script.fileSelected"
           @click="removeSelectedFile"><span class="fa fa-trash"></span></span>
         <span class="btn btn-outline-success btn-xs mg-1" v-tooltip="`Add New File`"
           @click="addNewFile"
@@ -126,17 +126,20 @@
               logs : [
               ]
            },
-           files : [], fileSelected : "",
+           script : {
+            files : [], fileSelected : "",
+            config : {}, setup : []
+           }
         }),
         computed : {
            fileNames(){
-             return this.files.map(function(file){
+             return this.script.files.map(function(file){
                 return file.name;
               });
            },
            selectedFile (){
-              let fileSelected = this.fileSelected; 
-              return this.files.filter(function(file){
+              let fileSelected = this.script.fileSelected; 
+              return this.script.files.filter(function(file){
                 return file.name == fileSelected;
               })[0] || {};
            },
@@ -178,10 +181,10 @@
               if(!files || !files?.length){
                 files = [{name : "main", content : "", config : {}, setup : []}]
               }
-              this.files = files.map(function(file){
+              this.script.files = files.map(function(file){
                   return file;
               });
-              this.fileSelected = this.fileNames[0];
+              this.script.fileSelected = this.fileNames[0];
 
             } finally {
               this.table.busy = false;
@@ -211,11 +214,11 @@
             this.trail = setTimeout(()=> this.loadLogs(),2000);
           },
           removeSelectedFile(){
-            let fileSelected = this.fileSelected;
-            this.files = this.files.filter(function(file){
+            let fileSelected = this.script.fileSelected;
+            this.script.files = this.script.files.filter(function(file){
                 return fileSelected!==file.name;
             });
-            this.fileSelected = this.fileNames[0];
+            this.script.fileSelected = this.fileNames[0];
           },
           addNewFile(){
             let fileName = window.prompt("File Name");
@@ -226,18 +229,21 @@
                 return;
               }
             }
-            this.files.push({
+            this.script.files.push({
               name : (fileName || "").toLowerCase(),
               content : ""
             });
-            this.fileSelected = fileName || this.fileSelected || this.fileNames[0];
+            this.script.fileSelected = fileName || this.script.fileSelected || this.script.fileNames[0];
           },
           async saveScript(){
             try {
               this.table.busy = true;
               this.state = "Saving...";
               let resp = await this.$service.post('/api/objects/appscript/'+this.$route.params.appId,{
-                files : this.files
+                files : this.script.files,
+                config : this.script.config || {},
+                setup : this.script.setup || []
+
               });
             } finally {
               this.table.busy = false;
