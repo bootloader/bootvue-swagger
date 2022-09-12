@@ -190,6 +190,7 @@
                                     <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media" v-model="selectedMedia" />
                                     <label class="media_thumb_label" :for="'mdeia-'+media.name">
                                         <img v-lazy="formatters.https_thumburl(media.url)">
+                                        <span>{{media.title}}</span>
                                     </label>
                             </div>
                         </div>
