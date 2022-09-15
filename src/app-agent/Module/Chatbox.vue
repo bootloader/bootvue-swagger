@@ -187,8 +187,8 @@
                         <div class="media_card_body-bubbles-wrapper">
                             <div v-for="media in mediaOptions" v-bind:key="media.id"
                                 class="media_thumb"  @dblclick="sendQuickMedia(media)">
-                                    <input :id="'mdeia-'+media.name" type="radio" name="media" :value="media" v-model="selectedMedia" />
-                                    <label class="media_thumb_label" :for="'mdeia-'+media.name">
+                                    <input :id="'mdeia-'+media.code" type="radio" :name="'mdeia-'+media.code" :value="media" v-model="selectedMedia" />
+                                    <label class="media_thumb_label" :for="'mdeia-'+media.code">
                                         <img v-lazy="formatters.https_thumburl(media.url)">
                                         <span>{{media.title}}</span>
                                     </label>
