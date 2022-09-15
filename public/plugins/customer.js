@@ -228,8 +228,8 @@
         let configString = null;
         if(!configString){
             for(var i in scripts){
-                if(scripts[index].id == 'mychatscript'){
-                    configString = scripts[index].innerHTML.trim();
+                if(scripts[i].id == 'mychatscript'){
+                    configString = scripts[i].innerHTML.trim();
                     break;
                 }
             }

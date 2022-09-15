@@ -648,6 +648,10 @@
     white-space: pre-wrap;
     margin-bottom: 5px;
   }
+  .sc-message--text-content img {
+    max-width: 100%;
+    max-height: 100%;
+  }
   .sc-message--avatar {
     display: none;
   }
