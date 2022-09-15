@@ -34,9 +34,9 @@
       </template>
 
       <template v-slot:text-message-body="{ message,messageText, messageColors}">
-        <p class="sc-message--text-content" v-html="messageText" dir="auto"></p>
+        <p class="sc-message--text-content content-text" v-html="messageText" dir="auto"></p>
 
-        <p  class="sc-message--text-content"
+        <p  class="sc-message--text-content content-attachment"
             dir="auto"
             v-if="message.data.attachments && message.data.attachments.length>0">
             <span  v-for="atch in message.data.attachments" :key="atch.mediaURL">
@@ -647,6 +647,9 @@
   .sc-message--text-content {
     white-space: pre-wrap;
     margin-bottom: 5px;
+  }
+  .sc-message--text-content  .content-text {
+    word-break: break-all;
   }
   .sc-message--text-content img {
     max-width: 100%;
