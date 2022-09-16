@@ -240,7 +240,7 @@
             configString = myScript.innerHTML.trim();
         }
         if(configString){
-            myChat.init(JSON.parse(myScript.innerHTML));
+            myChat.init(JSON.parse(configString));
         }
         win.myChat = myChat;
     } catch(e){
