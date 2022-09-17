@@ -392,7 +392,7 @@
             if(this.sampleVarData && typeof this.sampleVarData == "object"){
                 let csvData = {contacts:""};
                 this.sampleVarData.map(v=>{
-                    let newKay = v.path.split(".")[1];
+                    let newKay = v.path;
                     csvData[newKay] = ""
                 })
 
