@@ -391,9 +391,13 @@
           downloadCSVtemplate(){
             if(this.sampleVarData && typeof this.sampleVarData == "object"){
                 let csvData = {contacts:""};
-                this.sampleVarData.map(v=>{
-                    let newKay = v.path;
-                    csvData[newKay] = ""
+                console.log("this.selectedTemplate",this.selectedTemplate)
+                let templateVar = this.selectedTemplate.template;
+                let reg = /[^{\}]+(?=})/g;
+                let data = templateVar.match(reg)
+                console.log("sampleVarData",this.sampleVarData);
+                data.map(v=>{
+                    csvData[v] = ""
                 })
 
                 if(Object.keys(csvData).length){
