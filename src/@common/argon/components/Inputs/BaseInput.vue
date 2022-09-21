@@ -6,7 +6,7 @@
         {'is-question': question }
       ]">
       <slot name="label">
-        <label v-if="!prelabel && (label || name)" 
+        <label v-if="!isPrelabel && (label || name)" 
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -27,19 +27,21 @@
        {'has-label': (label || name) || $slots.label},
        inputGroupClasses
        ]">
-        <div v-if="prependIcon || prelabel || $slots.prepend || prepend" class="input-group-prepend">
+        <div v-if="isPrelabel" class="input-group-prepend">
           <slot name="prepend">
             <span v-if="prepend" class="input-group-text">{{prepend}}</span>
-            <b-button  v-else-if="prelabel" :variant="variant">
-              {{label || name}}
-            </b-button>
-            <span v-else :class="prependClass">
+            <span v-else-if="prependClass" :class="prependClass" :variant="variant">
               <i v-if="prependIcon" :class="prependIcon"></i>
             </span>
+            <b-button  v-else :variant="variant">
+              <i v-if="prependIcon" :class="prependIcon"></i>
+               <span v-else> {{label || name}}</span>
+            </b-button>
           </slot>
         </div>
         <slot v-bind="slotData">
           <input
+            ref="input"
             :id="'fmg-' + inputId"
             v-model="displayValue"
             :type="type"
@@ -81,6 +83,7 @@
               </slot>
           </span>
           <slot name="actions" >
+
           </slot>  
         </div>
         <slot name="infoBlock"></slot>
@@ -282,6 +285,9 @@
           this.group
         );
       },
+      isPrelabel(){
+        return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend
+      },
       showHelpMessage(){
         if((this.question && this.$attrs.placeholder)  || this.helpMessage){
           return true;
@@ -322,7 +328,6 @@
     },
     methods: {
       updateValue(evt) {
-        console.log("updateValue",evt)
         let value = evt.target.value;
         this.emitValue(value);
       },
@@ -340,7 +345,7 @@
       },
       onScore(evt) {
         this.$emit("score", evt);
-      }
+      },
     }
   };
 </script>

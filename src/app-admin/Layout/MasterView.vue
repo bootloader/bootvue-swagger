@@ -43,7 +43,14 @@
             >
               <template slot="table-row" slot-scope="props">
                   <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
-                    <slot :name="'cell('+ props.column.field  + ')'" v-bind="{props,item : props.row}">
+                    <slot :name="'cell('+ props.column.field  + ')'" v-bind="(function(slotScope){
+                      return {
+                        openView :()=>openView(slotScope),
+                        removeItem:() => removeItem(slotScope),
+                        editItem :() => editItem(slotScope),
+                         ...slotScope
+                      }
+                    })({props, item : props.row})">
                     </slot>
                   </span>  
                   <span v-else>
@@ -186,6 +193,28 @@
           </template>
       </b-modal>
 
+      <div class="master-sidebar-container">
+        <b-sidebar :id="'SB_'+viewid+'_EDIT'" v-if="selectedItem"
+          :title="(selectedItemMode == 'EDIT' ? 'Edit' : 'Add') + ` ${header.name} `" 
+            right shadow backdrop lazy v-model="showSideBar"
+                :backdrop-variant="'transparent'" bg-variant="white" body-class="p-3">
+           <slot name="sidebar(edit)" v-bind="selectedItem">
+              <pre v-if="selectedItem">{{selectedItem.itemCopy | json}}</pre>
+          </slot>  
+          <template v-if="sidebarFooter" #footer="{ hide }">
+            <div class="p-2 bg-dark">
+                <slot name="sidebar-footer(edit)" v-bind="selectedItem">
+                      <button @click="editItemCancel(); hide();" class="btn btn-warning">Close</button>
+                      &nbsp;
+                      <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
+                            class="btn btn-primary">{{selectedItem.itemCopy.id ? 'Update' : 'Create'}}</button>
+                </slot>
+            </div>  
+          </template>
+ 
+        </b-sidebar>
+      </div>
+
     </div>
 
 </template>
@@ -240,6 +269,14 @@
           },
           size : {
           },
+          sidebar : {
+              type: Boolean,
+              default : false
+          },
+          sidebarFooter : {
+              type: Boolean,
+              default : false
+          },
           busy : {
               type: Boolean,
               default : false
@@ -267,6 +304,7 @@
             selectedItem : null,
             viewid : 'v'+ Date.now(),
             oldHash : "",
+            showSideBar : false
         }),
         computed : {
           isbusy : {
@@ -276,6 +314,9 @@
             set(newName){
               return newName;
             }
+          },
+          hasSidebar(){
+            return this.sidebar || this.sidebarFooter;
           },
           smallTable(){
             return this.table.small || (this.table.size == 'sm')
@@ -405,12 +446,13 @@
             this.$bvModal.show(this.viewid + "_VIEW")
           },
           createItem(item){
-            if(item){
+            if(item && !(item instanceof Event)){
             } else if(typeof this.newItem == 'function'){
               item  = this.newItem();
             } else {
               item  = this.newItem;
             }
+             console.log("----this.item",item)
             this.editItem({item})
           },
           editItem(row){
@@ -418,8 +460,12 @@
                 ...row,
                 itemCopy : JSON.parse(JSON.stringify(row.item))
               };
+              console.log("----this.selectedItem",this.selectedItem)
               this.oldHash = JSON.stringify(this.selectedItem.itemCopy);
-              this.$bvModal.show(this.viewid + "_EDIT")
+              if(this.hasSidebar)
+                this.showSideBarDo(true);
+              else 
+                this.$bvModal.show(this.viewid + "_EDIT")
           },
           async editItemSave ({item,index}) {
               await this.$service.post(this.table.api, this.selectedItem.itemCopy);
@@ -431,15 +477,20 @@
              this.loadItems();
           },
           async editItemCancel() {
-              await this.$bvModal.hide(this.viewid + "_EDIT")
+              if(this.hasSidebar)
+                this.showSideBarDo(false);
+              else 
+                await this.$bvModal.hide(this.viewid + "_EDIT")
           },
           editItemCancelled(){
               this.selectedItem = null;
           },
           getSelectedItem(){
             return this.selectedItem;
+          },
+          showSideBarDo(show=true){
+            setTimeout(()=>this.showSideBar=show,0)
           }
-
         }
     }
 
@@ -477,6 +528,11 @@
         color: #c3c3c3;
         font-weight: bold;
     }
+  }
+  .master-sidebar-container .b-sidebar{
+     margin-top: 60px; 
+     height: calc(100% - 60px);
+     min-width: 30%;
   }
 }
 </style>

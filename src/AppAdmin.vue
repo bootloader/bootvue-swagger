@@ -30,6 +30,7 @@
   Vue.component('ButtonRadioGroup', () => import('./@common/argon/components/ButtonRadioGroup.vue'));
   Vue.component('BaseDropdown', () => import('./@common/argon/components/BaseDropdown.vue'));
   Vue.component('BaseCopy', () => import('./@common/argon/components/BaseCopy.vue'));
+  Vue.component('BaseQuickEdit', () => import('./@common/argon/components/BaseQuickEdit.vue'));
   import globalDirectives from '@/@common/argon/plugins/globalDirectives';
   Vue.use(globalDirectives);
 
@@ -48,9 +49,10 @@
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
 
-  import 'viewerjs/dist/viewer.css'
-  import Viewer from 'v-viewer'
-  Vue.use(Viewer)
+  import 'viewerjs/dist/viewer.css';
+  import Viewer from 'v-viewer';
+  Vue.use(Viewer);
+
 
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';

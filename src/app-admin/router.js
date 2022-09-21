@@ -129,6 +129,14 @@ export default AppRouter.route({
             component: () => import('./Modules/TmplHSM/TmplWaba.vue'),    
         },
 
+//Master Screens
+{
+    path: '/app/master/contact/profiles',
+    name: 'ContactProfiles',
+    component: () => import('./Modules/Masters/ContactProfiles.vue'),
+},
+//Setup
+
         {
             path : "/app/setup/agent-panel",
             name: 'SetUpAgentPanel',

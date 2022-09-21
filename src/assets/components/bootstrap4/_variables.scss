@@ -648,8 +648,8 @@ $form-feedback-invalid-color:       theme-color("danger") !default;
 $form-feedback-icon-valid-color:    $form-feedback-valid-color !default;
 $form-feedback-icon-valid:          str-replace(url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='#{$form-feedback-icon-valid-color}' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e"), "#", "%23") !default;
 $form-feedback-icon-invalid-color:  $form-feedback-invalid-color !default;
-$form-feedback-icon-invalid:        str-replace(url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-feedback-icon-invalid-color}' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E"), "#", "%23") !default;
-
+//$form-feedback-icon-invalid:        str-replace(url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-feedback-icon-invalid-color}' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E"), "#", "%23") !default;
+$form-feedback-icon-invalid:        str-replace(url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%201000%201000%22%20enable-background=%22new%200%200%201000%201000%22%20xml:space=%22preserve%22%3E%20%3Cg%3E%3Cpath fill='#{$form-feedback-icon-invalid-color}' d=%22M975.7,904.6c-21.2,41.4-59.9,65.5-105.4,65.5H129.7c-45.4,0-84.1-24-105.4-65.5C3.1,863.2,5.6,816.7,31.2,778L401.6,83.6c22.9-34.7,57.7-53.7,98.4-53.7c40.8,0,75.5,18.9,98.5,53.7L968.8,778C994.4,816.7,997,863.2,975.7,904.6z%20M500,808.9c22.2,0,40.3-18.1,40.3-40.3s-18.1-40.3-40.3-40.3c-22.2,0-40.3,18-40.3,40.3S477.8,808.9,500,808.9z%20M500,325.4c-37.1,0-67.2,30.1-67.2,67.2l26.9,268.6c0,22.2,18.1,40.3,40.3,40.3c22.2,0,40.3-18.1,40.3-40.3l26.9-268.6C567.2,355.5,537.1,325.4,500,325.4z%22/%3E%3C/g%3E%20%3C/svg%3E"), "#", "%23") !default;
 
 // Dropdowns
 //
@@ -691,9 +691,9 @@ $zindex-sticky:                     1020 !default;
 $zindex-fixed:                      1030 !default;
 $zindex-modal-backdrop:             1040 !default;
 $zindex-modal:                      1050 !default;
+$zindex-sidebar-backdrop:             1040 !default;
 $zindex-popover:                    1060 !default;
 $zindex-tooltip:                    1070 !default;
-
 
 // Navs
 
@@ -932,6 +932,14 @@ $modal-show-transform:              none !default;
 $modal-transition:                  transform .3s ease-out !default;
 
 
+//Sidebar
+$b-sidebar-width: 320px !default;
+$b-sidebar-transition-duration: 0.3s !default;
+$b-sidebar-zindex: calc(#{$zindex-fixed} + 5) !default;
+$b-sidebar-header-font-size: 1.5rem !default;
+$b-sidebar-header-padding-y: $navbar-padding-y !default;
+$b-sidebar-header-padding-x: $navbar-padding-x !default;
+
 // Alerts
 //
 // Define alert colors, border radius, and padding.
@@ -1089,3 +1097,4 @@ $positions: static, relative, absolute, fixed, sticky !default;
 
 $print-page-size:                   a3 !default;
 $print-body-min-width:              map-get($grid-breakpoints, "lg") !default;
+

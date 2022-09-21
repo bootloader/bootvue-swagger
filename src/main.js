@@ -7,7 +7,7 @@ import store from './store';
 import service from './services/DataService';
 import axios from 'axios';
 
-import { BootstrapVue,BootstrapVueIcons} from "bootstrap-vue"
+import { BootstrapVue,BootstrapVueIcons,SidebarPlugin} from "bootstrap-vue"
 
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -36,7 +36,7 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
-//Vue.use(SidebarPlugin)
+Vue.use(SidebarPlugin)
 
 Vue.use(VueLoading);
 Vue.use(VTooltip);
