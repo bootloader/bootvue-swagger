@@ -20,12 +20,29 @@
 }
 
 .basic-component {
-  .v-select{
-    color: rgb(87, 87, 87) !important; 
-    .vs__selected{
-      color: rgb(87, 87, 87) !important;
+  &.bc-v-select{
+    .has-prelabel {
+      display: flex;
+      .input-group-prepend>* {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .v-select {
+        flex: 1 1 auto;
+        color: rgb(87, 87, 87) !important; 
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        .vs__dropdown-toggle {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        .vs__selected{
+          color: rgb(87, 87, 87) !important;
+        }
+      }
     }
   }
+
   .vs__search::placeholder,
   .vs__dropdown-toggle,
   .vs__dropdown-menu,
@@ -35,6 +52,20 @@
   .vs__dropdown-option.vs__dropdown-option--highlight {
       color: #FFF !important;
   }
+  .v-select-sm {
+    .vs__dropdown-toggle {
+      height: calc(1.8125rem + 2px);
+      .vs__selected {
+        height: calc(1.8125rem + 2px);
+        margin: 0px 2px 0;
+      }
+    }
+    input {
+      height: calc(1.8125rem + 0px);
+      margin: 0px 2px 0;
+    }
+  }
+
 }
 
 
@@ -293,3 +324,21 @@
 
   }
   //////// FLUSHED LAYOUT /// ENDS
+
+
+  ///  STYLERS
+  /// 
+  /// 
+
+.styler-20-80 {
+  &.basic-component {
+    &.bc-input, &.bc-v-select {
+      .input-group-prepend {
+        min-width: 20%;
+        .btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

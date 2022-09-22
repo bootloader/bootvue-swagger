@@ -6,7 +6,7 @@
         {'is-question': question },
       ]">
       <slot name="label">
-        <label v-if="label || name" 
+        <label v-if="!isPrelabel && (label || name)"
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -20,22 +20,27 @@
         </label>
       </slot>
       <div :class="[
-       {'input-group': hasIcon || (feedback)},
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},
+       {'has-prelabel' : isPrelabel},
        inputGroupClasses
        ]">
-        <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
-        <span class="input-group-text">
-          <slot name="prepend">
-            <i :class="prependIcon"></i>
-          </slot>
-        </span>
+        <div v-if="isPrelabel" class="input-group-prepend">
+            <slot name="prepend">
+              <span v-if="prepend" class="input-group-text">{{prepend}}</span>
+              <span v-else-if="prependClass" :class="prependClass" :variant="variant">
+                <i v-if="prependIcon" :class="prependIcon"></i>
+                <span v-else> {{label || name}}</span>
+              </span>
+              <b-button  v-else :variant="variant" :size="size">
+                <i v-if="prependIcon" :class="prependIcon"></i>
+                <span v-else> {{label || name}}</span>
+              </b-button>
+            </slot>
         </div>
-        
         <my-v-select 
-            :id="'fmg-' + inputId" ref="myVSelect"
+            :id="'fmg-' + inputId" ref="myVSelect" :size="size"
             :placeholder="$attrs.placeholder"
             :value="value" 
             v-on="listeners"
@@ -46,7 +51,7 @@
             :required="required"
             :autoPosition="autoPosition"
             :filter="filter" :searchable="searchable" :clearable="clearable"
-            :class="['text-'+size,
+            :class="['text-'+size, 'v-select-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
             >
@@ -176,6 +181,23 @@
         type: String,
         description: "Input group css classes"
       },
+      prelabel: {
+        type: Boolean,
+        default: false,
+        description: "Prepend Label (left)"
+      },
+      variant : { type: String,  default : 'outline-success' },
+      prepend : {
+         type: String
+      },
+      prependIcon: {
+        type: String,
+        description: "Prepend icon (left)"
+      },
+      prependClass: {
+        type: String,
+        description: "Prepend Class (left)"
+      },
       value: {
         type: [String, Number],
         description: "Input value"
@@ -272,6 +294,7 @@
           prepend !== undefined ||
           this.appendIcon !== undefined ||
           this.prependIcon !== undefined ||
+          this.prelabel !== undefined ||
           this.textLimit > 0 ||
           this.group
         );
@@ -280,7 +303,10 @@
         if(this.helpMessage){
           return true;
         }
-      }
+      },
+      isPrelabel(){
+        return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend || this.prependClass
+      },
     },
     methods: {
       updateValue(value) {

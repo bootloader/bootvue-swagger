@@ -2,7 +2,7 @@
     <base-input  v-on="listeners"
         class="mx-0 px-0" size="sm" :label="label" :name="name" v-bind="$attrs"
         ref="input"  v-model="inputValue" autocomplete="off" :rules="rules" 
-        :prependClass="prependClass" :prependIcon="prependIcon"
+        :prependClass="prependClass" :prependIcon="prependIcon" :prelabel="prelabel" :prependGroupClass="prependGroupClass"
         @keyup.enter="commitValue">
         <template #default>
           <span v-if="!editing" id="fmg-1"
@@ -52,7 +52,15 @@
         type: [String],
         description: "Size value"
       },
+      prelabel : {
+        type: Boolean,
+      },
       prependClass: {
+        type: String,
+        default : "",//"input-group-text",
+        description: "Prepend Class (left)"
+      },
+      prependGroupClass : {
         type: String,
         default : "",//"input-group-text",
         description: "Prepend Class (left)"

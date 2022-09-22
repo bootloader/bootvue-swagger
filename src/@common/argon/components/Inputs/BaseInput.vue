@@ -25,6 +25,7 @@
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},
+        {'has-prelabel' : isPrelabel},
        inputGroupClasses
        ]">
         <div v-if="isPrelabel" class="input-group-prepend">
@@ -32,6 +33,7 @@
             <span v-if="prepend" class="input-group-text">{{prepend}}</span>
             <span v-else-if="prependClass" :class="prependClass" :variant="variant">
               <i v-if="prependIcon" :class="prependIcon"></i>
+               <span v-else> {{label || name}}</span>
             </span>
             <b-button  v-else :variant="variant">
               <i v-if="prependIcon" :class="prependIcon"></i>
@@ -141,6 +143,7 @@
         default: false,
         description: "Prepend Label (left)"
       },
+      variant : { type: String,  default : 'outline-success' },
       feedback: {
         type: Boolean,
         default: false,
@@ -218,7 +221,6 @@
       },
       prependClass: {
         type: String,
-        default : "btn btn-sm",//"input-group-text",
         description: "Prepend Class (left)"
       },
       rules: {
@@ -248,7 +250,6 @@
         type : Boolean,
         default : false
       },
-      variant : { type: String,  default : 'outline-success' }
     },
     data() {
       return {
@@ -286,7 +287,7 @@
         );
       },
       isPrelabel(){
-        return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend
+        return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend || this.prependClass
       },
       showHelpMessage(){
         if((this.question && this.$attrs.placeholder)  || this.helpMessage){

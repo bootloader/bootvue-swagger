@@ -32,7 +32,7 @@
            <b-button size="sm" @click="row.editItem"  v-tooltip="row.item.message" variant="outline-primary" class="mg-1">
                 <i class="fa fa-eye" title="View"/>
             </b-button>   
-            <b-button size="sm" @click="row.removeItem"  v-tooltip="row.item.message" variant="outline-primary" class="mg-1">
+            <b-button size="sm" @click="row.removeItem"  v-tooltip="row.item.message" variant="outline-danger" class="mg-1">
                 <i class="fa fa-trash" title="Delete"/>
             </b-button> 
       </template>
@@ -40,15 +40,19 @@
       <template #sidebar(edit)="{itemCopy}">
         <ValidationObserver ref="form" v-if="itemCopy">
               <div hidden class="text-xs">id:{{itemCopy.id}}</div>
-              <base-quick-edit class="mx-0 px-0" size="sm" label="Name"
+              <base-quick-edit class="mx-0 px-0 styler-20-80" size="sm" label="Name" prelabel
                     v-model="itemCopy.name.formattedName" autocomplete="off" rules="required"
                     placeholder="Enter name" @commit="onChange('SET','name',itemCopy,itemCopy.name)">
               </base-quick-edit>
               <span v-if="itemCopy.id" class="sections">
-                <base-quick-edit class="mx-0 px-0" size="sm" name="Code"
+                <base-quick-edit class="mx-0 px-0 styler-20-80" size="sm" name="Code" prelabel
                       v-model="itemCopy.code"  autocomplete="off" rules="required|alphanum"
                       placeholder="Enter Code" @commit="onChange('SET','code',itemCopy,itemCopy.code)">
                 </base-quick-edit>
+                <base-v-select class="mx-0 px-0 styler-20-80" size="sm" name="RM" prelabel
+                      v-model="itemCopy.rmCode"  options="getx:/api/admins/agent" clearable
+                      placeholder="Enter Code" @change="onChange('SET','rmCode',itemCopy,itemCopy.rmCode)">
+                </base-v-select>
                 <div class="section-divider">
                     <span class="section-divider-title">Phones</span>
                 </div>
@@ -148,8 +152,10 @@
             session : null,
             newItem : {
                   "name": {},
+                  "code" : "",
+                  "rmCode" : "",            
                   "phones": [],
-                  "emails" : []            
+                  "emails" : [],
             },
             newPhone : null,
             newEmail : null
