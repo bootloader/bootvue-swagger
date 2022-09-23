@@ -225,7 +225,7 @@
                         title: 'Masters',
                     },
                     {
-                        enabled: true,
+                        enabled: false,
                         href: '/app/master/contact/profiles',
                         title: 'Contact Profiles',
                         icon: 'pe-7s-network fas fa-address-card',
