@@ -50,7 +50,7 @@
                       placeholder="Enter Code" @commit="onChange('SET','code',itemCopy,itemCopy.code)">
                 </base-quick-edit>
                 <base-v-select class="mx-0 px-0 styler-20-80" size="sm" name="RM" prelabel
-                      v-model="itemCopy.rmCode"  options="getx:/api/admins/agent" clearable
+                      v-model="itemCopy.rmCode"  options="getx:/api/admins/agent" clearable optionKey="code"
                       placeholder="Enter Code" @change="onChange('SET','rmCode',itemCopy,itemCopy.rmCode)">
                 </base-v-select>
                 <div class="section-divider">
