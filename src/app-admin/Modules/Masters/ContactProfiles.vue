@@ -152,8 +152,8 @@
             session : null,
             newItem : {
                   "name": {},
-                  "code" : "",
-                  "rmCode" : "",            
+                  "code" : null,
+                  "rmCode" : null,            
                   "phones": [],
                   "emails" : [],
             },
