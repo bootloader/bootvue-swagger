@@ -101,7 +101,9 @@ $popular-list:(
 .text-dotted {
     text-decoration: underline dotted;
 }
-
+.border-1px {
+    border-width: 1px; border-style: solid;
+}
 .dull {
     opacity: 0.7;
 }

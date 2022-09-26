@@ -189,13 +189,13 @@
                 <button @click="editItemCancel" class="btn btn-warning">Cancel</button>
                 &nbsp;
                 <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
-                      class="btn btn-primary">{{selectedItem.itemCopy.id ? 'Update' : 'Create'}}</button>
+                      class="btn btn-primary">{{IS_MODE_EDIT ? 'Update' : 'Create'}}</button>
           </template>
       </b-modal>
 
       <div class="master-sidebar-container">
         <b-sidebar :id="'SB_'+viewid+'_EDIT'" v-if="selectedItem"
-          :title="(selectedItemMode == 'EDIT' ? 'Edit' : 'Add') + ` ${header.name} `" 
+          :title="sidebarTitle" 
             right shadow backdrop lazy v-model="showSideBar"
                 :backdrop-variant="'transparent'" bg-variant="white" body-class="p-3">
            <slot name="sidebar(edit)" v-bind="selectedItem">
@@ -207,7 +207,7 @@
                       <button @click="editItemCancel(); hide();" class="btn btn-warning">Close</button>
                       &nbsp;
                       <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
-                            class="btn btn-primary">{{selectedItem.itemCopy.id ? 'Update' : 'Create'}}</button>
+                            class="btn btn-primary">{{IS_MODE_EDIT ? 'Update' : 'Create'}}</button>
                 </slot>
             </div>  
           </template>
@@ -281,6 +281,9 @@
               type: Boolean,
               default : false
           },
+          itemIdGetter : {
+              type: Function
+          },
           newItem : {
             type : [Boolean,Object],
             default: function () {
@@ -304,7 +307,7 @@
             selectedItem : null,
             viewid : 'v'+ Date.now(),
             oldHash : "",
-            showSideBar : false
+            showSideBar : false,
         }),
         computed : {
           isbusy : {
@@ -351,12 +354,27 @@
               return this.table.items;
             }
           },
+          selectedItemId(){
+            return (typeof this.itemIdGetter == 'function') ? this.itemIdGetter(this.selectedItem) : this.selectedItem?.itemCopy?.id 
+          },
           selectedItemMode(){
-            return (this.selectedItem?.itemCopy?.id) ? 'EDIT' : 'CREATE';
+            return this.selectedItemId ? 'EDIT' : 'CREATE';
+          },
+          IS_MODE_EDIT(){
+            return selectedItemMode == "EDIT";
           },
           selectedItemChanged :  function (argument) {
             return this.oldHash !== JSON.stringify(this.selectedItem?.itemCopy);
-          } 
+          },
+          sidebarTitle(){
+              return (()=>{
+                  switch(this.selectedItemMode){
+                    case 'EDIT': return 'Edit';
+                    case 'CREATE': return 'Add';
+                    default : return 'View';
+                  }
+              })()+ ' ' +this.header.name;
+          },
         },
         mounted : function (argument) {
           if(this.goodTable)
@@ -457,7 +475,7 @@
           },
           editItem(row){
               this.selectedItem = { 
-                ...row,
+                ...row,mode : this.mode,
                 itemCopy : JSON.parse(JSON.stringify(row.item))
               };
               console.log("----this.selectedItem",this.selectedItem)

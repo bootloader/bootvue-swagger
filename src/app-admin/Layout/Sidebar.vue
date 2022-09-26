@@ -73,22 +73,12 @@
                 menu: menuFilter([
                     {
                         header: true,
-                        title: 'Dashboards',
-                    },
-                    {
-                        title: 'Summary',
-                        icon: 'pe-7s-graph3 fa fa-chart-bar',
-                        href: '/',
-                        enabled: true,
-                    },
-                    {
-                        header: true,
                         title: 'Reports',
                     },
                     {
-                        title: 'Sessions',
-                        icon: 'pe-7s-chat fa fa-chalkboard-teacher',
-                        href: '/app/reports/sessions',
+                        title: 'Dashboard',
+                        icon: 'pe-7s-graph3 fa fa-chart-bar',
+                        href: '/',
                         enabled: true,
                     },
                     {
@@ -99,13 +89,25 @@
                     },
                     {
                         header: true,
-                        title: 'Moderator',
+                        title: 'Manage',
+                    },
+                    {
+                        title: 'Sessions',
+                        icon: 'pe-7s-chat fa fa-chalkboard-teacher',
+                        href: '/app/reports/sessions',
+                        enabled: true,
                     },
                     {
                         title: 'Contacts',
                         icon: 'pe-7s-chat fa fa-address-book',
                         enabled: true,
                         href: '/app/moderate/contacts',
+                    },
+                    {
+                        enabled: true,
+                        href: '/app/master/contact/profiles',
+                        title: 'Contact Profiles',
+                        icon: 'pe-7s-network fas fa-address-card',
                     },
                     {
                         title: 'Import Chat',
@@ -222,23 +224,19 @@
                     },
                     {
                         header: true,
-                        title: 'Masters',
-                    },
-                    {
-                        enabled: true,
-                        href: '/app/master/contact/profiles',
-                        title: 'Contact Profiles',
-                        icon: 'pe-7s-network fas fa-address-card',
-                    },
-                    {
-                        header: true,
                         title: 'Setup',
                     },
                     {
                         enabled: true,
-                        href: '/app/setup/agent-panel',
-                        title: 'Configuration Setup',
-                        icon: 'pe-7s-network fa fa-tools',
+                        href: '/app/setup/channels',
+                        title: 'Channels',
+                        icon: 'pe-7s-key fa fa-plug',
+                    },
+                    {
+                        enabled: true,
+                        href: '/app/setup/client-api-keys',
+                        title: 'Client Apps',
+                        icon: 'pe-7s-key fa fa-th-large',
                     },
                     {
                         enabled: true,
@@ -254,15 +252,9 @@
                     },
                     {
                         enabled: true,
-                        href: '/app/setup/client-api-keys',
-                        title: 'Client Apps',
-                        icon: 'pe-7s-key fa fa-th-large',
-                    },
-                    {
-                        enabled: true,
-                        href: '/app/setup/channels',
-                        title: 'Channels',
-                        icon: 'pe-7s-key fa fa-plug',
+                        href: '/app/setup/agent-panel',
+                        title: 'Configuration Setup',
+                        icon: 'pe-7s-network fa fa-tools',
                     },
 
                     {

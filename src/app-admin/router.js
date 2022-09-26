@@ -12,16 +12,26 @@ export default AppRouter.route({
             component: () => import('./Modules/MyAnalytics.vue'),
         },
         {
+            path: '/app/reports/taxonomy',
+            name: 'ReportTaxonomy',
+            component: () => import('./Modules/ReportTaxonomy.vue'),
+        },
+//manage
+        {
             path: '/app/reports/sessions',
             name: 'AgentSessions',
             component: () => import('./Modules/AgentSessions.vue'),
         },
         {
-            path: '/app/reports/taxonomy',
-            name: 'ReportTaxonomy',
-            component: () => import('./Modules/ReportTaxonomy.vue'),
+            path: '/app/moderate/contacts',
+            name: 'ModContactMaster',
+            component: () => import('./Modules/Masters/ModContactMaster.vue'),
         },
-
+        {
+            path: '/app/master/contact/profiles',
+            name: 'ContactProfiles',
+            component: () => import('./Modules/Masters/ContactProfiles.vue'),
+        },
         {
             path: '/app/moderate/import-chat',
             name: 'ImportChat',
@@ -31,11 +41,6 @@ export default AppRouter.route({
             path: '/app/moderate/imported-chat-logs',
             name: 'ModImportChatLogs',
             component: () => import('./Modules/ImportChat/ModImportChatLogs.vue'),
-        },
-        {
-            path: '/app/moderate/contacts',
-            name: 'ModContactMaster',
-            component: () => import('./Modules/ModContactMaster.vue'),
         },
 
 //Bulk Messaging
@@ -129,12 +134,6 @@ export default AppRouter.route({
             component: () => import('./Modules/TmplHSM/TmplWaba.vue'),    
         },
 
-//Master Screens
-{
-    path: '/app/master/contact/profiles',
-    name: 'ContactProfiles',
-    component: () => import('./Modules/Masters/ContactProfiles.vue'),
-},
 //Setup
 
         {
