@@ -4,6 +4,7 @@
 import axios from "axios";
 import Vue from 'vue';
 import formatters from '../../services/formatters';
+import jscovery from '../../services/jscovery';
 
   async function post(url,option){
     try{
@@ -27,7 +28,15 @@ const state = {
   quickReplies : [],
   qreps : null,qaxns : null,qlabels : null, qtags : null,qmeds : null,
   quickTags:[],
+
+  localFlags : { hsmWarning : false }
 };
+var localFlagsCovery = jscovery.bind('admin.local.flags',state.localFlags,function(to,from){
+  to.hsmWarning = from.hsmWarning;
+}).reover({
+  hsmWarning : false
+});
+
 var tagFormat = function (argument) {
     return {
         id : argument.id,
@@ -41,6 +50,7 @@ var tagFormat = function (argument) {
 }
 const getters = {
     //Contacts
+  localFlags: (state) => state.localFlags,  
   isAuthenticated: (state) => !!state.user,
   StateQReps: (state) => state.qreps,
   StateQMeds: (state) => state.qmeds,
@@ -63,6 +73,10 @@ const getters = {
 };
 
 const actions = {
+  async localFlags({commit},{key,value}){
+    state.localFlags[key] = value;
+    commit("setLocalFlags",state.localFlags);
+  },
   async Register({dispatch}, form) {
     await axios.post('register', form)
     let UserForm = new URLSearchParams()
@@ -328,6 +342,10 @@ const actions = {
 };
 
 const mutations = {
+  setLocalFlags(state, localFlags){
+    state.localFlags = Object.assign({},localFlags);
+    localFlagsCovery.commit(state.localFlags);
+  },
   setQLabels(state, qlabels) {
     state.qlabels = qlabels;
     formatters.addContactLabels(qlabels);

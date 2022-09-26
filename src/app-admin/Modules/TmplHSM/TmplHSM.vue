@@ -285,9 +285,11 @@
              </template>  
         </master-view>
 
-        <MyModalBox v-if="mode=='edit' && newItem" size="md" autostart>
-         <i class="fa fa-exclamation-circle text-warning"/> HSM template is comprehensive template, final output may differ for each channel. 
+        <MyModalBox v-if="mode=='edit' && newItem && !$store.getters.localFlags.hsmWarning" size="md" autostart>
+          <p><i class="fa fa-exclamation-circle text-warning"/> HSM template is comprehensive template, final output may differ for each channel. 
          For example : WhatsApp has a limitation of maximum 3 buttons in single message, so when you submit for WhatsApp approval you will be prompted to modify the template accordingly. 
+         </p>
+         <p> <label><input type="checkbox" @change="showWarning"/> I understand. Do not show this warning again.</label></p>
         </MyModalBox>  
 
         <b-modal :id="modalEditButton.name" size="md"
@@ -373,14 +375,13 @@
     import ModalSelector from "../../../@common/custom/components/ModalSelector.vue";
     import JsonXPath from "../../../@common/utils/JsonXPath";
     import TmplUtils from "../../../@common/utils/TmplUtils";
+    import jscovery from "@/services/jscovery";
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
         faUsersSlash,faUsers,faTrash,faEye
     } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-    import mustache from 'mustache';
-    import formatters from '../../../services/formatters';
      import debounce from "debounce";
 
     import vSelect from 'vue-select'
@@ -711,6 +712,12 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
           },
           buttonSetting(){
             this.$bvModal.show("buttonSetting");
+          },
+          
+          showWarning(e){
+            this.$store.dispatch("localFlags",{
+              key : "hsmWarning", value : e.target.checked
+            });
           }
         }
 

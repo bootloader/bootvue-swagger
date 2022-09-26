@@ -19,13 +19,13 @@ var MAP = {
         'false' : ['text-danger'],
     },
     switch : {
-        '_' : [''], '$' : ['no-type-status', 'text-success border-success'],
+        '_' : ['my-switch'], '$' : ['no-type-status', 'text-success border-success'],
         'on' : ["fa fa-toggle-on",'text-success'],
         'true' : ["fa fa-toggle-on",'text-success'],
-        'off' : ['fa fa-toggle-off', 'text-danger'],
-        'false' : ['fa fa-toggle-off', 'text-danger'],
+        'off' : ['fa fa-toggle-on fa-rotate-180', 'text-danger'],
+        'false' : ['fa fa-toggle-on fa-rotate-180', 'text-danger'],
         'null' : ['fa fa-toggle-off'],
-        'none' : ['fa fa-toggle-off','text-danger']
+        'none' : ['fa fa-toggle-on fa-rotate-180','text-danger']
     },
     chatmode : {
         '_' : [''],  '$' : ['fa fa-th-large'],
@@ -211,5 +211,8 @@ export default {
         border-radius: 2em;
         margin-right: 4px;
         cursor: pointer;
+    }
+    .my-switch.fa-toggle-on,.my-switch.fa-toggle-off  {
+        font-size: 20px;
     }
 </style>

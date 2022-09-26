@@ -90,8 +90,15 @@
                 <base-v-select class="w-100" ref="attachment"
                   options="getx:/api/tmpl/quickmedia"
                   optionKey="code" optionLabel="title"
-                  v-model="input.templates.attachment"
-                ></base-v-select>
+                  v-model="input.templates.attachment">
+                    <template #option="{ item }">
+                      <my-icon type="fileType" :value="item.type"/>
+                      {{item.title}}
+                    </template>  
+                     <template #selected-option="{ item }">
+                      <my-icon type="fileType" :value="item.type"/>&nbsp;{{item.title}}
+                    </template>
+                </base-v-select>
                 <br/>
                 <div class="vgrid-wrapper">
                   <VGrid theme="default" class="w-100 position-relative"
@@ -122,9 +129,11 @@
                                 <br/> <br/><i>This will download a cvs file with all the variables associated with the chosen template​</i><br/>
                         </b-form-row>
 
-                            <ValidationProvider :rules="input.contacts == '' ? 'required':''" persist="true"  class="form-row" vid="input_contact_csv" 
-                        name="Contact Number" mode="lazy" v-slot="{ validate, errors }">
-                                <b-form-file placeholder="Upload CSV file​" accept=".csv" v-model="input.contactCSV" @change="validate($event)"></b-form-file>
+                            <ValidationProvider :rules="input.contacts == '' ? 'required':''" 
+                                persist="true"  class="form-row" vid="input_contact_csv" 
+                                name="Contact Number" mode="lazy" v-slot="{ validate, errors }">
+                                <b-form-file placeholder="Upload CSV file​" v-if="input.contactCSV"
+                                  accept=".csv" v-model="input.contactCSV" @change="validate($event)"></b-form-file>
                                 <span class="v-input-error">{{ errors[0] }}</span>
                             </ValidationProvider>
                             <div v-if="input.csvUploadError.length">
@@ -176,7 +185,6 @@
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
     import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
-    import SmartConversations from '../../../app-content/Pages/Pricing/SmartConversations.vue';
 
     function newItem() {
       return {
@@ -197,7 +205,6 @@
         components: {
             PageTitle, 'font-awesome-icon': FontAwesomeIcon,vSelect,TemplatePreview,
                 BaseVSelect,VGrid,
-                SmartConversations
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -424,7 +431,7 @@
   @import "@/assets/demo-ui/_chat-preview.scss";
 
  .m-mod-bulk-send {
-  .vs__dropdown-option.vs__dropdown-option--highlight {
+  .basic-component .vs__dropdown-option.vs__dropdown-option--highlight {
       background: rgb(225, 225, 225) !important;
       color: #000!important;
   }
