@@ -194,7 +194,7 @@
                     case "AUDIO":
                         return 'audio/*';
                     default :
-                        return '*/*';
+                        return null;
                 }
             },
             sampleVarData(){
@@ -359,7 +359,7 @@
                 this.$refs.myVueDropzone.removeFile(file);
             },
             async fileUploadedAll(e){
-                this.toggleView("CHAT_BOX");
+                //this.toggleView("CHAT_BOX");
                 this.caption_text = null;
             },
         },

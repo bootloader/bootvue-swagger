@@ -16,7 +16,7 @@
             {{row.item.name.formattedName}}
       </template>
 
-      <template #cell(phone)="row">
+      <template #cell(phones)="row">
         <span v-if="row.item.phones && row.item.phones[0]">
           +{{row.item.phones[0].countryCallingCode}} {{row.item.phones[0].nationalNumber}}
         </span>
@@ -138,7 +138,7 @@
                         }
                     },
                     { key : 'code', label : "Code" , filterOptions:{enabled:true}},
-                    { key : 'phone', label : "Phone" , filterOptions:{enabled:true}},
+                    { key : 'phones', label : "Phone" , filterOptions:{enabled:true}},
                     { key : 'emails', label : "Email" , filterOptions:{enabled:true}},
                     { key : 'actions', label : "Action" }
                 ],
