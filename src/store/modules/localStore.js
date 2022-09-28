@@ -4,7 +4,9 @@
 import axios from "axios";
 
 const state = {
-	local : {}
+	local : {
+    admin : {}
+  }
 };
 
 const getters = {

@@ -271,7 +271,7 @@
                     //{ key : 'actions', label : "Action" }
                 ],
                 items : [],
-                perPage: 25, currentPage: 1,
+                perPage: 20, currentPage: 1,
                 rows : 0,
                 busy : false,
             },

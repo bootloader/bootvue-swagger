@@ -253,7 +253,7 @@
         computed : {
             filtered() {
                 let includeInActive = this.includeInActive;
-                let items = this.$store.getters.StateAgents;
+                let items = this.$store.getters.StateApi.AdminsAgent;
                 if(!items?.length) return [];
                 const filtered = items.filter(item=>{
                   return includeInActive || (item.isactive =="Y")
@@ -268,10 +268,10 @@
                 return filtered.length > 0
                   ? filtered
                   : [
-                      Object.keys(items[0]).reduce(function(obj, value) {
-                        obj[value] = '';
-                        return obj;
-                      }, {})
+                      // Object.keys(items[0]).reduce(function(obj, value) {
+                      //   obj[value] = '';
+                      //   return obj;
+                      // }, {})
                     ];
             },
             teams : function (argument) {
@@ -315,7 +315,9 @@
           async loadAgents (loader){
             try {
               this.table.busy = true && loader;
-              await this.$store.dispatch('GetAgents');
+              return await this.$service.getX('/api/admins/agent',{
+                includeInActive : true
+              });
             } finally {
               this.table.busy = false && loader;
             }

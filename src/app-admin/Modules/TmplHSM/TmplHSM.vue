@@ -285,7 +285,7 @@
              </template>  
         </master-view>
 
-        <MyModalBox v-if="mode=='edit' && newItem && !$store.getters.localFlags.hsmWarning" size="md" autostart>
+        <MyModalBox v-if="mode=='edit' && newItem" size="md" :autostart="!$store.getters.local.admin.hsmWarning">
           <p><i class="fa fa-exclamation-circle text-warning"/> HSM template is comprehensive template, final output may differ for each channel. 
          For example : WhatsApp has a limitation of maximum 3 buttons in single message, so when you submit for WhatsApp approval you will be prompted to modify the template accordingly. 
          </p>
@@ -715,9 +715,7 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
           },
           
           showWarning(e){
-            this.$store.dispatch("localFlags",{
-              key : "hsmWarning", value : e.target.checked
-            });
+            this.$service.local("admin","hsmWarning",e.target.checked);
           }
         }
 

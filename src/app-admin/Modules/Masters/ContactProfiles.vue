@@ -22,17 +22,17 @@
         </span>
       </template>
 
-      <template #cell(email)="row">
+      <template #cell(emails)="row">
         <span v-if="row.item.emails && row.item.emails[0]">
           {{row.item.emails[0].email}}
         </span>
       </template>
 
       <template #cell(actions)="row">
-           <b-button size="sm" @click="row.editItem"  v-tooltip="row.item.message" variant="outline-primary" class="mg-1">
+           <b-button size="xs" @click="row.editItem"  v-tooltip="row.item.message" variant="outline-primary" class="mg-1">
                 <i class="fa fa-eye" title="View"/>
             </b-button>   
-            <b-button size="sm" @click="row.removeItem"  v-tooltip="row.item.message" variant="outline-danger" class="mg-1">
+            <b-button size="xs" @click="row.removeItem"  v-tooltip="row.item.message" variant="outline-danger" class="mg-1">
                 <i class="fa fa-trash" title="Delete"/>
             </b-button> 
       </template>
@@ -139,15 +139,16 @@
                     },
                     { key : 'code', label : "Code" , filterOptions:{enabled:true}},
                     { key : 'phone', label : "Phone" , filterOptions:{enabled:true}},
-                    { key : 'email', label : "Email" , filterOptions:{enabled:true}},
+                    { key : 'emails', label : "Email" , filterOptions:{enabled:true}},
                     { key : 'actions', label : "Action" }
                 ],
                 items : [],
-                perPage: 25,
+                perPage: 10,
                 currentPage: 1,
                 rows : 0,
                 api :  "/api/cusomter/profile",
-                size : "xs"
+                size : "xs",
+                paging : "lazy"
             },
             session : null,
             newItem : {

@@ -37,7 +37,7 @@
               :styleClass="'vgt-table condensed striped ' + table.tableClass"
               :pagination-options="{
                 enabled: true,
-                perPage: table.perPage || 25,
+                perPage: perPageSize,
                 ...table.paginationOptions
               }"
             >
@@ -91,7 +91,7 @@
                         :dark="table.dark || false"
                         :fixed="table.fixed || false"
                         :foot-clone="table.footClone || false"
-                        :per-page="table.perPage"
+                        :per-page="perPageSize"
                         :current-page="table_current_page"
                         :items="table.items"
                         :fields="table.fields"
@@ -99,7 +99,28 @@
                         :sort-desc="tableSortDesc"
                         :busy.sync="isbusy"
                         show-empty
-                        filter>
+                        filter
+                        :aria-empty='table.items.length==0'
+                        >
+
+                <template #top-row>
+                      <b-th v-for="field in table.fields" v-bind:key="field.key">
+                        <input  v-if="field.filterOptions" 
+                            type="search" v-model="tableSearch[field.key]" @keypress.enter="apply"  @change="apply"
+                          class="form-control form-control-sm" />
+                      </b-th>  
+                </template>
+                <template #bottom-row>
+                      <b-td :colspan="table.fields.length" class="b-table-bottom-row-td" rowspan=50>
+                        <div class="center-box">
+                            <div class="center-item text-center text-success py-1" styles="padding-top: 1em!important;">
+                                <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
+                                </b-spinner>
+                              <span class="no-item-text text-success"> Loading {{header.heading}} </span>
+                            </div>
+                        </div>
+                      </b-td> 
+                </template>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
                   <slot :name="slotName" v-bind="{
                       openView:()=>openView(slotScope),
@@ -123,7 +144,7 @@
                         </div>
                     </div>
                 </template>
-                <template #table-busy>
+                <template #table-busys>
                     <div class="center-box">
                         <div class="center-item text-center text-success py-1" style="padding-top: 1em!important;">
                               <b-spinner style="width: 3rem; height: 3rem;" class="align-middle">
@@ -131,6 +152,37 @@
                            <span class="no-item-text text-success"> Loading {{header.heading}} </span>
                         </div>
                     </div>
+                </template>
+
+                <template #custom-foot>
+                  <b-tr v-for="index in fillerRows" :key="index" class="b-table-filler-row">
+                    <b-td :colspan="table.fields.length" class="b-table-filler-row-td">
+                      &nbsp;
+                    </b-td>  
+                  </b-tr>  
+                  <b-pagination  v-if="table && table.items && table.items.length>perPageSize && tablePaging=='offline'"
+                        class="pb-3 pt-0 px-4"
+                        v-model="table_current_page"
+                        :total-rows="table.rows"
+                        :per-page="perPageSize"
+                        aria-controls="agent-session-list">        
+                  </b-pagination>
+                  <span  v-else-if="table && table.items && tablePaging=='lazy'">
+                    <b-button-group 
+                      size="sm" class="p-2" variant="outline-success">
+                      <b-button variant="outline-success"
+                        @click="loadPrev" 
+                        :disabled="pageNo < 1"
+                        >Previous</b-button>
+                      <b-button variant="outline-success">&nbsp;{{currentPage}}&nbsp;</b-button>
+                      <b-button variant="outline-success" 
+                        @click="loadNext"
+                        :disabled="table.items.length<perPageSize">Next</b-button>
+                    </b-button-group>
+                    <span  class="pb-0 mt-0 px-0" >
+                      &nbsp;Showing&nbsp;{{pageNo*perPageSize}}&nbsp;to&nbsp;{{pageNo*perPageSize+table.items.length}}
+                    </span>
+                  </span> 
                 </template>
             </b-table>
             <div v-else class="center-box">
@@ -144,30 +196,6 @@
                   <span class="no-item-text"> No {{header.heading}} </span>
                 </div>
             </div>
-            <b-pagination  v-if="table && table.items && table.items.length>table.perPage && tablePaging=='offline'"
-                  class="pb-3 pt-0 px-4"
-                  v-model="table_current_page"
-                  :total-rows="table.rows"
-                  :per-page="table.perPage"
-                  aria-controls="agent-session-list">        
-            </b-pagination>
-
-            <span  v-else-if="table && table.items && tablePaging=='lazy'">
-              <b-button-group 
-                size="sm" class="pb-3 pt-0 px-4" variant="outline-success">
-                <b-button variant="outline-success"
-                  @click="loadPrev" 
-                  :disabled="pageNo < 1"
-                  >Previous</b-button>
-                <b-button variant="outline-success">&nbsp;{{currentPage}}&nbsp;</b-button>
-                <b-button variant="outline-success" 
-                  @click="loadNext"
-                  :disabled="table.items.length<table.perPage">Next</b-button>
-              </b-button-group>
-              <span  class="pb-0 mt-0 px-0" >
-                &nbsp;Showing&nbsp;{{pageNo*table.perPage}}&nbsp;to&nbsp;{{pageNo*table.perPage+table.items.length}}
-              </span>
-            </span>  
 
         </div> 
 
@@ -308,6 +336,7 @@
             viewid : 'v'+ Date.now(),
             oldHash : "",
             showSideBar : false,
+            tableSearch : {}
         }),
         computed : {
           isbusy : {
@@ -322,7 +351,7 @@
             return this.sidebar || this.sidebarFooter;
           },
           smallTable(){
-            return this.table.small || (this.table.size == 'sm')
+            return this.table.small || (this.table.size == 'sm') || (this.size == 'sm')
           },
           tableSortDesc(){
             return this.table.sortDesc || (this.table.sortDir == 'desc')
@@ -330,11 +359,22 @@
           tablePaging(){
             return (this.table && this.table.paging) ? this.table.paging : 'offline';
           },
+          perPageSize(){
+            return this.table?.perPage || 10;
+          },
           currentPage(){
             if(this.tablePaging == 'lazy'){
               return this.pageNo + 1
             }
             return this.table_current_page;
+          },
+          currentPageSize(){
+            if(this.table?.api){
+              return  Math.min(this.table?.items?.length || 0, this.perPageSize || 0);
+            }
+            let totalPages = Math.floor((this.table?.items?.length || 0) / this.perPageSize)+1
+            return (totalPages == this.currentPage) ? ((this.table?.items?.length || 0) % this.perPageSize)
+            : this.perPageSize;
           },
           rowItems(){
             if(this.goodTable &&  this.table.groupBy){
@@ -375,6 +415,9 @@
                   }
               })()+ ' ' +this.header.name;
           },
+          fillerRows(){
+            return this.perPageSize - (this.currentPageSize || 0);
+          }
         },
         mounted : function (argument) {
           if(this.goodTable)
@@ -392,7 +435,8 @@
               });
           },
           async loadItems (additionalParams){
-            var params = {};
+            var params = {
+            };
             for(var i in this.actions){
               var name = this.actions[i].param || this.actions[i].type;
               params[name] = this.getInput(name);//?.lane;
@@ -400,6 +444,9 @@
             for(var i in this.filters){
               var name = this.filters[i].name || this.filters[i].param || this.filters[i].type;
               params[name] = this.filters[i].value;
+            }
+            for(var key in this.tableSearch){
+              params["search."+key] = this.tableSearch[key];
             }
             for(var key in additionalParams){
               params[key] = additionalParams[key];
@@ -409,7 +456,7 @@
                 this.busyintenral  = true;
                 var resp = await this.$service.get(this.table.api,{
                   ...params,
-                  pageSize : this.table.perPage, pageNo: this.pageNo,
+                  pageSize : this.perPageSize, pageNo: this.pageNo,
                   sortBy : this.table.sortBy,sortDir : this.table.sortDir
                 });
                 this.table.items = resp.results;
@@ -426,7 +473,6 @@
           async apply(){
             this.loadItems();
           },
-
 
           onActionINT : function (argument) {
             console.log("onAction",argument)
@@ -516,6 +562,51 @@
 </script>
 <style lang="scss">
 .m-master-view {
+  table.b-table[aria-busy='true'] {
+    opacity: 0.9;
+    position: relative;
+    .b-table-bottom-row-td{
+      display: block;
+      .center-box {
+          position: absolute;
+          right: 0;  left: 0;
+          // top: calc( 40% - 50px);
+          top: 220px;
+          height: 180px;
+          .spinner-border {
+            // width:  9rem!important;
+            // height: 9rem!important;
+          }
+      }
+    }
+    .b-table-empty-row {
+      display: none;
+    }
+  }
+  .b-table-bottom-row,.b-table-empty-row {
+    display: block;
+    height: 0px;
+    .b-table-bottom-row-td{
+        display: none;
+    }
+  }
+  table.b-table[aria-empty='true'] {
+      position: relative;
+      .b-table-empty-row {
+          div[aria-live='polite'] {
+            min-height: 100px;
+              position: absolute;
+              right: 0;  left: 0;
+              // top: calc( 50% - 180px);
+              top: 100px;
+              height: 180px;
+          }
+      }
+  }
+  .b-table-filler-row-td {
+    border: none !important;
+  }
+
   .center-box {
     .center-item > div.icon-wrapper {
       height: 10em;

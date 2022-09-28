@@ -30,7 +30,6 @@ let myRespInterceptor = axios.interceptors.response.use(
     return response;
   }, 
   function(error,s) {
-    //console.log("myRespInterceptor:error",error.response,s);
     let response  = error.response;
     let config = error.config;
     if(config.toast!==false && response.data && response.data.message){
@@ -242,6 +241,13 @@ const DataService = {
   },
   async store( namespace,key,item){
     store.dispatch('UpdateLocalStore',{ namespace : namespace, key : key, data : item })
+  },
+  async local(){
+    store.dispatch('UpdateLocalStore',{ 
+      namespace : arguments.length > 2 ? arguments[0] : 'default', 
+      key : arguments.length > 2 ? arguments[1] : arguments[0], 
+      data : arguments.length > 2 ? arguments[2] : arguments[1]
+   });
   },
   localStorage : {
     get(key){
