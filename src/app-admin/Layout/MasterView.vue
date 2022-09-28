@@ -446,7 +446,7 @@
               params[name] = this.filters[i].value;
             }
             for(var key in this.tableSearch){
-              params["search."+key] = this.tableSearch[key];
+              params["search."+key] = this.$f.trim(this.tableSearch[key]);
             }
             for(var key in additionalParams){
               params[key] = additionalParams[key];

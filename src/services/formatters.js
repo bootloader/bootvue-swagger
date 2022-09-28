@@ -144,6 +144,11 @@ var formatter = {
       return undefined;
     } return argument;
   },
+  trim(string){
+    if(typeof string == 'string'){
+      return string.trim();
+    } else return string;
+  },
   any : function(){
     for(var i in arguments){
       if(arguments[i] !== undefined && arguments[i] !== null ){
