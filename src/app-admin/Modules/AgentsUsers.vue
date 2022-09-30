@@ -317,6 +317,8 @@
               this.table.busy = true && loader;
               return await this.$service.getX('/api/admins/agent',{
                 includeInActive : true
+              },{
+                refresh : true
               });
             } finally {
               this.table.busy = false && loader;
@@ -341,12 +343,15 @@
           },
           async enableItem(item) {
               await this.$store.dispatch('DeActivateAgent',item);
+              await this.loadAgents();
           },
           async enableItemAdmin(item) {
               await this.$store.dispatch('DeAdminAgent',item);
+              await this.loadAgents();
           },
           async setItemDefault(item) {
              await this.$store.dispatch('SetAgentDefault', item);
+             await this.loadAgents();
           },
           async sendReset(item) {
              await this.$service.submit('/api/admins/agent/reset',{ agent_id : item.id });
