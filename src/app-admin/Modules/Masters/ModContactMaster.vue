@@ -14,7 +14,7 @@
       </template>
 
       <template #cell(actions)="row">
-            <span class="mg-1" @click="row.editItem">
+            <span class="mg-1" @click="row.editItem"  v-if="$config.PERMS.CONTACT_CENTER">
               <i  v-if="!row.item.profile" class="fa fa-user-plus pointer" ></i>
               <i v-else class="fa fa-user-check pointer text-success" ></i>
             </span>

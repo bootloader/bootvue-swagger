@@ -34,6 +34,7 @@
 <script>
     import { SidebarMenu } from 'vue-sidebar-menu'
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+    import { MyConst } from '@/services/global';
 
     function menuFilter(menu) {
         var header = null
@@ -54,7 +55,9 @@
                 return false
             })
             .filter(function (item) {
-                return item.disabled === false || item.enabled === true
+                return (item.disabled === false || item.enabled === true) && (
+                    !item.perm || MyConst.config?.PERMS[item.perm]
+                )
             })
     }
     export default {
@@ -104,7 +107,7 @@
                         href: '/app/moderate/contacts',
                     },
                     {
-                        enabled: true,
+                        enabled: true, perm : "CONTACT_CENTER",
                         href: '/app/master/contact/profiles',
                         title: 'Contact Profiles',
                         icon: 'pe-7s-network fas fa-address-card',

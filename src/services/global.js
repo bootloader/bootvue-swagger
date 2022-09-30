@@ -18,6 +18,7 @@ export const MyConst = {
 	config : (function(config){
 		//Derived Constants
 		config.chatRefreshInterval = config.chatIdleTimeout/5; //Chats/sessions should be refreshed after this interval
+		config.PERMS = config.PERMS || {}
 		return config;
 	})(Object.assign({
 		chatSessionTimeout : 86400000, // After which chat is expired
