@@ -256,7 +256,7 @@
                     {
                         enabled: true,
                         href: '/app/setup/agent-panel',
-                        title: 'Configuration Setup',
+                        title: 'Config Setup',
                         icon: 'pe-7s-network fa fa-tools',
                     },
 
