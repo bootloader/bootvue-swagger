@@ -339,6 +339,7 @@
               this.newItem = newItem();
               this.$refs.form.reset();
               this.onAction({name : "CANCEL"});
+              await this.loadAgents();
             }
           },
           async enableItem(item) {

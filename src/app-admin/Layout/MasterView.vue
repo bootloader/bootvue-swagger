@@ -401,7 +401,7 @@
             return this.selectedItemId ? 'EDIT' : 'CREATE';
           },
           IS_MODE_EDIT(){
-            return selectedItemMode == "EDIT";
+            return this.selectedItemMode == "EDIT";
           },
           selectedItemChanged :  function (argument) {
             return this.oldHash !== JSON.stringify(this.selectedItem?.itemCopy);
