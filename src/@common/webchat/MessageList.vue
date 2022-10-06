@@ -4,6 +4,8 @@
     class="sc-message-list"
     :style="{backgroundColor: colors.messageList.bg}"
     @scroll="handleScroll"
+    @touchstart="onTouchStart"
+    @touchend="onTouchEnd"
   >
     <Message
       v-for="(message, idx) in messagesList"
@@ -88,15 +90,31 @@ export default {
         return msgList;
     }
   },
+  data: () => ({
+      currentSize : this.messages.length,
+      touchstart:false,
+      touchend:true
+  }),
   mounted() {
     this.$nextTick(this._scrollDown())
   },
   updated() {
-    if (this.shouldScrollToBottom()) this.$nextTick(this._scrollDown())
+    if (this.shouldScrollToBottom() && this.messages.length > this.currentSize) this.$nextTick(this._scrollDown())
+    this.currentSize = this.messages.length;
   },
   methods: {
+    onTouchStart(){
+      this.touchstart=true;
+      this.touchend=false;
+    },
+    onTouchEnd(){
+      this.touchstart=false;
+      this.touchend=true;
+    },
     _scrollDown() {
-      this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight
+      if(this.touchend){
+        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight
+      }
     },
     handleScroll(e) {
       if (e.target.scrollTop === 0) {
@@ -121,7 +139,9 @@ export default {
 <style scoped>
 .sc-message-list {
   height: 80%;
-  overflow-y: auto;
+  overflow: auto;
+  -webkit-overflow-scrolling:touch;
+  overflow: scroll;
   background-size: 100%;
   padding: 40px 20px;
   display: flex;

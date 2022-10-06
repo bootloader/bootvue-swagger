@@ -45,7 +45,7 @@
                 <audio-player v-else-if="atch.mediaType == 'AUDIO'" 
                                 :file="atch.mediaURL | https"
                             ></audio-player>
-                <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank">
+                <a v-else :href="atch.mediaURL | https" class="fa fa-file-alt float-right" target="_blank" @click="e => downloadFile(e,atch.mediaURL)">
                 <small>&nbsp;{{atch.mediaCaption || atch.mediaType}}</small>
                 </a>
                 <br/>
@@ -84,6 +84,11 @@
     </web-chat-launcher>
     <div v-if="isLoading"  class="sc-loader-backdrop">
     </div>
+    <div id="image-viewer" v-if="imagePreview">
+      <span class="close" @click="closePreview">&times;</span>
+      <span class="download-image fa fa-download" @click="downloadPreview"></span>
+      <img class="modal-content" id="full-image" :src="previewImageUrl">
+    </div>
   </div>
 </template>
 
@@ -102,7 +107,8 @@
 
     var userAgent = window.navigator.userAgent.toLowerCase(),
     safari = /safari/.test( userAgent ),
-    ios = /iphone|ipod|ipad/.test( userAgent );
+    ios = /iphone|ipod|ipad/.test( userAgent ),
+    WebViewApp = /WebViewApp/.test( userAgent );
 
     function toMessage(msg) {
       if(!msg) return;
@@ -217,7 +223,10 @@
           isConfigSet : false,
           swagger : null,
           updatedOn : 0,
-          isLoading : false
+          isLoading : false,
+          imagePreview:false,
+          previewImageUrl:"",
+          downloadUrl:""
         }
       },
       computed : {
@@ -232,7 +241,33 @@
         downloadImage(e,url){
             let nUrl = new URL(url);
             nUrl.protocol = "https:";
-            window.open(nUrl, '_blank');
+            if(WebViewApp){
+              this.previewImageUrl = nUrl.href;
+              this.downloadUrl = nUrl.href;
+              this.imagePreview= true
+            }else{
+              window.open(nUrl, '_blank');
+            }            
+        },
+        closePreview(){
+          this.imagePreview= false
+          this.previewImageUrl = ""
+        },
+        downloadPreview(){
+          this.sendPostMessage({
+            event : "DOWNLOAD_FILE",
+            url : this.downloadUrl
+          });
+        },
+        downloadFile(url){
+          let nUrl = new URL(url);
+          nUrl.protocol = "https:";
+          if(WebViewApp){
+            this.sendPostMessage({
+              event : "DOWNLOAD_FILE",
+              url : nUrl.href
+            });
+          }
         },
         sendMessage (text) {
           if (text.length > 0) {
@@ -686,4 +721,65 @@
    .sc-header-image img{
       padding: 0px
    }
+
+#image-viewer img {
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+#image-viewer img:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+#image-viewer {
+     position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+}
+#image-viewer .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+#image-viewer .modal-content { 
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+#image-viewer .close ,#image-viewer .download-image{
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+#image-viewer .download-image{
+  font-size: 18px;
+  right: 80px;
+  top: 30px;
+}
+#image-viewer .close:hover,
+#image-viewer .close:focus ,#image-viewer .download-image:hover,#image-viewer .download-image:focus{
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
 </style>

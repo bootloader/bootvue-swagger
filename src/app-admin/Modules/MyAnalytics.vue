@@ -176,7 +176,7 @@
                                     <div class="widget-chart-flex">
                                         <div class="fsize-4">
                                             <small class="opacity-5"></small>
-                                            <span>{{summary.botScore}}</span></div>
+                                            <span>{{summary.satisfactionScore}}</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -354,6 +354,7 @@
                 "converDuration": 0,
                 "startLag": 0,
                 "peakLoad": {},
+                "satisfactionScore":0,
                 "botScore" : 0, "botClosure" : 0,
                 "graphApiDetails": {
 
