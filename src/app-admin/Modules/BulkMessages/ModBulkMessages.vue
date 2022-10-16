@@ -230,7 +230,7 @@
         },
         methods: {
           async onMounted(){
-            this.getItems();
+            await this.getItems();
             if(this.session?.status != "COMPLETED"){
                 setTimeout(()=>{ this.tally()},1000);
             }
