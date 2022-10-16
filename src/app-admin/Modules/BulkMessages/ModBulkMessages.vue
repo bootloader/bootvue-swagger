@@ -24,37 +24,47 @@
 
           <template #leftSummary>
              <h6 class="mt-3">Messages Pushed : {{stats.CRTD}}</h6>
-             <b-progress :value="stats.SENT" :max="stats.CRTD" show-value>
+             <b-progress :value="stats.SENT" :max="stats.CRTD" show-value v-tooltip="`
+                SCHLD:${stats.SCHLD}
+                <br/>SENT:${stats.SENT}
+                <br/>SENTX:${stats.SENTX}
+                <br/>SENT_ERR:${stats.SENT_ERR}
+             `">
                     <b-progress-bar v-if="stats.SENT"  :value="stats.SENT" variant="greyer">
                       <span> <strong>{{stats.SENT}}</strong> Sent</span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats.SENT_ERR" :value="stats.SENT_ERR" variant="warning">
+                    <b-progress-bar v-if="stats.SENT_ERR" :value="stats.SENT_ERR" variant="danger">
                       <span> <strong>{{stats.SENT_ERR}}</strong> Failed</span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats._SENT" :value="stats._SENT" variant="greyed">
+                    <!-- <b-progress-bar v-if="stats._SENT" :value="stats._SENT" variant="greyed">
                       <span> <strong>{{stats._SENT}}</strong> Pending</span>
-                    </b-progress-bar>
+                    </b-progress-bar> -->
               </b-progress> 
              <h6 class="mt-3">Message Delivery</h6>
-             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value>
+             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value v-tooltip="`
+                DLVRD:${stats.DLVRD}
+                <br/>SENTX_ERR:${stats.SENTX_ERR}
+             `">
                     <b-progress-bar v-if="stats.DLVRD"  :value="stats.DLVRD" variant="info">
                       <span> <strong>{{stats.DLVRD}}</strong> Delivered</span>
                     </b-progress-bar>
                     <b-progress-bar v-if="stats.SENTX_ERR" :value="stats.SENTX_ERR" variant="danger">
-                       <span> <strong>{{stats._DLVRD}}</strong> Failed</span>
+                       <span> <strong>{{stats.SENTX_ERR}}</strong> Failed</span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="greyed">
+                    <!-- <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="greyed">
                         <span><strong>{{stats._DLVRD}}</strong> Not Delivered</span>
-                    </b-progress-bar>
+                    </b-progress-bar> -->
               </b-progress> 
              <h6 class="mt-3">Read Reciept</h6>
-             <b-progress :value="stats.READ" :max="stats.CRTD" show-value>
+             <b-progress :value="stats.READ" :max="stats.CRTD" show-value v-tooltip="`
+                READ:${stats.READ}
+             `">
                     <b-progress-bar v-if="stats.READ" :value="stats.READ" variant="success">
                       <span> <strong>{{stats.READ}}</strong> Read </span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats._READ"  :value="stats._READ" variant="greyed">
+                    <!-- <b-progress-bar v-if="stats._READ"  :value="stats._READ" variant="greyed">
                        <span> <strong>{{stats._READ}}</strong> Not Read</span>
-                    </b-progress-bar>
+                    </b-progress-bar> -->
               </b-progress> 
           </template>  
 
@@ -201,10 +211,12 @@
           stats(){
             let stats = {
               CRTD :0, SENT : 0, SENTX : 0, DLVRD : 0, READ : 0,
-              SENT_ERR : 0, SENTX_ERR : 0,
+              SENT_ERR : 0, SENTX_ERR : 0, CCWIN : 0,
               ... (this.session?.stats || {}),
             }
-            stats.SENT = stats.SENT - stats.SENT_ERR;
+            stats.CRTD = Math.max(stats.CRTD,stats.INIT,stats.SENT);
+            stats.SENT_ERR = Math.max(stats.SENT_ERR, stats.SENTX_ERR) + stats.CCWIN;
+            stats.SENT = (stats.CRTD - stats.SENT_ERR);
             stats._SENT = stats.CRTD - stats.SENT - stats.SENT_ERR;
             stats._DLVRD = stats.SENT - stats.DLVRD;
             stats._READ = stats.DLVRD - stats.READ;
