@@ -210,11 +210,12 @@
         computed : {
           stats(){
             let stats = {
-              CRTD :0, SENT : 0, SENTX : 0, DLVRD : 0, READ : 0,
+              SCHLD : 0, CRTD :0, 
+              SENT : 0, SENTX : 0, DLVRD : 0, READ : 0,
               SENT_ERR : 0, SENTX_ERR : 0, CCWIN : 0,
               ... (this.session?.stats || {}),
             }
-            stats.CRTD = Math.max(stats.CRTD,stats.INIT,stats.SENT);
+            stats.CRTD = Math.max(stats.CRTD||0,stats.INIT||0,stats.SENT||0,stats.SCHLD||0);
             stats.SENT_ERR = Math.max(stats.SENT_ERR, stats.SENTX_ERR) + stats.CCWIN;
             stats.SENT = (stats.CRTD - stats.SENT_ERR);
             stats._SENT = stats.CRTD - stats.SENT - stats.SENT_ERR;
@@ -225,9 +226,15 @@
         },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
-          this.getItems();
+          this.onMounted();
         },
         methods: {
+          async onMounted(){
+            this.getItems();
+            if(this.session?.status != "COMPLETED"){
+                setTimeout(()=>{ this.tally()},1000);
+            }
+          },
           async getItems (){
             var resp = await this.$service.submit("/api/message/bulk/push/messages",{
                 "contactType": "WHATSAPP",
