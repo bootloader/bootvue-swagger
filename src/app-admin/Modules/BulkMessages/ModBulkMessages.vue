@@ -201,6 +201,7 @@
               SENT_ERR : 0, SENTX_ERR : 0,
               ... (this.session?.stats || {}),
             }
+            stats.SENT = stats.SENT - stats.SENT_ERR;
             stats._SENT = stats.CRTD - stats.SENT - stats.SENT_ERR;
             stats._DLVRD = stats.SENT - stats.DLVRD;
             stats._READ = stats.DLVRD - stats.READ;
