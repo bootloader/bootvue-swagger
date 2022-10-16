@@ -23,13 +23,16 @@
           </template>
 
           <template #leftSummary>
-             <h6 class="mt-3">Messages Pushed : {{stats.SENT}}/ {{stats.SENT}}</h6>
+             <h6 class="mt-3">Messages Pushed : {{stats.CRTD}}</h6>
              <b-progress :value="stats.SENT" :max="stats.CRTD" show-value>
                     <b-progress-bar v-if="stats.SENT"  :value="stats.SENT" variant="greyer">
                       <span> <strong>{{stats.SENT}}</strong> Sent</span>
                     </b-progress-bar>
                     <b-progress-bar v-if="stats.SENT_ERR" :value="stats.SENT_ERR" variant="warning">
                       <span> <strong>{{stats.SENT_ERR}}</strong> Failed</span>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="stats._SENT" :value="stats._SENT" variant="greyed">
+                      <span> <strong>{{stats._SENT}}</strong> Pending</span>
                     </b-progress-bar>
               </b-progress> 
              <h6 class="mt-3">Message Delivery</h6>
@@ -40,7 +43,7 @@
                     <b-progress-bar v-if="stats.SENTX_ERR" :value="stats.SENTX_ERR" variant="danger">
                        <span> <strong>{{stats._DLVRD}}</strong> Failed</span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="grey">
+                    <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="greyed">
                         <span><strong>{{stats._DLVRD}}</strong> Not Delivered</span>
                     </b-progress-bar>
               </b-progress> 
@@ -49,7 +52,7 @@
                     <b-progress-bar v-if="stats.READ" :value="stats.READ" variant="success">
                       <span> <strong>{{stats.READ}}</strong> Read </span>
                     </b-progress-bar>
-                    <b-progress-bar v-if="stats._READ"  :value="stats._READ" variant="grey">
+                    <b-progress-bar v-if="stats._READ"  :value="stats._READ" variant="greyed">
                        <span> <strong>{{stats._READ}}</strong> Not Read</span>
                     </b-progress-bar>
               </b-progress> 
