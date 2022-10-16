@@ -115,7 +115,6 @@
                 this.isLoading = true;
                 //this.session.contactType = "TELEGRAM";
                 var resp = await this.$store.dispatch('GetSessionChats',this.session);
-                console.log("resp",resp)
                 this.activeChat = DataProcessor.session(resp);
                 this.isLoading = false;
             },

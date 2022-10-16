@@ -18,6 +18,10 @@
             </div>
             <div class="page-title-actions">
 
+        <span v-if="!!$scopedSlots.filters" class="filter-wrapper">
+              <slot name="filters" >
+              </slot>
+        </span>
         <span v-for="(filter,index) in ifFilters" v-bind:key="'filter-'+index" class="filter-wrapper">
               <slot :name="'filter('+filter.name+')'"  v-bind="{filter}"  >
                     <span  v-if="!filter.hidden" >

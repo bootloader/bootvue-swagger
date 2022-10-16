@@ -1,90 +1,117 @@
 <template>
     <div>
-        <page-title :heading=heading :icon=icon
-        :actions=actions >
-          <template #subheading>
+      <master-view id="agent-session-list" 
+          :header="{
+            heading: heading,
+            subheading: subheading,
+            icon: icon,
+          }"
+          :table="table"
+          :actions=actions
+          :filters="[{ label : 'Show In-Active', name : 'showInActive'}]"
+          :busy="table.busy">
+
+          <template #header-subheading>
             <span v-if="session">
               published by {{session.createdBy}} @ {{session.createdStamp | formatDate}}
             </span>
           </template>
 
-        </page-title>
+          <template #filters>
+             <b-button variant="success" class="fa fa-download mg-1" @click="downloadCSVtemplate"> </b-button>
+            <b-button variant="success" class="fa fa-sync mg-1" @click="tally"> </b-button>
+          </template>
 
+          <template #leftSummary>
+             <h6 class="mt-3">Messages Pushed : {{stats.SENT}}/ {{stats.SENT}}</h6>
+             <b-progress :value="stats.SENT" :max="stats.CRTD" show-value>
+                    <b-progress-bar v-if="stats.SENT"  :value="stats.SENT" variant="greyer">
+                      <span> <strong>{{stats.SENT}}</strong> Sent</span>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="stats.SENT_ERR" :value="stats.SENT_ERR" variant="warning">
+                      <span> <strong>{{stats.SENT_ERR}}</strong> Failed</span>
+                    </b-progress-bar>
+              </b-progress> 
+             <h6 class="mt-3">Message Delivery</h6>
+             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value>
+                    <b-progress-bar v-if="stats.DLVRD"  :value="stats.DLVRD" variant="info">
+                      <span> <strong>{{stats.DLVRD}}</strong> Delivered</span>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="stats.SENTX_ERR" :value="stats.SENTX_ERR" variant="danger">
+                       <span> <strong>{{stats._DLVRD}}</strong> Failed</span>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="grey">
+                        <span><strong>{{stats._DLVRD}}</strong> Not Delivered</span>
+                    </b-progress-bar>
+              </b-progress> 
+             <h6 class="mt-3">Read Reciept</h6>
+             <b-progress :value="stats.READ" :max="stats.CRTD" show-value>
+                    <b-progress-bar v-if="stats.READ" :value="stats.READ" variant="success">
+                      <span> <strong>{{stats.READ}}</strong> Read </span>
+                    </b-progress-bar>
+                    <b-progress-bar v-if="stats._READ"  :value="stats._READ" variant="grey">
+                       <span> <strong>{{stats._READ}}</strong> Not Read</span>
+                    </b-progress-bar>
+              </b-progress> 
+          </template>  
 
-       <b-table id="agent-session-list" :striped=true
-                     :bordered=true
-                     :outlined=false
-                     :small=true
-                     :hover=true
-                     :dark=false
-                     :fixed=false
-                     :foot-clone=false
-                     :per-page="table.perPage"
-                     :current-page="table.currentPage"
-                     :items="table.items"
-                     :fields="table.fields">
-                <template #cell(account)="row">
-                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
-                      {{session.lane}}
+          <template #cell(account)="row">
+              <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
+                {{session.lane}}
+          </template>
+          <template #cell(contact)="row">
+              <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
+                {{row.item.contact.phone}}
+          </template>
+          <template #cell(createdBy)="row">
+                {{row.item.sender}}
+          </template>
+          <template #cell(sendType)="row">
+                {{row.item.meta.composeType}}-{{row.item.meta.sendType}}
+          </template>
+          <template #cell(template)="row">
+              <span cursor-pointer class="fa fa-comment" :id="'template-details-'+ row.index ">
+              </span>&nbsp;{{row.item.template}}
+              <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
+                custom-class="message-preview">
+                <template #default class="message-preview"> 
+                    <div class="message-text">{{row.item.text}}</div>
                 </template>
-                <template #cell(contact)="row">
-                    <i  class="fab"  v-bind:class="MyDict.socialPrefix(session.contactType)"> </i>
-                      {{row.item.contact.phone}}
-                </template>
-                <template #cell(createdBy)="row">
-                      {{row.item.sender}}
-                </template>
-                <template #cell(sendType)="row">
-                      {{row.item.meta.composeType}}-{{row.item.meta.sendType}}
-                </template>
-                <template #cell(template)="row">
-                    <span cursor-pointer class="fa fa-comment" :id="'template-details-'+ row.index ">
-                    </span>&nbsp;{{row.item.templateId}}
-                    <b-popover triggers="hover focus" :target="'template-details-'+ row.index "
-                      custom-class="message-preview">
-                      <template #default class="message-preview"> 
-                          <div class="message-text">{{row.item.text}}</div>
-                      </template>
-                    </b-popover>
-                </template>
-                <template #cell(initiated)="row">
-                    {{ row.item.stamps.INIT | formatDate}}
-                </template>  
-                <template #cell(status)="row">
-                    <div cursor-pointer class="fa fa-info-circle" :id="'job-status-details-'+ row.index ">
-                    </div>
-                      {{row.item.status}}
-                    <div v-if="row.item.logs" style="line-height: 21px;" 
-                      cursor-pointer class="fa fa-exclamation-triangle float-right" :id="'job-logs-details-'+ row.index ">
-                    </div> 
-                    
+              </b-popover>
+          </template>
+          <template #cell(initiated)="row">
+              {{ row.item.stamps.INIT | formatDate}}
+          </template>  
+          <template #cell(status)="row">
+              <div cursor-pointer class="fa fa-info-circle" :id="'job-status-details-'+ row.index ">
+              </div>
+                {{row.item.status}}
+              <div v-if="row.item.logs" style="line-height: 21px;" 
+                cursor-pointer class="fa fa-exclamation-triangle float-right" :id="'job-logs-details-'+ row.index ">
+              </div> 
+              
 
-                    <b-popover triggers="hover focus" :target="'job-status-details-'+ row.index ">
-                      <template #title>
-                        <div class="text-align-left row" v-for="(stamp,status) in row.item.stamps" style="width: 400px"> 
-                         <small class="col-2"> {{status}} </small> <small class="col-10">:&nbsp;&nbsp;{{stamp | formatDate}}</small>
-                        </div>
-                      </template>
-                    </b-popover>
-
-                    <b-popover v-if="row.item.logs" triggers="hover focus" :target="'job-logs-details-'+ row.index ">
-                      <template #title>
-                        <small class="text-align-left" v-for="(log,status) in row.item.logs"> 
-                         {{log}}
-                        </small>
-                      </template>
-                    </b-popover>
-
+              <b-popover triggers="hover focus" :target="'job-status-details-'+ row.index ">
+                <template #title>
+                  <div class="text-align-left row" v-for="(stamp,status) in row.item.stamps" style="width: 400px"> 
+                    <small class="col-2"> {{status}} </small> <small class="col-10">:&nbsp;&nbsp;{{stamp | formatDate}}</small>
+                  </div>
                 </template>
+              </b-popover>
 
-        </b-table>
+              <b-popover v-if="row.item.logs" triggers="hover focus" :target="'job-logs-details-'+ row.index ">
+                <template #title>
+                  <small class="text-align-left" v-for="(log,status) in row.item.logs"> 
+                    {{log}}
+                  </small>
+                </template>
+              </b-popover>
 
-          <b-pagination
-              v-model="table.currentPage"
-              :total-rows="table.rows"
-              :per-page="table.perPage"
-              aria-controls="agent-session-list"
-            ></b-pagination>
+          </template>
+
+
+      </master-view>
+
         
     </div>
 
@@ -94,6 +121,7 @@
 
     import PageTitle from "../../Components/PageTitle.vue";
     import { MyFlags,MyDict,MyConst } from '../../../services/global';
+    import {Parser, transforms } from 'json2csv';
 
     //import chart1 from './Analytics/chart1';
     //import chart2 from './Analytics/chart2';
@@ -146,9 +174,9 @@
             },
             table : {
                 fields: [ 
-                    { key : 'messageId', label : "Id" },
+                    //{ key : 'messageId', label : "Id" },
                     { key : 'contact', label : "Contact" },
-                    { key : 'sessionId', label : "SessionId" },
+                    //{ key : 'sessionId', label : "SessionId" },
                     { key : 'template', label : "Template" },
                     { key : 'createdBy', label : "by" },
                     { key : 'initiated', label : "@" },
@@ -166,6 +194,19 @@
             },
             session : null,
         }),
+        computed : {
+          stats(){
+            let stats = {
+              CRTD :0, SENT : 0, SENTX : 0, DLVRD : 0, READ : 0,
+              SENT_ERR : 0, SENTX_ERR : 0,
+              ... (this.session?.stats || {}),
+            }
+            stats._SENT = stats.CRTD - stats.SENT - stats.SENT_ERR;
+            stats._DLVRD = stats.SENT - stats.DLVRD;
+            stats._READ = stats.DLVRD - stats.READ;
+            return stats;
+          }
+        },
         mounted : function (argument) {
           //this.dateRangeOnUpdate();
           this.getItems();
@@ -179,7 +220,6 @@
             this.table.items = resp.results;
             this.table.rows = this.table.items.length;
             this.session = resp.meta;
-            console.log("sessions",resp,this.table )
           },
           async deleteItem (r,index) {
               var resp = await this.$store.dispatch('PostRequest',{
@@ -189,17 +229,27 @@
               this.sessions.items = resp.results;
               this.sessions.rows = this.sessions.items.length;
           },
-
-          hideChat : function (argument) {
-            this.session = null;
+          async tally(){
+            var resp = await this.$service.submit("/api/message/bulk/push/retry",{
+                "action": "tally",
+                "jobId" : this.$route.params.bulkSessionId
+            });
+            await this.getItems();
           },
-          showChat : function (r) {
-            if(this.session && this.session.sessionId == r.sessionId){
-              this.session = null;
-            } else {
-              this.session = r;
-            }
-          },
+          downloadCSVtemplate(){
+              if(Object.keys(this.table.items).length){
+                  const json2csvParser = new Parser({transforms : [, transforms.flatten()]});
+                  const csv = json2csvParser.parse(this.table.items);
+                  console.log("csv",csv);
+                  let csvContent = "data:text/csv;charset=utf-8,"+csv;
+                  var encodedUri = encodeURI(csvContent);
+                  var link = document.createElement("a");
+                  link.setAttribute("href", encodedUri);
+                  link.setAttribute("download", "bulk_push_messages.csv");
+                  document.body.appendChild(link); // Required for FF
+                  link.click();
+              }
+          }
 
         },
 

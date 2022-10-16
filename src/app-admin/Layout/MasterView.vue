@@ -24,8 +24,14 @@
         </page-title>
 
 
-      <slot name="body">
-        <div v-if="goodTable && table" class="bg-white" >
+      <slot name="body"><b-row>
+        <b-col v-if="summarySlots.left" :cols="summarySlots.left" >
+          <slot name="leftSummary">
+
+          </slot> 
+        </b-col> 
+        <b-col v-if="summarySlots.main" :cols="summarySlots.main" >
+        <div v-if="goodTable && table" class="bg-white overflow-y-auto" >
             <vue-good-table 
               :columns="table.fields"
               :rows="rowItems"
@@ -80,7 +86,7 @@
               </template>
             </vue-good-table> 
         </div> 
-        <div v-else-if="table" class="bg-white p-0">
+        <div v-else-if="table" class="bg-white p-0 overflow-y-auto">
 
           <b-table id="agent-session-list" :striped=true :class="[table.tableClass]" v-if="table.items"
                         empty-filtered-text="No Records"
@@ -198,8 +204,9 @@
             </div>
 
         </div> 
-
-      </slot>  
+        
+      </b-col>
+      </b-row></slot>  
 
       <b-modal :id="viewid+'_VIEW'" :title="'View'" size="lg">
             <slot name="modal(view)" v-bind="selectedItem">
@@ -417,6 +424,15 @@
           },
           fillerRows(){
             return this.perPageSize - (this.currentPageSize || 0);
+          },
+          summarySlots (){
+            let left = !!this.$scopedSlots.leftSummary ? 3 : 0;
+            let right = !!this.$scopedSlots.rightSummary ? 3 : 0;
+            return {
+              left : left,
+              main : (12 - left - right),
+              right : right
+            }
           }
         },
         mounted : function (argument) {
