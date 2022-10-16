@@ -44,6 +44,7 @@
              <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value v-tooltip="`
                 DLVRD:${stats.DLVRD}
                 <br/>SENTX_ERR:${stats.SENTX_ERR}
+                <br/>CCWIN:${stats.CCWIN}
              `">
                     <b-progress-bar v-if="stats.DLVRD"  :value="stats.DLVRD" variant="info">
                       <span> <strong>{{stats.DLVRD}}</strong> Delivered</span>
