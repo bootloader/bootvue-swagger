@@ -90,11 +90,13 @@ export default {
         return msgList;
     }
   },
-  data: () => ({
+  data(){
+      return {
       currentSize : this.messages.length,
       touchstart:false,
       touchend:true
-  }),
+    }
+  },
   mounted() {
     this.$nextTick(this._scrollDown())
   },

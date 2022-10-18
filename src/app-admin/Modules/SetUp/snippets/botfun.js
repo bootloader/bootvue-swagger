@@ -17,8 +17,20 @@ export default {
                 type: 'snippet',
             },
             {
-                caption: 'makeApiCall',
-                snippet: `await $.rest({\n\turl:"https://url.com/"//YouOptionsHere\n}).post()`,
+                caption: 'rest.get as json',
+                snippet: `await $.rest({\n\turl:"https://url.com/"//YouOptionsHere\n}).get().json()`,
+                type: 'snippet',
+            },
+            {
+                caption: 'rest.post as json',
+                snippet: `await $.rest({\n\turl:"https://url.com/"//YouOptionsHere\n})`
+                        + `.post({\n\t"key":"value"//YouOptionsHere\n}).json()`,
+                type: 'snippet',
+            },
+            {
+                caption: 'rest.submit as json',
+                snippet: `await $.rest({\n\turl:"https://url.com/"//YouOptionsHere\n})`
+                            + `.submit({\n\t"key":"value"//YouOptionsHere\n}).json()`,
                 type: 'snippet',
             },
             {
