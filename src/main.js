@@ -50,8 +50,8 @@ Vue.use(Vue2TouchEvents)
 import AppWrapper from './AppWrapper';
 
 (function(configs,app){
-	var config = configs[app] || configs.dev
-	console.log("ALWAYS",app,config);
+	var config = configs[app] || configs.dev;
+	//console.log("ALWAYS",app,config);
 
 	if(typeof config.beforeLoad == 'function'){
 		config.beforeLoad();
