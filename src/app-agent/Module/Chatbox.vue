@@ -1222,13 +1222,14 @@
                         let scrollTop = event.target.scrollTop;
                         this.loadingPrev = true;
                         let activeChat = this.activeChat;
+                        let prevSessionId = (this.prevChats[0] || activeChat).sessionId
                         let response = await this.$service.get("/api/session/messages",{
                                 contactId : activeChat.contactId,
-                                sessionId : activeChat.sessionId,
+                                sessionId : prevSessionId,
                                 previous : true
                         },{ first :activeChat.sessionId });
 
-                        if(!response.meta){
+                        if(!response.meta || (response.meta.sessionId == prevSessionId)){
                             this.loadingPrev = false;
                             return;
                         }
