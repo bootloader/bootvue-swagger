@@ -45,6 +45,8 @@ $popular-list:(
 @each $key,$val in $popular-list{
     .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
         background-color: #{$val}!important;
+    }
+    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after {
         color: set-color($val);
     }
     .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after {

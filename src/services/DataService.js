@@ -9,6 +9,7 @@ import { i18n } from "./i18n";
 import formatter from "./formatters";
 import tunnel from './/tunnel';
 import storage from 'local-storage-fallback';
+import jskeeper from '@/services/jskeeper';
 
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
@@ -134,7 +135,14 @@ const DataService = {
     url = slashUrl(url);
     let _config = config || {};
     _config.params = query;
-    let response = await axios.get(url,_config);
+    let response = null;
+    if(config.first){
+      response  = await jskeeper.first(function(){
+        return axios.get(url,_config);
+      }, "getfirst:" + config.first);
+    } else {
+      response = await axios.get(url,_config);
+    }
     return processor(query,response.data,_config);
   },
   async getX(url,query,config) {
