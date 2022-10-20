@@ -115,6 +115,10 @@
                   label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
                   >
                 </base-input>
+                <qr-code :value="$global.MyDict.c2cUrl(oneItemView)" :options="{
+                  size : 300
+                }">
+                </qr-code>
                 <template #modal-footer="{ok}">
                   <button @click="ok()"
                           class="btn btn-sm btn-primary">OK</button>
@@ -149,7 +153,8 @@
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
-    import MyStatus from '../../../@common/custom/components/MyStatus.vue';
+    import MyStatus from '@/@common/custom/components/MyStatus.vue';
+    import QrCode from '@/@common/custom/components/QrCode.vue';
 
     function newItem(channelType) {
       return {
@@ -161,7 +166,8 @@
     export default {
         components: {
             MasterView,XSimpleForm,
-                MyStatus
+                MyStatus,
+                QrCode
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,

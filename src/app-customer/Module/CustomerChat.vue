@@ -30,7 +30,7 @@
           <img v-if="config.header.icon.url" class="sc-header--img-v2" :src="config.header.icon.url" alt="" 
             style="width:34px;height:34px ;" />
         </span>  
-        <div class="sc-header--title">{{ config.header.title.text }}</div>
+        <div class="sc-header--title">{{ config.header.title.text}}</div>
       </template>
 
       <template v-slot:text-message-body="{ message,messageText, messageColors}">
@@ -145,7 +145,7 @@
           participants: [
             {
               id: 'support',
-              name: 'Support',
+              name: 'Supportor',
               imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
             }
           ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
@@ -594,6 +594,7 @@
             var config = myChatEvent.options.config || {};
             config.dummy = 'dummy.dummy';
             var thisConfig = this.config;
+            thisConfig.header.title.text = (this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_TITLE) || thisConfig.header.title.text;
             for(var key in config){
                   var keys = key.split(".");
                   if(keys[keys.length-1] == 'color'){

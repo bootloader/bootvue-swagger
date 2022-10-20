@@ -252,7 +252,7 @@ export default {
                 "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",
                 //"header.icon.url" : this.$global.MyConst.cdn + "/_common/static/support.png",
-                "header.title.text" : "Support",
+                //"header.title.text" : "Support",
                 //"header.disabled" : true,
 
                 "launcher.bg.color" : "#1e293b",
