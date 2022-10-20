@@ -30,7 +30,7 @@
                 <br/>SENTX:${stats.SENTX}
                 <br/>SENT_ERR:${stats.SENT_ERR}
              `">
-                    <b-progress-bar v-if="stats.SENT"  :value="stats.SENT" variant="greyer">
+                    <b-progress-bar v-if="stats.SENT"  :value="stats.SENT" variant="greyer" class="bg-text">
                       <span> <strong>{{stats.SENT}}</strong> Sent</span>
                     </b-progress-bar>
                     <b-progress-bar v-if="stats.SENT_ERR" :value="stats.SENT_ERR" variant="danger">
@@ -41,11 +41,11 @@
                     </b-progress-bar> -->
               </b-progress> 
              <h6 class="mt-3">Message Delivery</h6>
-             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value v-tooltip="`
-                DLVRD:${stats.DLVRD}
+             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value  variant="greyer" class="bg-text text-black" 
+                v-tooltip="`DLVRD:${stats.DLVRD}
                 <br/>SENTX_ERR:${stats.SENTX_ERR}
                 <br/>CCWIN:${stats.CCWIN}
-             `">
+             `" >
                     <b-progress-bar v-if="stats.DLVRD"  :value="stats.DLVRD" variant="info">
                       <span> <strong>{{stats.DLVRD}}</strong> Delivered</span>
                     </b-progress-bar>

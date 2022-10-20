@@ -76,7 +76,7 @@
     import Loading from 'vue-loading-overlay';
     import debounce from 'debounce';
 
-    const D20 = 1000*60*60*24*20;
+    const D20 = 1000*60*60*24*20*7;
     const DT1 = Date.now() + 24 * 60 * 60 * 1000;
 
     export default {

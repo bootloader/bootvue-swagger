@@ -35,6 +35,20 @@ var CONTACT_TAGS_DICT = {};
     const DATE = new Date(timestamp);
     return moment(DATE).format('h:mm a DD MMM YY');
   }
+  function dateStamp(timestamp,gap) {
+    if(!timestamp){
+      return "";
+    }
+    const NOW = new Date();
+    const DATE = new Date(timestamp);
+    const DIFF = moment(NOW).diff(DATE, 'day');
+    if(DIFF < 1 && isToday(DATE)){
+      return "Today";
+    } else if(DIFF < 2 ){
+      return "Yesterday";
+    }
+    return moment(DATE).format('DD MMM YY');
+  }
   function clock(timestamp,gap) {
     const DATE = new Date(timestamp);
     return moment(DATE).format('DD-MMM-YY h:mm:ss a');
@@ -121,7 +135,7 @@ var formatter = {
       CONTACT_TAGS_DICT[tags[i].id] = tags[i];
     }
   },
-  timespan : timespan,formatStamp : formatStamp,
+  timespan : timespan,formatStamp : formatStamp, dateStamp : dateStamp,
   hexacode : function (str) {
     return intToRGB(hashCode(str));
   },
@@ -362,6 +376,7 @@ var formatter = {
 
     Vue.filter('formatDate', formatTime);
     Vue.filter('formatStamp', formatStamp);
+    Vue.filter('dateStamp', dateStamp);
     Vue.filter('timeago', timeago);
     Vue.filter('clock', clock);
     

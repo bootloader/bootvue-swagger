@@ -150,8 +150,8 @@
                                         </base-input>
 
                                         <BaseVSelect class="col-md-3" size="sm"
-                                          name="Channel Type"
-                                          :emptyDisplay="'ALL'"
+                                          name="Channel Type" 
+                                          filterable searchable clearable
                                           options="@data/contact_types"
                                           v-model="newItem.contactType"
                                           placeholder="Select Channel Type">

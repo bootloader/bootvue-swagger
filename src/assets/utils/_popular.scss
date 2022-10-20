@@ -47,6 +47,9 @@ $popular-list:(
         background-color: #{$val}!important;
         color: set-color($val);
     }
+    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after {
+        color: set-color($val);
+    }
     .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after {
         color: #{$val}!important;
     }

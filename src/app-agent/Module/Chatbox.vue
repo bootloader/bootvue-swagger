@@ -117,10 +117,25 @@
             <br/>
         </span>
     </div> 
-    <ChatMessages v-else
-        :activeChat="activeChat"
-        v-show="is_CHAT_BOX"
-    />
+    <div v-else>
+        <div class="history-messages">
+            <div class="history-loader">
+                <loading :active.sync="loadingPrev"
+                    :can-cancel="false"  
+                    :loader="'dots'"
+                    :is-full-page="false"></loading>
+            </div>
+            <span v-for="(prevChat,index) in prevChats" v-bind:key="'his-'+index">
+                <ChatMessages  :activeChat="prevChat"
+                    v-show="is_CHAT_BOX" />
+            </span>   
+        </div>
+        <ChatMessages 
+                :activeChat="activeChat"
+                v-show="is_CHAT_BOX"
+        />
+    </div>    
+
 
 </div>
                     </div>
@@ -392,6 +407,7 @@
     import debounce from 'debounce';
     import throttle from 'throttleit';
     import pebounce from 'pebounce';
+    import DataProcessor from "@/services/DataProcessor";
 
 
     import { Textcomplete } from "@textcomplete/core";
@@ -509,6 +525,7 @@
                     agent : { }
                 }
             },
+            prevChats : [],
             chatsVersionLocal : 0,
             isSendNewMessage : false,
             winMode : null,
@@ -555,7 +572,8 @@
               },
             }],
             media: null,
-            mediaRecorder : null
+            mediaRecorder : null,
+            mcb : null,loadingPrev : false
         }),
         created () {
             // fetch the data when the view is created and the data is
@@ -598,11 +616,18 @@
             //         placement: "top" 
             //     }
             // })
+
+            this.mcb = document.querySelector('.msg_card_body');
+            this.mcb.addEventListener('scroll', this.handleScroll);
         },
         beforeUnmount (){
             this.tunnel.off();
             clearInterval(this.refreshActiveChatInterval);
             //this.textcomplete.destroy()
+        },
+        destroyed () {
+            this.mcb= document.querySelector('.msg_card_body');
+            this.mcb.removeEventListener('scroll', this.handleScroll);
         },
         watch: {
             '$route.params.contactId': function (contactId) {
@@ -827,9 +852,9 @@
                 this.lastMessageId = lastMessageId;
 
                 this.$nextTick(() => {
-                    var mcb =document.querySelector('.msg_card_body');
-                    if(mcb){
-                        mcb.scrollTop =  mcb.scrollHeight+50;
+                    this.mcb =document.querySelector('.msg_card_body');
+                    if(this.mcb){
+                        this.mcb.scrollTop =  this.mcb.scrollHeight+50;
                     }
                 });
             },
@@ -917,6 +942,7 @@
                 return null;
             },100),
             onSessionChange : debounce(async function(){
+                this.prevChats = [];
                 this.activeChat = this.selectActiveChat();
 
                 if(this.activeChat == null && this.$route.params.contactId){
@@ -1165,7 +1191,9 @@
                 console.log("fileUploading2",msg)
                 formData.append('message', JSON.stringify(msg));
                 if(this.caption_text)
-                    formData.append("caption",this.caption_text);
+                    formData.append("caption",
+                    encodeURIComponent(this.caption_text)
+                    );
                 //this.caption_text = null;
             },
             async fileUploaded(file,resp) {
@@ -1188,8 +1216,47 @@
             },
             onSwipeLeft(){
                 this.showContactProfile('info')
-            }
-            
+            },
+            handleScroll : debounce(async function(event){
+                console.log("handleScroll....",event.target.scrollTop)
+                if(event.target.scrollTop < 50){
+                        let scrollHeight = event.target.scrollHeight;
+                        let scrollTop = event.target.scrollTop;
+                        this.loadingPrev = true;
+                        let activeChat = this.activeChat;
+                        let prevSessionId = (this.prevChats[0] || activeChat).sessionId
+                        let response = await this.$service.get("/api/session/messages",{
+                                contactId : activeChat.contactId,
+                                sessionId : prevSessionId,
+                                previous : true
+                        },{ first :activeChat.sessionId });
+
+                        if(!response.meta || (response.meta.sessionId == prevSessionId)){
+                            this.loadingPrev = false;
+                            return;
+                        }
+                        let session =  {
+                            ...response.meta,
+                            snapshot : Date.now(),
+                            messages : response.results
+                        };
+                        DataProcessor.session(session);
+                        document.documentElement.style.scrollBehavior = 'auto';
+                        event.target.style.scrollBehavior = 'auto';
+                        this.prevChats.unshift(session);
+                        this.loadingPrev  = false;
+                        this.mcb = event.target;
+                        this.scrollAdjust({scrollTop,scrollHeight});
+                        this.$nextTick(() => {
+                            this.scrollAdjust({scrollTop,scrollHeight});
+                            this.loadingPrev  = false;
+                        });
+
+                }
+            },500),
+             scrollAdjust : throttle(async function({scrollTop,scrollHeight}){
+                this.mcb.scrollTop =  scrollTop + (this.mcb.scrollHeight - scrollHeight);
+             },50)
         },
 
     }
@@ -1278,6 +1345,16 @@
 
     }
    
+    .history-messages {
+        opacity: 0.7;
+        border-bottom: 1px #00000006 solid;
+        margin-bottom: 10px;
+    }
+    .history-messages .history-loader {
+        position: relative;
+        min-height: 20px;
+        margin-top: -10px;
+    }
     .log_icon {
         color: red;
     }
