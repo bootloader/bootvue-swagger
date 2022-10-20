@@ -1,8 +1,5 @@
 <template>
     <div v-if="activeChat" class="m-chat-messages" tabindex="-1" >
-        <div class="text-center scroll-date"> 
-            <span class="bg-red bg-text">{{activeChat.startSessionStamp|formatDate}} </span> 
-        </div>
         <div v-for="(m) in messages"  v-bind:key="`message-${activeChat.sessionId}-${m.messageId}-${m.messageIdRef}`" tabindex="-1" 
             :id="`message-${activeChat.sessionId}-${m.messageId}-${m.messageIdRef}`" ><!-- LOOP Start --><span v-if="m">
             <div v-if="$global.MyFunc.isInbound(m.type)"
@@ -89,7 +86,9 @@
             </ChatMessageLog> 
 
         </span><!-- LOOP ENDS --></div>
-        
+        <div class="text-center scroll-date"> 
+            <span class="">{{activeChat.startSessionStamp|formatDate}} </span> 
+        </div>
     </div>
 
 </template>
@@ -305,23 +304,25 @@
 <style lang="scss">
     .m-chat-messages {
         .scroll-date {
-            position: absolute;
-            z-index: 0px;
+            position: absolute !important;
             width: 100%;
-            opacity: 0.1;
-            display: none;
+            opacity: 0 !important;
+            margin : 0 auto;
+            z-index: 1000000000000 !important;
+            top: 100px;
             span {
                 display: inline-block;
-                width: 30%;
+                min-width: 100px;
+                border-radius: 8px;
+                background-color: rgba(0, 0, 0, 0.373);
+                color: #FFF;
+                padding: 0 5px;
             }
         }
     }
     .m-chat-messages:hover{
         .scroll-date {
-            position: absolute !important;
             opacity: 1 !important;
-            margin : 0 auto;
-            z-index: 100000000 !important;
         }
     }
 </style>
