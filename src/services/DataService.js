@@ -136,10 +136,10 @@ const DataService = {
     let _config = config || {};
     _config.params = query;
     let response = null;
-    if(config.first){
+    if(_config.first){
       response  = await jskeeper.first(function(){
         return axios.get(url,_config);
-      }, "getfirst:" + config.first);
+      }, "getfirst:" + _config.first);
     } else {
       response = await axios.get(url,_config);
     }
