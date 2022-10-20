@@ -108,7 +108,7 @@
     var userAgent = window.navigator.userAgent.toLowerCase(),
     safari = /safari/.test( userAgent ),
     ios = /iphone|ipod|ipad/.test( userAgent ),
-    WebViewApp = /WebViewApp/.test( userAgent );
+    WebViewApp = /webviewapp/.test( userAgent );
 
     function toMessage(msg) {
       if(!msg) return;
@@ -259,7 +259,7 @@
             url : this.downloadUrl
           });
         },
-        downloadFile(url){
+        downloadFile(e,url){
           let nUrl = new URL(url);
           nUrl.protocol = "https:";
           if(WebViewApp){
