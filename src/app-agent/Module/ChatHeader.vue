@@ -84,7 +84,7 @@
                                         v-b-modal.chattags>
                                             {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
                                         </span>
-                                        <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
+                                        <span v-else-if="canChangeChatTags" class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
                                     </b-dropdown-item>
                                 </b-dropdown>
                                 <span class="float-right quick-option d-none d-md-block" 
@@ -106,7 +106,7 @@
 
                     </div> 
                     
-                    <div class="clear-both card-header-lower d-none d-md-block"> 
+                    <div class="clear-both card-header-lower d-none d-md-block text-xs"> 
                         <div class="chat_tags text-align-right float-right ">
                             <span v-if="activeChat" class="tag-chat-status tag-darker" :class="'tag-chat-status-'+ activeChat.status"
                                 v-b-modal.chattags >
@@ -118,7 +118,7 @@
                                >
                                 {{formatters.contactTags(activeChat.tagId[0]).title + ( activeChat.tagId.length > 1 ? ' +' +(activeChat.tagId.length-1) + " More" : "")}}
                             </span>
-                            <span v-else class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
+                            <span v-else-if="canChangeChatTags" class="tag-chat-status tag-lighter fa fa-plus" v-b-modal.chattags></span>
                           
                         </div>
                          
@@ -128,7 +128,7 @@
                         </div>
 
                     </div>
-                    <b-modal v-if="isActionable && MyConst.config.CHAT_TAG_ENABLED" id="chattags" ref="chattags" title="Select Chat Status"
+                    <b-modal v-if="canChangeChatTags" id="chattags" ref="chattags" title="Select Chat Status"
                                 content-class="card"
                                 footer-class="card-footer"
                                 header-class="card-header"
@@ -214,6 +214,9 @@
                 return (this.activeChat?.contact?.name 
                             || this.activeChat?.contact?.phone
                             || this.activeChat?.contact?.email ) || this.activeChat?.name;
+            },
+            canChangeChatTags(){
+                return this.isActionable && MyConst.config.CHAT_TAG_ENABLED;
             }
         },
         methods: {
@@ -257,18 +260,25 @@
     }
 </script>
 <style scoped>
-
-/* User Info Panel */    
+.card-header{
+    padding-bottom: 10px;
+}
+.user_img{
+    cursor: pointer;
+    height: 45px;
+    width: 45px;
+    border: 0px solid #f5f6fa;
+}
+/* User Info Panel */  
   .user_info{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 15px;
+    margin: 0px auto 0px 10px ;
+    font-size: calc( var(--vs-font-size) * .8 ) !important;
+    font-size: calc( var(--vs-font-size) * .8 ) !important;
   }
   .user_info .user_name{
-    font-size: 15px;
     color: white;
-    line-height: 15px;
-    margin-bottom: 9px;
+    line-height: 12px;
+    margin-bottom: 8px;
     display: block;
   }
   .user_info .font-name{
@@ -293,15 +303,24 @@
 <style type="text/css">
    
   .user_info .user_assignment .vs__selected {
-    font-size: 13px !important;
     color: rgb(255 255 255);
     background: transparent;
     border: none;
+    padding: 0px 2px;
+    margin: 0px 2px;
+    cursor: pointer;
+  }
+  .user_info .user_assignment{
+    cursor: pointer !important;
+  }
+  .user_info .user_assignment .vs__search{
+    line-height: calc( var(--vs-font-size) * .8 ) !important;
+    font-size: calc( var(--vs-font-size) * .8 ) !important;
   }
   .user_assignment .vs__dropdown-toggle {
     border : none;
     color: #fff;
-    background-color: #0000002e;
+    background-color: #00000021;
     border-radius: 6px;
   }
   .user_assignment .vs__selected-options{
