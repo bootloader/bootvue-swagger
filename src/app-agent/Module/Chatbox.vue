@@ -1191,7 +1191,9 @@
                 console.log("fileUploading2",msg)
                 formData.append('message', JSON.stringify(msg));
                 if(this.caption_text)
-                    formData.append("caption",this.caption_text);
+                    formData.append("caption",
+                    encodeURIComponent(this.caption_text)
+                    );
                 //this.caption_text = null;
             },
             async fileUploaded(file,resp) {

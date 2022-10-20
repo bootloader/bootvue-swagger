@@ -87,7 +87,7 @@
 
         </span><!-- LOOP ENDS --></div>
         <div class="text-center scroll-date"> 
-            <span class="">{{activeChat.startSessionStamp|formatDate}} </span> 
+            <span class="">{{activeChat.startSessionStamp|dateStamp}} </span> 
         </div>
     </div>
 
@@ -314,7 +314,7 @@
                 display: inline-block;
                 min-width: 100px;
                 border-radius: 8px;
-                background-color: rgba(0, 0, 0, 0.373);
+                background-color: rgba(0, 0, 0, 0.454);
                 color: #FFF;
                 padding: 0 5px;
             }
