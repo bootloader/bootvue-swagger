@@ -111,9 +111,8 @@
                         read documentation</a>
                     </template>  
                 </base-text-area>
-                <base-input v-else-if="oneItemView.webhookManual" size="sm" readonly prelabel copy
-                  label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
-                  >
+                <base-input v-else-if="oneItemView.webhookManual && oneItemView.callbackPath" size="sm" readonly prelabel copy
+                  label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath">
                 </base-input>
                 <qr-code :value="$global.MyDict.c2cUrl(oneItemView)" :options="{
                   size : 300
