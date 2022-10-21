@@ -238,6 +238,7 @@
                 { key : 'actions', label : "Action" }],
               busy : false,
               sortBy: 'name',
+              perPage: 25,
             },
            filters:{
                deptname:"",

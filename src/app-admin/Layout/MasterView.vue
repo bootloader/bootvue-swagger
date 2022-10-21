@@ -167,9 +167,9 @@
                     </b-td>  
                   </b-tr>  
                   <b-pagination  v-if="table && table.items && table.items.length>perPageSize && tablePaging=='offline'"
-                        class="pb-3 pt-0 px-4"
+                        class="p-2"
                         v-model="table_current_page"
-                        :total-rows="table.rows"
+                        :total-rows="totalItems"
                         :per-page="perPageSize"
                         aria-controls="agent-session-list">        
                   </b-pagination>
@@ -365,6 +365,9 @@
           },
           tablePaging(){
             return (this.table && this.table.paging) ? this.table.paging : 'offline';
+          },
+          totalItems(){
+            return this.table?.items?.length ||  this.table?.rows;
           },
           perPageSize(){
             return this.table?.perPage || 10;
