@@ -616,7 +616,6 @@
             //         placement: "top" 
             //     }
             // })
-
             this.mcb = document.querySelector('.msg_card_body');
             this.mcb.addEventListener('scroll', this.handleScroll);
         },
@@ -1192,7 +1191,7 @@
                 formData.append('message', JSON.stringify(msg));
                 if(this.caption_text)
                     formData.append("caption",
-                    encodeURIComponent(this.caption_text)
+                        (this.$config?.PERMS?.BUILD_VERSION<2) ? this.caption_text : encodeURIComponent(this.caption_text)
                     );
                 //this.caption_text = null;
             },
@@ -1218,6 +1217,9 @@
                 this.showContactProfile('info')
             },
             handleScroll : debounce(async function(event){
+                if(this.$config?.PERMS?.BUILD_VERSION<2){
+                    return;
+                }
                 console.log("handleScroll....",event.target.scrollTop)
                 if(event.target.scrollTop < 50){
                         let scrollHeight = event.target.scrollHeight;
