@@ -111,7 +111,7 @@
         <b-card class="col-md-4 session-list contact-list" >
             <b-tabs card>
                 <b-tab title="Copy/Paste" active>
-                    <ValidationProvider    v-slot="v" :rules="input.contactCSV == '' ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
+                    <ValidationProvider v-slot="v" :rules="input.contactCSV == '' ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
                         name="Contact Number" mode="lazy">
                         <label>Contacts</label>
                         <textarea class="form-control" rows="10" v-model="input.contacts" >
@@ -120,6 +120,7 @@
                         <span class="v-input-error">{{ v.errors[0] }}</span>
                     </ValidationProvider> 
                 </b-tab>
+                
                 <b-tab title="Upload CSV">
                     <b-card-text>
                         
@@ -128,11 +129,11 @@
                                 class="form-control btn btn-primary">Download CSV Template​</button>
                                 <br/> <br/><i>This will download a cvs file with all the variables associated with the chosen template​</i><br/>
                         </b-form-row>
-
+                        <br/>
                             <ValidationProvider :rules="input.contacts == '' ? 'required':''" 
                                 persist="true"  class="form-row" vid="input_contact_csv" 
                                 name="Contact Number" mode="lazy" v-slot="{ validate, errors }">
-                                <b-form-file placeholder="Upload CSV file​" v-if="input.contactCSV"
+                                <b-form-file placeholder="Upload CSV file"
                                   accept=".csv" v-model="input.contactCSV" @change="validate($event)"></b-form-file>
                                 <span class="v-input-error">{{ errors[0] }}</span>
                             </ValidationProvider>
@@ -403,7 +404,7 @@
                 let reg = /[^{\}]+(?=})/g;
                 let data = templateVar.match(reg)
                 console.log("sampleVarData",this.sampleVarData);
-                data.map(v=>{
+                data?.map(v=>{
                     csvData[v] = ""
                 })
 
