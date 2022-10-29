@@ -83,6 +83,13 @@
                         icon: 'pe-7s-graph3 fa fa-chart-bar',
                         href: '/',
                         enabled: true,
+                        child: [
+                            {
+                                enabled: true,
+                                href: '/app/analytics',
+                                title: 'Analytics',
+                            }
+                        ],
                     },
                     {
                         title: 'Taxonomy',

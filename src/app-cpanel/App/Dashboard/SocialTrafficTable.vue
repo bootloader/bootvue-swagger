@@ -1,11 +1,28 @@
 <template>
-    <b-card no-body class="bg-default shadow">
+    <b-card no-body class="shadow">
         <b-card-header class="bg-transparent border-0">
-            <h3 class="mb-0 text-white">{{headerTitle}}</h3>
+          <b-row>
+          <b-col lg="9">
+            <h3 class="mb-0">{{headerTitle}}</h3>
+          </b-col>
+          <b-col lg="3"  v-if="options && options.length">
+              <base-select
+                  alternative
+                  question
+                  type="text"
+                  name="Domain"
+                  placeholder="Domain"
+                  rules="required"
+                  required
+                  @change="optionOnChange"
+                  :options="options"
+                  >
+              </base-select>
+          </b-col>
+          </b-row>
         </b-card-header>
 
-        <el-table class="table-responsive table table-dark"
-                  header-row-class-name="thead-dark"
+        <el-table class="table-responsive table "
                   :data="tableData">
             <el-table-column label="Channel"
                              min-width="310px"
@@ -41,7 +58,9 @@
     },
     props:{
       tableData:Array,
-      headerTitle:String
+      headerTitle:String,
+      optionOnChange:Function,
+      options:Array,
     },
     data() {
       return {

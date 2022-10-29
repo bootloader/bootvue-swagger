@@ -1,27 +1,12 @@
 <template>
     <div class="dashboard">
-        <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
-            <!-- Card stats -->
-            <div class="pl-lg-12">
-                <b-row>
-                    <b-col lg="3">
-                        <base-select
-                            alternative
-                            question
-                            type="text"
-                            name="Domain"
-                            placeholder="Domain"
-                            rules="required"
-                            required
-                            v-model="model.tnt"
-                            @change="domainOnChange"
-                            :options="domainOptions">
-                        </base-select>
-                    </b-col>
-                </b-row>
-            </div>
-        </base-header>
-    <b-container fluid class="mt--9">
+    <page-title :heading=heading :subheading=subheading :icon=icon
+        >
+            <template #filter(agent)="{filter}">
+                <MyAgentSelect v-model="filter.value" @change="agentSelect" emptyDisplay="All Teams"> </MyAgentSelect>
+            </template>
+    </page-title>
+    <b-container fluid class="mt--0">
         <!--Tables-->
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
@@ -36,12 +21,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+    
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -57,12 +37,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+    
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -78,12 +53,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+    
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -99,12 +69,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+    
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -120,12 +85,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+   
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -141,21 +101,15 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+  
     </div>
 </template>
 <script>
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
-    import SocialTrafficTable from './Dashboard/SocialTrafficTable';
     import DynamicLeftTopFreezeTable from './Dashboard/DynamicLeftTopFreezeTable.vue'
-    import SocialTrafficTableWaba from './Dashboard/SocialTrafficTableWaba';
-import moment from 'moment';
+    import moment from 'moment';
+    import PageTitle from "..//Components/PageTitle.vue";
 
    function initialModeState (){
        return { 
@@ -253,13 +207,13 @@ import moment from 'moment';
     export default {
         components: {
             StatsCard,
-            SocialTrafficTable,
-            SocialTrafficTableWaba,
-            DynamicLeftTopFreezeTable
+            DynamicLeftTopFreezeTable,
+            PageTitle
         },
         data() {
             return {
-                domainOptions: [],
+                heading: 'Messsage Analytics',
+                icon: 'pe-7s-graph3 icon-gradient bg-tempting-azure',
                 monthOptions: [],
                 model: {
                     tnt: '',
@@ -411,22 +365,10 @@ import moment from 'moment';
                 this.daterange.days = endDate.diff(startDate, 'days');
                 this.loadBroadcastDaywiseSummary();
             },
-            async loadDomains() {
-                let resp = await this.$service.get(
-                    '/partnerdashboard/pub/domain'
-                )
-                this.domainOptions = resp.results.map((v) => {
-                    return {
-                        name: v.domain+" ("+v.company.businessName+")",
-                        value: v.domain,
-                    }
-                })
-                this.model.tnt = this.domainOptions[0].value
-                this.loadTimeStamp()
-            },
+           
             async loadTimeStamp() {
                 let resp = await this.$service.get(
-                    '/partnerdashboard/pub/admin/fetch-month',
+                    '/fetch-month',
                     { tnt: this.model.tnt }
                 )
                 console.log("this.model.tnt.value",this.model.tnt);
@@ -450,7 +392,7 @@ import moment from 'moment';
             async loadDaywiseSummary(){
                 let _THAT = this;
                 let daySummary = await this.$service.get(
-                    '/partnerdashboard/pub/daywise-summary',
+                    '/admin/daywise-summary',
                     { ...this.model,
                         timestamp:0,
                         dateRange1:this.daterange.startDate.valueOf(), 
@@ -472,7 +414,7 @@ import moment from 'moment';
                 let _THAT = this;
                
                 let hourSummary = await this.$service.get(
-                   '/partnerdashboard/pub/hourwise-summary',
+                   '/admin/hourwise-summary',
                    { ...this.model,timestamp:0,hr:this.hrMsg}
                 )
 
@@ -488,7 +430,7 @@ import moment from 'moment';
             async loadWabaMonthwiseSummary(){
                 let _THAT = this;
                 let wabaResp = await this.$service.get(
-                    '/partnerdashboard/pub/monthwise-summary/waba',
+                    '/admin/monthwise-summary/waba',
                     { ...this.model, timestamp:this.wabaTimestamp }
                 )
                 this.wabaUsesData = initialChannelState(initialModeState());
@@ -503,7 +445,7 @@ import moment from 'moment';
             async loadMonthwiseSummarySave(){
                 let _THAT = this;
                 let resp = await this.$service.get(
-                    '/partnerdashboard/pub/monthwise-summary-save',
+                    '/admin/monthwise-summary-save',
                     { ...this.model, timestamp:this.timestamp }
                 )
                 this.dateWiseSummaryCount = initialChannelState(initialModeState());
@@ -526,7 +468,7 @@ import moment from 'moment';
             async loadOutboundMsgHourly(){
                 let _THAT = this;
                 let hourSummary = await this.$service.get(
-                   '/partnerdashboard/pub/hourwise-msg-status-summary',
+                   '/admin/hourwise-msg-status-summary',
                    { ...this.model,timestamp:0,hr:this.hrMsg}
                 )
 
@@ -535,7 +477,7 @@ import moment from 'moment';
             async loadBroadcastDaywiseSummary(){
                 let _THAT = this;
                 let daySummary = await this.$service.get(
-                    '/partnerdashboard/pub/datewise-msg-status-summary',
+                    '/admin/datewise-msg-status-summary',
                     { ...this.model,
                         timestamp:0,
                         dateRange1:this.daterange.startDate.valueOf(), 
@@ -568,8 +510,9 @@ import moment from 'moment';
             }
         },
         mounted() {
-            this.hour = this.hourOptions[0].value
-            this.loadDomains()
+            this.hour = this.hourOptions[0].value;
+            this.model.tnt = window.location.host.split(".")[0]
+            this.loadTimeStamp()
         },
     }
 </script>

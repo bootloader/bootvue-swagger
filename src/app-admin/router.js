@@ -12,6 +12,12 @@ export default AppRouter.route({
             component: () => import('./Modules/MyAnalytics.vue'),
         },
         {
+            path: '/app/analytics',
+            alias: '/app/home',
+            name: 'msganalytics',
+            component: () => import('./Modules/MsgAnalytics.vue'),
+        },
+        {
             path: '/app/reports/taxonomy',
             name: 'ReportTaxonomy',
             component: () => import('./Modules/ReportTaxonomy.vue'),
@@ -31,6 +37,16 @@ export default AppRouter.route({
             path: '/app/master/contact/profiles',
             name: 'ContactProfiles',
             component: () => import('./Modules/Masters/ContactProfiles.vue'),
+        },
+        {
+            path: '/app/faq',
+            name: 'FAQ',
+            component: () => import('./Modules/FAQ.vue'),
+        },
+        {
+            path: '/app/reports/taxonomy',
+            name: 'ReportTaxonomy',
+            component: () => import('./Modules/ReportTaxonomy.vue'),
         },
         {
             path: '/app/moderate/import-chat',

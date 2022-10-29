@@ -50,7 +50,7 @@
                 <div id='myChatTitleBar' 
                      style='height: ${minHeight}px; width: ${minWidth}px; position:fixed; cursor: pointer;'></div>
                 <div id='myChatFrame' style='margin: 0px 0px 0px 0px;'>
-                    <iframe id="myChatIFrame-${UNIQUEID}" 
+                    <iframe id="myChatIFrame-${UNIQUEID}"
                         allow="camera https://${options.domain}; microphone https://${options.domain}; geolocation https://${options.domain}"
                             src=${options.path}?${options.query}></iframe>
                 <div>

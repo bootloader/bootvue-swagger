@@ -327,6 +327,27 @@ const actions = {
     let response = await axios.get("/gallery/map/quick_tags");
     commit("setQuickTags", response.data);
   },
+
+  async GetFAQParent({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/parent",{ params : options });
+    return response.data;
+  },
+  async GetFAQByParentCode({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/parent/code",{ params : options });
+    return response.data;
+  },
+  async CreateFAQ({ commit },options) {
+    let response = await axios.post( "/pub/app/faq",{ params : options });
+    return response.data;
+  },
+  async UpdateFAQ({ commit },options) {
+    let response = await axios.post( "/pub/app/update/faq",{ params : options });
+    return response.data;
+  },
+  async getAllFAQ({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/all",{ params : options });
+    return response.data;
+  },
 };
 
 const mutations = {
