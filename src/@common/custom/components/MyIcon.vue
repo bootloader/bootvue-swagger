@@ -12,11 +12,27 @@
 var MAP = {
     status : {
         '_' : ['fa fa-circle'],
-        'approved' : ["text-success"],
+        'approved' : ["text-success"], 
         'rejected' : ['text-danger'],
         'submitted' : ['text-warning'],
         'true' : ['text-success'],
         'false' : ['text-danger'],
+    },
+    waba : {
+        '_' : [''], "$" : ["fa fa-circle"],
+        'approved' : ["fa fa-circle", "text-success"], 
+        'active' : ["fa fa-circle", "text-success"],
+        'live' : ["fa fa-circle","text-success"],
+        'rejected' : ["fa fa-circle",'text-danger'],
+        'submitted' : ["fa fa-circle",'text-warning'],
+        'true' : ["fa fa-circle",'text-success'],
+        'false' : ["fa fa-circle",'text-danger'],
+        'verified' : ["fa fa-check-circle",'text-success'],
+        'ready' : ["fa fa-check-circle",'text-success'],
+        'running' : ["fa fa-dot-circle",'text-success'],
+        'certificate_declined' : ["fas fa-certificate",'text-warning'],
+        'pending_deletion' : ["fa fa-minus-circle",'text-yellow'],
+        'pending' : ["fa fa-circle",'text-yellow'],
     },
     switch : {
         '_' : ['my-switch'], '$' : ['no-type-status', 'text-success border-success'],

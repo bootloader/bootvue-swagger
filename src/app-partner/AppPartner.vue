@@ -17,3 +17,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+    @import '@/assets/utils/_popular.scss';
+</style>

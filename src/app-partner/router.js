@@ -34,12 +34,20 @@ export default AppRouter.route({
           children: [
             {
               path: '/app/home',
-              name: 'domains',
+              name: 'Domains',
               component: () => import(/* webpackChunkName: "demo" */ './App/PartnerHome/PartnerHome.vue'),
               meta : {
                 role : ["DOMAIN_ADMIN"]
               }
-            }
+            },
+            {
+              path: '/app/waba',
+              name : "Waba Channels",
+              component: () => import(/* webpackChunkName: "demo" */ './App/PartnerWaba/PartnerWaba.vue'),
+              meta : {
+                role : ["DOMAIN_ADMIN"]
+              },
+            },
           ]
         },
         {

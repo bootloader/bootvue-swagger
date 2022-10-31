@@ -8,6 +8,7 @@
         :searchable="searchable"
         :placeholder="placeholder"
         :clearable="clearable"
+        :filter="search"
         @search="onSearch"
         :appendToBody="appendToBody"
         :calculatePosition="calculatePosition"
@@ -93,6 +94,8 @@
             selectedPrefixClass : {
             },
             filter : {
+            },
+            search :{
             },
             type : {
                 type : String,
@@ -189,7 +192,7 @@
                         item : null,
                     },...this.model.options];
                 }
-
+                //console.log("filters",this.filter);
                 if(this.filter){
                     let filters = [];
                     if(Object.prototype.toString.call(this.filter) === '[object Array]') {
@@ -197,6 +200,7 @@
                     } else if(Object.prototype.toString.call(this.filter) === '[object Object]') {
                         filters = [this.filter];
                     }
+                    //console.log("filters",filters);
                     this.model.options  = this.model.options.filter(function(option){
                         return filters.some(function(filter){
                             for(var key in filter){

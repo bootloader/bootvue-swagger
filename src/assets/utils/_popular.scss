@@ -1,5 +1,5 @@
 // Helpers imports
-@import "social";
+//@import "social";
 
 $threshold: 55%;
 $dark: #000;
@@ -24,6 +24,12 @@ $scheme : var(--scheme-color);
     }
 }
 
+
+$color-instagram-y              : #fdf497;
+$color-instagram-r              : #fd5949;
+$color-instagram-p              : #d6249f;
+$color-instagram-b              : #285AEB;
+
 $popular-list:(
     red : #ff0000,
     online : #4cd137,
@@ -39,7 +45,25 @@ $popular-list:(
     teal-100 : #d2f4ea,
     scheme :  var(--scheme-color),
     darker : #262a2e,
-    darkish : #343a40d1
+    darkish : #343a40d1,
+
+
+    facebook: #4267B2,
+    twitter:  #1DA1F2,
+    telegram:  #0088cc,
+    telegram-plane:  #0088cc,
+    whatsapp: #25D366,
+    whatsapp-dull: #10b981,
+    google: #dc4a38,
+    dribbble: #f26798,
+    skype : #00aff0,
+    chrome : #4c8bf5,
+    instagram-y : #fdf497,
+    instagram-r : #fd5949,
+    instagram-p : #d6249f,
+    instagram-b : #285AEB,
+    envelope : #444343,
+
 );
 
 @each $key,$val in $popular-list{
@@ -51,6 +75,9 @@ $popular-list:(
     }
     .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after {
         color: #{$val}!important;
+    }
+    .fac-bg.fa-#{$key}::before{
+        background-color: #{$val};
     }
     .btn-#{$key} {
         background-color: #{$val};
@@ -109,6 +136,29 @@ $popular-list:(
 }
 .dull {
     opacity: 0.7;
+}
+
+.fac-bg::before {
+    color : #FFF;
+}
+.fac-bg.fa-instagram::before,
+.bg-instagram,.bg-instagram\:before::before,.bg-instagram\:after::after  {
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+}
+.fa-instagram.text-instagram::before {
+    //background: -webkit-linear-gradient(#eee, #333);
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.fac-bg {
+    &.fa-telegram:before {
+        content: "\f3fe";
+    }
+    &.fa-facebook:before {
+        content: "\f39e";
+    }
 }
 
 .fa-x {

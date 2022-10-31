@@ -14,6 +14,14 @@
                   }">
         </sidebar-item>
 
+        <sidebar-item
+                  :link="{
+                    name: 'WABA',
+                    path: '/app/waba',
+                    icon: 'fa fa-whatsapp text-whatsapp'
+                  }">
+        </sidebar-item>
+
         <sidebar-item hidden
           :link="{
             name: 'Dashboard',

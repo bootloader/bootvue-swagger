@@ -50,7 +50,8 @@
             :valid="valid" 
             :required="required"
             :autoPosition="autoPosition"
-            :filter="filter" :searchable="searchable" :clearable="clearable"
+            :filter="filter" :search="search"
+             :searchable="searchable" :clearable="clearable"
             :class="['text-'+size, 'v-select-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
@@ -246,6 +247,8 @@
       optionContext : {
       },
       filter : {
+      },
+      search : {
       },
       emptyDisplay :{},
       autoPosition : {

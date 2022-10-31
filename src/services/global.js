@@ -52,6 +52,7 @@ export const User = (function(){
 	}
 	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	user.canAddOwner = (user.isDuperUser || user.isSuperDev || user.isPartner);
+	user.canAddWaba = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	return user;
 })();
 

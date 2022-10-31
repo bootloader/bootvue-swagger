@@ -1548,7 +1548,6 @@
 <script>
 import IndexNavbar from "./IndexNavbar.vue";
 import FooterComponent from "./Footer.vue";
-import "@/assets/utils/_social.scss";
 import "@/assets/utils/_popular.scss";
 
 import patternVue from "@/assets/vendor/notus/img/pattern_vue.png";
