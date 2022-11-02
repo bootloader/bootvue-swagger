@@ -1,12 +1,9 @@
 <template>
     <div class="dashboard">
-    <page-title :heading=heading :subheading=subheading :icon=icon
-        >
-            <template #filter(agent)="{filter}">
-                <MyAgentSelect v-model="filter.value" @change="agentSelect" emptyDisplay="All Teams"> </MyAgentSelect>
-            </template>
-    </page-title>
-    <b-container fluid class="mt--0">
+        <page-title :heading=heading :subheading=subheading :icon=icon>
+        </page-title>
+        
+    <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
@@ -14,14 +11,13 @@
                 headerTitle="Hourly Number of messages exchanged" 
                 :tableData="getHourDataTable" 
                 :optionOnChange="hourOptionOnChange" 
-                :colHeadFormatter="timeFormatter"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
       </b-row>
       <!--End tables-->
     </b-container>
-    
+   
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -69,7 +65,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    
+   
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -78,7 +74,6 @@
                 headerTitle="Hourly Outbound broadcast Messages" 
                 :tableData="getOutboundMsgHourlyDataTable" 
                 :optionOnChange="outboundHourOptionOnChange" 
-                :colHeadFormatter="timeFormatter"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -101,15 +96,15 @@
       </b-row>
       <!--End tables-->
     </b-container>
-  
+   
     </div>
 </template>
 <script>
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
     import DynamicLeftTopFreezeTable from './Dashboard/DynamicLeftTopFreezeTable.vue'
-    import moment from 'moment';
     import PageTitle from "..//Components/PageTitle.vue";
+    import moment from 'moment';
 
    function initialModeState (){
        return { 
@@ -212,8 +207,10 @@
         },
         data() {
             return {
-                heading: 'Messsage Analytics',
+                heading: 'Message Analytics',
+                subheading: 'Select date range for report',
                 icon: 'pe-7s-graph3 icon-gradient bg-tempting-azure',
+                domainOptions: [],
                 monthOptions: [],
                 model: {
                     tnt: '',
@@ -224,7 +221,7 @@
                 dateWiseSummaryCount: initialChannelState(initialModeState()),
                 hourWiseCountMap:initialChannelState(null),
                 dayWiseSummaryCount:initialChannelState(null),
-                outboundMsgHourly:[],
+                outboundMsgHourly:{},
                 outboundMsgDayily:{},
                 channelWiseSummaryCount: {},
                 summaryCount: {},
@@ -285,6 +282,7 @@
                             name: v[0],
                             ...v[1]
                         }
+                        console.log("row",row);
                         data.push(row)
                 })
 
@@ -292,7 +290,6 @@
             },
             getBroadcastDayDataTable(){
                 let data = [];
-                this.outboundMsgDayily
                 Object.entries(this.outboundMsgDayily).map(v=>{
                         let row =  {
                             name: v[0],
@@ -337,6 +334,18 @@
                 let date = moment(parseInt(ms));
                 return date.local().format('HH:mm');
             },
+            getMinute(ms){
+                let date = moment(parseInt(ms));
+                return date.local().format('mm');
+            },
+            getHour(ms){
+                let date = moment(parseInt(ms));
+                return date.local().format('ha');
+            },
+            getHourMin(ms){
+                let date = moment(parseInt(ms)).subtract(1,"hour");
+                return date.local().format('ha');
+            },
             dateFormatter(ms){
                 let date = moment(parseInt(ms),"YYYYMMDD");
                 return date.local().format('DD MMM');
@@ -368,10 +377,9 @@
            
             async loadTimeStamp() {
                 let resp = await this.$service.get(
-                    '/fetch-month',
+                    '/admin/fetch-month',
                     { tnt: this.model.tnt }
                 )
-                console.log("this.model.tnt.value",this.model.tnt);
                 this.monthOptions = resp.results.map((v) => {
                     return {
                         name: v.monthStr,
@@ -404,26 +412,39 @@
                 Object.entries(daySummary.results[0].dateWiseSummaryCount).map(
                     (v) => {
                         let channel = v[0].split('_')[1]
-                        console.log("v",v,channel);
                         _THAT.dayWiseSummaryCount[channel].mode  = v[1];
-                        console.log("_THAT.dateWiseSummaryCount",_THAT.dayWiseSummaryCount);
                     }
                 )
+            },
+            getHourWiseData(resp){
+                let _THAT = this;
+                let data = {};
+                Object.entries(resp).reduce((a,b,i)=>{
+                    let time = parseInt(_THAT.getMinute(b[0]));
+                    if(time == 0 && i == 0){
+                        data[_THAT.getHourMin(b[0])+"-"+_THAT.getHour(b[0])] = b[1];
+                        return null;
+                    }
+                    if(a){
+                        data[_THAT.getHour(a[0])+"-"+_THAT.getHour(b[0])] = a[1]+b[1];
+                        return null;
+                    } else return b;
+                });
+                return data
             },
             async loadHourwiseSummary(){
                 let _THAT = this;
                
                 let hourSummary = await this.$service.get(
                    '/admin/hourwise-summary',
-                   { ...this.model,timestamp:0,hr:this.hrMsg}
+                   { ...this.model,timestamp:0,hr:this.hour}
                 )
 
                 this.hourWiseCountMap = initialChannelState(null);
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
                     (v) => {
                         let channel = v[0].split('_')[1]
-                        _THAT.hourWiseCountMap[channel].mode  = v[1];
-                        console.log("_THAT.hourWiseCountMap",_THAT.hourWiseCountMap);
+                        _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1]);
                     }
                 )
             },
@@ -471,8 +492,14 @@
                    '/admin/hourwise-msg-status-summary',
                    { ...this.model,timestamp:0,hr:this.hrMsg}
                 )
-
-                this.outboundMsgHourly = hourSummary.results[0].hourWiseCountMap;
+                _THAT.outboundMsgHourly = {};
+                Object.entries(hourSummary.results[0].hourWiseCountMap).map(
+                    (v) => {
+                        let data = _THAT.getHourWiseData(v[1]);
+                        _THAT.outboundMsgHourly[v[0]] = data;
+                        console.log("_THAT.outboundMsgHourly[v[1]]",_THAT.outboundMsgHourly[v[0]]);
+                    }
+                )
             },
             async loadBroadcastDaywiseSummary(){
                 let _THAT = this;
@@ -491,7 +518,6 @@
                 this.loadTimeStamp()
             },
             monthOnChange(e) {
-                console.log(e.target.value)
                 this.timestamp = e.target.value;
                 this.loadMonthwiseSummarySave()
             },
@@ -500,7 +526,6 @@
                 this.loadHourwiseSummary()
             },
             wabaOnMonthChange(e) {
-                console.log(e.target.value)
                 this.wabaTimestamp = e.target.value
                 this.loadWabaMonthwiseSummary()
             },
@@ -510,7 +535,7 @@
             }
         },
         mounted() {
-            this.hour = this.hourOptions[0].value;
+            this.hour = this.hourOptions[0].value
             this.model.tnt = window.location.host.split(".")[0]
             this.loadTimeStamp()
         },

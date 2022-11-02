@@ -29,7 +29,6 @@
                 headerTitle="Hourly Number of messages exchanged" 
                 :tableData="getHourDataTable" 
                 :optionOnChange="hourOptionOnChange" 
-                :colHeadFormatter="timeFormatter"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -113,7 +112,6 @@
                 headerTitle="Hourly Outbound broadcast Messages" 
                 :tableData="getOutboundMsgHourlyDataTable" 
                 :optionOnChange="outboundHourOptionOnChange" 
-                :colHeadFormatter="timeFormatter"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -270,7 +268,7 @@ import moment from 'moment';
                 dateWiseSummaryCount: initialChannelState(initialModeState()),
                 hourWiseCountMap:initialChannelState(null),
                 dayWiseSummaryCount:initialChannelState(null),
-                outboundMsgHourly:[],
+                outboundMsgHourly:{},
                 outboundMsgDayily:{},
                 channelWiseSummaryCount: {},
                 summaryCount: {},
@@ -331,6 +329,7 @@ import moment from 'moment';
                             name: v[0],
                             ...v[1]
                         }
+                        console.log("row",row);
                         data.push(row)
                 })
 
@@ -338,7 +337,6 @@ import moment from 'moment';
             },
             getBroadcastDayDataTable(){
                 let data = [];
-                this.outboundMsgDayily
                 Object.entries(this.outboundMsgDayily).map(v=>{
                         let row =  {
                             name: v[0],
@@ -382,6 +380,18 @@ import moment from 'moment';
             timeFormatter(ms){
                 let date = moment(parseInt(ms));
                 return date.local().format('HH:mm');
+            },
+            getMinute(ms){
+                let date = moment(parseInt(ms));
+                return date.local().format('mm');
+            },
+            getHour(ms){
+                let date = moment(parseInt(ms));
+                return date.local().format('ha');
+            },
+            getHourMin(ms){
+                let date = moment(parseInt(ms)).subtract(1,"hour");
+                return date.local().format('ha');
             },
             dateFormatter(ms){
                 let date = moment(parseInt(ms),"YYYYMMDD");
@@ -429,7 +439,6 @@ import moment from 'moment';
                     '/partnerdashboard/pub/admin/fetch-month',
                     { tnt: this.model.tnt }
                 )
-                console.log("this.model.tnt.value",this.model.tnt);
                 this.monthOptions = resp.results.map((v) => {
                     return {
                         name: v.monthStr,
@@ -462,26 +471,39 @@ import moment from 'moment';
                 Object.entries(daySummary.results[0].dateWiseSummaryCount).map(
                     (v) => {
                         let channel = v[0].split('_')[1]
-                        console.log("v",v,channel);
                         _THAT.dayWiseSummaryCount[channel].mode  = v[1];
-                        console.log("_THAT.dateWiseSummaryCount",_THAT.dayWiseSummaryCount);
                     }
                 )
+            },
+            getHourWiseData(resp){
+                let _THAT = this;
+                let data = {};
+                Object.entries(resp).reduce((a,b,i)=>{
+                    let time = parseInt(_THAT.getMinute(b[0]));
+                    if(time == 0 && i == 0){
+                        data[_THAT.getHourMin(b[0])+"-"+_THAT.getHour(b[0])] = b[1];
+                        return null;
+                    }
+                    if(a){
+                        data[_THAT.getHour(a[0])+"-"+_THAT.getHour(b[0])] = a[1]+b[1];
+                        return null;
+                    } else return b;
+                });
+                return data
             },
             async loadHourwiseSummary(){
                 let _THAT = this;
                
                 let hourSummary = await this.$service.get(
                    '/partnerdashboard/pub/hourwise-summary',
-                   { ...this.model,timestamp:0,hr:this.hrMsg}
+                   { ...this.model,timestamp:0,hr:this.hour}
                 )
 
                 this.hourWiseCountMap = initialChannelState(null);
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
                     (v) => {
                         let channel = v[0].split('_')[1]
-                        _THAT.hourWiseCountMap[channel].mode  = v[1];
-                        console.log("_THAT.hourWiseCountMap",_THAT.hourWiseCountMap);
+                        _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1]);
                     }
                 )
             },
@@ -529,8 +551,14 @@ import moment from 'moment';
                    '/partnerdashboard/pub/hourwise-msg-status-summary',
                    { ...this.model,timestamp:0,hr:this.hrMsg}
                 )
-
-                this.outboundMsgHourly = hourSummary.results[0].hourWiseCountMap;
+                _THAT.outboundMsgHourly = {};
+                Object.entries(hourSummary.results[0].hourWiseCountMap).map(
+                    (v) => {
+                        let data = _THAT.getHourWiseData(v[1]);
+                        _THAT.outboundMsgHourly[v[0]] = data;
+                        console.log("_THAT.outboundMsgHourly[v[1]]",_THAT.outboundMsgHourly[v[0]]);
+                    }
+                )
             },
             async loadBroadcastDaywiseSummary(){
                 let _THAT = this;
@@ -549,7 +577,6 @@ import moment from 'moment';
                 this.loadTimeStamp()
             },
             monthOnChange(e) {
-                console.log(e.target.value)
                 this.timestamp = e.target.value;
                 this.loadMonthwiseSummarySave()
             },
@@ -558,7 +585,6 @@ import moment from 'moment';
                 this.loadHourwiseSummary()
             },
             wabaOnMonthChange(e) {
-                console.log(e.target.value)
                 this.wabaTimestamp = e.target.value
                 this.loadWabaMonthwiseSummary()
             },

@@ -63,7 +63,7 @@
                          :prop="key"
                          header-align="center"
                          :label="colHeadFormatter ? colHeadFormatter(key) : key"
-                         min-width="120px"
+                         min-width="140px"
                          v-if="key != 'name'"
                       >
                 <template v-slot="{row}">
