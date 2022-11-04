@@ -388,7 +388,10 @@ var formatter = {
     });
     Vue.filter('uppercase', function (html_str) {
       return (html_str || '').toUpperCase();
-  });
+    });
+    Vue.filter('nospacial', function (html_str) {
+      return (html_str || '').replace(/[-_]/ig,' ');
+    });
     Vue.filter('number', function (value,format) {
         var _format = format || "0,0a"
         return numeral(value).format(_format).toUpperCase();//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();

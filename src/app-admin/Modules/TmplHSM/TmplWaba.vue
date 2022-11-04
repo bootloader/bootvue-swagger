@@ -519,6 +519,12 @@
             nonEditable : function(){
                 return !!this.template?.template?.status;
             },
+            wabaEditable(){
+                return !!this.template?.template?.status;
+                //360 not allowing update, fb does, but no api for now except partner apis
+                //let status = (this.template?.template?.status || "").toLowerCase()
+                //return ["approved", "rejected","paused"].indexOf(status) > -1;
+            },
             hasMediaHeader : function(){
                 return ["IMAGE","VIDEO","DOCUMENT"].indexOf(this.templateSimple?.header?.format) > -1;
             },
@@ -638,7 +644,7 @@
                         varMap : this.templateSimple.varMap
                     }
 
-                    if(!this.nonEditable){
+                    if(!this.nonEditable || this.wabaEditable){
                         templateRequest.template = {
                             category : this.template.template.category,
                             language : this.template.template.language,

@@ -168,6 +168,7 @@ function createWABATmplSample(template) {
                 {
                     type: 'BODY',
                     text: null,
+                    example: {body_text:[[]]}
                 },
                 {
                     type: 'HEADER',

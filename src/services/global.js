@@ -48,11 +48,12 @@ export const User = (function(){
 	let user = {
 		isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
 		isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0,
-		isPartner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_PARTNER')>=0
+		isPartner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_PARTNER')>=0,
+		isWabaManager : (window.CONST.APP_USER_ROLE || []).indexOf('WABA_MANAGER')>=0,
 	}
 	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	user.canAddOwner = (user.isDuperUser || user.isSuperDev || user.isPartner);
-	user.canAddWaba = (user.isDuperUser || user.isSuperDev || user.isPartner);
+	user.canAddWaba = 	user.isDuperUser || user.isWabaManager;
 	return user;
 })();
 

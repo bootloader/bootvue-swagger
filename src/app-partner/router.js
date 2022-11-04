@@ -47,7 +47,7 @@ export default AppRouter.route({
               meta : {
                 role : ["DOMAIN_ADMIN"]
               },
-            },
+            }
           ]
         },
         {
