@@ -6,7 +6,9 @@
         <slot>
           <span v-if="isLabelCapitalize" class="text-capitalize">  {{label | nospacial | lowercase}} </span>
           <span v-else>  {{label}} </span>:&nbsp; 
-          <span class="text-dark font-weight-bold ms-sm-2">{{text}}</span>
+          <span v-if="textCapitalize" 
+            class="text-capitalize text-dark font-weight-bold ms-sm-2">  {{text | nospacial | lowercase}} </span>
+          <span v-else class="text-dark font-weight-bold ms-sm-2">  {{text}} </span>
         </slot>  
       </span>
 </template>
