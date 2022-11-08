@@ -28,7 +28,9 @@
             <dynamic-left-top-freeze-table 
                 headerTitle="Hourly Number of messages exchanged" 
                 :tableData="getHourDataTable" 
+                :loading="loading.hourDataTable"
                 :optionOnChange="hourOptionOnChange" 
+                :refresh="loadHourwiseSummary"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -49,6 +51,8 @@
                 headerTitle="Daily Number of messages exchanged" 
                 :tableData="getDayDataTable" 
                 :daterangeChange="onDaysDaterangeChange"
+                :loading="loading.dayDataTable"
+                :refresh="loadDaywiseSummary"
                 :colHeadFormatter="dateFormatter"
                 :daterange="daterange">
             </dynamic-left-top-freeze-table>
@@ -69,7 +73,9 @@
             <dynamic-left-top-freeze-table 
                 headerTitle="Monthly number of messages exchanged" 
                 :tableData="getDataTable" 
-                :optionOnChange="monthOnChange" 
+                :loading="loading.dataTable"
+                :optionOnChange="monthOnChange"
+                :refresh="loadMonthwiseSummarySave" 
                 :colHeadFormatter="headerFormatter"
                 :options="monthOptions">
             </dynamic-left-top-freeze-table>
@@ -88,9 +94,11 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Monthly number of messages exchanged (WABA)" 
+                headerTitle="Number of Conversation (WABA)" 
                 :tableData="getWabaDataTable" 
-                :optionOnChange="wabaOnMonthChange" 
+                :loading="loading.wabaDataTable"
+                :optionOnChange="wabaOnMonthChange"
+                :refresh="loadWabaMonthwiseSummary" 
                 :colHeadFormatter="headerFormatter"
                 :options="monthOptions">
             </dynamic-left-top-freeze-table>
@@ -109,9 +117,11 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Hourly Outbound broadcast Messages" 
+                headerTitle="Hourly Outbound broadcast Messages (WABA)" 
                 :tableData="getOutboundMsgHourlyDataTable" 
+                :loading="loading.outboundMsgHourlyDataTable"
                 :optionOnChange="outboundHourOptionOnChange" 
+                :refresh="loadOutboundMsgHourly"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -129,10 +139,12 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Daily Outbound broadcast Messages" 
+                headerTitle="Daily Outbound broadcast Messages (WABA)" 
                 :tableData="getBroadcastDayDataTable" 
+                :loading="loading.broadcastDayDataTable"
                 :daterangeChange="onBroadcastDaysDaterangeChange"
                 :colHeadFormatter="dateFormatter"
+                :refresh="loadBroadcastDaywiseSummary"
                 :daterange="daterangeBroadcast">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -257,6 +269,14 @@ import moment from 'moment';
         },
         data() {
             return {
+                loading:{
+                    dataTable:false,
+                    hourDataTable:false,
+                    outboundMsgHourlyDataTable:false,
+                    broadcastDayDataTable:false,
+                    dayDataTable:false,
+                    wabaDataTable:false
+                },
                 domainOptions: [],
                 monthOptions: [],
                 model: {
@@ -273,6 +293,22 @@ import moment from 'moment';
                 channelWiseSummaryCount: {},
                 summaryCount: {},
                 modes:["I","O"],
+                modesHouroutb:{
+                    INIT:"Received by Mehery",
+                    SENT:"Sent by Mehery",
+                    SENTX:"Accepted by WhatsApp",
+                    SENT_ERR:"Error from WhatsApp",
+                    DLVRD:"Delivered to Customer",
+                    READ:"Read by Customer"
+                },
+                modesoutdaily:{
+                    INIT:"Received by Mehery",
+                    SENT:"Sent by Mehery",
+                    SENTX:"Accepted by WhatsApp",
+                    SENT_ERR:"Error from WhatsApp",
+                    DLVRD:"Delivered to Customer",
+                    READ:"Read by Customer"
+                },
                 daterange:{
                     startDate : moment().subtract(7,"day").valueOf(),
                     endDate : moment().valueOf(),
@@ -325,12 +361,14 @@ import moment from 'moment';
             getOutboundMsgHourlyDataTable(){
                 let data = [];
                 Object.entries(this.outboundMsgHourly).map(v=>{
+                    if(this.modesHouroutb.hasOwnProperty(v[0])){
                         let row =  {
-                            name: v[0],
+                            name: this.modesHouroutb[v[0]],
                             ...v[1]
                         }
                         console.log("row",row);
                         data.push(row)
+                    }
                 })
 
                 return data;
@@ -338,11 +376,13 @@ import moment from 'moment';
             getBroadcastDayDataTable(){
                 let data = [];
                 Object.entries(this.outboundMsgDayily).map(v=>{
+                    if(this.modesoutdaily.hasOwnProperty(v[0])){
                         let row =  {
-                            name: v[0],
+                            name: this.modesoutdaily[v[0]],
                             ...v[1]
                         }
                         data.push(row)
+                    } 
                 })
 
                 return data;
@@ -458,6 +498,7 @@ import moment from 'moment';
             },
             async loadDaywiseSummary(){
                 let _THAT = this;
+                this.loading.dayDataTable = true;
                 let daySummary = await this.$service.get(
                     '/partnerdashboard/pub/daywise-summary',
                     { ...this.model,
@@ -467,6 +508,7 @@ import moment from 'moment';
                         days:this.daterange.days
                     }
                 )
+                this.loading.dayDataTable = false;
                 this.dayWiseSummaryCount = initialChannelState(null);
                 Object.entries(daySummary.results[0].dateWiseSummaryCount).map(
                     (v) => {
@@ -480,6 +522,7 @@ import moment from 'moment';
                 let data = {};
                 Object.entries(resp).reduce((a,b,i)=>{
                     let time = parseInt(_THAT.getMinute(b[0]));
+                    console.log("getHourWiseData",time);
                     if(time == 0 && i == 0){
                         data[_THAT.getHourMin(b[0])+"-"+_THAT.getHour(b[0])] = b[1];
                         return null;
@@ -493,11 +536,12 @@ import moment from 'moment';
             },
             async loadHourwiseSummary(){
                 let _THAT = this;
-               
+                this.loading.hourDataTable = true;
                 let hourSummary = await this.$service.get(
                    '/partnerdashboard/pub/hourwise-summary',
                    { ...this.model,timestamp:0,hr:this.hour}
                 )
+                this.loading.hourDataTable = false;
 
                 this.hourWiseCountMap = initialChannelState(null);
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
@@ -509,10 +553,12 @@ import moment from 'moment';
             },
             async loadWabaMonthwiseSummary(){
                 let _THAT = this;
+                this.loading.wabaDataTable = true;
                 let wabaResp = await this.$service.get(
                     '/partnerdashboard/pub/monthwise-summary/waba',
                     { ...this.model, timestamp:this.wabaTimestamp }
                 )
+                this.loading.wabaDataTable = false;
                 this.wabaUsesData = initialChannelState(initialModeState());
                 wabaResp.results.map( v => {
                         let channel = 'waba'
@@ -524,10 +570,12 @@ import moment from 'moment';
             },
             async loadMonthwiseSummarySave(){
                 let _THAT = this;
+                this.loading.dataTable = true;
                 let resp = await this.$service.get(
                     '/partnerdashboard/pub/monthwise-summary-save',
                     { ...this.model, timestamp:this.timestamp }
                 )
+                this.loading.dataTable = false;
                 this.dateWiseSummaryCount = initialChannelState(initialModeState());
                 Object.entries(resp.results[0].dateWiseCountMap).map(
                     (v) => {
@@ -547,10 +595,12 @@ import moment from 'moment';
             },
             async loadOutboundMsgHourly(){
                 let _THAT = this;
+                this.loading.outboundMsgHourlyDataTable = true;
                 let hourSummary = await this.$service.get(
                    '/partnerdashboard/pub/hourwise-msg-status-summary',
                    { ...this.model,timestamp:0,hr:this.hrMsg}
                 )
+                this.loading.outboundMsgHourlyDataTable = false;
                 _THAT.outboundMsgHourly = {};
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
                     (v) => {
@@ -562,6 +612,7 @@ import moment from 'moment';
             },
             async loadBroadcastDaywiseSummary(){
                 let _THAT = this;
+                this.loading.broadcastDayDataTable = true;
                 let daySummary = await this.$service.get(
                     '/partnerdashboard/pub/datewise-msg-status-summary',
                     { ...this.model,
@@ -571,6 +622,7 @@ import moment from 'moment';
                         days:this.daterange.days
                     }
                 )
+                this.loading.broadcastDayDataTable = false;
                 this.outboundMsgDayily = daySummary.results[0].dateWiseSummaryCount
             },
             domainOnChange() {

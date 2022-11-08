@@ -200,7 +200,7 @@ export default {
           var encodedUri = encodeURI(csvContent);
           var link = document.createElement("a");
           link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "bulk_upload_format.csv");
+          link.setAttribute("download", "report.csv");
           document.body.appendChild(link); // Required for FF
           link.click();
       }
