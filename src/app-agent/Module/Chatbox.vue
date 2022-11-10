@@ -1191,7 +1191,7 @@
                 formData.append('message', JSON.stringify(msg));
                 if(this.caption_text)
                     formData.append("caption",
-                        (this.$config?.PERMS?.BUILD_VERSION<2) ? this.caption_text : encodeURIComponent(this.caption_text)
+                        this.$config.isLagacy ? this.caption_text : encodeURIComponent(this.caption_text)
                     );
                 //this.caption_text = null;
             },
@@ -1217,7 +1217,7 @@
                 this.showContactProfile('info')
             },
             handleScroll : debounce(async function(event){
-                if(this.$config?.PERMS?.BUILD_VERSION<2){
+                if(this.$config.isLagacy){
                     return;
                 }
                 console.log("handleScroll....",event.target.scrollTop)
