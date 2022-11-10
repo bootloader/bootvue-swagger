@@ -18,12 +18,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+   
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -41,12 +36,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -64,12 +54,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+  
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -87,12 +72,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -110,12 +90,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
     <b-container fluid class="mt--9">
         <!--Tables-->
       <b-row class="mt-5">
@@ -134,12 +109,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
     </div>
 </template>
 <script>
