@@ -1,15 +1,18 @@
 <template>
-  <b-card no-body class="shadow">
+  <b-card no-body class="shadow" :class="loading ? 'loading' :''" >
       <b-card-header class="bg-transparent border-0">
               <b-row>
-                <b-col lg="8">
+                <b-col lg="6">
                   <h3 class="mb-0">{{headerTitle}}</h3>
                 </b-col>
-                  <b-col sm="2" v-if="true" class="text-right">
-                    <span class="fa fa-download mt-3" @click="downloadCSVtemplate"></span>
-                  </b-col>
-                  <b-col lg="2"  v-if="options && options.length">
+                 
+                  <b-col lg="6" class="text-right">
+                      <span class="fa fa-refresh mr-3 mt-3" @click="refresh"></span>
+                      <span class="fa fa-download mt-3" @click="downloadCSVtemplate"></span>
                       <base-select
+                        class="col-lg-4 col-md-6"
+                        style="display:inline-block"
+                        v-if="options && options.length"
                           alternative
                           question
                           type="text"
@@ -22,9 +25,10 @@
                           :options="options"
                           >
                       </base-select>
-                  </b-col>
-                  <b-col lg="2" v-if="daterange">
-                    <date-range-picker v-model="dateranegeinput.range" class=""
+
+                    <date-range-picker v-model="dateranegeinput.range"
+                      class="col-lg-4 col-md-6"
+                      v-if="daterange"
                       :opens="'left'"
                       :time-picker="false"
                       control-container-class="reportrange-text"
@@ -39,16 +43,16 @@
                       </date-range-picker>
                   </b-col>
                   
+                  
               </b-row>
       </b-card-header>
 
       <el-table class="table-responsive table"
-                :default-sort = "{prop: 'name', order: 'ascending'}"
-                :data="tableData">
+              :data="tableData">
           <el-table-column label="Channel"
             fixed
             header-align="left"
-            min-width="200px"
+            min-width="230px"
             prop="name">
             <template v-slot="{row}">
                 <b-media no-body class="align-items-center  ">
@@ -110,6 +114,13 @@ export default {
       type: Object,
       default: function () {
         return null;
+      }
+    },
+    refresh:Function,
+    loading: {
+      type: Boolean,
+      default: function () {
+        return false;
       }
     },
   },
@@ -192,6 +203,7 @@ export default {
       console.log(e)
     },
     downloadCSVtemplate(){
+      let _THAT = this;
       if(Object.keys(this.tableData).length){
           const json2csvParser = new Parser();
           const csv = json2csvParser.parse(this.tableData);
@@ -200,7 +212,8 @@ export default {
           var encodedUri = encodeURI(csvContent);
           var link = document.createElement("a");
           link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "report.csv");
+          console.log("_THAT.headerTitle.split('').join()",_THAT.headerTitle.split(" ").join(''))
+          link.setAttribute("download", _THAT.headerTitle.split(" ").join("") +".csv");
           document.body.appendChild(link); // Required for FF
           link.click();
       }
@@ -226,6 +239,14 @@ export default {
   .daterangepicker.show-calendar .ranges {
       padding: 0px !important;
   }
-
 } 
+.el-table .el-table__cell{
+padding:4px 0
+}
+.fa-download, .fa-refresh{
+cursor: pointer;
+}
+.loading{
+filter: blur(4px);
+}
 </style>

@@ -122,6 +122,7 @@
                 :loading="loading.outboundMsgHourlyDataTable"
                 :optionOnChange="outboundHourOptionOnChange" 
                 :refresh="loadOutboundMsgHourly"
+                :sortBy="sortBy()"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -145,6 +146,7 @@
                 :daterangeChange="onBroadcastDaysDaterangeChange"
                 :colHeadFormatter="dateFormatter"
                 :refresh="loadBroadcastDaywiseSummary"
+                :sortBy="sortBy()"
                 :daterange="daterangeBroadcast">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -360,31 +362,34 @@ import moment from 'moment';
             },
             getOutboundMsgHourlyDataTable(){
                 let data = [];
-                Object.entries(this.outboundMsgHourly).map(v=>{
-                    if(this.modesHouroutb.hasOwnProperty(v[0])){
-                        let row =  {
-                            name: this.modesHouroutb[v[0]],
-                            ...v[1]
-                        }
-                        console.log("row",row);
-                        data.push(row)
+                var k = JSON.parse(JSON.stringify( this.outboundMsgDayily, this.sortBy()),1);
+                Object.entries(k).map(v=>{
+                    k[v[0]] = this.outboundMsgDayily[v[0]];
+                })
+                Object.entries(k).map(v=>{
+                    let row =  {
+                        name: this.modesHouroutb[v[0]],
+                        ...v[1]
                     }
+                    console.log("row",row);
+                    data.push(row)
                 })
 
                 return data;
             },
             getBroadcastDayDataTable(){
                 let data = [];
-                Object.entries(this.outboundMsgDayily).map(v=>{
-                    if(this.modesoutdaily.hasOwnProperty(v[0])){
+                var k = JSON.parse(JSON.stringify( this.outboundMsgDayily, this.sortBy()),1);
+                Object.entries(k).map(v=>{
+                    k[v[0]] = this.outboundMsgDayily[v[0]];
+                })
+                Object.entries(k).map(v=>{
                         let row =  {
-                            name: this.modesoutdaily[v[0]],
+                            name: this.modesHouroutb[v[0]],
                             ...v[1]
                         }
                         data.push(row)
-                    } 
                 })
-
                 return data;
             },
             getDayDataTable(){
@@ -417,6 +422,9 @@ import moment from 'moment';
             }
         },
         methods: {
+            sortBy(){
+                return Object.keys(this.modesHouroutb);
+            },
             timeFormatter(ms){
                 let date = moment(parseInt(ms));
                 return date.local().format('HH:mm');
@@ -522,7 +530,6 @@ import moment from 'moment';
                 let data = {};
                 Object.entries(resp).reduce((a,b,i)=>{
                     let time = parseInt(_THAT.getMinute(b[0]));
-                    console.log("getHourWiseData",time);
                     if(time == 0 && i == 0){
                         data[_THAT.getHourMin(b[0])+"-"+_THAT.getHour(b[0])] = b[1];
                         return null;
@@ -606,7 +613,6 @@ import moment from 'moment';
                     (v) => {
                         let data = _THAT.getHourWiseData(v[1]);
                         _THAT.outboundMsgHourly[v[0]] = data;
-                        console.log("_THAT.outboundMsgHourly[v[1]]",_THAT.outboundMsgHourly[v[0]]);
                     }
                 )
             },
