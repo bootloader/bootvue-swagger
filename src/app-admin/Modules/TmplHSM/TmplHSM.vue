@@ -197,13 +197,13 @@
                                         <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
                                         <base-text-area  name="Header" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.header" 
-                                                          rules="max:1024|HBPrefixedVar:*,0,60,contact.,data.,global." :rows="1"
+                                                          rules="max:1024|HBPrefixedVar:*,0,60,contact.,data.,global.,session." :rows="1"
                                                           :textLimit="60"
                                                           :textCompleteStrategies="strategies">
                                         </base-text-area>
                                         <base-text-area  name="Body" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.template" 
-                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data.,global." :rows="9"
+                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data.,global.,session." :rows="9"
                                                           :textLimit="1024"
                                                           :textCompleteStrategies="strategies">
                                         </base-text-area>

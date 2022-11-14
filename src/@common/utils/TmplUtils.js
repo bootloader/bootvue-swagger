@@ -43,6 +43,10 @@ function sampleModel (){
         contact : {
           name : "John Doe", phone : "919876543210", email : "John.Doe."+(counter++)+"@company.com"
         },
+        session : {
+            agent : { name : "Vinod" , code : "vinod" },
+            team : { name : "Online", code : "online"}
+        },
         global : {
         },
         data : {}

@@ -41,7 +41,7 @@
                     </b-progress-bar> -->
               </b-progress> 
              <h6 class="mt-3">Message Delivery</h6>
-             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value  variant="greyer" class="bg-text text-black" 
+             <b-progress :value="stats.DLVRD" :max="stats.CRTD" show-value  variant="greyer" class="bg-text bg-greyish" 
                 v-tooltip="`DLVRD:${stats.DLVRD}
                 <br/>SENTX_ERR:${stats.SENTX_ERR}
                 <br/>CCWIN:${stats.CCWIN}
@@ -51,6 +51,9 @@
                     </b-progress-bar>
                     <b-progress-bar v-if="stats.SENTX_ERR" :value="stats.SENTX_ERR" variant="danger">
                        <span> <strong>{{stats.SENTX_ERR}}</strong> Failed</span>
+                    </b-progress-bar>
+                    <b-progress-bar v-else-if="!stats.DLVRD" value="0" variant="greyish" class="bg-text">
+                       <span> <strong>{{stats.DLVRD}}</strong> Delivered</span>
                     </b-progress-bar>
                     <!-- <b-progress-bar v-if="stats._DLVRD" :value="stats._DLVRD" variant="greyed">
                         <span><strong>{{stats._DLVRD}}</strong> Not Delivered</span>
