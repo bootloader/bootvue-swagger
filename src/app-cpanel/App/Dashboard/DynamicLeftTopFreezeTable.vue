@@ -126,7 +126,6 @@
     },
     filters: {
       date(val) {   
-        console.log("val",val);
         if(val){
           return moment(val).format("DD/MM/YYYY");
         }
@@ -144,13 +143,13 @@
         dateranegeinput : (() => { 
           if(!this.daterange) return null;
 
-          var startDate = this.daterange.startDate || hour0(moment().subtract(7,"day")).toDate(),
+          var startDate = this.daterange.startDate || hour0(moment().subtract(6,"day")).toDate(),
           endDate = this.daterange.endDate || hour24(moment()).toDate();
 
           return {
               range: {startDate : startDate, endDate : endDate},
               ranges : {
-                  'Last 7 Days': [hour0(moment().subtract(7,"day")).toDate(), 
+                  'Last 7 Days': [hour0(moment().subtract(6,"day")).toDate(), 
                                     hour24(moment()).toDate()],
                   'This month': [hour0(moment().date(1)).toDate(), 
                                       hour24(moment()).toDate()],
@@ -173,10 +172,8 @@
     },
     methods:{
       logEvent: function(e, test) {
-          console.log(e, test)
       },
       dateFormat: function (a,b){
-        console.log(a,b);
       },
       sanitizeDateRange : function (daterange) {
           var startDate = moment(daterange.startDate);
@@ -186,13 +183,11 @@
           return daterange;
       },
       onDateRangeSelect : function (r) {
-          console.log("select",r);
           var range = this.sanitizeDateRange(r);
           this.dateranegeinput.range.startDate = range.startDate;
           this.dateranegeinput.range.endDate = range.endDate;
       },
       onDateRangeUpdate : function (r) {
-          console.log("c_update",r);
           if(this.daterange){
               this.daterange.startDate = r.startDate;
               this.daterange.endDate = r.endDate;
@@ -200,19 +195,16 @@
           }
       },
       startSelection:function(e){
-        console.log(e)
       },
       downloadCSVtemplate(){
         let _THAT = this;
         if(Object.keys(this.tableData).length){
             const json2csvParser = new Parser();
             const csv = json2csvParser.parse(this.tableData);
-            console.log("csv",csv);
             let csvContent = "data:text/csv;charset=utf-8,"+csv;
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            console.log("_THAT.headerTitle.split('').join()",_THAT.headerTitle.split(" ").join(''))
             link.setAttribute("download", _THAT.headerTitle.split(" ").join("") +".csv");
             document.body.appendChild(link); // Required for FF
             link.click();

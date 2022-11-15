@@ -60,15 +60,15 @@
       </b-row>
       <!--End tables-->
     </b-container>
+    <!-- <br/>
     <br/>
     <br/>
     <br/>
     <br/>
     <br/>
-    <br/>
-    <b-container fluid class="mt--9">
+    <b-container fluid class="mt--9"> -->
         <!--Tables-->
-      <b-row class="mt-5">
+      <!-- <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
                 headerTitle="Monthly number of messages exchanged" 
@@ -80,9 +80,9 @@
                 :options="monthOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
-      </b-row>
+      </b-row> -->
       <!--End tables-->
-    </b-container>
+    <!-- </b-container> -->
     <br/>
     <br/>
     <br/>
@@ -144,7 +144,6 @@
                 :tableData="getBroadcastDayDataTable" 
                 :loading="loading.broadcastDayDataTable"
                 :daterangeChange="onBroadcastDaysDaterangeChange"
-                :colHeadFormatter="dateFormatter"
                 :refresh="loadBroadcastDaywiseSummary"
                 :sortBy="sortBy()"
                 :daterange="daterangeBroadcast">
@@ -164,10 +163,8 @@
 <script>
     import * as chartConfigs from '@/@common/argon/components/Charts/config'
     import StatsCard from '@/@common/argon/components/Cards/StatsCard'
-    import SocialTrafficTable from './Dashboard/SocialTrafficTable';
     import DynamicLeftTopFreezeTable from './Dashboard/DynamicLeftTopFreezeTable.vue'
-    import SocialTrafficTableWaba from './Dashboard/SocialTrafficTableWaba';
-import moment from 'moment';
+    import moment from 'moment';
 
    function initialModeState (){
        return { 
@@ -265,8 +262,6 @@ import moment from 'moment';
     export default {
         components: {
             StatsCard,
-            SocialTrafficTable,
-            SocialTrafficTableWaba,
             DynamicLeftTopFreezeTable
         },
         data() {
@@ -312,13 +307,13 @@ import moment from 'moment';
                     READ:"Read by Customer"
                 },
                 daterange:{
-                    startDate : moment().subtract(7,"day").valueOf(),
+                    startDate : moment().subtract(6,"day").valueOf(),
                     endDate : moment().valueOf(),
                     span : "Today",
                     days:7
                 },
                 daterangeBroadcast:{
-                    startDate : moment().subtract(7,"day").valueOf(),
+                    startDate : moment().subtract(6,"day").valueOf(),
                     endDate : moment().valueOf(),
                     span : "Today",
                     days:7
@@ -362,16 +357,15 @@ import moment from 'moment';
             },
             getOutboundMsgHourlyDataTable(){
                 let data = [];
-                var k = JSON.parse(JSON.stringify( this.outboundMsgDayily, this.sortBy()),1);
+                var k = JSON.parse(JSON.stringify( this.outboundMsgHourly, this.sortBy()),1);
                 Object.entries(k).map(v=>{
-                    k[v[0]] = this.outboundMsgDayily[v[0]];
+                    k[v[0]] = this.outboundMsgHourly[v[0]];
                 })
                 Object.entries(k).map(v=>{
                     let row =  {
                         name: this.modesHouroutb[v[0]],
                         ...v[1]
                     }
-                    console.log("row",row);
                     data.push(row)
                 })
 
@@ -439,6 +433,10 @@ import moment from 'moment';
             },
             getHourMin(ms){
                 let date = moment(parseInt(ms)).subtract(1,"hour");
+                return date.local().format('ha');
+            },
+            getHourPlus(ms){
+                let date = moment(parseInt(ms)).add(1,"hour");
                 return date.local().format('ha');
             },
             dateFormatter(ms){
@@ -520,21 +518,35 @@ import moment from 'moment';
                 this.dayWiseSummaryCount = initialChannelState(null);
                 Object.entries(daySummary.results[0].dateWiseSummaryCount).map(
                     (v) => {
-                        let channel = v[0].split('_')[1]
-                        _THAT.dayWiseSummaryCount[channel].mode  = v[1];
+                        let key  = v[0].split('_')
+                        if(v[0].split('_').length == 3){
+                            let channel = key[1]+"("+key[2]+")";
+                            _THAT.dayWiseSummaryCount[channel] = {..._THAT.dayWiseSummaryCount[key[1]]};
+                            _THAT.dayWiseSummaryCount[channel].mode = v[1];
+                            _THAT.dayWiseSummaryCount[channel].label = _THAT.dayWiseSummaryCount[channel].label+"("+key[2]+")"
+                        } else {
+                            _THAT.dayWiseSummaryCount[key[1]].mode = v[1];
+                        }
                     }
                 )
+               
             },
             getHourWiseData(resp){
                 let _THAT = this;
                 let data = {};
+                let length = Object.entries(resp).length;
                 Object.entries(resp).reduce((a,b,i)=>{
-                    let time = parseInt(_THAT.getMinute(b[0]));
-                    if(time == 0 && i == 0){
-                        data[_THAT.getHourMin(b[0])+"-"+_THAT.getHour(b[0])] = b[1];
-                        return null;
+                    let time = parseInt(_THAT.getMinute(i== 1 ? a[0] : b[0]));
+
+                    if(time == 0 && i == 1){
+                        data[_THAT.getHourMin(a[0])+"-"+_THAT.getHour(a[0])] = b[1]
+                        return b;
                     }
-                    if(a){
+                    if(!a && length == i+1 && time != 0){
+                        data[_THAT.getHour(b[0])+"-"+_THAT.getHourPlus(b[0])] = b[1];
+                        return false;
+                    }
+                    if(a && b){
                         data[_THAT.getHour(a[0])+"-"+_THAT.getHour(b[0])] = a[1]+b[1];
                         return null;
                     } else return b;
@@ -553,8 +565,15 @@ import moment from 'moment';
                 this.hourWiseCountMap = initialChannelState(null);
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
                     (v) => {
-                        let channel = v[0].split('_')[1]
-                        _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1]);
+                        let key  = v[0].split('_')
+                        if(v[0].split('_').length == 3){
+                            let channel = key[1]+"("+key[2]+")";
+                            _THAT.hourWiseCountMap[channel] = {..._THAT.hourWiseCountMap[key[1]]};
+                            _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1]);
+                            _THAT.hourWiseCountMap[channel].label = _THAT.hourWiseCountMap[channel].label+"("+key[2]+")"
+                        } else {
+                            _THAT.hourWiseCountMap[key[1]].mode = _THAT.getHourWiseData(v[1]);
+                        }
                     }
                 )
             },
@@ -629,7 +648,13 @@ import moment from 'moment';
                     }
                 )
                 this.loading.broadcastDayDataTable = false;
-                this.outboundMsgDayily = daySummary.results[0].dateWiseSummaryCount
+                this.outboundMsgDayily = {};
+                Object.entries(daySummary.results[0].dateWiseSummaryCount).map(v=>{
+                    Object.entries(v[1]).map(w=>{
+                        this.outboundMsgDayily[v[0]] ? "" : this.outboundMsgDayily[v[0]] = {};
+                        this.outboundMsgDayily[v[0]][this.dateFormatter(w[0])] = w[1];
+                    })
+                })
             },
             domainOnChange() {
                 this.loadTimeStamp()

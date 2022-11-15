@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="shadow" :class="loading ? 'loading' :''" >
+  <b-card no-body class="shadow table-box" :class="loading ? 'loading' :''" >
       <b-card-header class="bg-transparent border-0">
               <b-row>
                 <b-col lg="6">
@@ -89,6 +89,10 @@ import VueMoment from 'vue-moment';
 import DateRangePicker from 'vue2-daterange-picker'
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import {Parser} from 'json2csv';
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
+// configure language
+locale.use(lang)
 
 function hour0(mmt){
   return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
@@ -126,7 +130,6 @@ export default {
   },
   filters: {
     date(val) {   
-      console.log("val",val);
       if(val){
         return moment(val).format("DD/MM/YYYY");
       }
@@ -144,13 +147,13 @@ export default {
       dateranegeinput : (() => { 
         if(!this.daterange) return null;
 
-        var startDate = this.daterange.startDate || hour0(moment().subtract(7,"day")).toDate(),
+        var startDate = this.daterange.startDate || hour0(moment().subtract(6,"day")).toDate(),
         endDate = this.daterange.endDate || hour24(moment()).toDate();
 
         return {
             range: {startDate : startDate, endDate : endDate},
             ranges : {
-                'Last 7 Days': [hour0(moment().subtract(7,"day")).toDate(), 
+                'Last 7 Days': [hour0(moment().subtract(6,"day")).toDate(), 
                                   hour24(moment()).toDate()],
                 'This month': [hour0(moment().date(1)).toDate(), 
                                     hour24(moment()).toDate()],
@@ -173,10 +176,8 @@ export default {
   },
   methods:{
     logEvent: function(e, test) {
-        console.log(e, test)
     },
     dateFormat: function (a,b){
-      console.log(a,b);
     },
     sanitizeDateRange : function (daterange) {
         var startDate = moment(daterange.startDate);
@@ -186,13 +187,11 @@ export default {
         return daterange;
     },
     onDateRangeSelect : function (r) {
-        console.log("select",r);
         var range = this.sanitizeDateRange(r);
         this.dateranegeinput.range.startDate = range.startDate;
         this.dateranegeinput.range.endDate = range.endDate;
     },
     onDateRangeUpdate : function (r) {
-        console.log("c_update",r);
         if(this.daterange){
             this.daterange.startDate = r.startDate;
             this.daterange.endDate = r.endDate;
@@ -200,19 +199,16 @@ export default {
         }
     },
     startSelection:function(e){
-      console.log(e)
     },
     downloadCSVtemplate(){
       let _THAT = this;
       if(Object.keys(this.tableData).length){
           const json2csvParser = new Parser();
           const csv = json2csvParser.parse(this.tableData);
-          console.log("csv",csv);
           let csvContent = "data:text/csv;charset=utf-8,"+csv;
           var encodedUri = encodeURI(csvContent);
           var link = document.createElement("a");
           link.setAttribute("href", encodedUri);
-          console.log("_THAT.headerTitle.split('').join()",_THAT.headerTitle.split(" ").join(''))
           link.setAttribute("download", _THAT.headerTitle.split(" ").join("") +".csv");
           document.body.appendChild(link); // Required for FF
           link.click();
@@ -222,7 +218,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.vue-daterange-picker {
+.table-box .vue-daterange-picker {
   min-height: 35px;
   float: right;
   .reportrange-text{
@@ -235,6 +231,7 @@ export default {
       border-color: transparent;
       padding: 8px;
       box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
+      text-align: center !important;
   }
   .daterangepicker.show-calendar .ranges {
       padding: 0px !important;
@@ -243,10 +240,19 @@ export default {
 .el-table .el-table__cell{
 padding:4px 0
 }
-.fa-download, .fa-refresh{
+.table-box .fa-download, .table-box .fa-refresh{
 cursor: pointer;
 }
-.loading{
+.table-box .loading{
 filter: blur(4px);
+}
+.table-box .vue-daterange-picker .reportrange-text{
+    background-color: #fff !important;
+    border: 0 none;
+}
+.table-box .input-group-alternative{
+  box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
+  border: 0;
+  transition: box-shadow .15s ease, -webkit-box-shadow .15s ease;
 }
 </style>
