@@ -2,7 +2,7 @@
   <div class="wrapper">
     <notifications></notifications>
     <side-bar
-      :logo="$config.PROP_LOGO_BG_X_LOGO"
+      :logo="$config.PROP_LOGO_BG_X_LOGO" :profileImage="profileImage"
     >
       <template slot="links">
 
@@ -107,7 +107,7 @@
       </template>
     </side-bar>
     <div class="main-content min-vh-100">
-      <dashboard-navbar :type="$route.meta.navbarType"></dashboard-navbar>
+      <dashboard-navbar :type="$route.meta.navbarType" :profileImage="profileImage"></dashboard-navbar>
 
       <div @click="$sidebar.displaySidebar(false)" class="min-vh-100">
         <fade-transition :duration="200" origin="center top" mode="out-in">
@@ -123,6 +123,7 @@
   /* eslint-disable no-new */
   import PerfectScrollbar from 'perfect-scrollbar';
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
+  import profileImage from "@/assets/images/avatars//profile.png";
 
 console.log("This is AppPartnerAuth")
 
@@ -152,6 +153,11 @@ console.log("This is AppPartnerAuth")
       ContentFooter,
       //DashboardContent,
       FadeTransition
+    },
+    data(){
+      return {
+        profileImage
+      }
     },
     methods: {
       initScrollbar() {

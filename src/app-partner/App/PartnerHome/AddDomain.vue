@@ -2,7 +2,7 @@
   <div>
 
   <b-row  v-if="$global.User.isMultiDomainUser" align-v="center" slot="header"  class="my-normalize-v2">
-    <b-col v-if="$global.User.isDuperUser" cols="6">
+    <b-col v-if="$global.User.isDuperUser" lg="6" md="12">
       <base-v-select options="getx:/partner/api/users"  class="d-block" 
           layout="default" size="sm"
           v-model="search.user" clearable
@@ -17,7 +17,7 @@
         </template> 
        </base-v-select>
     </b-col> 
-     <b-col  cols="6">
+     <b-col  lg="6" md="12" >
       <base-input  class="" layout="default" size="sm"
           v-model="search.domain"
           @change="loadDetailsAsync"
@@ -44,7 +44,7 @@
     </b-card>
 
     <b-row  v-else-if="!isEditDetail" align-v="center" slot="header" >
-        <b-col v-for="(model,index) in modelValid" :key="'domain-'+index" cols="6">
+        <b-col v-for="(model,index) in modelValid" :key="'domain-'+index" lg="6" md="12">
           <stats-card :title="'@'+model.domain"
               types="gradient-red"
               :sub-title="model.company.businessName"

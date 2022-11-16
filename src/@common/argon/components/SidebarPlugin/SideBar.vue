@@ -27,7 +27,7 @@
                         <a slot="title-container" class="nav-link" href="#" role="button">
                             <div class="media align-items-center">
                               <span class="avatar avatar-sm rounded-circle">
-                                <img alt="Image placeholder" src="//argon/img/theme/team-1.jpg">
+                                <img alt="Image placeholder" :src="profileImage">
                               </span>
                             </div>
                         </a>
@@ -130,6 +130,11 @@
         type: Boolean,
         default: true,
         description: 'Whether sidebar should autoclose on mobile when clicking an item'
+      },
+      profileImage : {
+        type: String,
+        default: '/argon/img/theme/team-1.jpg',
+        description: 'Sidebar app logo'
       }
     },
     provide() {
