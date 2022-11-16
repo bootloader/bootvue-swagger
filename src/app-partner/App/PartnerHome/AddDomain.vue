@@ -19,7 +19,7 @@
     </b-col> 
      <b-col  lg="6" md="12" >
       <base-input  class="" layout="default" size="sm"
-          v-model="search.domain"
+          v-model="search.domain" placeholder="Type to Search..."
           @change="loadDetailsAsync"
        ></base-input>
      </b-col> 
