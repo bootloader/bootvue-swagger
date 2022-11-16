@@ -1,8 +1,8 @@
 <template>
   <div>
 
-  <b-row  v-if="$global.User.isDuperUser" align-v="center" slot="header"  class="my-normalize-v2">
-    <b-col  cols="6">
+  <b-row  v-if="$global.User.isMultiDomainUser" align-v="center" slot="header"  class="my-normalize-v2">
+    <b-col v-if="$global.User.isDuperUser" cols="6">
       <base-v-select options="getx:/partner/api/users"  class="d-block" 
           layout="default" size="sm"
           v-model="search.user" clearable
@@ -265,7 +265,7 @@
             </b-row>
           </div>
 
-     <hr class="my-4"hidden>
+     <hr class="my-4" hidden>
           <!-- Address -->
           <h6 class="heading-small text-muted mb-4" hidden> Customer Contact</h6>
 
@@ -436,12 +436,22 @@ export default {
       return this.models[this.selectedIndex] || this.defModel;
     },
     modelValid(){
+      let search = (this.search.domain || "").toLowerCase();
       return this.models.filter(function(m){
-        return !!m.domain;
+        return (!!m.domain) && (m.search.indexOf(search) > -1);
       });
     },
     isDomainSet(){
       return !!this.model.domain && !!this.model.id;
+    },
+    userOptions(){
+      if(this.$global.User.isDuperUser){
+        return '';
+      } else {
+        return this.models.map(function(){
+
+        });
+      }
     }
   },
   created() {
@@ -483,12 +493,15 @@ export default {
           social : result.social || {},
           domain : result.domain,
           server : result.server,
-          id : result.id
+          id : result.id,
+          search : [result.company?.businessName ,result.domain].join(" ").toLowerCase()
         }
       });
     },
     async loadDetailsAsync(){
-      return this.loadDetails();
+      if(this.$global.User.isDuperUser){
+        return this.loadDetails();
+      }
     },
     async updateProfile() {
        let resp = await this.$service.post("/partner/api/domain",{
