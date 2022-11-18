@@ -6,7 +6,10 @@
 <script>
   import Vue from 'vue';
   import "@fortawesome/fontawesome-free/css/all.min.css";
-  
+  import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
+  Vue.use(DashboardPlugin);
+  import "@/assets/vendor/notus/styles/tailwind.css";
+
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'

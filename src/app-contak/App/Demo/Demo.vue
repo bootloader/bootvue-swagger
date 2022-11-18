@@ -11,8 +11,8 @@
   </div>
 </template>
 <script>
-import DemoReciever from './DemoReciever.vue';
-import DemoSender from './DemoSender.vue';
+import DemoReciever from '../../App/Demo/DemoReciever.vue';
+import DemoSender from '../../App/Demo/DemoSender.vue';
 export default {
   data() {
     return {

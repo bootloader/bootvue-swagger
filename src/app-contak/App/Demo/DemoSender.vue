@@ -20,7 +20,7 @@
 </template>
 <script>
 import BaseInput from '@/@common/argon/components/Inputs/BaseInput.vue';
-import BaseButton from '../@common/argon/components/BaseButton.vue';
+import BaseButton from '@/@common/argon/components/BaseButton.vue';
 export default {
   data() {
     return {

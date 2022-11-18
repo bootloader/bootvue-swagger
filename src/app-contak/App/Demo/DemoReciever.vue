@@ -46,8 +46,8 @@
 </template>
 <script>
 import BaseInput from '@/@common/argon/components/Inputs/BaseInput.vue';
-import BaseButton from '../@common/argon/components/BaseButton.vue';
-import ProfileApp from '../app-front/Index/ProfileApp.vue';
+import BaseButton from '@/@common/argon/components/BaseButton.vue';
+import ProfileApp from '../../../app-front/Index/ProfileApp.vue';
 export default {
   data() {
     return {
