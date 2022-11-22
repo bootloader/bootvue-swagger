@@ -297,6 +297,10 @@
               console.log("onMessageWasSentAsync:message:undefined");
               return;
           }
+          if(message.type == "file" && message.data.file.size >= 5242880){
+              this.addMessage({ type : "system", data : { text : "File size should not exceed 5 mb" }});
+              return false;
+            } 
           message.id=null;
           message.data.type="I"; 
           message.data.timestamp = Date.now();
@@ -305,13 +309,14 @@
         if(this.options.channelId){
               let resp = null;
               if(message.type == "file"){
-                  let bodyFormData = new FormData();
+                  let bodyFormData = new FormData();                 
                   bodyFormData.append("file",message.data.file, message.data.file.fileName);
                   resp= await this.$service.put(
                         `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
                         `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
                         bodyFormData
                     );
+                  console.log("filemessageresp",resp)
               } else {
                   resp = await this.$service.post(
                     `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
@@ -378,6 +383,7 @@
           }
         },
         onMessageRecvd (message) {
+          console.log("onMessageRecvd",message);
           this.form_input = message.data.inputs ? message.data.inputs[0] : null;
           this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
           this.addMessage(message);
