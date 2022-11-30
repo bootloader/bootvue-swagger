@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <div>
     <b-row>
       <b-col>
         <demo-sender/>

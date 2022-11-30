@@ -5,7 +5,7 @@
       <!-- Table -->
       <b-row v-if="viewSignupForm"  class="justify-content-center">
         <b-col lg="6" md="8" >
-          <b-card no-body class="bg-secondary border-0 " >
+          <b-card no-body class="bg-transparent border-0 " >
             <b-card-header class="px-lg-5 bg-transparent pb-2 d-none">
                <h2> Get started free </h2>
                 <small> No credit card required</small>
@@ -17,13 +17,13 @@
               </div>
               <div class="d-none">
                 <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
-                <div class="text-center">
-                  <a href="#" class="btn btn-neutral btn-icon mr-4">
-                    <span class="btn-inner--icon"><img src="/argon/img//icons/common/github.svg"></span>
+                <div class="btn-wrapper text-center">
+                  <a href="#" class="btn btn-neutral btn-icon">
+                    <span class="btn-inner--icon"><img :src="$config.CDN_URL + '/argon/img/icons/common/github.svg'"></span>
                     <span class="btn-inner--text">Github</span>
                   </a>
                   <a href="#" class="btn btn-neutral btn-icon">
-                    <span class="btn-inner--icon"><img src="/argon/img//icons/common/google.svg"></span>
+                    <span class="btn-inner--icon"><img :src="$config.CDN_URL +  '/argon/img/icons/common/google.svg'"></span>
                     <span class="btn-inner--text">Google</span>
                   </a>
                 </div>
@@ -87,13 +87,6 @@
                         v-model="model.country"
                         options="data:countries">
                   </base-select>
-                  <h4>Product Interested In</h4>
-                  <div v-for="(product,key) in products">
-                    <base-checkbox v-model="products[key].checked">
-                      <i :class="product.icon"></i>
-                      {{product.label}}
-                    </base-checkbox>
-                  </div>
                   
                   <b-row class=" my-4">
                     <b-col cols="12">
@@ -119,7 +112,7 @@
       <!-- Register Done -->
       <b-row v-if="viewMailSent" class="justify-content-center">
         <b-col lg="6" md="8" >
-          <b-card no-body class="bg-secondary border-0" >
+          <b-card no-body class="bg-transparent border-0" >
             <b-card-header class="px-lg-5 bg-transparent pb-2 text-center ">
                <h2> Almost there … </h2>
                 <small> Please check your email to confirm your account.</small>
@@ -133,7 +126,6 @@
               <div class="text-center text-muted mb-4">
                 <small>If you haven't received our email in 15 minutes, please check your spam folder.</small>
               </div>
-
 
             </b-card-body>
           </b-card>

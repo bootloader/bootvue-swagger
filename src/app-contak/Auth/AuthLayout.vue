@@ -1,37 +1,33 @@
 <template>
-  <div class="main-content bg-default">
+  <div class="main-content bg-defaults">
 
   <b-navbar v-if="defaultBar" fixed 
    toggleable="md" type="transparent" variant="faded"
-   class="navbar-horizontal navbar-main navbar-top navbar-dark">
+   class="navbar-horizontal navbar-main navbar-top navbar-darks">
 
       <b-row class="w-100">
         
         <b-col cols=12 md="4" class="navbar-wrapper text-md-center">
           <b-navbar-brand to="/" class="pl-3">
-            <img :src="$config.PROP_LOGO_BG_X_LOGO_W" />
+            <img :src="$config.PROP_STATIC_SERVER + `/bg-x-icon-w.png`"  class="xs:d-inline sm-:d-none" />
           </b-navbar-brand>
           <b-navbar-toggle target="nav-text-collapse" class="float-right"></b-navbar-toggle>
         </b-col>
 
         <b-col cols="12" md="8">
           <b-collapse id="nav-text-collapse" is-nav>
-            <b-navbar-nav class="align-items-lg-center ml-md-auto">
-               <b-nav-item href="/front/auth/login">
-                  <i class="fa fa-user-secret text-primary"></i>
-                  <span class="nav-link-inner--text text-primary">Agent Login</span>
-                </b-nav-item>
+            <b-navbar-nav class="align-items-lg-center ml-md-auto text-oa-white">
                 <b-nav-item to="/auth/forgot-pass" v-if="$route.name !== 'forgot-pass'">
-                  <i class="fa fa-unlock-alt text-primary"></i>
-                  <span class="nav-link-inner--text text-primary">Forgot password</span>
+                  <i class="fa fa-unlock-alt text-oa-blue"></i>
+                  <span class="nav-link-inner--text text-oa-blue">Forgot password</span>
                 </b-nav-item>
                 <b-nav-item to="/auth/register" v-if="$route.name !== 'register'">
-                  <i class="fa fa-user  text-primary"></i>
-                  <span class="nav-link-inner--text  text-primary">Register</span>
+                  <i class="fa fa-user  text-oa-blue"></i>
+                  <span class="nav-link-inner--text  text-oa-blue">Register</span>
                 </b-nav-item>
                 <b-nav-item to="/auth/login" v-if="$route.name !== 'login'">
-                  <i class="fa fa-key  text-primary"></i>
-                  <span class="nav-link-inner--text  text-primary">Login</span>
+                  <i class="fa fa-key  text-oa-blue"></i>
+                  <span class="nav-link-inner--text  text-oa-blue">Login</span>
                 </b-nav-item>
             </b-navbar-nav>
           </b-collapse>
@@ -56,7 +52,7 @@
           <b-row>
             <b-col cols="6" class="collapse-brand">
               <router-link to="/">
-                <img :src="$config.PROP_LOGO_BG_X_ICON" />
+                <img :src="$config.PROP_STATIC_SERVER + `/bg-x-icon-w.png`" class="xs:d-none"/>
               </router-link>
             </b-col>
             <b-col cols="6" class="collapse-close">
@@ -87,45 +83,31 @@
     </base-nav>
 
     <b-row class="main-content  min-vh-100 w-100 m-0 p-0">
-      <b-col md="4">
+      <b-col :md="leftSpan" class="smooth-width">
         <div class="min-md-vh-100 w-75 m-auto pt-6 pb-3">
-
-
-<ul class="list-unstyled bg-transparent text-white row">
-  <li v-for="b in bulletin" class="media bg-transparent mt-4 col-12 col-md-12" :key="b.title">
-    <span class="icon mr-3 text-center small">
-      <i :class="b.icon" class=""></i>
-    </span> 
-    <small class="clearfix text-white d-inline d-md-none">{{b.title}}</small> 
-    <div class="clearfix"/>
-    <div class="media-body d-none d-md-inline">  
-      <h2 class="info-title text-white">{{b.title}}</h2>    
-      <p class="description d-none d-lg-inline"> 
-          {{b.caption}}
-      </p>
-    </div>
-    <div class="clearfix"/>
-  </li>
-</ul>
-
+            <ul class="list-unstyled bg-transparent text-oa-blue row  xs:d-none sm-:d-inline">
+              <li class="media bg-transparent mt-4 col-12 col-md-12" >
+                <img  class="xs:d-none xs:w-20 sm:w-25 md:w-75 lg:w-100 xl:w-100"
+                  :src="$config.PROP_STATIC_SERVER + `/bg-x-icon-w.png`" />
+              </li>  
+            </ul>
         </div>
       </b-col>
-      <b-col md="8" class="bg-secondary">
+      <b-col :md="rightSpan" class="bg-oa-grey smooth-width">
         <div class="main-content min-vh-100 pt-7 pb-3 w-100">
           <zoom-center-transition
             :duration="pageTransitionDuration"
-            mode="out-in"
-          >
-            <router-view></router-view>
+            mode="out-in">
+            <router-view @updateAuthStatus="updateAuthStatus"></router-view>
           </zoom-center-transition>
         </div>
       </b-col>
     </b-row>
 
-    <footer class="py-3 bg-secondary" id="footer-main">
+    <footer class="py-3 bg-white" id="footer-main">
       <b-container>
         <b-row align-v="center" class="justify-content-xl-between">
-          <b-col xl="6">
+          <b-col xl="6" >
             <div class="copyright text-center text-xl-left text-muted">
               © {{ year }}
               <a
@@ -191,18 +173,19 @@ export default {
       pageTransitionDuration: 200,
       year: new Date().getFullYear(),
       pageClass: "login-page",
-      bulletin : [
-        {icon : "far fa-user-circle",title : "Free account", caption : "Create free account and add multiple channles for free"},
-        {icon: "far fa-comments", title : "Multi channel", caption : "Connect with your custmers on popular social channles from single screen. Focus on communication not the mode."},
-        {icon : "fa fa-user-astronaut", title : "Smart communication", caption : "Define message formats, reply suggestions, manage your customer support action from agent panel."},
-        {icon : "fa fa-bolt", title : "Quick response", caption : "Quick replies, automated responses."},
-      ]
+      auth : false,
     };
   },
   computed: {
     title() {
       return `${this.$route.name} Page`;
     },
+    leftSpan(){
+      return this.auth ? 2 : 4;
+    },
+    rightSpan(){
+      return this.auth ? 10 : 8;
+    }
   },
   methods: {
     onToggleNavbar(showMenu) {
@@ -226,10 +209,10 @@ export default {
       console.log("toggleNavbar",this.showMenu )
     },
     setBackgroundColor() {
-      document.body.classList.add("bg-default");
+      document.body.classList.add("bg-oa-blue");
     },
     removeBackgroundColor() {
-      document.body.classList.remove("bg-default");
+      document.body.classList.remove("bg-oa-blue");
     },
     updateBackground() {
       if (!this.$route.meta.noBodyBackground) {
@@ -238,6 +221,10 @@ export default {
         this.removeBackgroundColor();
       }
     },
+    updateAuthStatus(){
+      this.auth = !this.auth;
+      setTimeout(()=>  window.location.href = "/contak/panel",300)
+    }
   },
   beforeDestroy() {
     this.removeBackgroundColor();
@@ -288,6 +275,9 @@ $scaleSize: 0.8;
     opacity: 0;
     transform: scale3d($scaleSize, $scaleSize, $scaleSize);
   }
+}
+.smooth-width {
+    transition: all 1s;
 }
 
 .main-content .zoomOut {

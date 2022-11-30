@@ -8,7 +8,7 @@
   import "@fortawesome/fontawesome-free/css/all.min.css";
   import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
   Vue.use(DashboardPlugin);
-  import "@/assets/vendor/notus/styles/tailwind.css";
+  //import "@/assets/vendor/notus/styles/tailwind.css";
 
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
@@ -32,19 +32,18 @@
         recaptchaScript.setAttribute('src', 'https://kit.fontawesome.com/1153462312.js')
         document.head.appendChild(recaptchaScript);
 
-      recaptchaScript = document.createElement('link')
-      recaptchaScript.setAttribute('rel', 'stylesheet')
-      recaptchaScript.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css')
-      document.head.appendChild(recaptchaScript);
+      // recaptchaScript = document.createElement('link')
+      // recaptchaScript.setAttribute('rel', 'stylesheet')
+      // recaptchaScript.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css')
+      // document.head.appendChild(recaptchaScript);
       
     },
   }
 
 </script>
 <style lang="scss">
-    @import "@/assets/base.scss";
-    @import '@/assets/utils/_popular.scss';
-    @import "./../assets/fonts/openweb/css/openwebicons.css";
+    @import "@/assets/app-contak.scss";
+   // @import "./../assets/fonts/openweb/css/openwebicons.css";
     // .v-input-error {
     //   color : red;
     // }

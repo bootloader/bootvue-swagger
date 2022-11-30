@@ -64,6 +64,10 @@ $popular-list:(
     instagram-b : #285AEB,
     envelope : #444343,
 
+    oa-blue : #3f3f95,
+    oa-yellow : #fab14b,
+    oa-grey : #f7fafc,
+
 );
 
 @each $key,$val in $popular-list{

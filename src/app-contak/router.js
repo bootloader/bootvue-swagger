@@ -3,7 +3,7 @@ import AppRouter from '../services/router';
 console.log("contak ROUTER")
 export default AppRouter.route({
     app: 'contak',
-    base : "/contak/",
+    base : "/contak/panel/",
     linkActiveClass: 'active',
     scrollBehavior: (to, from ,savedPosition) => {
       if (savedPosition) {
@@ -34,7 +34,7 @@ export default AppRouter.route({
         children: [
           {
             path: '/app/home',
-            name: 'Domains',
+            name: 'Home',
             component: () => import(/* webpackChunkName: "demo" */ './App/Home/Home.vue'),
             meta : {
              // role : ["DOMAIN_ADMIN"]
@@ -42,6 +42,7 @@ export default AppRouter.route({
           },
           {
             path: "/app/demo",
+            name: 'Demo',
             component: () => import('./App/Demo/Demo.vue'),
           },
         ]

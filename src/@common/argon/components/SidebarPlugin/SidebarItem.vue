@@ -45,7 +45,7 @@
         @click.native="linkClick"
         :is="elementType(link, false)"
         class="nav-link"
-        :class="{ active: link.active }"
+        :class="[{ active: link.active },navLinkClass]"
         :target="link.target"
         :href="link.path"
       >
@@ -86,6 +86,9 @@ export default {
       },
       description:
         'Sidebar link. Can contain name, path, icon and other attributes. See examples for more info'
+    },
+    navLinkClass : {
+
     }
   },
   provide() {

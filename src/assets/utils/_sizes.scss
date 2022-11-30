@@ -1,0 +1,91 @@
+$popular-sizes:(
+  xxs : "xs",
+  xs : "sm",
+  sm : "md", 
+  md : "lg", 
+  lg : "xl", 
+  xl : "xxl", 
+  xxl : "xxxl", 
+);
+
+@each $key,$val in $popular-sizes{
+  @include media-breakpoint-down($val) {
+    .-#{$val}\:d-none {
+      display: none;
+    }
+    .-#{$val}\:d-block {
+      display: block;
+    }
+    .-#{$val}\:d-inline {
+      display: inline;
+    }
+    .-#{$val}\:w-20 {
+      width: 20%;
+    }
+    .-#{$val}\:w-25 {
+      width: 25%;
+    }
+    .-#{$val}\:w-50 {
+      width: 50%;
+    }
+    .-#{$val}\:w-75 {
+      width: 75%;
+    }
+    .-#{$val}\:w-100 {
+      width: 100%;
+    }
+  }
+  @include media-breakpoint-up($val) {
+    .#{$val}-\:d-none {
+      display: none;
+    }
+    .#{$val}-\:d-block {
+      display: block;
+    }
+    .#{$val}-\:d-inline {
+      display: inline;
+    }
+    .#{$val}-\:w-20 {
+      width: 20%;
+    }
+    .#{$val}-\:w-25 {
+      width: 25%;
+    }
+    .#{$val}-\:w-50 {
+      width: 50%;
+    }
+    .#{$val}-\:w-75 {
+      width: 75%;
+    }
+    .#{$val}-\:w-100 {
+      width: 100%;
+    }
+  }
+  @include media-breakpoint-between($val,$val) {
+    .#{$val}\:d-none {
+      display: none;
+    }
+    .#{$val}\:d-block {
+      display: block;
+    }
+    .#{$val}\:d-inline {
+      display: inline;
+    }
+    .#{$val}\:w-20 {
+      width: 20%;
+    }
+    .#{$val}\:w-25 {
+      width: 25%;
+    }
+    .#{$val}\:w-50 {
+      width: 50%;
+    }
+    .#{$val}\:w-75 {
+      width: 75%;
+    }
+    .#{$val}\:w-100 {
+      width: 100%;
+    }
+  }
+}
+

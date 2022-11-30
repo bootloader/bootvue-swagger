@@ -1,28 +1,28 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper bg-oa-grey">
     <notifications></notifications>
-    <side-bar
-      :logo="$config.PROP_LOGO_BG_X_LOGO"
+    <side-bar class="bg-oa-blue text-white"
+      :logo="$config.PROP_STATIC_SERVER + `/bg-x-icon-w.png`"
     >
       <template slot="links">
 
-        <sidebar-item
+        <sidebar-item nav-link-class="text-oa-grey text-bold"
                   :link="{
                     name: 'Dashboard',
                     path: '/app/home',
-                    icon: 'ni ni-planet text-blue'
+                    icon: 'ni ni-planet'
                   }">
         </sidebar-item>
 
-        <sidebar-item
+        <sidebar-item nav-link-class="text-oa-grey text-bold"
                   :link="{
                     name: 'Demo',
                     path: '/app/demo',
-                    icon: 'fa fa-whatsapp text-whatsapp'
+                    icon: 'fa fa-whatsapp'
                   }">
         </sidebar-item>
 
-        <sidebar-item hidden
+        <sidebar-item hidden nav-link-class="text-white"
           :link="{
             name: 'Dashboard',
             path: '/app/dashboard',
@@ -80,42 +80,32 @@
         </sidebar-item>
       </template>
 
-      <!-- <template slot="links-after">
+      <template slot="links-after">
         <hr class="my-3">
         <h6 class="navbar-heading p-0 text-muted">Links</h6>
 
         <b-nav class="navbar-nav mb-md-3">
-          <b-nav-item :href="'https://mehery.atlassian.net/servicedesk/customer/portals'" target="_blank">
-              <i class="ni ni-support-16"></i>
-              <b-nav-text class="p-0">Support</b-nav-text>
-          </b-nav-item>
-          <b-nav-item
-               :href="$global.MyConst.config.PROP_SERVICE_DOCS_LINK"  target="_blank"
-               >
-              <i class="ni ni-paper-diploma"></i>
-              <b-nav-text class="p-0">Developer Guide</b-nav-text>
-          </b-nav-item>
-          <b-nav-item :href="$global.MyConst.config.PROP_SERVICE_DOCS_LINK + '/server-xms/public2'" target="_blank">
-              <i class="ni ni-single-copy-04"></i>
-              <b-nav-text class="p-0">API Integration</b-nav-text>
-          </b-nav-item>
-          <b-nav-item :href="'/cpanel/app'" target="_blank" v-if="showLink('SUPER_DEV')">
-              <i class="ni ni-chart-bar-32"></i>
-              <b-nav-text class="p-0">CPanel</b-nav-text>
+          <b-nav-item class="text-white text-bold"
+             :href="'https://mehery.atlassian.net/servicedesk/customer/portals'" target="_blank">
+              <i class="ni ni-support-16 text-white"></i>
+              <b-nav-text class="p-0 text-white">Support</b-nav-text>
           </b-nav-item>
         </b-nav>
-      </template> -->
+      </template>
     </side-bar>
     <div class="main-content min-vh-100">
       <dashboard-navbar :type="$route.meta.navbarType"></dashboard-navbar>
-
       <div @click="$sidebar.displaySidebar(false)" class="min-vh-100">
-        <fade-transition :duration="200" origin="center top" mode="out-in">
-          <!-- your content here -->
-          <router-view></router-view>
-        </fade-transition>
+        <b-container fluid>
+          <div style="min-height: 85px;"></div>
+          <fade-transition :duration="200" origin="center top" mode="out-in">
+            <!-- your content here -->
+            <router-view></router-view>
+          </fade-transition>
+          <div style="min-height: 4rem;"></div>
+        </b-container>
       </div>
-      <content-footer v-if="!$route.meta.hideFooter" class="content-footer"></content-footer>
+      <content-footer v-if="!$route.meta.hideFooter" class="content-footer bg-white"></content-footer>
     </div>
   </div>
 </template>
@@ -124,7 +114,7 @@
   import PerfectScrollbar from 'perfect-scrollbar';
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
-console.log("This is AppPartnerAuth")
+  console.log("This is AppPartnerAuth")
 
   function hasElement(className) {
     return document.getElementsByClassName(className).length > 0;
@@ -176,7 +166,9 @@ console.log("This is AppPartnerAuth")
   bottom: 0;
   left: 0;
   z-index: 1030;
-  background: transparent!important;
+  //background: transparent!important;
+  padding: .75rem 0;
+  border-top: 1px rgba(106, 106, 106, 0.153) solid;
   .nav .nav-item .nav-link, .footer .footer-link{
     color: #fff!important;
   }
