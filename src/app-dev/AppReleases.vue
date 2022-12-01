@@ -166,6 +166,11 @@ import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
                       version : '', stamp : '',
                       title : "XMS"
                 },
+                {
+                      context : '/contak',
+                      version : '', stamp : '',
+                      title : "CONTAK"
+                },
               ]
           },
       }),

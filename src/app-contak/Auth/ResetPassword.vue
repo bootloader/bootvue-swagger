@@ -5,7 +5,7 @@
       <!-- Table -->
       <b-row class="justify-content-center">
         <b-col lg="6" md="8" >
-          <b-card no-body class="bg-secondary border-0">
+          <b-card no-body class="bg-transparent border-0">
             <b-card-header class="bg-transparent pb-5 d-none">
               <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
                 <div class="btn-wrapper text-center">
@@ -83,16 +83,19 @@
     },
     methods: {
       async onSubmit() {
-        this.$service.submit('/partner/pub/set/pass',{
-          account : this.model.account,
-          code : this.model.code,
-          newpass : this.model.newpass,
-          confirmpass : this.model.confirmpass,
-          agree : this.model.agree
-        });
-        setTimeout(function (params) {
-          window.location.href = "/partner/app/"
-        }, 100);
+        try {
+          await this.$service.submit('/panel/auth/v1/setpass',{
+            email : this.model.account,
+            varifyCode : this.model.code,
+            passsword : this.model.newpass,
+            confirmpass : this.model.confirmpass,
+            agree : this.model.agree
+          });
+          this.$emit("updateAuthStatus",true) ;
+        } catch(e){
+          //console.log(e.response);
+        }
+
       },
       onScore(evt) {
         this.model.strength = evt.strength

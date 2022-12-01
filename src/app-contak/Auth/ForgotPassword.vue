@@ -104,7 +104,7 @@
         // this will be called only after form is valid. You can do an api call here to register users
         try {
           //this.model.email = "sds"
-          let resp = await this.$service.submit("/partner/pub/forgot/pass",{
+          let resp = await this.$service.submit("/panel/auth/v1/resetpass",{
             email : this.model.email
           });
           console.log("resp",resp);

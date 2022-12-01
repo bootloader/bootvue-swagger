@@ -41,9 +41,24 @@ export default AppRouter.route({
             }
           },
           {
-            path: "/app/demo",
-            name: 'Demo',
-            component: () => import('./App/Demo/Demo.vue'),
+            path: "/app/api",
+            name: 'APIs',
+            component: () => import('./App/Org/Api.vue'),
+          },
+          {
+            path: "/app/org/add",
+            name: 'Add Organization',
+            component: () => import('./App/Org/AddOrg.vue'),
+          },
+          {
+            path: "/app/org/edit/:orgId",
+            name: 'Edit Organization',
+            component: () => import('./App/Org/AddOrg.vue'),
+          },
+          {
+            path: "/app/org/api/:orgId",
+            name: 'APIKey',
+            component: () => import('./App/Org/Api.vue'),
           },
         ]
       },

@@ -59,35 +59,6 @@
                               v-model="model.phone">
                   </base-input>
 
-                  <base-input alternative question feedback
-                              class="mb-3"
-                              :name="$t('fields.company')" 
-                              vid="signupContact.company"
-                              :rules="{required: true}"  required
-                              v-model="model.company">
-                  </base-input>
-
-                <base-select alternative question feedback
-                              class="mb-3"
-                              :name="$t('fields.role')" 
-                              vid="signupContact.role"
-                              :rules="{required: true}"  required
-                              v-model="model.role">
-                  <option value="agency_partner_developer">Agency / Partner Developer</option>
-                  <option value="professional_developer">Professional Developer</option>
-                  <option value="technology_business_manager">Technology / Business Manager</option>
-                  <option value="other">Other</option>
-                </base-select>
-
-                  <base-select  alternative question feedback
-                        class="mb-3"
-                        :name="$t('fields.country')" 
-                        vid="signupContact.country"
-                        :rules="{required: true}"  required
-                        v-model="model.country"
-                        options="data:countries">
-                  </base-select>
-                  
                   <b-row class=" my-4">
                     <b-col cols="12">
                       <base-input :rules="{ required: { allowFalse: false } }" name=Privacy Policy>
@@ -181,7 +152,7 @@ import BaseCheckbox from '../../@common/argon/components/Inputs/BaseCheckbox.vue
           //this.model.email = "sds"
           let interestedProduct = this.products.filter(v=>v.checked);
             interestedProduct = interestedProduct.map(v=>v.value);
-          let resp = await this.$service.post("/partner/pub/register",{...this.model,product:interestedProduct});
+          let resp = await this.$service.submit("/panel/auth/v1/signup",{...this.model,product:interestedProduct});
           console.log("resp",resp)
           this.view.screen = 'MAILSENT';
           // this.$router.push({ 

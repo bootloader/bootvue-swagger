@@ -14,11 +14,11 @@
                   }">
         </sidebar-item>
 
-        <sidebar-item nav-link-class="text-oa-grey text-bold"
+        <sidebar-item nav-link-class="text-oa-grey text-bold" hidden
                   :link="{
-                    name: 'Demo',
-                    path: '/app/demo',
-                    icon: 'fa fa-whatsapp'
+                    name: 'APIs',
+                    path: '/app/api',
+                    icon: 'fa fa-code'
                   }">
         </sidebar-item>
 

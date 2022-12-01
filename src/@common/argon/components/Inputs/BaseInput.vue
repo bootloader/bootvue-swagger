@@ -6,7 +6,7 @@
         {'is-question': question }
       ]">
       <slot name="label">
-        <label v-if="!isPrelabel && (label || name)" 
+        <label v-if="!isPrelabel && fieldLabel" 
           :for="'fmg-' + inputId"
           :class="[
           {'focused': focused},
@@ -16,7 +16,7 @@
           'text-'+size,
           labelClasses
         ]">
-          {{label || name}}
+          {{fieldLabel}}
         </label>
       </slot>
       <div :class="[
@@ -24,7 +24,7 @@
         size ? 'input-group-'+size : '',
        {'focused': focused},
        {'input-group-alternative': alternative},
-       {'has-label': (label || name) || $slots.label},
+       {'has-label': fieldLabel || $slots.label},
         {'has-prelabel' : isPrelabel},
        inputGroupClasses
        ]">
@@ -33,11 +33,11 @@
             <span v-if="prepend" class="input-group-text">{{prepend}}</span>
             <span v-else-if="prependClass" :class="prependClass" :variant="variant">
               <i v-if="prependIcon" :class="prependIcon"></i>
-               <span v-else> {{label || name}}</span>
+               <span v-else> {{fieldLabel}}</span>
             </span>
             <b-button  v-else :variant="variant">
               <i v-if="prependIcon" :class="prependIcon"></i>
-               <span v-else> {{label || name}}</span>
+               <span v-else> {{fieldLabel}}</span>
             </b-button>
           </slot>
         </div>
@@ -70,7 +70,8 @@
             <a target="_blank" :href="value" class="btn btn-outline-success fa fa-external-link"></a>
         </div> 
         <div v-if="copy" class="input-group-append input-group-append-copy">
-            <b-button v-clipboard:copy="value" :variant="variant" class="fa fa-clipboard"
+            <b-button v-clipboard:copy="value" :variant="variant" class="fa fa-clipboard" 
+            v-tooltip="'Copy ' + fieldLabel"
             ></b-button>
         </div> 
         <div v-if="append || appendIcon || $slots.append || (textLimit>0) ||  $slots.actions" class="input-group-append">
@@ -90,22 +91,24 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="help">
-          <div class="help-feedback" v-if="showHelpMessage">
-            {{helpMessage || $attrs.placeholder}}
-          </div>
-      </slot>
-      <password-meter v-show="strengthBar" :password="`${value}`" @score="listeners.score" />
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="help">
+              <div class="help-feedback" v-if="showHelpMessage">
+                {{helpMessage || $attrs.placeholder}}
+              </div>
+          </slot>
+          <password-meter v-show="strengthBar" :password="`${value}`" @score="listeners.score" />
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span>  
     </b-form-group>
   </validation-provider>
 </template>
@@ -288,6 +291,9 @@
       },
       isPrelabel(){
         return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend || this.prependClass
+      },
+      fieldLabel(){
+        return (this.label || this.name)
       },
       showHelpMessage(){
         if((this.question && this.$attrs.placeholder)  || this.helpMessage){

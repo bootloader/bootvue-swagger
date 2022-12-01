@@ -65,7 +65,11 @@
       margin: 0px 2px 0;
     }
   }
-
+  &.bc-input{
+    .input-group input.form-control:not(:first-child){
+      padding-left: 12px;
+    }
+  }
 }
 
 
@@ -331,13 +335,24 @@
   /// 
 
 .styler-20-80 {
-  &.basic-component {
+  &.basic-component,.basic-component {
     &.bc-input, &.bc-v-select {
       .input-group-prepend {
         min-width: 20%;
         .btn {
           width: 100%;
         }
+      }
+    }
+  }
+}
+
+.styler-height-fix {
+  &.basic-component,.basic-component {
+    &.bc-input, &.bc-v-select {
+      .input-bottom {
+        min-height: 10px;
+        display: inline-block;
       }
     }
   }

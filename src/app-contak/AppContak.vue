@@ -10,6 +10,10 @@
   Vue.use(DashboardPlugin);
   //import "@/assets/vendor/notus/styles/tailwind.css";
 
+  import VueClipboard from 'vue-clipboard2';
+  VueClipboard.config.autoSetContainer = true // add this line
+  Vue.use(VueClipboard)
+
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
