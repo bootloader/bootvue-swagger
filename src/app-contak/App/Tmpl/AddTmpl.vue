@@ -88,12 +88,12 @@ export default {
         footer : '', 
         cta : []
       },
-      loading : false
+      isTemplateLoding : false
     };
   },
   computed : {
     editable(){
-      return !this.template.templateId
+      return  !this.basic.isLoding && !this.isTemplateLoding && !this.template.templateId
     }
   },
   mounted(){
@@ -105,6 +105,7 @@ export default {
       console.log("this.iCompany",this.iCompany)
       this.template.companyId = this.iCompany.companyId;
       if(this.$route.params.templateId){
+        this.isTemplateLoding = true;
         let resp = await this.$service.get('/panel/api/v1/hsm/tmpl',{
           companyId : this.iCompany.companyId
          });
@@ -114,6 +115,7 @@ export default {
             break;
           }
          }
+         this.isTemplateLoding = false;
       }
     },
     async saveTemplate(){

@@ -4,6 +4,20 @@
       <b-col>
 
         <b-card header="Reset Key" class="styler-20-80">
+        <b-row align-v="center" slot="header" v-if="iCompany">
+            <b-col cols="4">
+              <base-select v-model="iCompany.companyId"  size="sm"
+                :options="companies.map((c)=> {
+                  return {  id : c.companyId,  label : c.company.displayName}
+                })" />
+            </b-col>
+          <b-col cols="8" class="text-right" >
+            <b-button to="/app/"
+              class="btn btn-sm btn-outline-oa-blue">
+                Cancel
+            </b-button>
+          </b-col>
+        </b-row>
           <base-input variant="outline-oa-blue" label="From" 
                 v-model="company.displayName" layout="flushed" prelabel readonly />
           <base-input variant="outline-oa-blue" label="OrgId" 

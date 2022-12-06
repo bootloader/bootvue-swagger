@@ -2,7 +2,8 @@ export  default {
     data() {
         return {
           basic  : {
-            isSelectDefaultCompanyEnabled :  false
+            isSelectDefaultCompanyEnabled :  false,
+            isLoading : false
           }
         };
       },
@@ -23,14 +24,19 @@ export  default {
     },
     watch : {
         '$route.params.orgId' :  function(){
-            if(this.isSelectDefaultCompanyEnabled){
+            if(this.basic.isSelectDefaultCompanyEnabled){
                 this.selectDefaultCompany();
             }
         }
     },
     methods : {
         async loadBasic(){
-          return await this.$service.getX("/panel/api/v1/companys");
+          this.basic.isLoding = true; 
+            try {
+              return await this.$service.getX("/panel/api/v1/companys");
+            } finally {
+                this.basic.isLoding = false;  
+            }
         },
         async selectDefaultCompany(){
             await this.loadBasic();
@@ -41,7 +47,7 @@ export  default {
                  }
                })
             }
-            this.isSelectDefaultCompanyEnabled = true;
+            this.basic.isSelectDefaultCompanyEnabled = true;
         }
     } 
 }
