@@ -1,6 +1,7 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
+  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
+    disabled ? 'bc-disabled' : '']">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
@@ -27,7 +28,7 @@
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},
-       inputGroupClasses
+       inputGroupClasses, 'input-group-text-area'
        ]">
         <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
         <span class="input-group-text">
@@ -63,7 +64,7 @@
             v-bind="$attrs" 
             :disabled="disabled"
             :valid="valid" 
-            :placeholder="$attrs.placeholder"
+             :placeholder="question ? '' : $attrs.placeholder"
             :required="required"
             class="form-control"
             :class="[
@@ -83,13 +84,17 @@
             <b-button v-clipboard:copy="value" 
                 variant="outline-success fa fa-clipboard"></b-button>
         </div>
-        <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
+        <div v-if="textLimit>0" class="input-group-append input-group-append-text-limit">
+          <span class="input-group-text">
+              <span class="">
+                {{value ? value.length : 0}}/{{textLimit}}
+              </span>
+          </span>
+        </div>
+        <div v-if="appendIcon || $slots.append" class="input-group-append">
           <span class="input-group-text">
                <slot name="append">
-                  <span v-if="textLimit>0" class="">
-                    {{value ? value.length : 0}}/{{textLimit}}
-                  </span>
-                  <i v-else :class="appendIcon"></i>
+                  <i :class="appendIcon"></i>
               </slot>
           </span>
         </div>

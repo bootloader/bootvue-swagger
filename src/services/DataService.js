@@ -128,6 +128,8 @@ const DataService = {
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("submitX",pathKey,results, responseData)
       await store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    } else {
+      await store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results });
     }
     return results;
   },
@@ -167,6 +169,8 @@ const DataService = {
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",pathKey,results, response.data)
       store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    } else {
+      store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results });
     }
     return results;
   },

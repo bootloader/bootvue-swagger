@@ -14,6 +14,14 @@
                   }">
         </sidebar-item>
 
+        <sidebar-item nav-link-class="text-oa-grey text-bold" v-if="companies && companies.length>0"
+                  :link="{
+                    name: 'Templates',
+                    path: '/app/org/0/tmpl',
+                    icon: 'fa fa-code'
+                  }">
+        </sidebar-item>
+
         <sidebar-item nav-link-class="text-oa-grey text-bold" hidden
                   :link="{
                     name: 'APIs',
@@ -135,8 +143,10 @@
   import ContentFooter from './Footer.vue';
   //import DashboardContent from '../Layout/Content.vue';
   import { FadeTransition } from 'vue2-transitions';
+  import basic from './mixin/basic.js'
 
   export default {
+    mixins : [basic],
     components: {
       DashboardNavbar,
       ContentFooter,
@@ -155,7 +165,8 @@
       }
     },
     mounted() {
-      this.initScrollbar()
+      this.initScrollbar();
+      this.loadBasic();
     }
   };
 </script>

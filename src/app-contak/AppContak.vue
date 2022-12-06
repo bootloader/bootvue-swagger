@@ -29,6 +29,8 @@
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
 
+  Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
+
   console.log("ConTak App is loaded")
   export default {
     mounted : function (argument) {

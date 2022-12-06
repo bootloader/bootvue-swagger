@@ -1,6 +1,7 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-    :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size]">
+    :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size,
+    $attrs.disabled ? 'bc-disabled' : '' ]">
     <b-form-group class="form-group-input" :label-for="'fmg-' + inputId"
       :class="[
         {'is-question': question }
@@ -252,7 +253,7 @@
       formatLive : {
         type : Boolean,
         default : false
-      },
+      }
     },
     data() {
       return {

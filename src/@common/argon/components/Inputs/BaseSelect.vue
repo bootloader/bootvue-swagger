@@ -1,5 +1,7 @@
 <template>
-  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}">
+  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
+  :class="['basic-component bc-select','bc-span', 'bc-layout-' + layout, 'bc-size-' + size, 
+  $attrs.disabled ? 'bc-disabled' : '']">
     <b-form-group class="form-group-select" label-for="'fmg-' + inputId"
       :class="[
         {'is-question': question }, 'text-' + size
@@ -38,7 +40,7 @@
             v-on="listeners"
             v-bind="$attrs"
             :valid="valid"
-            :required="required"
+            :required="required" 
             class="form-control"
             :class="[
               {'is-valid': valid && validated && successMessage}, 
@@ -73,16 +75,18 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span>  
     </b-form-group>
   </validation-provider>
 </template>
@@ -94,6 +98,11 @@
     inheritAttrs: false,
     name: "base-select",
     props: {
+      layout : {
+        type : String,
+        default : "default",
+        description: "ex : flushed"
+      },
       required: {
         type: Boolean,
         description: "Whether input is required (adds an asterix *)"

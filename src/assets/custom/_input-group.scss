@@ -130,11 +130,26 @@
       }
 
     }
-    .input-group-alternative input,
-    .input-group-alternative textarea{
-      border-radius: 0px;
+
+    .input-group-alternative {
+
+      &.input-group-text-area {
+        display: flex;
+        flex-wrap: nowrap;
+        .input-group-append-text-limit {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background-color: #0000;
+          z-index: 100000000000000000;
+        }
+      }
+
+      input, textarea{
+       border-radius: 0px;
+     }
     }
-  
+
     .form-control.is-valid {
       box-shadow: 0 2px 0 0 lightgreen;
     }
@@ -180,6 +195,18 @@
       color: rgb(87, 87, 87) !important; 
       .vs__selected{
         color: rgb(87, 87, 87) !important;
+      }
+    }
+
+    &.bc-disabled {
+      .form-control-label {
+        background-color: rgba(0, 0, 0, 0);
+      }
+      .input-group-append {
+        background-color: rgba(0, 0, 0, 0);
+        .input-group-text {
+          background-color: rgba(0, 0, 0, 0);
+        }
       }
     }
 
@@ -349,7 +376,7 @@
 
 .styler-height-fix {
   &.basic-component,.basic-component {
-    &.bc-input, &.bc-v-select {
+    &.bc-input, &.bc-v-select, &.bc-select {
       .input-bottom {
         min-height: 10px;
         display: inline-block;

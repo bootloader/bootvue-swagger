@@ -60,6 +60,21 @@ export default AppRouter.route({
             name: 'APIKey',
             component: () => import('./App/Org/Api.vue'),
           },
+          {
+            path: "/app/org/:orgId/tmpl",
+            name: 'Templates',
+            component: () => import('./App/Tmpl/ListTmpl.vue'),
+          },
+          {
+            path: "/app/org/:orgId/tmpl/add",
+            name: 'Add Template',
+            component: () => import('./App/Tmpl/AddTmpl.vue'),
+          },
+          {
+            path: "/app/org/:orgId/tmpl/:templateId",
+            name: 'View Template',
+            component: () => import('./App/Tmpl/AddTmpl.vue'),
+          },
         ]
       },
       {
