@@ -343,7 +343,8 @@
             },
             getHourDataTable(){
                 let data = [];
-                Object.entries(this.hourWiseCountMap).map(v=>{
+                Object.entries(this.hourWiseCountMap).map((v,i)=>{
+                    if(i === 0) return;
                     if(v[1].mode){
                         let row =  {
                             name: v[1].label,
@@ -531,7 +532,7 @@
                 )
                
             },
-            getHourWiseData(resp){
+            getHourWiseData(resp,hr){
                 let _THAT = this;
                 let data = {};
                 let length = Object.entries(resp).length;
@@ -551,7 +552,15 @@
                         return null;
                     } else return b;
                 });
-                return data
+                data = Object.entries(data).map(v=>{
+                    return v;
+                })
+                data = data.slice(-hr);
+                let newData = {};
+                data.map(v=>{
+                    newData[v[0]]=v[1]
+                })
+                return newData
             },
             async loadHourwiseSummary(){
                 let _THAT = this;
@@ -569,10 +578,10 @@
                         if(v[0].split('_').length == 3){
                             let channel = key[1]+"("+key[2]+")";
                             _THAT.hourWiseCountMap[channel] = {..._THAT.hourWiseCountMap[key[1]]};
-                            _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1]);
+                            _THAT.hourWiseCountMap[channel].mode = _THAT.getHourWiseData(v[1], this.hour);
                             _THAT.hourWiseCountMap[channel].label = _THAT.hourWiseCountMap[channel].label+"("+key[2]+")"
                         } else {
-                            _THAT.hourWiseCountMap[key[1]].mode = _THAT.getHourWiseData(v[1]);
+                            _THAT.hourWiseCountMap[key[1]].mode = _THAT.getHourWiseData(v[1], this.hour);
                         }
                     }
                 )
@@ -630,7 +639,7 @@
                 _THAT.outboundMsgHourly = {};
                 Object.entries(hourSummary.results[0].hourWiseCountMap).map(
                     (v) => {
-                        let data = _THAT.getHourWiseData(v[1]);
+                        let data = _THAT.getHourWiseData(v[1], this.hrMsg);
                         _THAT.outboundMsgHourly[v[0]] = data;
                     }
                 )
