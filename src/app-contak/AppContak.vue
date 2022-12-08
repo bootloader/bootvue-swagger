@@ -30,6 +30,7 @@
   Vue.component('ValidationObserver', ValidationObserver);
 
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
+  Vue.component('BaseVSelect', () => import('@/@common/custom/components/base/BaseVSelect.vue'));
 
   console.log("ConTak App is loaded")
   export default {

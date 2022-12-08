@@ -4,10 +4,10 @@
         <template v-slot:header>
           <b-row align-v="center" v-if="iCompany">
             <b-col cols="4">
-              <base-select v-model="iCompany.companyId"  size="sm"
+              <base-v-select v-model="iCompany.companyId"  size="sm" disabled
                 :options="companies.map((c)=> {
                   return {  id : c.companyId,  label : c.company.displayName}
-                })" />
+                })" alternative question  />
             </b-col>
             <b-col cols="8" class="text-right">
               <b-button :to="{ name: 'Add Template',

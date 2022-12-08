@@ -15,12 +15,16 @@
         @input="onChange">
 
         <template #selected-option="option">
-            <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+            <span :class="option.selectedClass">
+                <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
+                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+            </span>
         </template>
 
         <template #option="option">
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+             <span :class="option.optionClass">
+                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+             </span>  
         </template>
 
         <template #open-indicator="{ attributes }">
@@ -180,7 +184,9 @@
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
                             item : option,
-                            prefixClass : option.prefixClass || option.icon
+                            prefixClass : option.prefixClass || option.icon,
+                            optionClass : option.optionClass || option.class,
+                            selectedClass : option.selectedClass || option.class,
                         };
                     }
                 });

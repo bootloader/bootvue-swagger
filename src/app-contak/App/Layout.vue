@@ -10,7 +10,7 @@
                   :link="{
                     name: 'Dashboard',
                     path: '/app/home',
-                    icon: 'ni ni-planet'
+                    icon: 'fa fa-chart-bar'
                   }">
         </sidebar-item>
 
@@ -18,7 +18,7 @@
                   :link="{
                     name: 'Templates',
                     path: '/app/org/0/tmpl',
-                    icon: 'fa fa-code'
+                    icon: 'fa fa-comment-alt'
                   }">
         </sidebar-item>
 
@@ -113,7 +113,7 @@
           <div style="min-height: 4rem;"></div>
         </b-container>
       </div>
-      <content-footer v-if="!$route.meta.hideFooter" class="content-footer bg-white"></content-footer>
+      <content-footer v-if="!$route.meta.hideFooter" class="content-footer bg-text-grey"></content-footer>
     </div>
   </div>
 </template>
@@ -180,8 +180,5 @@
   //background: transparent!important;
   padding: .75rem 0;
   border-top: 1px rgba(106, 106, 106, 0.153) solid;
-  .nav .nav-item .nav-link, .footer .footer-link{
-    color: #fff!important;
-  }
 }
 </style>

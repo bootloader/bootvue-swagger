@@ -102,7 +102,7 @@
       font-weight: 400;
     }
   
-    .input-group {
+    .input-group, .input-group-alternative  {
       border-radius: 0px;
       border-bottom: 1px solid #b8b2b2;
       &.focused {
@@ -133,21 +133,53 @@
 
     .input-group-alternative {
 
-      &.input-group-text-area {
-        display: flex;
-        flex-wrap: nowrap;
-        .input-group-append-text-limit {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          background-color: #0000;
-          z-index: 100000000000000000;
+        &.input-group-text-area {
+          display: flex;
+          flex-wrap: nowrap;
+          .input-group-append-text-limit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #0000;
+            z-index: 100000000000000000;
+          }
         }
-      }
-
-      input, textarea{
-       border-radius: 0px;
-     }
+        input, textarea{
+          border-radius: 0px;
+        }
+        &.input-group-select {
+          background-color: $input-bg;
+          select.form-control{
+            border-radius: 0px;
+            &:last-child{
+              width: calc(100% - 10px);
+            }
+          }
+        }
+        .v-select {
+            .vs__dropdown-toggle {
+                border: 0px;
+                padding: 7px 5px;
+                min-height: 43px;
+                .vs__selected {
+                  //color: #8898aa!important;
+                  color: $gray-600!important;
+                  font-size : $input-btn-font-size;
+                }
+            }
+            &.v-select-sm {
+              .vs__dropdown-toggle {
+                  padding: 5px 5px;
+                  min-height: 39px;
+              }
+            }
+            &.v-select-xs {
+              .vs__dropdown-toggle {
+                  padding: 5px 5px;
+                  min-height: 37px;
+              }
+            }
+        }
     }
 
     .form-control.is-valid {
@@ -199,6 +231,21 @@
     }
 
     &.bc-disabled {
+      .v-select.vs--disabled {
+        .vs__dropdown-toggle {
+          background-color: #eaecef;
+        }
+        .vs__selected {
+          width: 100%;
+          background-color: #0000;
+        }
+        input {
+          display: none;
+        }
+        .vs__actions {
+          display: none;
+        }
+      }
       .form-control-label {
         background-color: rgba(0, 0, 0, 0);
       }
@@ -206,7 +253,14 @@
         background-color: rgba(0, 0, 0, 0);
         .input-group-text {
           background-color: rgba(0, 0, 0, 0);
+          display: none;
         }
+      }
+      select,textarea {
+        -moz-appearance:none; /* Firefox */
+        -webkit-appearance:none; /* Safari and Chrome */
+        appearance:none;
+        resize: none;
       }
     }
 
@@ -376,7 +430,7 @@
 
 .styler-height-fix {
   &.basic-component,.basic-component {
-    &.bc-input, &.bc-v-select, &.bc-select {
+    &.bc-input, &.bc-v-select, &.bc-select, &.bc-text-area {
       .input-bottom {
         min-height: 10px;
         display: inline-block;

@@ -100,22 +100,24 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="help">
-          <div class="help-feedback" v-if="showHelpMessage">
-            {{helpMessage || $attrs.placeholder}}
-          </div>
-      </slot>
-      <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="help">
+              <div class="help-feedback" v-if="showHelpMessage">
+                {{helpMessage || $attrs.placeholder}}
+              </div>
+          </slot>
+          <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span> 
     </b-form-group>
   </validation-provider>
 </template>

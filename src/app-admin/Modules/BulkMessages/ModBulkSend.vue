@@ -111,7 +111,7 @@
         <b-card class="col-md-4 session-list contact-list" >
             <b-tabs card>
                 <b-tab title="Copy/Paste" active>
-                    <ValidationProvider v-slot="v" :rules="input.contactCSV == '' ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
+                    <ValidationProvider v-slot="v" :rules="(input.contactCSV && input.contactCSV.length)  ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
                         name="Contact Number" mode="lazy">
                         <label>Contacts</label>
                         <textarea class="form-control" rows="10" v-model="input.contacts" >
@@ -230,7 +230,7 @@
                   vars : {}
                 },
                 contacts : "",
-                contactCSV:"",
+                contactCSV: [],
                 csvUploadError:[]
             },
             table : {
@@ -370,10 +370,10 @@
             console.log("success",success, this.input.contactCSV);
             if(!success) return;
             let referenceKey;
-            if(this.input.contactCSV){
+            if(this.input.contactCSV && this.input.contactCSV.length){
                 referenceKey = await this.uploadCsv();
             }
-            if(this.input.contactCSV && !referenceKey) return;
+            if(this.input.contactCSV && this.input.contactCSV.length && !referenceKey) return;
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.input.lane.selected.title,

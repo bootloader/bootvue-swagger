@@ -1,6 +1,7 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
+  :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
+  disabled ? 'bc-disabled' : '']">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
@@ -48,7 +49,7 @@
             :options="options" :optionKey="optionKey" :optionLabel="optionLabel" :optionContext="optionContext"
             :emptyDisplay="emptyDisplay"
             :valid="valid" 
-            :required="required"
+            :required="required" :disabled="disabled"
             :autoPosition="autoPosition"
             :filter="filter" :search="search"
              :searchable="searchable" :clearable="clearable"
@@ -81,22 +82,24 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="help">
-          <div class="help-feedback" v-if="showHelpMessage">
-            {{helpMessage || $attrs.placeholder}}
-          </div>
-      </slot>
-      <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="help">
+              <div class="help-feedback" v-if="showHelpMessage">
+                {{helpMessage || $attrs.placeholder}}
+              </div>
+          </slot>
+          <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span>  
     </b-form-group>
   </validation-provider>
 </template>
@@ -260,6 +263,10 @@
         default: false
       },
       searchable : {
+        type: Boolean,
+        default: false
+      },
+      disabled : {
         type: Boolean,
         default: false
       }

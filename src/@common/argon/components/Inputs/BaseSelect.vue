@@ -24,7 +24,7 @@
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': label || $slots.label},
-       inputGroupClasses
+       inputGroupClasses,'input-group-select'
        ]">
         <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
         <span class="input-group-text">

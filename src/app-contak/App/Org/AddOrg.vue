@@ -23,8 +23,9 @@
             </b-col>
 
             <b-col cols="6">
-              <base-input name="Country of Operation" v-model="company.countryOfOperation" 
-                alternative question feedback  required/>
+              <base-select name="Country of Operation" v-model="company.countryOfOperation" 
+                options="data:countries"
+                alternative question required/>
               <base-input name="Address" v-model="company.address" 
                 alternative question feedback  required/>
             </b-col> 

@@ -1,0 +1,319 @@
+{
+    "options":[
+       {
+          "id":"ACCOUNT_UPDATE",
+          "label":"Account Update",
+          "desc":"Let customers know about updates or changes to their account.",
+          "icon":"fa fa-cog",
+          "header" : {
+            "variant" : "MAJOR"
+          }
+       },
+       {
+         "id":"ACCOUNT_UPDATE-MINOR",
+         "label":"Account Notification",
+         "desc":"Profile/Settings/Preferences changes",
+         "icon":"fa fa-cog",
+         "optionClass" : "text-md pl-2 text-sm",
+         "header" : {
+            "variant" : "MINOR"
+          }
+      },
+      {
+         "id":"ACCOUNT_UPDATE-INFO",
+         "label":"Account Activation",
+         "desc":"e-Voting etc",
+         "icon":"fa fa-cog",
+         "optionClass" : "text-md pl-2 text-sm",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+      {
+         "id":"ACCOUNT_UPDATE-ALERT",
+         "label":"Account Alert",
+         "desc":"Membership expiry, Password change etc",
+         "icon":"fa fa-cog",
+         "optionClass" : "text-md pl-2 text-sm",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+       {
+          "id":"APPOINTMENT_UPDATE",
+          "label":"Appointment Update",
+          "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
+          "icon":"fa fa-calendar",
+          "header" : {
+            "variant" : "MAJOR"
+         }
+       },
+       {
+         "id":"APPOINTMENT_UPDATE-INFO",
+         "label":"Appointment Confirmed",
+         "desc":"Appointment is confirmed",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-calendar",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+       {
+         "id":"APPOINTMENT_UPDATE-ALERT",
+         "label":"Appointment Cancellation",
+         "desc":"Appointment is cancelled",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-calendar",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+
+      {
+         "id":"RESERVATION_UPDATE",
+         "label":"Reservation Update",
+         "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
+         "icon":"fas fa-hotel",
+         "header" : {
+            "variant" : "MAJOR"
+         }
+      },
+      {
+         "id":"RESERVATION_UPDATE-INFO",
+         "label":"Reservation Confirmation",
+         "desc":"Room upgrade is confirmed",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fas fa-hotel",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+      {
+         "id":"RESERVATION_UPDATE-ALERT",
+         "label":"Reservation Alert",
+         "desc":"Hotel booking is cancelled",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fas fa-hotel",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+
+
+      {
+         "id":"TICKET_UPDATE",
+         "label":"Ticket Update",
+         "desc":"Send ticketing information or updates to customers.",
+         "icon":"fa fa-ticket",
+         "header" : {
+            "variant" : "MAJOR"
+         }
+      },
+      {
+         "id":"TICKET_UPDATE-ALERT",
+         "label":"Ticket Alert",
+         "desc":"Show is cancelled",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-ticket",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+
+       {
+          "id":"ISSUE_RESOLUTION",
+          "label":"Customer Issue",
+          "desc":"Respond to questions, concerns or feedback from customers about your business.",
+          "icon":"far fa-meh",
+          "header" : {
+            "variant" : "MAJOR"
+         }
+       },
+       {
+         "id":"ISSUE_RESOLUTION-MINOR",
+         "label":"Issue Notifications",
+         "desc":"Respond to questions, concerns or feedback from customers about your business.",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"far fa-meh",
+         "header" : {
+            "variant" : "MINOR"
+         }
+      },
+      {
+         "id":"ISSUE_RESOLUTION-INFO",
+         "label":"Issue Resolved",
+         "desc":"Issue is resolved.",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"far fa-meh",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+      {
+         "id":"ISSUE_RESOLUTION-ALERT",
+         "label":"Issue Alert",
+         "desc":"Issue requires a request for additional information",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"far fa-meh",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+      {
+         "id":"TRANSPORTATION_UPDATE",
+         "label":"Transportation Update",
+         "desc":"Send transportation information or updates to customers.",
+         "icon":"fa fa-plane",
+         "header" : {
+            "variant" : "MAJOR"
+         }
+      },
+      {
+         "id":"TRANSPORTATION_UPDATE-ALERT",
+         "label":"Transportation Alert",
+         "desc":"Ride is cancelled, Flight Delayed",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-plane",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+      {
+         "id":"TRANSPORTATION_UPDATE-INFO",
+         "label":"Transportation Alert",
+         "desc":"Ferry/Cab has arrived",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-plane",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+
+
+      {
+         "id":"SHIPPING_UPDATE",
+         "label":"Shipping Update",
+         "desc":"Send shipping updates to customers about their orders.",
+         "icon":"fa fa-truck",
+         "header" : {
+            "variant" : "MAJOR"
+         }
+      },
+      {
+         "id":"SHIPPING_UPDATE-INFO",
+         "label":"Shipping Delivered" ,
+         "desc":"Product is delivered",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-truck",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+      {
+         "id":"SHIPPING_UPDATE-ALERT",
+         "label":"Shipping Alert" ,
+         "desc":"Shipment is delayed",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-truck",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+      {
+         "id":"PAYMENT_UPDATE",
+         "label":"Payment Update",
+         "desc":"Send a message to customers about their payment.",
+         "icon":"fa fa-credit-card",
+         "header" : {
+            "variant" : "MAJOR"
+         }
+      },
+      {
+         "id":"PAYMENT_UPDATE-MINOR",
+         "label":"Payment Notification",
+         "desc":"Status on a payment transaction has changed",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-credit-card",
+         "header" : {
+            "variant" : "MINOR"
+         }
+      },
+      {
+         "id":"PAYMENT_UPDATE-INFO",
+         "label":"Payment Success",
+         "desc":"NEFT Credit/Debit success, Remittance Success",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-credit-card",
+         "header" : {
+            "variant" : "INFO"
+         }
+      },
+      {
+         "id":"PAYMENT_UPDATE-ALERT",
+         "label":"Payment Alerts",
+         "desc":"Transaction Failure/Alert,NEFT Credit failure, Out-of-stock notification",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-credit-card",
+         "header" : {
+            "variant" : "ALERT"
+         }
+      },
+
+
+      {
+         "id":"PERSONAL_FINANCE_UPDATE",
+         "label":"Personal Finance Update",
+         "desc":"Send a message to customers about their personal finances.",
+         "icon":"fa fa-dollar-sign "
+      },
+      {
+         "id":"PERSONAL_FINANCE_UPDATE-CREDIT",
+         "label":"Personal Finance Credit/Deposit",
+         "desc":"Credit Alert,Account Credit.",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-dollar-sign ",
+         "header" : {
+            "variant" : "CREDIT",
+            "label" : "Credited Amount"
+         }
+      },
+      {
+         "id":"PERSONAL_FINANCE_UPDATE-DEBIT",
+         "label":"Personal Finance Debit/Spends",
+         "desc":"Debit / Spend Alert, Transaction - Debit",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-dollar-sign",
+         "header" : {
+            "variant" : "DEBIT",
+            "label" : "Debited Amount"
+         }
+      },
+      {
+         "id":"PERSONAL_FINANCE_UPDATE-INFO",
+         "label":"Personal Finance Notification",
+         "desc":"Payment receipt notification",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-dollar-sign",
+         "header" : {
+            "variant" : "INFO"
+          }
+      },
+      {
+         "id":"PERSONAL_FINANCE_UPDATE-ALERT",
+         "label":"Personal Finance Alert",
+         "desc":"Balance not enough,Scheduled payment reminder",
+         "optionClass" : "text-md pl-2 text-sm",
+         "icon":"fa fa-dollar-sign ",
+         "header" : {
+            "variant" : "ALERT"
+          }
+      }
+
+
+    ]
+ }
