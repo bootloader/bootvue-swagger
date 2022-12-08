@@ -126,11 +126,32 @@
                                 <b-card-sub-title class="mb-2 text-sm">
                                     Add a title or choose which type of media you'll use for this header.</b-card-sub-title>
                                 <b-card-text>
-                                <my-v-select  class="mb-1"
-                                    emptyDisplay="None" :selectDefault="true" :clearable="false"
-                                        v-model="templateSimple.header.format" :disabled="nonEditable"
-                                        options="data:hsm/message_format_types">
-                                </my-v-select>  
+                                <b-row>
+                                    <b-col cols="6">
+                                        <my-v-select  class="mb-1"
+                                            emptyDisplay="None" :selectDefault="true" :clearable="false"
+                                            v-model="templateSimple.header.format" :disabled="nonEditable"
+                                            options="data:hsm/message_format_types">
+                                        </my-v-select> 
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <my-v-select class="w-100" ref="attachment" v-if="hasMediaHeader"
+                                        options="getx:/api/tmpl/quickmedia"
+                                        optionKey="url" optionLabel="title" clearable
+                                        v-model="templateSimple.examples.header_handler" 
+                                        :filter="{
+                                            type : templateSimple.header.format || ''
+                                        }">
+                                            <template #option="{ item }">
+                                            <my-icon type="fileType" :value="item.type"/>
+                                            {{item.title}} {{item.type == templateSimple.header.format}}
+                                            </template>  
+                                            <template #selected-option="{ item }">
+                                            <my-icon type="fileType" :value="item.type"/>&nbsp;{{item.title}}
+                                            </template>
+                                        </my-v-select>
+                                    </b-col>
+                                </b-row>
                                  <base-input 
                                     prelabel :name="'Sample URL of media'"
                                     v-if="hasMediaHeader"  :disabled="nonEditable"

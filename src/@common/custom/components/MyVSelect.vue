@@ -130,6 +130,9 @@
             },
             options : function(newVal, oldVal){
                 this.loadOptions();
+            },
+            filter : function(newVal, oldVal){
+                this.loadOptions();
             }
         },
         created : function(){
