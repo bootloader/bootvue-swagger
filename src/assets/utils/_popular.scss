@@ -68,6 +68,11 @@ $popular-list:(
     oa-yellow : #fab14b,
     oa-grey : #f7fafc,
 
+    major : #0a0a0a,
+    minor : #cfcfcf,
+    debit : #dc4a38,
+    credit : #10b981,
+    alert : #f0ba6f,
 );
 
 @each $key,$val in $popular-list{

@@ -130,6 +130,13 @@ module.exports = {
         title: 'Content Aapp',
         chunks: ['chunk-vendors', 'chunk-common', 'content']
       },
+      'www' : {
+        entry: './src/main.js',
+        template: 'public/app-www.html',
+        filename: 'app-www.html',
+        title: 'WWW Aapp',
+        chunks: ['chunk-vendors', 'chunk-common', 'www']
+      },
     },
 
 

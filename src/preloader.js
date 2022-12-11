@@ -4,6 +4,15 @@ if(window.CONST && window.CONST.CDN_URL){
 }
 
 window.CONST = (window.CONST || {});
+
+switch(location.origin){
+	case "https://notiphyapp.github.io":
+	case "https://www.otpalerts.com":
+		window.CONST.APP = "www";
+		break;
+	default:
+		console.log("NO_URL_MATH");	
+}
 window.CONST.APP = window.CONST.APP || "content";
 var pathname = location.pathname;
 if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plugin\/customer\/.*$/.test(pathname)){
@@ -22,7 +31,7 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 	window.CONST.APP = "page";
 }else if(pathname.indexOf("/contak") == 0){
 	window.CONST.APP = "contak";
-}
+} 
 window.callMobileEventListener = function(options){
 	console.log("callMobileEventListener",options)
 }

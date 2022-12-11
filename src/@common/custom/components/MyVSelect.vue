@@ -22,7 +22,7 @@
         </template>
 
         <template #option="option">
-             <span :class="option.optionClass">
+             <span :class="[option.optionClass]">
                 <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
              </span>  
         </template>

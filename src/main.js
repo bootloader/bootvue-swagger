@@ -112,6 +112,11 @@ import AppWrapper from './AppWrapper';
 		},
 		component : () => import('./app-content/AppContent.vue')
 	},
+	"www" : { //Www App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-www/AppW.vue')
+	},
 },window.CONST.APP);
 
 

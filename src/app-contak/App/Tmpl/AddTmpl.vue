@@ -28,16 +28,31 @@
             <b-col cols="4">
               <base-v-select name="Message Type" v-model="template.type" 
                 :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
-                alternative question  required :disabled="!editable"/>
+                alternative question  required :disabled="!editable">
+              
+              </base-v-select>
               <base-v-select name="Header Variant" v-model="template.header.variant" 
                 options="data:color_variant"
-                alternative question  required :disabled="!editable"/>
+                alternative question  required :disabled="!editable">
+                  <template #option="option">
+                      <i v-if="option.value" :class="`text-${option.value.toLowerCase()}`"
+                          class="fa fa-circle" />&nbsp;<span>{{option.label}}</span>
+                  </template> 
+                  <template #selected-option="option">
+                      <i v-if="option.value" :class="`text-${option.value.toLowerCase()}`"
+                          class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
+                  </template> 
+              </base-v-select>
             </b-col> 
 
             <b-col cols="4">
               <base-v-select name="Message Category" v-model="template.category" :disabled="!editable"
                  options="data:hsm/message_categories" ref="category" @change="loadDefault"
                  alternative question required />
+                  <template #selected-option="option">
+                      <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
+                          class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
+                  </template> 
             </b-col>                          
  
               <b-col cols="8">
