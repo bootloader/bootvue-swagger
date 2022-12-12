@@ -3,11 +3,21 @@ import AppRouter from '../services/router';
 console.log("front ROUTER")
 export default AppRouter.route({
     app: 'www',
-    base : "/w",
-    routes:  [
+    base : "/",
+    routes : (function(){
+      return [
         {
-          path: "/",
-          component: () => import('./twtbapp/Index.vue'),
+          path: '/',
+          redirect: '/'+window.CONST.BASE,
+          name : "base",
+          meta : {
+          },
+        },
+        {
+          path: "/notpapi",
+          name : "notpapi",
+          component: () => import('./contakapi/Index.vue'),
         }
-      ]
+      ];
+    })()
 })

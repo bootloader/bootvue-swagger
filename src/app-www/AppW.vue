@@ -19,6 +19,9 @@
     throttleWait : 200
   });
 
+ // Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
+  //Vue.component('BaseVSelect', () => import('@/@common/custom/components/base/BaseInput.vue'));
+
   console.log("WWW App is loaded")
   export default {
 
@@ -26,8 +29,7 @@
 </script>
 <style lang="scss">
     //@import "@/assets/base.scss";
-    //  @import '@/assets/utils/_popular.scss';
-    // @import "./../assets/fonts/openweb/css/openwebicons.css";
+   // @import "./../assets/fonts/openweb/css/openwebicons.css";
     // .v-input-error {
     //   color : red;
     // }
