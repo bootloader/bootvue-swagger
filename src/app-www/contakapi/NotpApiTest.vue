@@ -1,28 +1,28 @@
 <template>
 <div>
   <validation-observer v-slot="{}" ref="login">
-  <b-row class="">
-     <b-col cols="4">
-     </b-col> 
-        <b-col cols="4" class="pt-4" v-if="!isLoggedIn">
-            <base-input name="apiKey" id="apiKey"   helpMessage="Get your Api Key from OA Panel"
+    <b-row class="">
+      <b-col cols="4">
+      </b-col> 
+      <b-col cols="4" class="pt-4" v-if="!isLoggedIn">
+            <base-input name="Api Key" id="apiKey"   helpMessage="Get your Api Key from OA Panel"
              alternative question feedback v-model="message.apiKey" required/>
             <b-button @click="login" variant="primary" class="btn-block mb-4">Login</b-button>
       </b-col>   
       <b-col cols="4" class="pt-4" v-else>
-            <base-input name="apiKey" id="apiKey" readonly
+            <base-input name="Api Key" id="apiKey" readonly
              alternative question feedback required v-model="apiKeySecret"/>
             <base-input name="Phone" id="phone"  helpMessage="Field:phone -Destination Phone number with ISD code"
             alternative question feedback required v-model="message.phone"/>
-            <base-input name="Header Prefix" id="value" helpMessage="Field:header.prefix - OTP prefix, Currency Code etc "
-            alternative question feedback  v-model="message.header.prefix" />
-            <base-input name="Header Value" id="value" helpMessage="Field:header.value - OTP, Amount, Points, Credits etc"
-            alternative question feedback  v-model="message.header.value" />
-            <base-input name="Template Code" id="template_code" helpMessage="Field:template.code - Template created for this message"
+            <base-input name="Header Prefix" id="value" helpMessage="Field:template.model.prefix - OTP prefix, Currency Code etc "
+            alternative question feedback  v-model="message.template.model.prefix" />
+            <base-input name="Header Value" id="value" helpMessage="Field:template.model.value - OTP, Amount, Points, Credits etc"
+            alternative question feedback  v-model="message.template.model.value" />
+            <base-input name="TemplateCode" id="template_code" helpMessage="Field:template.code - Template created for this message"
             alternative question feedback required v-model="message.template.code"/>
-            <base-text-area name="Template Data" id="template_data"  rows="5"
-              helpMessage="Field:template.data - Additonal template data in json format to replace custom variables"
-            alternative question feedback   v-model="message.template.data"/>
+            <base-text-area name="modelData" id="TemplateData"  rows="5"  :textLimit="10" rules="required|max:10"
+              helpMessage="Field:template.model.data - Additonal template data in json format to replace custom variables"
+              alternative question feedback required v-model="modelData"/>
             <base-input name="Validity" id="validity"
             helpMessage="Field:validity - validity of message in Seconds"
             alternative question feedback  v-model="message.validity"/>
@@ -58,12 +58,17 @@ export default {
     return {
       message : {
         apiKey : '',  phone : '', 
-        header :{
-          prefix : "",
-          otp : "", value : '',
-        },  
-        template : { code : '',  data : '' } , validity : ""
+        template : { 
+          code : '',  
+          model : {
+            prefix : "", value : '', suffix : '',
+            data : {
+            },
+          }  
+        } , validity : ""
       },
+      modelData : "{}",
+      modalDataValid : true,
       isLoggedIn : false,
       errorMessage : null,
       navbarOpen: false,
@@ -73,6 +78,11 @@ export default {
         //'https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css'
       ]
     };
+  },
+  watch : {
+    'modelData' : function(){
+      this.validateModelData();
+    }
   },
   computed : {
     apiKeySecret(){
@@ -111,14 +121,15 @@ export default {
           this.isLoggedIn = true;
         }
       } catch(e){
-       this.setError(e.response?.data?.error);
+        this.setError(e.response?.data?.error);
       }
       this.isLoggedIn = true;
     },
     setError(resp){
         this.errorMessage = resp?.error?.message || resp?.error ||  resp?.message;
         this.$refs.login.setErrors({
-          apiKey : this.errorMessage
+          'Api Key' : this.errorMessage,
+          modelData : "Invalid JSON format"
         })
     },
     async sendMessage(){
@@ -126,6 +137,18 @@ export default {
         ...this.message,
           otp : this.message?.header?.otp || this.message?.header?.value,
         });
+    },
+    async validateModelData(){
+      try {
+        this.message.template.model.data = JSON.parse(this.modelData);
+        this.modelDataValid = true;
+      } catch(e){
+        console.log("JSON",e)
+        this.modelDataValid = false;
+        this.$refs.login.setErrors({
+          modelData : "Invalid JSON format"
+        });
+      }
     }
   },
   components: {
