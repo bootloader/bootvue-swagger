@@ -503,15 +503,19 @@
                 this.loadBroadcastDaywiseSummary()
 
             },
+            getDateFormate(milliseconds){
+                return moment(milliseconds).format("DD/MM/YYYY");
+            },
             async loadDaywiseSummary(){
                 let _THAT = this;
                 this.loading.dayDataTable = true;
+                console.log("this.daterange.startDate",this.daterange.startDate, );
                 let daySummary = await this.$service.get(
                     '/partnerdashboard/pub/daywise-summary',
                     { ...this.model,
                         timestamp:0,
-                        dateRange1:this.daterange.startDate.valueOf(), 
-                        dateRange2:this.daterange.endDate.valueOf(),
+                        dateRange1:_THAT.getDateFormate(_THAT.daterange.startDate), 
+                        dateRange2:_THAT.getDateFormate(_THAT.daterange.endDate),
                         days:this.daterange.days
                     }
                 )
@@ -651,8 +655,8 @@
                     '/partnerdashboard/pub/datewise-msg-status-summary',
                     { ...this.model,
                         timestamp:0,
-                        dateRange1:this.daterange.startDate.valueOf(), 
-                        dateRange2:this.daterange.endDate.valueOf(),
+                        dateRange1:_THAT.getDateFormate(_THAT.daterange.startDate), 
+                        dateRange2:_THAT.getDateFormate(_THAT.daterange.endDate),
                         days:this.daterange.days
                     }
                 )

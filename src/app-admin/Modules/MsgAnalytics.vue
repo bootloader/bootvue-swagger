@@ -464,6 +464,9 @@ import moment from 'moment';
                 this.loadBroadcastDaywiseSummary()
 
             },
+            getDateFormate(milliseconds){
+                return moment(milliseconds).format("DD/MM/YYYY");
+            },
             async loadDaywiseSummary(){
                 let _THAT = this;
                 this.loading.dayDataTable = true;
@@ -471,8 +474,8 @@ import moment from 'moment';
                     '/admin/daywise-summary',
                     { ...this.model,
                         timestamp:0,
-                        dateRange1:this.daterange.startDate.valueOf(), 
-                        dateRange2:this.daterange.endDate.valueOf(),
+                        dateRange1:_THAT.getDateFormate(_THAT.daterange.startDate), 
+                        dateRange2:_THAT.getDateFormate(_THAT.daterange.endDate),
                         days:this.daterange.days
                     }
                 )
@@ -612,8 +615,8 @@ import moment from 'moment';
                     '/admin/datewise-msg-status-summary',
                     { ...this.model,
                         timestamp:0,
-                        dateRange1:this.daterange.startDate.valueOf(), 
-                        dateRange2:this.daterange.endDate.valueOf(),
+                        dateRange1:_THAT.getDateFormate(_THAT.daterange.startDate), 
+                        dateRange2:_THAT.getDateFormate(_THAT.daterange.endDate),
                         days:this.daterange.days
                     }
                 )
