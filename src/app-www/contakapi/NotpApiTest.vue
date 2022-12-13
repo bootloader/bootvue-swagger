@@ -103,7 +103,7 @@ export default {
     },
     async login(){
       try{
-        let resp = await this.$service.post("/newComp/login",{
+        let resp = await this.$service.post("/entoc/login",{
           apiKey : this.apiKey
         });
           this.setError(resp);
@@ -122,7 +122,7 @@ export default {
         })
     },
     async sendMessage(){
-      await this.$service.post("/newComp/send",{
+      await this.$service.post("/entoc/send",{
         ...this.message,
           otp : this.message?.header?.otp || this.message?.header?.value,
         });
