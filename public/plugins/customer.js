@@ -9,10 +9,10 @@
         });
         return uuid;
     }
-    var maxHeight = 500;
-    var minHeight = 70;
-    var maxWidth = 400;
-    var minWidth = 70;
+    var maxHeight = 600;
+    var minHeight = 100;
+    var maxWidth = 450;
+    var minWidth = 100;
     var UNIQUEID = '3ix5ju9kqbtr2W';
     var OPTIONS = {};
     var EVENTS = {};
@@ -100,7 +100,6 @@
                     height: ${maxHeight}px; width: ${maxWidth}px; 
                     height: calc(100vh - 55px);
                     max-height: ${maxHeight}px;
-                    box-shadow:0 0 15px -7px #000;
                 }
                 .myChatDivOpen#myChatDiv #myChatFrame {
                     maring: 0px 0px 0px 0px; 
@@ -156,8 +155,8 @@
            if(EVENTS.load)  EVENTS.load(OPTIONS);
         },
         chatOnClose : function (argument) {
-            this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivOpen",'myChatDivClose');
             if(EVENTS.close)  EVENTS.close(argument);
+            this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivOpen",'myChatDivClose');
         },
         chatOnOpen : function (argument) {
             this.$myChatDiv.className = this.$myChatDiv.className.replace("myChatDivClose",'myChatDivOpen');

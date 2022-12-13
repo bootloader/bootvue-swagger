@@ -91,16 +91,29 @@ export default {
 
 <style scoped lang="scss">
 .sc-message--text {
-  padding: 5px 20px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 10px;
   font-weight: 300;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 16px;
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
   .sc-message--text-content {
     white-space: pre-wrap;
+    margin: 0;
+    padding: 0;
   }
+  
+  ul,li{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  ul{
+    padding:10px;
+  }
+
   &:hover .sc-message--toolbox {
     left: -20px;
     opacity: 1;

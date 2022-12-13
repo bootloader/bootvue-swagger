@@ -20,6 +20,7 @@
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :disableUserListToggle="false"
       :messageStyling="messageStyling"
+      :headerLogo="config.header.icon.url"
       @onType="handleOnType"
       @edit="editMessage"
       :launcherPosition="config.launcher.position"
@@ -673,15 +674,7 @@
 
 </script>
 <style type="text/css">
-  .sc-launcher {
-    right: 5px!important;
-    bottom: 5px!important;
-  }
-  .sc-launcher .sc-closed-icon, .sc-launcher .sc-open-icon{
-      position: fixed;
-      right: 5px!important;
-      bottom: 5px!important;
-  }
+
   .sc-header {
     min-height: 55px!important;
     padding: 5px!important;
@@ -709,7 +702,7 @@
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.22);
+    /* background-color: rgba(0, 0, 0, 0.22); */
     text-align: center;
     line-height: 100vh;
     color: #0000005e;
