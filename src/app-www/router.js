@@ -16,7 +16,7 @@ export default AppRouter.route({
         {
           path: "/notpapi",
           name : "notpapi",
-          component: () => import('./contakapi/Index.vue'),
+          component: () => import('./contakapi/NotpApiTest.vue'),
         }
       ];
     })()
