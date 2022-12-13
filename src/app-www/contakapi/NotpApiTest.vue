@@ -1,35 +1,45 @@
 <template>
 <div>
-  <validation-observer v-slot="{}" ref="login">
-    <b-row class="">
-      <b-col cols="4">
-      </b-col> 
+          <validation-observer v-slot="{}" ref="login">
+    <b-row class="styler-height-fix">
       <b-col cols="4" class="pt-4" v-if="!isLoggedIn">
             <base-input name="Api Key" id="apiKey"   helpMessage="Get your Api Key from OA Panel"
              alternative question feedback v-model="message.apiKey" required/>
             <b-button @click="login" variant="primary" class="btn-block mb-4">Login</b-button>
       </b-col>   
-      <b-col cols="4" class="pt-4" v-else>
-            <base-input name="Api Key" id="apiKey" readonly
+      <b-col cols="4" class="pt-4" v-if="isLoggedIn">
+            <base-input name="Api Key" id="apiKey" readonly 
              alternative question feedback required v-model="apiKeySecret"/>
-            <base-input name="Phone" id="phone"  helpMessage="Field:phone -Destination Phone number with ISD code"
+          <base-input name="Phone" id="phone"
+            helpMessage="Field:phone -Destination Phone number with ISD code"
             alternative question feedback required v-model="message.phone"/>
-            <base-input name="Header Prefix" id="value" helpMessage="Field:template.model.prefix - OTP prefix, Currency Code etc "
-            alternative question feedback  v-model="message.template.model.prefix" />
-            <base-input name="Header Value" id="value" helpMessage="Field:template.model.value - OTP, Amount, Points, Credits etc"
-            alternative question feedback  v-model="message.template.model.value" />
-            <base-input name="TemplateCode" id="template_code" helpMessage="Field:template.code - Template created for this message"
-            alternative question feedback required v-model="message.template.code"/>
-            <base-text-area name="modelData" id="TemplateData"  rows="5"  :textLimit="10" rules="required|max:10"
-              helpMessage="Field:template.model.data - Additonal template data in json format to replace custom variables"
-              alternative question feedback required v-model="modelData"/>
-            <base-input name="Validity" id="validity"
+      <base-input name="Validity" id="validity"
             helpMessage="Field:validity - validity of message in Seconds"
             alternative question feedback  v-model="message.validity"/>
+          <base-input name="Header Prefix" id="value"
+             helpMessage="Field:template.model.prefix - OTP prefix, Currency Code etc "
+            alternative question feedback  v-model="message.template.model.prefix" />
+            <base-input name="Header Value" id="value"
+            helpMessage="Field:template.model.value - OTP, Amount, Points, Credits etc"
+            alternative question feedback  v-model="message.template.model.value" />
+      </b-col> 
+      <b-col cols="4" class="pt-4" v-if="isLoggedIn">
+            <base-input name="TemplateCode" id="template_code"
+              helpMessage="Field:template.code - Template created for this message"
+            alternative question feedback required v-model="message.template.code" />
+            <base-text-area name="Model Data" id="model_data" 
+               rows="5" @change="validateModelData" @blur="validateModelData"
+              helpMessage="Field:template.model.data - Additonal template data in json format to replace custom variables"
+              alternative question feedback required v-model="modelData"
+              formatFilter="json" :formatValue="message.template.model.data" />
             <b-button @click="sendMessage" variant="primary" class="btn-block mb-4">Send Message</b-button>
+      </b-col> 
+      <b-col cols="4" class="pt-4" v-if="isLoggedIn">
+        <pre>{{apiRequest|json}}</pre>
       </b-col>  
     </b-row>
-  </validation-observer>    
+              </validation-observer>  
+  
 </div>
 </template>
 <script>
@@ -52,6 +62,7 @@
   Vue.component('ValidationObserver', ValidationObserver);
 
   Vue.component('BaseInput', () => import('@/@common/argon/components/Inputs/BaseInput.vue'));
+  import debounce from "debounce";
 
 export default {
   data() {
@@ -68,7 +79,6 @@ export default {
         } , validity : ""
       },
       modelData : "{}",
-      modalDataValid : true,
       isLoggedIn : false,
       errorMessage : null,
       navbarOpen: false,
@@ -80,9 +90,9 @@ export default {
     };
   },
   watch : {
-    'modelData' : function(){
-      this.validateModelData();
-    }
+    // 'modelData' : function(){
+    //   //this.validateModelData();
+    // }
   },
   computed : {
     apiKeySecret(){
@@ -94,7 +104,17 @@ export default {
         }
         return ""
       }).join("-")
+    },
+    apiRequest(){
+      return {
+        ...this.message,
+        apiKey : this.apiKeySecret
+      }
     }
+  },
+  mounted(){
+    this.validateModelData = debounce(validateModelData,1000);
+    this.formatModelData = debounce(formatModelData,2000)
   },
   mounted(){
       for(var i in this.css){
@@ -129,8 +149,9 @@ export default {
         this.errorMessage = resp?.error?.message || resp?.error ||  resp?.message;
         this.$refs.login.setErrors({
           'Api Key' : this.errorMessage,
-          modelData : "Invalid JSON format"
-        })
+          'Model Data' : "Invalid JSON format",
+          'TemplateCode' : "TemplateCode"
+        });
     },
     async sendMessage(){
       await this.$service.post("/entoc/send",{
@@ -138,17 +159,21 @@ export default {
           otp : this.message?.header?.otp || this.message?.header?.value,
         });
     },
-    async validateModelData(){
+    validateModelData(){
       try {
         this.message.template.model.data = JSON.parse(this.modelData);
-        this.modelDataValid = true;
+        //this.formatModelData();
       } catch(e){
-        console.log("JSON",e)
-        this.modelDataValid = false;
-        this.$refs.login.setErrors({
-          modelData : "Invalid JSON format"
-        });
+        setTimeout(()=>{
+            this.$refs.login.setErrors({
+                'Model Data' : e.toString()
+            });
+        })
+ 
       }
+    },
+    formatModelData(){
+      this.modelData = this.$options.filters.json(this.modelData);
     }
   },
   components: {
