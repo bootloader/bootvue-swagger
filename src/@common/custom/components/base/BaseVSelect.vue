@@ -1,7 +1,7 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
   :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
-  disabled ? 'bc-disabled' : '']">
+  disabled ? 'bc-disabled' : '']" ref="vp">
     <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
@@ -287,7 +287,8 @@
           //input: this.updateValue,
           focus: this.onFocus,
           blur: this.onBlur,
-          score : this.onScore
+          score : this.onScore,
+          change : this.onChange
         };
       },
       slotData() {
@@ -323,7 +324,15 @@
         if(value?.target){
           value = (value?.target?.value);
         }
+        this.emitValue(value);
+      },
+      emitValue(value){
         this.$emit("input", value);
+        //this.$emit("change", value);
+      },
+      onChange(evt){
+        setTimeout(()=>this.$refs.vp.validate());
+        this.$emit("change", evt);
       },
       onFocus(evt) {
         this.focused = true;
