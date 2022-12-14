@@ -67,6 +67,11 @@
                   <slot :name="'groupBy'" v-bind="{props, item : props.row}">
                   </slot>
               </template>
+              <template slot="column-filter" slot-scope="{ column, updateFilters }">
+                <input v-if="column.filterOptions && column.filterOptions.search"
+                  :name="`vgt-${column.key}`" type="search" :placeholder="`Filter ${column.label}`" class="vgt-input"
+                  @change="(value) => updateFilters(column, readValue(value))"/>
+              </template>
               <template slot="emptystate">
                   <div class="center-box">
                       <div v-if="!isbusy" class="center-item">
@@ -448,6 +453,12 @@
 
         },
         methods: {
+          readValue(e){
+            if(e?.target){
+             return (e?.target?.value);
+            }
+            return e;
+          },
           convertToGoodTable :  function(){
               this.table.fields.map(function(column){
                   column.field = column.key;

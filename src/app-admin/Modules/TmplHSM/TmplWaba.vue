@@ -442,11 +442,10 @@
                   },
             table: {
                 fields: [
-                    { key: 'code', label: 'Template Code/Name', sortable: true, filterOptions:{enabled:true}},
+                    { key: 'code', label: 'Template Code/Name', sortable: true, filterOptions:{enabled:true,search : true}},
                     { key: 'template.category', label: 'Message Type', sortable: true, 
                     filterOptions:{
                         enabled:true,
-                        
                     }},
                     //{ key: 'template.namespace', label: 'namespace' },
                     { key: 'template.status', label: 'Status', sortable: true, 
