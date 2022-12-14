@@ -214,7 +214,7 @@
                                 <b-card-text>
                                 <base-input :disabled="nonEditable"
                                     v-model="templateSimple.footer.text" :textLimit="60"
-                                    rules="max:60" >
+                                    rules="max:60|oneline" >
                                 </base-input>
                                 </b-card-text>
                             </b-card-body>

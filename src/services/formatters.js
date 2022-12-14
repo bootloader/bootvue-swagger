@@ -270,7 +270,7 @@ var formatter = {
 
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile","oneline"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -367,6 +367,13 @@ var formatter = {
     }
     return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
   },
+  oneline : function(contents){
+    if(!/\n/.test(contents))
+      return true
+    return 'errors.ValidLine';
+  },
+
+  //Formmatter
   item_code : function item_code (value) {
     return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9_]+/g,'_').replace(/[_]+/g,'_');
   },

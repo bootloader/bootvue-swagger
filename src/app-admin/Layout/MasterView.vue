@@ -70,7 +70,7 @@
               <template slot="column-filter" slot-scope="{ column, updateFilters }">
                 <input v-if="column.filterOptions && column.filterOptions.search"
                   :name="`vgt-${column.key}`" type="search" :placeholder="`Filter ${column.label}`" class="vgt-input"
-                  @change="(value) => updateFilters(column, readValue(value))"/>
+                  @input="(e) => filterSearch(updateFilters,column,e)"/>
               </template>
               <template slot="emptystate">
                   <div class="center-box">
@@ -266,6 +266,7 @@
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
     import JsonXPath from "@/@common/utils/JsonXPath";
+    import debounce from "debounce";
 
     export default {
         components: {
@@ -348,7 +349,7 @@
             viewid : 'v'+ Date.now(),
             oldHash : "",
             showSideBar : false,
-            tableSearch : {}
+            tableSearch : {},
         }),
         computed : {
           isbusy : {
@@ -450,7 +451,7 @@
           //this.dateRangeOnUpdate();
           if(this.autoApply)
             this.loadItems();
-
+          this.filterSearch = debounce(this.filterSearch,200);
         },
         methods: {
           readValue(e){
@@ -458,6 +459,9 @@
              return (e?.target?.value);
             }
             return e;
+          },
+          filterSearch(fun,column,e){
+            fun(column,this.readValue(e));
           },
           convertToGoodTable :  function(){
               this.table.fields.map(function(column){

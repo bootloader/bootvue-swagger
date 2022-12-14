@@ -133,7 +133,7 @@ function cloneWABATmplSample(template,hsm) {
                 })(),
                 {
                     type: 'FOOTER',
-                    text: hsm?.footer,
+                    text: (hsm?.footer || '').replace(/\n/,' ') || undefined,
                 },
                 {
                     type: 'BUTTONS',
