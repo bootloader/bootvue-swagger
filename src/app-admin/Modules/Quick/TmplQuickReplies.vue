@@ -92,7 +92,7 @@
             },
             table :{
               fields: [ 
-                { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
+                { key : 'category', label : "Category" , sortable: true}, { key : 'title', label : "Title" , sortable: true}, 
                 { key: 'actions', label: 'Actions' }
               ],
               busy : false,

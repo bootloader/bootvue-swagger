@@ -47,6 +47,7 @@
                 ...table.paginationOptions
               }"
             >
+            
               <template slot="table-row" slot-scope="props">
                   <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
                     <slot :name="'cell('+ props.column.field  + ')'" v-bind="(function(slotScope){

@@ -18,6 +18,7 @@
             <template #filter(go2hsm)="{filter}">
                 <b-button variant="link" :to="filter.link">{{filter.label}}</b-button>
             </template>
+            
             <template #filter(channelId)="{apply,filter}">
                 <MyChannelSelect v-model="filter.value" @change="apply"
                     :filter="{
@@ -446,11 +447,13 @@
                     { key: 'template.category', label: 'Message Type', sortable: true, 
                     filterOptions:{
                         enabled:true,
+                        search : true
                     }},
                     //{ key: 'template.namespace', label: 'namespace' },
                     { key: 'template.status', label: 'Status', sortable: true, 
                     filterOptions:{
                         enabled:true,
+                        clearSelectionText: 'clear',
                         filterDropdownItems:["approved","rejected"]
                     }},
                     { key: 'template.language', label: 'Language',sortable: false},
