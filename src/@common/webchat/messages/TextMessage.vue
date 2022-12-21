@@ -169,3 +169,8 @@ a.chatLink {
   color: inherit !important;
 }
 </style>
+<style>
+a.chatLink {
+  color: inherit !important;
+}
+</style>
