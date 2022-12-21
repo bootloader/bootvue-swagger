@@ -25,7 +25,7 @@
                 </span>
               </el-col>
               <el-col :sm="20" :xs="21"><span> &nbsp;</span></el-col>
-              <el-col :sm="1" :xs="1">
+              <el-col :sm="1" :xs="1" v-if="isOpen">
                 <i @click.prevent="close()" class="el-icon-close" style="color:#fff; font-size: 26px; cursor: pointer;"></i>
               </el-col>
             </el-row>

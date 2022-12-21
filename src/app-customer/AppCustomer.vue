@@ -16,9 +16,6 @@
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
-  import ElementUI from 'element-ui';
-
-  Vue.use(ElementUI);
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
