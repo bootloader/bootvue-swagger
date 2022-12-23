@@ -127,7 +127,7 @@
                         <b-form-row>
                             <button @click="downloadCSVtemplate"
                                 class="form-control btn btn-primary">Download CSV Template​</button>
-                                <br/> <br/><i>This will download a cvs file with all the variables associated with the chosen template​</i><br/>
+                                <br/> <br/><i>This will download a CSV file with all the variables associated with the chosen template​</i><br/>
                         </b-form-row>
                         <br/>
                             <ValidationProvider :rules="input.contacts == '' ? 'required':''" 

@@ -5,7 +5,7 @@
             <div class="pl-lg-12">
                 <b-row>
                     <b-col lg="3">
-                        <base-select
+                        <!-- <base-select
                             alternative
                             question
                             type="text"
@@ -13,10 +13,18 @@
                             placeholder="Domain"
                             rules="required"
                             required
+                            searchable
                             v-model="model.tnt"
                             @change="domainOnChange"
                             :options="domainOptions">
-                        </base-select>
+                        </base-select> -->
+
+                        <BaseVSelect size="sm" label="Domain"  placeholder="Select Domain   "
+                            :options="domainOptions"
+                            v-model="model.tnt"
+                            @change="domainOnChange"
+                            filterable searchable required rules="required"
+                            class="mb-0"/>
                     </b-col>
                 </b-row>
             </div>
@@ -478,6 +486,19 @@
                         value: v.domain,
                     }
                 })
+                this.domainOptions.sort((a, b) => {
+                    const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+                    const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+
+                    // names must be equal
+                    return 0;
+                });
                 this.model.tnt = this.domainOptions[0].value
                 this.loadTimeStamp()
             },
@@ -709,6 +730,9 @@ body{
         .form-control-label{
         color: #fff !important;
         }
+    }
+    .form-control-label{
+        color: #fff !important;
     }
     .el-table.table-dark{
     background-color: #172b4d;
