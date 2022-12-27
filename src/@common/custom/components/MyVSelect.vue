@@ -241,7 +241,7 @@
             async loadOptions(){
                 if(this.options && (typeof this.options == 'string') 
                     && /^(data\:|@data\/)/.test(this.options) ){
-                    let json = await import("@/@data/" + this.options.replace(/^(data:|@data\/)/,"") + ".json");
+                    let json = await import("@/@data/" + this.options.replace(/^(data:\/|data:|@data\/)/,"") + ".json");
                     this.fromOptions(json.options);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('getx:') == 0){
                     let url = this.options.replace("getx:","");

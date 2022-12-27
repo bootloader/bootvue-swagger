@@ -1,0 +1,12 @@
+{
+    "options": [
+        {
+            "code": "TEXTLOCAL",
+            "name": "TextLocal"
+        },
+        {
+            "code": "OTHERS",
+            "name": "Others"
+        }
+    ]
+ }

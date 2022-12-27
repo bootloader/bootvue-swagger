@@ -128,7 +128,9 @@
           header-class="py-2"
             @hidden="cancelItem">
                 <x-simple-form size="sm"
-                :inputs="modalInputs" :isnew="!oneItem.id"
+                :inputs="modalInputs" :isnew="!oneItem.id" :settings="{
+                  json_height : '200px'
+                }"
                 @change="onConfigChange">
                 </x-simple-form>
                 <template #modal-footer>
@@ -279,13 +281,14 @@
               let resp = await this.$service.get('api/meta/channel_configs/'+item.channelType);
               console.log("oldHash",this.oldHash)
               this.modalInputs = resp.results.map(function (meta) {
-                var key = (meta.path || meta.key)
+                let path = (meta.pathRaw || meta.path )
+                var key = (path|| meta.key)
                 console.log("meta.key",key,JsonXPath({ path : '$.'+key,json : item}))
                 return {
                   meta : meta,
                   config : { 
                     key : meta.key,
-                    path : meta.path,
+                    path : path,
                     value : JsonXPath({ path : '$.'+key,json : item})[0]
                   }
                 }
@@ -293,7 +296,7 @@
               this.$bvModal.show(this.modelName)
           },
           async onConfigChange({ meta,config }){
-              var key = (meta.path || meta.key);
+              var key = (meta.pathRaw || meta.path || meta.key);
               const rs = JsonXPath({
                 path : '$.' +key,
                 json: this.oneItem,

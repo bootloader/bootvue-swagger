@@ -36,12 +36,27 @@
                        <span> <MyIcon type="infoType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
                       <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
-                <v-jsoneditor v-else-if="input.meta.inputType == 'JSON'"
+                <div v-else-if="input.meta.inputType == 'JSON'" class="form-group form-group-input" >
+                    <label class="form-control-label text-sm">
+                        {{input.meta.title || input.meta.key}}
+                    </label>
+                    <v-jsoneditor 
                     v-model="input.config.value" :options="{
                       mode : 'code', mainMenuBar : false,
                       onChange : ()=>onChange(input.meta,input.config)
-                    }" :plus="false" height="400px" @error="onJsonError"
+                    }" :plus="false" :height="settings.json_height || '400px'" @error="onJsonError"
                     />
+                </div>
+                <base-text-area v-else-if="input.meta.inputType == 'TEXTAREA'"  class="mb-0" :size="size"
+                    :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
+                    v-model="input.config.value" 
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
+                    :value="input.meta.defaultValue"
+                    :required="!input.meta.optional "
+                    :placeholder="input.meta.example"
+                    @change="onChange(input.meta,input.config)">
+                </base-text-area>
+
                 <base-input v-else  class="mb-0" :size="size"
                     :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
                     v-model="input.config.value" 
@@ -86,6 +101,11 @@
                 description: "pass list of input configs",
                 default : function () {
                     return [{}];
+                }
+            },
+            settings : {
+                type : Object, default : function(){
+                    return {}
                 }
             },
             isnew : {

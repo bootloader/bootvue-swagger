@@ -41,6 +41,12 @@
             "name": "Email",
             "channelType" : "mailto",
             "enabled" : true
+        },
+        {
+            "code": "SMS",
+            "name": "SMS",
+            "channelType" : "sms",
+            "enabled" : true
         }
     ]
  }

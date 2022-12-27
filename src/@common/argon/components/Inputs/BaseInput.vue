@@ -344,7 +344,7 @@
       },
       suggestionValid(){
         if((!this.focused && !this.hovered) || this.$attrs.disabled || this.$attrs.readonly) return null;
-        let value  = this.value.toUpperCase();
+        let value  = this.value?.toUpperCase() || '';
         return this.suggestions.filter((s)=>{
           let ss = s.toUpperCase();
           return (ss.indexOf(value)>-1) && (ss!=value);
