@@ -4,7 +4,7 @@
       <master-view 
           :header="{
             heading : 'Client Apps',
-            subheading : 'Client Apps are used to interact with messaging apis',
+            subheading : 'Client Apps are containers that bundle messaging functionality for your specific use cases and messaging campaigns.',
             icon : 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-th-large',
           }"
           :table=table
