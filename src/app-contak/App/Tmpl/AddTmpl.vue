@@ -23,7 +23,7 @@
                 alternative question feedback  required :disabled="!editable"/>
              <base-input name="Header Label" v-model="template.header.label" 
                 alternative question feedback  required :disabled="!editable" clearable
-                :suggestions="headerLabels"/>
+                :suggestions="headerLabels"  @change="loadDefault"/>
             </b-col>
 
             <b-col cols="4">
@@ -48,7 +48,7 @@
 
             <b-col cols="4">
               <base-v-select name="Message Category" v-model="template.category" :disabled="!editable"
-                 options="data:hsm/message_categories_oa" ref="category" @change="loadDefault"
+                 options="data:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
                  alternative question required 
                  />
                   <template #selected-option="option">
@@ -144,7 +144,10 @@ export default {
         this.loadDefault();
       }
     },
-    async loadDefault(){
+    async loadDefault(catChanged){
+      if(catChanged === true){
+        this.template.header.label = '';
+      }
       let cat = this.$refs.category?.selected();
       if(cat && cat?.item && cat.item?.suggestion){
        this.headerLabels = Object.keys(cat?.item?.suggestion || {});
