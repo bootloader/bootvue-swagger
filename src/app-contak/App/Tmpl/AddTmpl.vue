@@ -21,20 +21,20 @@
             <b-col cols="4" v-if="companies">
                <base-input name="Template Code" v-model="template.code" 
                 alternative question feedback  required :disabled="!editable"/>
-             <base-input name="Header Label" v-model="template.header.label" 
-                alternative question feedback  required :disabled="!editable" clearable
+             <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
+                alternative question feedback  :required="!isOTP" clearable
                 :suggestions="headerLabels"  @change="loadDefault"/>
             </b-col>
 
             <b-col cols="4">
               <base-v-select name="Message Type" v-model="template.type" 
                 :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
-                alternative question  required :disabled="!editable">
+                alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
               
               </base-v-select>
               <base-v-select name="Header Variant" v-model="template.header.variant" 
                 options="data:color_variant"
-                alternative question  required :disabled="!editable">
+                alternative question  required :disabled="!editable || isOTP">
                   <template #option="option">
                       <i v-if="option.value" :class="`text-${option.value.toLowerCase()}`"
                           class="fa fa-circle" />&nbsp;<span>{{option.label}}</span>
@@ -47,7 +47,7 @@
             </b-col> 
 
             <b-col cols="4">
-              <base-v-select name="Message Category" v-model="template.category" :disabled="!editable"
+              <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
                  options="data:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
                  alternative question required 
                  />
@@ -119,6 +119,9 @@ export default {
     bodyTextLimit(){
       return this.template.body.length>180 ? `SMS with length greater than 180 characters will usually split
             into multiple parts in case of fallback` : '';
+    },
+    isOTP(){
+      return this.template.type == 'OTP';
     }
   },
   mounted(){
@@ -157,6 +160,10 @@ export default {
        ){
          this.template.header.variant = cat.item.header?.variant || suggestion[this.template.header.label]
        }
+      } else {
+        this.headerLabels = [];
+        this.template.header.label = '';
+        this.template.header.variant  = 'MAJOR';
       }
     },
     async saveTemplate(){
