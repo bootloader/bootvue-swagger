@@ -7,7 +7,7 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Hourly Number of messages exchanged" 
+                headerTitle="Hourly number of messages exchanged" 
                 :tableData="getHourDataTable" 
                 :loading="loading.hourDataTable"
                 :optionOnChange="hourOptionOnChange" 
@@ -24,7 +24,7 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Daily Number of messages exchanged" 
+                headerTitle="Daily number of messages exchanged" 
                 :tableData="getDayDataTable" 
                 :daterangeChange="onDaysDaterangeChange"
                 :loading="loading.dayDataTable"
@@ -65,7 +65,7 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Number of Conversation (WABA)" 
+                headerTitle="Number of conversation (WABA)" 
                 :tableData="getWabaDataTable" 
                 :loading="loading.wabaDataTable"
                 :optionOnChange="wabaOnMonthChange"
@@ -83,7 +83,7 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Hourly Outbound broadcast Messages (WABA)" 
+                headerTitle="Hourly outbound broadcast messages (WABA)" 
                 :tableData="getOutboundMsgHourlyDataTable" 
                 :loading="loading.outboundMsgHourlyDataTable"
                 :optionOnChange="outboundHourOptionOnChange" 
@@ -100,7 +100,7 @@
       <b-row class="mt-5">
         <b-col xl="12" class="mb-5 mb-xl-0">
             <dynamic-left-top-freeze-table 
-                headerTitle="Daily Outbound broadcast Messages (WABA)" 
+                headerTitle="Daily outbound broadcast messages (WABA)" 
                 :tableData="getBroadcastDayDataTable" 
                 :loading="loading.broadcastDayDataTable"
                 :daterangeChange="onBroadcastDaysDaterangeChange"
