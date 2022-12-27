@@ -2,13 +2,13 @@
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
     :class="['basic-component bc-input','bc-span', 'bc-layout-' + layout, 'bc-size-' + size,
     $attrs.disabled ? 'bc-disabled' : '' ]">
-    <b-form-group class="form-group-input" :label-for="'fmg-' + inputId"
+    <b-form-group class="form-group-input" :label-for="'fmg-bi-' + inputId"
       :class="[
         {'is-question': question }
       ]">
       <slot name="label">
         <label v-if="!isPrelabel && fieldLabel" 
-          :for="'fmg-' + inputId"
+          :for="'fmg-bi-' + inputId"
           :class="[
           {'focused': focused},
           {'is-valid': valid && validated }, 
@@ -43,22 +43,30 @@
           </slot>
         </div>
         <slot v-bind="slotData">
-          <input
+          <input 
             ref="input"
-            :id="'fmg-' + inputId"
+            :id="'fmg-bi-' + inputId"
             v-model="displayValue"
-            :type="type"
+            :type="clearable ? 'search' : type"
             v-on="listeners"
             v-bind="$attrs" 
             :valid="valid" 
             :placeholder="question ? '' : $attrs.placeholder"
             :required="required"
             class="form-control"
+            :list="'fmg-bi-' + inputId + '-suggestions'"
             :class="[
                 size ? 'form-control-'+size : '',
                 {'is-valid': valid && validated && successMessage}, 
-                {'is-invalid': invalid && validated}, inputClasses]">
+                {'is-invalid': invalid && validated}, inputClasses]"
+                :autocomplete="suggestionValid ? 'off' : undefined">
         </slot>
+        <div v-if="suggestionValid && suggestionValid.length" class="bc-input-suggestions"
+          @mouseenter="mouseEnter"  @mouseleave="mouseLeave">
+          <div v-for="s in suggestionValid" :value="s" v-bind:key="s" @click="emitValue(s)">
+            {{s}}
+          </div>
+        </div>
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
                <i class="fa" :class="[
@@ -240,6 +248,9 @@
       copy : {
         type : Boolean,
         default : false
+      }, clearable : {
+        type : Boolean,
+        default : false
       },
       link : {
         type : Boolean,
@@ -253,11 +264,18 @@
       formatLive : {
         type : Boolean,
         default : false
-      }
+      },
+      suggestions : {
+        type : [Array,Object],
+        default : function(){
+          return [];
+        },
+      }      
     },
     data() {
       return {
         focused: false,
+        hovered : false,
         inputId : ++ID_COUNTER
       };
     },
@@ -273,6 +291,7 @@
       },
       slotData() {
         return {
+          hovered : this.hovered,
           focused: this.focused,
           error: this.error,
           ...this.listeners
@@ -322,7 +341,15 @@
                 this.emitValue(newValue);
               } else  this.emitValue(modifiedValue);
           }
-        }
+      },
+      suggestionValid(){
+        if(!this.focused && !this.hovered) return null;
+        let value  = this.value.toUpperCase();
+        return this.suggestions.filter((s)=>{
+          let ss = s.toUpperCase();
+          return (ss.indexOf(value)>-1) && (ss!=value);
+        });
+      }
     },
     watch : {
       'formatValue' :  function(n,o){
@@ -351,9 +378,15 @@
         this.focused = false;
         this.$emit("blur", evt);
       },
+      mouseEnter(){
+        this.hovered = true;
+      },
+      mouseLeave(){
+        this.hovered = false;
+      },
       onScore(evt) {
         this.$emit("score", evt);
-      },
+      }
     }
   };
 </script>

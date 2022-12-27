@@ -22,7 +22,8 @@
                <base-input name="Template Code" v-model="template.code" 
                 alternative question feedback  required :disabled="!editable"/>
              <base-input name="Header Label" v-model="template.header.label" 
-                alternative question feedback  required :disabled="!editable"/>
+                alternative question feedback  required :disabled="!editable" clearable
+                :suggestions="headerLabels"/>
             </b-col>
 
             <b-col cols="4">
@@ -47,8 +48,9 @@
 
             <b-col cols="4">
               <base-v-select name="Message Category" v-model="template.category" :disabled="!editable"
-                 options="data:hsm/message_categories" ref="category" @change="loadDefault"
-                 alternative question required />
+                 options="data:hsm/message_categories_oa" ref="category" @change="loadDefault"
+                 alternative question required 
+                 />
                   <template #selected-option="option">
                       <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
                           class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
@@ -106,7 +108,8 @@ export default {
         footer : '', 
         cta : []
       },
-      isTemplateLoding : false
+      isTemplateLoding : false,
+      headerLabels : []
     };
   },
   computed : {
@@ -143,14 +146,20 @@ export default {
     },
     async loadDefault(){
       let cat = this.$refs.category?.selected();
-      if(cat && cat?.item && cat.item?.header){
-        this.template.header.label = cat.item.header?.label;
-        this.template.header.variant = cat.item.header?.variant || this.template.header.variant ;
+      if(cat && cat?.item && cat.item?.suggestion){
+       this.headerLabels = Object.keys(cat?.item?.suggestion || {});
+       let suggestion = cat?.item?.suggestion;
+       if(suggestion && this.template.header.label
+        && suggestion[this.template.header.label]
+       ){
+         this.template.header.variant = cat.item.header?.variant || suggestion[this.template.header.label]
+       }
       }
     },
     async saveTemplate(){
        let resp = await this.$service.post("/panel/api/v1/hsm/tmpl",{
-          ...this.template
+          ...this.template,
+          categoryTitle : this.$refs.category?.selected().item.label
         },{
          ref : this.$refs.formValidator
        });

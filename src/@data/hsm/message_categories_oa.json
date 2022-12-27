@@ -1,0 +1,118 @@
+{
+    "options":[
+       {
+          "id":"ACCOUNT",
+          "label":"Account",
+          "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
+          "icon":"fa fa-coins",
+          "suggestion" : {
+            "Credit" : "CREDIT",
+            "Debit" : "DEBIT",
+            "Notification" : "INFO",
+            "Statement" : "MAJOR",
+            "Activated" : "INFO",
+            "Balance" : "MAJOR",
+            "Shares Credited" : "CREDIT",
+            "Shares Debited" : "DEBIT",
+            "Spend" : "DEBIT"
+          }
+       },
+       {
+         "id":"APPOINTMENT",
+         "label":"Appointments",
+         "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
+         "icon":"fa fa-calendar",
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Rescheduled" : "ALERT"
+          }
+       },
+      {
+         "id":"RESERVATION",
+         "label":"Reservations",
+         "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
+         "icon":"fas fa-hotel",
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      },
+      {
+         "id":"TICKET",
+         "label":"Ticket",
+         "desc":"Send ticketing information or updates to customers.",
+         "icon":"fa fa-ticket",
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      },
+
+       {
+          "id":"SERVICE",
+          "label":"Service",
+          "desc":"Respond to questions, concerns or feedback from customers about your business.",
+          "icon":"far fa-meh",
+          "suggestion" : {
+            "Issue" : "MAJOR",
+            "Notification" : "MINOR",
+            "Resolved" : "INFO",
+            "Cancelled" : "ALERT",
+            "Checkbook dispatched" : "INFO"
+          }
+       },
+
+      {
+         "id":"SHIPMENT",
+         "label":"Shippments",
+         "desc":"Send shipping updates to customers about their orders.",
+         "icon":"fa fa-truck",
+         "suggestion" : {
+            "Dispatched" : "MAJOR",
+            "Delivered" : "INFO",
+            "Delayed" : "ALERT",
+            "Pickup Initiated" : "MAJOR",
+            "Pickup completed" : "INFO"
+          }
+      },
+      {
+         "id":"PAYMENT",
+         "label":"Payment",
+         "desc":"Send a message to customers about their payment.",
+         "icon":"fa fa-credit-card",
+         "suggestion" : {
+            "Initiated" : "MAJOR",
+            "Notification" : "INFO",
+            "Success" : "MAJOR",
+            "Reminder" : "ALERT"
+          }
+      },
+      {
+         "id":"PROFILE",
+         "label":"Profile",
+         "desc":"Send a message to customers about their profile/credential changes",
+         "icon":"fa fa-user",
+         "suggestion" : {
+            "Created" : "MAJOR",
+            "Password Updated" : "INFO",
+            "Success" : "MAJOR",
+            "Disabled" : "ALERT",
+            "Deleted" : "ALERT"
+          }
+      },
+      {
+         "id":"ORDER",
+         "label":"Order",
+         "desc":"Send a message to customers about orders",
+         "icon":"fas fa-shopping-cart",
+         "suggestion" : {
+            "Received" : "MAJOR",
+            "Accepted" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      }
+    ]
+ }

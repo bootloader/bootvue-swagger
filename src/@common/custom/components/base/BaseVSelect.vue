@@ -2,13 +2,13 @@
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
   :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
   disabled ? 'bc-disabled' : '']" ref="vp">
-    <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
+    <b-form-group class="form-group-input" :label-for="'fmg-bvs-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
       ]">
       <slot name="label">
         <label v-if="!isPrelabel && (label || name)"
-          :for="'fmg-' + inputId"
+          :for="'fmg-bvs-' + inputId"
           :class="[
           {'focused': focused},
           {'is-valid': valid && validated }, 
@@ -41,7 +41,7 @@
             </slot>
         </div>
         <my-v-select 
-            :id="'fmg-' + inputId" ref="myVSelect" :size="size"
+            :id="'fmg-bvs-' + inputId" ref="myVSelect" :size="size"
             :placeholder="$attrs.placeholder"
             :value="value" 
             v-on="listeners"
