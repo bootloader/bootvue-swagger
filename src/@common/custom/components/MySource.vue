@@ -175,6 +175,16 @@
                     let file =  this.options.split("#");   
                     let json = await import("@/@data/" + file[0].replace(/^(data:\/|data:|@data\/)/,"") + ".json");
                     this.fromOptions(json.options);
+                } else if(this.options && (typeof this.options == 'string') 
+                    && /^(json\:|@json\/)/.test(this.options) ){
+                    let file =  this.options.split("#"); 
+                    console.log("__webpack_public_path__",__webpack_public_path__); 
+                    let jsonfile = __webpack_public_path__ + '/_json/' + file[0].replace(/^(json:\/|json:|@json\/)/,"") + ".json" 
+                    let resp = await fetch(jsonfile);
+                    let json = await resp.json();
+                    //let resp = await this.$service.getX(jsonfile);
+                    //this.fromOptions(resp.results ? resp.results : resp);
+                    this.fromOptions(json.options);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('getx:') == 0){
                     let url = this.options.replace("getx:","");
                     let resp = await this.$service.getX(url);

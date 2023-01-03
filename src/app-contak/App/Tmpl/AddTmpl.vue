@@ -30,7 +30,6 @@
               <base-v-select name="Message Type" v-model="template.type" 
                 :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
                 alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
-              
               </base-v-select>
               <base-v-select name="Header Variant" v-model="template.header.variant" 
                 options="data:color_variant"
@@ -48,7 +47,7 @@
 
             <b-col cols="4">
               <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
-                 options="data:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
+                 options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
                  alternative question required 
                  />
                   <template #selected-option="option">

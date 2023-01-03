@@ -31,8 +31,8 @@
           <el-table-column label="Status"
                           min-width="30px"
                           prop="approved">
-            <template>
-              <my-icon type="status" status="approved" value="Approved"/>
+            <template v-slot="{row}">
+              <my-icon v-if="row" type="status" status="approved" value="Approved"/>
             </template>
           </el-table-column>
           <el-table-column label="Status"
