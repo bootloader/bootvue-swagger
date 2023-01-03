@@ -59,7 +59,7 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css';
                 console.log("fileAdded")
             },
             sendingEvent(file, xhr, formData){
-                formData.append('tnt', this.model.domain);
+                //formData.append('tnt', this.model.domain);
             },
             async fileUploaded (file, response) {
                     //this.model.social.logo = response.results[0];

@@ -27,15 +27,28 @@
             <base-input name="TemplateCode" id="template_code"
               helpMessage="Field:template.code - Template created for this message"
             alternative question feedback required v-model="message.template.code" />
-            <base-text-area name="Model Data" id="model_data" 
+            <!-- <base-text-area name="Model Data" id="model_data" 
                rows="5" @change="validateModelData" @blur="validateModelData"
               helpMessage="Field:template.model.data - Additonal template data in json format to replace custom variables"
               alternative question feedback required v-model="modelData"
-              formatFilter="json" :formatValue="message.template.model.data" />
+              formatFilter="json" :formatValue="message.template.model.data" /> -->
+            <div class="vgrid-wrapper w-100 bg-white" style="height: 200px">
+              <VGrid theme="default" class="w-100 position-relative" 
+                  :columns="sampleVar.columns"
+                  :source="sampleVar.data"
+                  @afteredit=afterEdit
+              ></VGrid>
+            </div> 
+
             <b-button @click="sendMessage" variant="primary" class="btn-block mb-4">Send Message</b-button>
       </b-col> 
       <b-col cols="4" class="pt-4" v-if="isLoggedIn">
-        <pre>{{apiRequest|json}}</pre>
+        <pre class="text-sm">
+curl -X POST /api.mehery.io/xms/api/v1/message/send \
+-H 'Content-Type: application/json' \
+-H 'x-api-key: {{apiRequest.apiKey}}'
+-d {{apiRequest|json}}
+        </pre>
       </b-col>  
     </b-row>
               </validation-observer>  
@@ -53,6 +66,8 @@
   import VueClipboard from 'vue-clipboard2';
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
+  import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
+
 
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
@@ -79,6 +94,14 @@ export default {
         } , validity : ""
       },
       modelData : "{}",
+      sample : {},
+      sampleVar : {
+        columns: [
+          { name: 'Variable', prop: "variable"},
+          { name: 'Value', prop: "value"}] ,
+        contact : [],
+        data : [{},{},{}]
+      } ,
       isLoggedIn : false,
       errorMessage : null,
       navbarOpen: false,
@@ -86,7 +109,7 @@ export default {
       css : [
         //"https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700",
         //'https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css'
-      ]
+      ],
     };
   },
   watch : {
@@ -174,14 +197,28 @@ export default {
     },
     formatModelData(){
       this.modelData = this.$options.filters.json(this.modelData);
+    },
+    afterEdit(){
+      this.sampleVar.data  = [...this.sampleVar.data.filter((r)=>{
+        if(!!r.variable || !!r.value){
+          this.message.template.model.data[r.variable] = r.value;
+          return true;
+        }
+        return false
+      }),{},{},{}];
     }
   },
   components: {
+    VGrid
   },
 };
 </script>
 <style lang="scss">
     @import "@/assets/app-contak.scss";
+    .vgrid-wrapper {
+      height: 50px;
+      min-height: 50px;
+    }
    // @import "./../assets/fonts/openweb/css/openwebicons.css";
     // .v-input-error {
     //   color : red;
