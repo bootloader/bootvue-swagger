@@ -1,0 +1,8 @@
+@import url(style.css);
+[class^="my-"], [class*=" my-"] {
+  vertical-align: middle;
+}
+[class^="my-"]::before, [class*=" my-"]::before {
+  font-size: 0.9em;
+  vertical-align: text-top;
+}

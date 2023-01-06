@@ -1,10 +1,24 @@
 {
     "options":[
+      {
+         "id":"OTP",
+         "label":"OTP",
+         "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
+         "icon":"my-oa-type-otp",
+         "type" :  "OTP", 
+         "suggestion" : {
+           "Login" : "MAJOR",
+           "Reset" : "MAJOR",
+           "Pin" : "MAJOR",
+           "Transaction" : "MAJOR"
+         }
+      },
        {
           "id":"ACCOUNT",
           "label":"Account",
           "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
-          "icon":"fa fa-coins",
+          "icon":"my-oa-type-account",
+          "type" :  "TRANSACTIONAL", 
           "suggestion" : {
             "Credit" : "CREDIT",
             "Debit" : "DEBIT",
@@ -21,7 +35,8 @@
          "id":"APPOINTMENT",
          "label":"Appointments",
          "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
-         "icon":"fa fa-calendar",
+         "icon":"my-oa-type-appointment",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
             "Confirmed" : "INFO",
@@ -32,7 +47,8 @@
          "id":"RESERVATION",
          "label":"Reservations",
          "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
-         "icon":"fas fa-hotel",
+         "icon":"my-oa-type-reservation",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
             "Confirmed" : "INFO",
@@ -43,7 +59,8 @@
          "id":"TICKET",
          "label":"Ticket",
          "desc":"Send ticketing information or updates to customers.",
-         "icon":"fa fa-ticket",
+         "icon":"my-oa-type-ticket",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
             "Confirmed" : "INFO",
@@ -55,7 +72,8 @@
           "id":"SERVICE",
           "label":"Service",
           "desc":"Respond to questions, concerns or feedback from customers about your business.",
-          "icon":"far fa-meh",
+          "icon":"my-oa-type-service",
+          "type" :  "TRANSACTIONAL", 
           "suggestion" : {
             "Issue" : "MAJOR",
             "Notification" : "MINOR",
@@ -69,7 +87,8 @@
          "id":"SHIPMENT",
          "label":"Shippments",
          "desc":"Send shipping updates to customers about their orders.",
-         "icon":"fa fa-truck",
+         "icon":"my-oa-type-shipment",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Dispatched" : "MAJOR",
             "Delivered" : "INFO",
@@ -82,7 +101,8 @@
          "id":"PAYMENT",
          "label":"Payment",
          "desc":"Send a message to customers about their payment.",
-         "icon":"fa fa-credit-card",
+         "icon":"my-oa-type-payment",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Initiated" : "MAJOR",
             "Notification" : "INFO",
@@ -94,7 +114,8 @@
          "id":"PROFILE",
          "label":"Profile",
          "desc":"Send a message to customers about their profile/credential changes",
-         "icon":"fa fa-user",
+         "icon":"my-oa-type-profile",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Created" : "MAJOR",
             "Password Updated" : "INFO",
@@ -107,7 +128,8 @@
          "id":"ORDER",
          "label":"Order",
          "desc":"Send a message to customers about orders",
-         "icon":"fas fa-shopping-cart",
+         "icon":"my-oa-type-order",
+         "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Received" : "MAJOR",
             "Accepted" : "INFO",

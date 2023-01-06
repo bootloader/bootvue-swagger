@@ -50,6 +50,7 @@
 </script>
 <style lang="scss">
     @import "@/assets/app-contak.scss";
+    @import "./../assets/fonts/my-icon/my-icon.css";
    // @import "./../assets/fonts/openweb/css/openwebicons.css";
     // .v-input-error {
     //   color : red;

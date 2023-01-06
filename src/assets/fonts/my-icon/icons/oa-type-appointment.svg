@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bounds</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="details--v-light" transform="translate(-36.000000, -152.000000)">
+            <g id="debit" transform="translate(16.000000, 132.000000)">
+                <g id="highlight" transform="translate(4.000000, 4.000000)">
+                    <g id="icon" transform="translate(16.000000, 16.000000)">
+                        <rect id="bounds" x="0" y="0" width="20" height="20"></rect>
+                        <path d="m15 3.5h3v14h-16v-14h3v-1h1v1h8v-1h1zm-10 1h-2v2h14v-2h-2v1h-1v-1h-8v1h-1zm-2 12h14v-9h-14zm5-1v-7h1v7zm-3 0v-7h1v7zm9 0v-7h1v7zm-3 0v-7h1v7z" id="shape" fill="#000" fill-opacity=".6" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

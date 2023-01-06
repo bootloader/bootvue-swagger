@@ -21,7 +21,7 @@
             <b-col cols="4" v-if="companies">
                <base-input name="Template Code" v-model="template.code" 
                 alternative question feedback  required :disabled="!editable"/>
-             <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
+             <base-input name="Header Label" v-model="template.header.label" :disabled="!editable"
                 alternative question feedback  :required="!isOTP" clearable
                 :suggestions="headerLabels"  @change="loadDefault"/>
             </b-col>
@@ -35,11 +35,11 @@
                 options="data:color_variant"
                 alternative question  required :disabled="!editable || isOTP">
                   <template #option="option">
-                      <i v-if="option.value" :class="`text-${option.value.toLowerCase()}`"
+                      <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
                           class="fa fa-circle" />&nbsp;<span>{{option.label}}</span>
                   </template> 
                   <template #selected-option="option">
-                      <i v-if="option.value" :class="`text-${option.value.toLowerCase()}`"
+                      <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
                           class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
                   </template> 
               </base-v-select>
@@ -48,12 +48,29 @@
             <b-col cols="4">
               <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
                  options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
-                 alternative question required 
-                 />
+                 alternative question required :filter="{
+                  type : template.type
+                 }" />
                   <template #selected-option="option">
                       <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
                           class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
                   </template> 
+              <div class="oa-message-preview-wrapper">
+                <div class="oa-message-preview-header">
+                  <div class="oa-message-preview-cat">
+                      <span class="oa-type-icon" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{messageCategory}}
+                  </div> 
+                  <div class="oa-message-preview-header-body row">
+                    <div class="col-6">
+                       <div class="text-black">{{template.header.label}}</div>
+                        <div class="text-sm text-grey">Article : 232A3434</div>
+                    </div>  
+                    <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
+                      25 Dec
+                    </div> 
+                  </div>  
+                </div>  
+              </div>    
             </b-col>                          
  
               <b-col cols="8">
@@ -121,6 +138,9 @@ export default {
     },
     isOTP(){
       return this.template.type == 'OTP';
+    },
+    messageCategory(){
+      return this.template.category;
     }
   },
   mounted(){
@@ -151,15 +171,18 @@ export default {
         this.template.header.label = '';
       }
       let cat = this.$refs.category?.selected();
-      if(cat && cat?.item && cat.item?.suggestion){
-       this.headerLabels = Object.keys(cat?.item?.suggestion || {});
-       let suggestion = cat?.item?.suggestion;
-       if(suggestion && this.template.header.label
-        && suggestion[this.template.header.label]
-       ){
-         this.template.header.variant = cat.item.header?.variant || suggestion[this.template.header.label]
-       }
-      } else {
+      this.headerLabels = Object.keys(cat?.item?.suggestion || {});
+      
+      if(this.template.type == "OTP"){
+        this.template.category = 'OTP';
+      } else if(cat && cat?.item && cat.item?.suggestion){
+        let suggestion = cat?.item?.suggestion;
+        if(suggestion && this.template.header.label
+          && suggestion[this.template.header.label]
+        ){
+          this.template.header.variant = cat.item.header?.variant || suggestion[this.template.header.label]
+        }
+      } else  {
         this.headerLabels = [];
         this.template.header.label = '';
         this.template.header.variant  = 'MAJOR';
@@ -181,9 +204,59 @@ export default {
   },
 };
 </script>
-<style style="css" sscoped>
+<style style="css" scoped>
   .template-body.basic-component .form-group .help-feedback{
       color: rgb(221, 137, 59);
 
   }
 </style>
+<style lang="scss">
+  .oa-message-preview-wrapper {
+      border-radius: 2px;
+      border: 1px solid rgba(41,45,120, 0.16);
+      opacity: 1;
+      background-color: rgba(255,255,255, 1);
+      padding: 4px;
+
+      font-family: sans-serif;
+      
+      .oa-message-preview-header {
+        border-radius: 2px;
+        opacity: 1;
+        background-color: rgba(255,255,255, 1);
+        background-size: 59.73159999999999%;
+        padding: 16px;
+          .oa-message-preview-cat {
+            opacity: 1;
+            color: #666;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-align: left;
+            line-height: 16px;
+            text-transform: uppercase;
+            .oa-type-icon {
+              margin-right: 5px;
+              font-size: 1.2em;
+            }
+          }
+          .oa-message-preview-header-body {
+              color: rgba(0,0,0,0.87);
+              font-size: 14px;
+              font-weight: 800;
+              font-style: normal;
+              letter-spacing: 0px;
+              text-align: left;
+              line-height: 20px;
+                  .oa-message-preview-header-value {
+                    font-size: 20px;
+                    font-weight: 800;
+                    font-style: normal;
+                    letter-spacing: 0px;
+                    text-align: right!important;
+                    line-height: 28px;
+                  }
+            }
+      }
+  }
+</style>>
+

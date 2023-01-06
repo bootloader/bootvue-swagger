@@ -40,6 +40,7 @@ $popular-list:(
     grey:  #8b8b8b,
     greyer:  #5a5a5a,
     blue: #153f9b,
+    black: #000000,
     white : #FFF,
     white-dirty : rgb(226, 226, 226),
     teal-100 : #d2f4ea,
@@ -68,11 +69,12 @@ $popular-list:(
     oa-yellow : #fab14b,
     oa-grey : #f7fafc,
 
-    major : #0a0a0a,
-    minor : #cfcfcf,
-    debit : #dc4a38,
-    credit : #10b981,
-    alert : #f0ba6f,
+    oa-major : #0a0a0a,
+    oa-minor : #cfcfcf,
+    oa-debit : rgb(255, 59, 48),
+    oa-credit : rgb(52, 199, 89),
+    oa-info : rgb(48, 176, 199),
+    oa-alert : rgb(255, 149, 0),
 );
 
 @each $key,$val in $popular-list{
