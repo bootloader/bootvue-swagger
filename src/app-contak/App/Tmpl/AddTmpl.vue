@@ -18,76 +18,91 @@
         </b-row>
         
         <b-row class="styler-height-fix">
-            <b-col cols="4" v-if="companies">
-               <base-input name="Template Code" v-model="template.code" 
-                alternative question feedback  required :disabled="!editable"/>
-             <base-input name="Header Label" v-model="template.header.label" :disabled="!editable"
-                alternative question feedback  :required="!isOTP" clearable
-                :suggestions="headerLabels"  @change="loadDefault"/>
-            </b-col>
+           <b-col cols="8">
+              <b-row>
+                <b-col cols="6" v-if="companies">
+                  <base-input name="Template Code" v-model="template.code" 
+                    alternative question feedback  required :disabled="!editable"/>
+                <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
+                    alternative question feedback  :required="!isOTP" clearable
+                    :suggestions="headerLabels"  @change="loadDefault"/>
+                </b-col>
 
-            <b-col cols="4">
-              <base-v-select name="Message Type" v-model="template.type" 
-                :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
-                alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
-              </base-v-select>
-              <base-v-select name="Header Variant" v-model="template.header.variant" 
-                options="data:color_variant"
-                alternative question  required :disabled="!editable || isOTP">
-                  <template #option="option">
-                      <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
-                          class="fa fa-circle" />&nbsp;<span>{{option.label}}</span>
-                  </template> 
-                  <template #selected-option="option">
-                      <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
-                          class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
-                  </template> 
-              </base-v-select>
-            </b-col> 
+                <b-col cols="6">
+                  <base-v-select name="Message Type" v-model="template.type" 
+                    :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
+                    alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
+                  </base-v-select>
+                  <base-v-select name="Header Variant" v-model="template.header.variant" 
+                    options="data:color_variant"
+                    alternative question  required :disabled="!editable || isOTP">
+                      <template #option="option">
+                          <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
+                              class="fa fa-circle" />&nbsp;<span>{{option.label}}</span>
+                      </template> 
+                      <template #selected-option="option">
+                          <i v-if="option.value" :class="`text-oa-${option.value.toLowerCase()}`"
+                              class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
+                      </template> 
+                  </base-v-select>
+                </b-col>
+                
+                <b-col cols="12">
+                    <base-input name="Title" v-model="template.title"  
+                      alternative question feedback required :disabled="!editable"
+                      rules="required|max:30" />
+                    <base-text-area  name="Body" alternative question feedback required :disabled="!editable"
+                          placeholder="Type here" v-model="template.body"  class="template-body"
+                          rules="required|max:360" :rows="6" 
+                          :textLimit="360" 
+                        :helpMessage="bodyTextLimit">
+                    </base-text-area>
+                    <base-input name="Footer" v-model="template.footer"  :disabled="!editable"
+                      alternative question feedback
+                      rules="max:20"/>
+                </b-col>
 
-            <b-col cols="4">
-              <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
-                 options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
-                 alternative question required :filter="{
-                  type : template.type
-                 }" />
-                  <template #selected-option="option">
-                      <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
-                          class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
-                  </template> 
-              <div class="oa-message-preview-wrapper">
-                <div class="oa-message-preview-header">
-                  <div class="oa-message-preview-cat">
-                      <span class="oa-type-icon" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{messageCategory}}
-                  </div> 
-                  <div class="oa-message-preview-header-body row">
-                    <div class="col-6">
-                       <div class="text-black">{{template.header.label}}</div>
-                        <div class="text-sm text-grey">Article : 232A3434</div>
+              </b-row>  
+             </b-col> 
+
+              <b-col  cols="4">
+                  <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
+                    options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
+                    alternative question required :filter="{
+                      type : template.type
+                    }">
+                      <template #selected-option="option">
+                          <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
+                              class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
+                      </template> 
+                  </base-v-select>    
+
+                  <div class="oa-message-preview-wrapper">
+                    <div class="oa-message-preview-header">
+                      <div class="oa-message-preview-header-body row">
+                        <div class="col-6">
+                          <div class="oa-message-preview-cat">
+                              <span class="oa-type-icon" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
+                          </div> 
+                          <div class="text-black">{{template.model.article}}</div>
+                            <div class="text-sm text-grey">{{template.model.account}}</div>
+                        </div>  
+                        <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
+                          {{template.model.value}}
+                        </div> 
+                      </div>  
                     </div>  
-                    <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
-                      25 Dec
-                    </div> 
                   </div>  
-                </div>  
-              </div>    
-            </b-col>                          
- 
-              <b-col cols="8">
-                  <base-input name="Title" v-model="template.title"  
-                    alternative question feedback required :disabled="!editable"
-                    rules="required|max:30" />
-                  <base-text-area  name="Body" alternative question feedback required :disabled="!editable"
-                        placeholder="Type here" v-model="template.body"  class="template-body"
-                        rules="required|max:360" :rows="6" 
-                        :textLimit="360" 
-                       :helpMessage="bodyTextLimit">
-                  </base-text-area>
-                  <base-input name="Footer" v-model="template.footer"  :disabled="!editable"
-                    alternative question feedback
-                    rules="max:20"/>
-              </b-col>
-              
+
+                  <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 200px; min-width:200px">
+                    <VGrid theme="default" class="w-100 position-relative" 
+                      :columns="sampleVar.columns"
+                      :source="sampleVar.data"
+                      @afteredit=afterEdit
+                  ></VGrid>
+                </div> 
+              </b-col>  
+
             </b-row>
 
         <b-row align-v="center" slot="footer">
@@ -106,6 +121,8 @@
 </template>
 <script>
 import basic from '../mixin/basic.js'
+ import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
+     import JsonXPath from "@/@common/utils/JsonXPath";
 
 export default {
   mixins : [basic],
@@ -122,8 +139,24 @@ export default {
         title : '', 
         body : '',
         footer : '', 
-        cta : []
+        cta : [],
+        model : {
+          prefix : "", value : '', suffix : '',
+          article : "",  account : "",
+          data : {
+          },
+        } 
       },
+      sampleVar : {
+        columns: [
+          { name: 'Variable', prop: "variable", readonly : true},
+          { name: 'Sample Value', prop: "value"}] ,
+        contact : [],
+        data : [
+          { variable : "value"},{ variable : "prefix" },{ variable : "suffix" },
+          { variable : "article"},{ variable : "account" }
+        ]
+      } ,
       isTemplateLoding : false,
       headerLabels : []
     };
@@ -175,6 +208,7 @@ export default {
       
       if(this.template.type == "OTP"){
         this.template.category = 'OTP';
+        this.template.header.label = 'OTP';
       } else if(cat && cat?.item && cat.item?.suggestion){
         let suggestion = cat?.item?.suggestion;
         if(suggestion && this.template.header.label
@@ -198,9 +232,20 @@ export default {
        this.$router.push({
         name : "Templates"
        });
+    },
+    afterEdit(e){
+      console.log("e.detail",e.detail);
+      const rs = JsonXPath({
+        path : '$.' +e.detail.model.variable,
+        json: this.template.model,
+        resultType: "all",
+        value : e.detail.model.value
+      });
+      this.template.model.__ob__.dep.notify();
+      console.log("this.template.model",this.template.model)
     }
   },
-  components: {
+  components: { VGrid
   },
 };
 </script>
@@ -248,6 +293,8 @@ export default {
               text-align: left;
               line-height: 20px;
                   .oa-message-preview-header-value {
+                    padding: 10px;
+                    margin: auto;
                     font-size: 20px;
                     font-weight: 800;
                     font-style: normal;
