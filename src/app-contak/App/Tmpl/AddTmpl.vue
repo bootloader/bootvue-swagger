@@ -77,18 +77,20 @@
                       </template> 
                   </base-v-select>    
 
-                  <div class="oa-message-preview-wrapper">
+                  <div class="oa-message-preview-wrapper" v-if="template.model">
                     <div class="oa-message-preview-header">
                       <div class="oa-message-preview-header-body row">
-                        <div class="col-6">
+                        <div class="col-6" >
                           <div class="oa-message-preview-cat">
-                              <span class="oa-type-icon" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
+                              <span class="oa-type-icon" v-if="messageCategory" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
                           </div> 
-                          <div class="text-black">{{template.model.article}}</div>
+                          <div class="text-black">{{template.model.subheader}}</div>
                             <div class="text-sm text-grey">{{template.model.account}}</div>
                         </div>  
                         <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
-                          {{template.model.value}}
+                          <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
+                          <span>{{template.model.value}}</span>
+                          <small class="oa-message-preview-header-suffix">{{template.model.suffix}}</small>
                         </div> 
                       </div>  
                     </div>  
@@ -142,7 +144,7 @@ export default {
         cta : [],
         model : {
           prefix : "", value : '', suffix : '',
-          article : "",  account : "",
+          subheader : "",  account : "",
           data : {
           },
         } 
@@ -150,11 +152,16 @@ export default {
       sampleVar : {
         columns: [
           { name: 'Variable', prop: "variable", readonly : true},
-          { name: 'Sample Value', prop: "value"}] ,
+          { name: 'Sample Value', prop: "value"}
+          //,{ name: 'Description', prop: "desc",readonly : true}
+        ] ,
         contact : [],
         data : [
-          { variable : "value"},{ variable : "prefix" },{ variable : "suffix" },
-          { variable : "article"},{ variable : "account" }
+          { variable : "subheader", desc : "eg: Amount,CODE "},
+          { variable : "prefix", desc : "eg: Rs,INR etc" }, 
+          { variable : "value", desc : "eg: 10,240 , 25 Dec"  },
+          { variable : "suffix" , desc : "eg: Rs,INR etc"  },
+          { variable : "account",  }
         ]
       } ,
       isTemplateLoding : false,
@@ -173,7 +180,7 @@ export default {
       return this.template.type == 'OTP';
     },
     messageCategory(){
-      return this.template.category;
+      return this.template.category || "";
     }
   },
   mounted(){
@@ -209,6 +216,7 @@ export default {
       if(this.template.type == "OTP"){
         this.template.category = 'OTP';
         this.template.header.label = 'OTP';
+        this.template.header.variant  = 'MAJOR';
       } else if(cat && cat?.item && cat.item?.suggestion){
         let suggestion = cat?.item?.suggestion;
         if(suggestion && this.template.header.label
@@ -302,6 +310,16 @@ export default {
                     text-align: right!important;
                     line-height: 28px;
                   }
+                   .oa-message-preview-header-prefix {
+                      font-size: .6em;
+                      vertical-align: text-bottom;
+                      padding-inline-end: 3px;
+                   }
+                  .oa-message-preview-header-suffix {
+                      font-size: .6em;
+                      vertical-align: text-top;
+                      padding-inline-start:3px;
+                  }   
             }
       }
   }
