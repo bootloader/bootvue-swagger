@@ -93,14 +93,30 @@
                 return this.message;
             }
         },
-        data: () => ({
-            viewerOptions : {
-                url: 'data-full-src',
-                title: [4, (image, imageData) => `${image.alt}`],
-                className : "m-chat-message-content-viewer",
-                navbar : false,
-            },
-        }),
+        methods: {
+            emitOnViewer(){
+                this.$emit('viewer',true)
+            }
+        },
+        data: function(){
+            let __THAT = this;
+            return {
+                viewerOptions : {
+                    url: 'data-full-src',
+                    title: [4, (image, imageData) => `${image.alt}`],
+                    className : "m-chat-message-content-viewer",
+                    navbar : false,
+                    show : function(){
+                        __THAT.$emit('viewer',true)
+                        console.log('show true');
+                    },
+                    hide : function(){
+                        console.log('hide false')
+                        __THAT.$emit('viewer',false)
+                    }
+                }
+            }
+        },
         props: {
             message : {
                 type: Object,
