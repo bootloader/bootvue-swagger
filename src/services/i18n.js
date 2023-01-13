@@ -34,6 +34,7 @@ let i18nConfig = {
         'ValidPhone' : 'Enter valid {_field_} eg +91 XXXXX XXXXX',
         'ValidPhonesPerLine' : 'Enter valid mobile number eg 91XXXXXXXXXX per line',
         'ValidEmail' : "Enter valid email address eg you@company.com",
+        'ValidURL' : "Enter valid URL address eg https://company.com/some/path/to_file",
         'Pattern' : "Enter valid {_field_}",
         'LessVariable' : "Insufficent number of valiables in {_field_}",
         'ExtraVariable' : "More than allowed valiables in {_field_}",

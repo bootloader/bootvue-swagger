@@ -363,7 +363,7 @@ var formatter = {
     try {
       url = new URL(string);
     } catch (_) {
-      return false;  
+      return "errors.ValidURL";  
     }
     return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
   },

@@ -48,6 +48,14 @@ $popular-list:(
     darker : #262a2e,
     darkish : #343a40d1,
 
+    nightest :rgba(0, 0, 0, 0.5),
+    night :rgba(0, 0, 0, 0.25),
+    nighter :rgba(0, 0, 0, 0.1),
+    nightish :rgba(0, 0, 0, 0.05),
+    dayish :rgba(255, 255, 255, 0.05),
+    dayer :rgba(255, 255, 255, 0.1),
+    day :rgba(255, 255, 255, 0.25),
+    dayest :rgba(255, 255, 255, 0.5),
 
     facebook: #4267B2,
     twitter:  #1DA1F2,
@@ -142,8 +150,14 @@ $popular-list:(
 .text-dotted {
     text-decoration: underline dotted;
 }
-.border-1px {
+.border-1px,.b-1px {
     border-width: 1px; border-style: solid;
+}
+.bb-1px {
+    border-bottom-width: 1px; border-bottom-style: solid;
+}
+.bl-1px {
+    border-left-width: 1px; border-left-style: solid;
 }
 .dull {
     opacity: 0.7;

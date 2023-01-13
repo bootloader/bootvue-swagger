@@ -84,8 +84,8 @@
                           <div class="oa-message-preview-cat">
                               <span class="oa-type-icon" v-if="messageCategory" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
                           </div> 
-                          <div class="text-black">{{template.model.subheader}}</div>
-                            <div class="text-sm text-grey">{{template.model.account}}</div>
+                          <div class="text-black">{{template.model.text}}</div>
+                            <div class="text-sm text-grey">{{template.model.subtext}}</div>
                         </div>  
                         <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
                           <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
@@ -94,7 +94,15 @@
                         </div> 
                       </div>  
                     </div>  
-                  </div>  
+                  </div>
+                   <div class="oa-message-preview-buttons" v-if="template.model">
+                        <div class="oa-message-preview-button" v-for="(cta,i) in ctas" v-bind:key="i">
+                         <i class="fa" :class="{
+                          'fa-external-link' : cta.type == 'URL',
+                          'fa-phone-alt' : cta.type == 'PHONE',
+                         }"/>&nbsp;{{cta.label}}
+                        </div>
+                   </div>  
 
                   <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 200px; min-width:200px">
                     <VGrid theme="default" class="w-100 position-relative" 
@@ -104,7 +112,44 @@
                   ></VGrid>
                 </div> 
               </b-col>  
-
+              <b-col cols="8">
+                <b-row class="bg-nightish m-0 button-detail">
+                   <b-col cols="8" class="text-right">
+                   </b-col>
+                   <b-col cols="4" class="text-right">
+                    <b-button  @click="addButton" variant="outline-oa-blue" :disabled="ctas.length>2" size="sm" class="m-2 mx-1">
+                        Add Button <i class="fa fa-plus"/> 
+                    </b-button>
+                   </b-col>
+                </b-row>  
+                <b-row v-for="(cta,i) in ctas" v-bind:key="i" class="bg-nightish m-0 button-detail">
+                  <b-col cols="5">
+                        <base-v-select :name="`Button-${i+1} Type`" v-model="cta.type" clearable 
+                          :options="[ { code : 'URL'} ,{ code : 'PHONE', label : 'Phone' }]"
+                          alternative question required :disabled="!editable">
+                        </base-v-select>
+                  </b-col>
+                  <b-col cols="5">
+                    <base-input :name="`Button-${i+1} Title`" v-model="cta.label"  v-if="!!cta.type"
+                      alternative question feedback :disabled="!editable" :required="!!cta.type"
+                      rules="required|max:20" />
+                  </b-col>
+                  <b-col cols="2" class="text-right mx-auto">
+                      <b-button  @click="ctas.splice(i,1)" variant="outline-danger" :title="`Delete Button-${i+1}`"
+                           :disabled="!editable" size="sm" class="m-2">
+                          <i class="fa fa-times"/>
+                      </b-button>
+                  </b-col>
+                  <b-col cols="11" v-if="cta.type" >
+                      <base-input v-if="cta.type=='URL'" :name="`Button-${i+1} URL`" v-model="cta.url"  
+                      alternative question feedback required :disabled="!editable"
+                      rules="required|URL" />
+                      <base-input v-if="cta.type=='PHONE'" :name="`Button-${i+1} Phone No.`" v-model="cta.phone"  
+                      alternative question feedback required :disabled="!editable"
+                      rules="required|phone" />
+                  </b-col>
+                </b-row>
+              </b-col>  
             </b-row>
 
         <b-row align-v="center" slot="footer">
@@ -144,7 +189,7 @@ export default {
         cta : [],
         model : {
           prefix : "", value : '', suffix : '',
-          subheader : "",  account : "",
+          text : "",  subtext : "",
           data : {
           },
         } 
@@ -157,11 +202,11 @@ export default {
         ] ,
         contact : [],
         data : [
-          { variable : "subheader", desc : "eg: Amount,CODE "},
           { variable : "prefix", desc : "eg: Rs,INR etc" }, 
           { variable : "value", desc : "eg: 10,240 , 25 Dec"  },
           { variable : "suffix" , desc : "eg: Rs,INR etc"  },
-          { variable : "account",  }
+          { variable : "text", desc : "eg: Amount,CODE "},
+          { variable : "subtext",  }
         ]
       } ,
       isTemplateLoding : false,
@@ -181,6 +226,9 @@ export default {
     },
     messageCategory(){
       return this.template.category || "";
+    },
+    ctas(){
+      return this.template.cta || [];
     }
   },
   mounted(){
@@ -233,6 +281,7 @@ export default {
     async saveTemplate(){
        let resp = await this.$service.post("/panel/api/v1/hsm/tmpl",{
           ...this.template,
+          cta : this.ctas,
           categoryTitle : this.$refs.category?.selected().item.label
         },{
          ref : this.$refs.formValidator
@@ -240,6 +289,13 @@ export default {
        this.$router.push({
         name : "Templates"
        });
+    },
+    addButton(){
+      if(this.ctas.length<3){
+        this.ctas.push({
+          type : "", url : "",label : "", phone : "", variant : ""
+        });
+      }
     },
     afterEdit(e){
       console.log("e.detail",e.detail);
@@ -262,15 +318,41 @@ export default {
       color: rgb(221, 137, 59);
 
   }
+  .button-detail:hover, .button-detail:focus {
+    border-right: 1px solid #3f3f95;
+    border-left: 1px solid #3f3f95;
+  }
 </style>
 <style lang="scss">
+
+  .oa-message-preview-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 33%;
+    max-width: 100%;
+    justify-content: space-between;
+      .oa-message-preview-button {
+        border-radius: 2px;
+        border: 1px solid rgba(41,45,120, 0.16);
+        opacity: 1;
+        background-color: rgba(255,255,255, 1);
+        padding: 7px;
+        font-family: sans-serif;
+        flex: auto;
+        text-align: center;
+        cursor: pointer;
+        color: rgb(0, 122, 255);
+        font-size: 14px;
+        font-weight: bold;
+      }
+  }
+
   .oa-message-preview-wrapper {
       border-radius: 2px;
       border: 1px solid rgba(41,45,120, 0.16);
       opacity: 1;
       background-color: rgba(255,255,255, 1);
       padding: 4px;
-
       font-family: sans-serif;
       
       .oa-message-preview-header {
