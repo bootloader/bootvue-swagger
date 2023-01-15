@@ -2,6 +2,7 @@ import Vue from 'vue';
 import moment from 'moment';
 import numeral from 'numeral';
 import JsonUtils from './../@common/utils/JsonUtils';
+import mustache from 'mustache';
 
 var CONTACT_LABELS_DICT = {};
 var CONTACT_TAGS_DICT = {};
@@ -462,6 +463,13 @@ var formatter = {
     });
     Vue.filter('json', function (str) {
       return JSON.stringify(JsonUtils.deepParse(str), null, 2);
+    });
+    Vue.filter('hb', function (str,model) {
+      try {
+        return mustache.render(str, model);
+      } catch(e){
+        return str;
+      }
     });
 
     Vue.filter('item_code', THAT.item_code);

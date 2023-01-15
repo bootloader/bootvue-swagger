@@ -48,19 +48,64 @@
                 </b-col>
                 
                 <b-col cols="12">
-                    <base-input name="Title" v-model="template.title"  
-                      alternative question feedback required :disabled="!editable"
+                    <base-input name="Title" v-model="template.title" hidden
+                      alternative question feedback :disabled="!editable"
                       rules="required|max:30" />
                     <base-text-area  name="Body" alternative question feedback required :disabled="!editable"
                           placeholder="Type here" v-model="template.body"  class="template-body"
                           rules="required|max:360" :rows="6" 
                           :textLimit="360" 
+                          :textCompleteStrategies="strategies"
                         :helpMessage="bodyTextLimit">
                     </base-text-area>
-                    <base-input name="Footer" v-model="template.footer"  :disabled="!editable"
-                      alternative question feedback
-                      rules="max:20"/>
+                    <base-text-area name="Footer" v-model="template.footer"  :disabled="!editable" 
+                      alternative question feedback  hidden
+                      :textCompleteStrategies="strategies" :rows="1" nonewline
+                      rules="max:60"/>
                 </b-col>
+
+
+              <b-col cols="12">
+                <b-row class="bg-nightish m-0 button-detail">
+                   <b-col cols="8" class="text-right">
+                   </b-col>
+                   <b-col cols="4" class="text-right">
+                    <b-button  @click="addButton" variant="outline-oa-blue" :disabled="ctas.length>2" size="sm" class="m-2 mx-1">
+                        Add Button <i class="fa fa-plus"/> 
+                    </b-button>
+                   </b-col>
+                </b-row>  
+                <b-row v-for="(cta,i) in ctas" v-bind:key="i" class="bg-nightish m-0 button-detail">
+                  <b-col cols="5">
+                        <base-v-select :name="`Button-${i+1} Type`" v-model="cta.type" clearable 
+                          :options="[ { code : 'URL'} ,{ code : 'PHONE', label : 'Phone' }]"
+                          alternative question required :disabled="!editable">
+                        </base-v-select>
+                  </b-col>
+                  <b-col cols="5">
+                    <base-text-area :name="`Button-${i+1} Title`" v-model="cta.label"  v-if="!!cta.type" @change="templateTextChange"
+                      alternative question feedback :disabled="!editable" :required="!!cta.type"
+                      :textCompleteStrategies="strategies" :rows="1" nonewline
+                      rules="required|max:30" />
+                  </b-col>
+                  <b-col cols="2" class="text-right mx-auto">
+                      <b-button  @click="ctas.splice(i,1)" variant="outline-danger" :title="`Delete Button-${i+1}`"
+                           :disabled="!editable" size="sm" class="m-2">
+                          <i class="fa fa-times"/>
+                      </b-button>
+                  </b-col>
+                  <b-col cols="11" v-if="cta.type" >
+                      <base-input v-if="cta.type=='URL'" :name="`Button-${i+1} URL`" v-model="cta.url"  @change="templateTextChange"
+                      alternative question feedback required :disabled="!editable"
+                      :textCompleteStrategies="strategies" :rows="1" nonewline
+                      rules="required|URL" />
+                      <base-input v-if="cta.type=='PHONE'" :name="`Button-${i+1} Phone No.`" v-model="cta.phone" @change="templateTextChange"
+                      alternative question feedback required :disabled="!editable"
+                      :textCompleteStrategies="strategies" :rows="1" nonewline
+                      rules="required|phone" />
+                  </b-col>
+                </b-row>
+              </b-col>
 
               </b-row>  
              </b-col> 
@@ -84,8 +129,8 @@
                           <div class="oa-message-preview-cat">
                               <span class="oa-type-icon" v-if="messageCategory" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
                           </div> 
-                          <div class="text-black">{{template.model.text}}</div>
-                            <div class="text-sm text-grey">{{template.model.subtext}}</div>
+                          <div class="text-black text-truncate">{{template.model.title}}</div>
+                            <div class="text-sm text-grey text-truncate">{{template.model.subtitle}}</div>
                         </div>  
                         <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
                           <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
@@ -93,63 +138,36 @@
                           <small class="oa-message-preview-header-suffix">{{template.model.suffix}}</small>
                         </div> 
                       </div>  
-                    </div>  
+                    </div>
+                    <div class="oa-message-preview-message">
+                        <div class="oa-message-preview-message-icon">
+                            <i class="my-oa-chat text-white bg-grey bg-round-text"/>
+                        </div> 
+                        <div class="oa-message-preview-message-text">
+                          {{template.body | hb(template.model)}}
+                        </div>  
+                    </div>    
                   </div>
                    <div class="oa-message-preview-buttons" v-if="template.model">
                         <div class="oa-message-preview-button" v-for="(cta,i) in ctas" v-bind:key="i">
                          <i class="fa" :class="{
                           'fa-external-link' : cta.type == 'URL',
                           'fa-phone-alt' : cta.type == 'PHONE',
-                         }"/>&nbsp;{{cta.label}}
+                         }"/>&nbsp;{{cta.label | hb(template.model)}}
                         </div>
                    </div>  
 
-                  <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 200px; min-width:200px">
+                  <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
                     <VGrid theme="default" class="w-100 position-relative" 
                       :columns="sampleVar.columns"
-                      :source="sampleVar.data"
+                      :source="vars"
                       @afteredit=afterEdit
-                  ></VGrid>
-                </div> 
+                    ></VGrid>
+                   </div> 
+                   <div>{{template.model | json}}
+                   </div> 
               </b-col>  
-              <b-col cols="8">
-                <b-row class="bg-nightish m-0 button-detail">
-                   <b-col cols="8" class="text-right">
-                   </b-col>
-                   <b-col cols="4" class="text-right">
-                    <b-button  @click="addButton" variant="outline-oa-blue" :disabled="ctas.length>2" size="sm" class="m-2 mx-1">
-                        Add Button <i class="fa fa-plus"/> 
-                    </b-button>
-                   </b-col>
-                </b-row>  
-                <b-row v-for="(cta,i) in ctas" v-bind:key="i" class="bg-nightish m-0 button-detail">
-                  <b-col cols="5">
-                        <base-v-select :name="`Button-${i+1} Type`" v-model="cta.type" clearable 
-                          :options="[ { code : 'URL'} ,{ code : 'PHONE', label : 'Phone' }]"
-                          alternative question required :disabled="!editable">
-                        </base-v-select>
-                  </b-col>
-                  <b-col cols="5">
-                    <base-input :name="`Button-${i+1} Title`" v-model="cta.label"  v-if="!!cta.type"
-                      alternative question feedback :disabled="!editable" :required="!!cta.type"
-                      rules="required|max:20" />
-                  </b-col>
-                  <b-col cols="2" class="text-right mx-auto">
-                      <b-button  @click="ctas.splice(i,1)" variant="outline-danger" :title="`Delete Button-${i+1}`"
-                           :disabled="!editable" size="sm" class="m-2">
-                          <i class="fa fa-times"/>
-                      </b-button>
-                  </b-col>
-                  <b-col cols="11" v-if="cta.type" >
-                      <base-input v-if="cta.type=='URL'" :name="`Button-${i+1} URL`" v-model="cta.url"  
-                      alternative question feedback required :disabled="!editable"
-                      rules="required|URL" />
-                      <base-input v-if="cta.type=='PHONE'" :name="`Button-${i+1} Phone No.`" v-model="cta.phone"  
-                      alternative question feedback required :disabled="!editable"
-                      rules="required|phone" />
-                  </b-col>
-                </b-row>
-              </b-col>  
+   
             </b-row>
 
         <b-row align-v="center" slot="footer">
@@ -168,14 +186,13 @@
 </template>
 <script>
 import basic from '../mixin/basic.js'
- import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
-     import JsonXPath from "@/@common/utils/JsonXPath";
+import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
+import JsonXPath from "@/@common/utils/JsonXPath";
+import JsonUtils from '@/@common/utils/JsonUtils';
+import TmplUtils from "@/@common/utils/TmplUtils";
 
-export default {
-  mixins : [basic],
-  data() {
+  function newTemplate(){
     return {
-      template : {
         templateId : '',
         companyId : '',
         code : "",
@@ -183,32 +200,63 @@ export default {
         header :  {
           label : '', variant : "MAJOR"
         }, 
-        title : '', 
+        //title : '', 
         body : '',
         footer : '', 
         cta : [],
         model : {
           prefix : "", value : '', suffix : '',
-          text : "",  subtext : "",
+          title : "",  subtitle : "",
           data : {
           },
         } 
-      },
+      };
+  }
+
+let sampleJsonKeys = JsonUtils.paths(newTemplate().model);
+
+export default {
+  mixins : [basic],
+  data() {
+    return {
+      template : newTemplate(),
       sampleVar : {
         columns: [
           { name: 'Variable', prop: "variable", readonly : true},
-          { name: 'Sample Value', prop: "value"}
+          { name: 'Sample Value', prop: "sample"}
           //,{ name: 'Description', prop: "desc",readonly : true}
         ] ,
         contact : [],
+        model : [
+          { variable : "{{prefix}}", path : "prefix", desc : "eg: Rs,INR etc" }, 
+          { variable : "{{value}}", path : "value" ,desc : "eg: 10,240 , 25 Dec"  },
+          { variable : "{{suffix}}" , path : "suffix" , desc : "eg: Rs,INR etc"  },
+          { variable : "{{title}}",path : "title",  desc : "eg: Amount,CODE "},
+          { variable : "{{subtitle}}", path : "subtitle" }
+        ],
         data : [
-          { variable : "prefix", desc : "eg: Rs,INR etc" }, 
-          { variable : "value", desc : "eg: 10,240 , 25 Dec"  },
-          { variable : "suffix" , desc : "eg: Rs,INR etc"  },
-          { variable : "text", desc : "eg: Amount,CODE "},
-          { variable : "subtext",  }
         ]
       } ,
+      strategies: [{
+        match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
+        search(term, callback) {
+          let data = "data.".startsWith(term) ? "data." : null;
+          let global = "global.".startsWith(term) ? "global." : null;
+          callback([...sampleJsonKeys,data].filter(function (name) {
+            return name && name.startsWith(term);
+          }).slice(0, 10))
+        },
+        template(name) {
+          return name;
+        },
+        replace(start,end) {
+          let suffix = end.trim().startsWith("}}") ? '' : '}}';
+          if(/^(data|global)\.$/.test(start)){
+            return ['$1{{' + start, suffix];
+          }
+          return '$1{{' + start + suffix
+        },
+      }],
       isTemplateLoding : false,
       headerLabels : []
     };
@@ -229,7 +277,24 @@ export default {
     },
     ctas(){
       return this.template.cta || [];
+    },
+    vars(){
+      return [...this.sampleVar.model,...this.sampleVar.data]
     }
+  },
+  watch : {
+    "template.header.variant" : function(neVal){
+        this.templateTextChange(neVal)
+    },
+    "template.body" : function(neVal){
+        this.templateTextChange(neVal)
+    },
+    "template.footer" : function(neVal){
+        this.templateTextChange(neVal)
+    },
+    "template.cta" : function(neVal){
+        this.templateTextChange(neVal)
+    },
   },
   mounted(){
     this.load();
@@ -300,14 +365,29 @@ export default {
     afterEdit(e){
       console.log("e.detail",e.detail);
       const rs = JsonXPath({
-        path : '$.' +e.detail.model.variable,
+        path : '$.' +e.detail.model.path,
         json: this.template.model,
         resultType: "all",
-        value : e.detail.model.value
+        value : e.detail.model.sample
       });
       this.template.model.__ob__.dep.notify();
       console.log("this.template.model",this.template.model)
-    }
+    },
+    templateTextChange(){
+      let neVal = ( JSON.stringify([
+        this.template.header, this.template.body, this.template.title, this.template.footer, this.template.cta])
+      )
+      let newItem = this.template;
+      this.sampleVar.data = TmplUtils.getVars(
+          neVal,/({{((data|global)\.[\w\d\.]+)}})/g).map(function(v,i){
+          return {
+              variable : v.variable,
+              path : v.path,
+              sample : JsonXPath({path : '$.' +v.path,json : newItem.model})[0]
+          }
+      });
+      this.template.model.__ob__.dep.notify();
+    },
   },
   components: { VGrid
   },
@@ -317,6 +397,10 @@ export default {
   .template-body.basic-component .form-group .help-feedback{
       color: rgb(221, 137, 59);
 
+  }
+  .button-detail{
+      border-right: 1px solid #3f3f9500;
+      border-left: 1px solid #3f3f9500;
   }
   .button-detail:hover, .button-detail:focus {
     border-right: 1px solid #3f3f95;
@@ -359,7 +443,9 @@ export default {
         border-radius: 2px;
         opacity: 1;
         background-color: rgba(255,255,255, 1);
-        background-size: 59.73159999999999%;
+        background-image: url('~@/assets/images/oa/bg-oa-message.png');
+        background-repeat: repeat;
+        background-color: #cccccc;
         padding: 16px;
           .oa-message-preview-cat {
             opacity: 1;
@@ -403,6 +489,16 @@ export default {
                       padding-inline-start:3px;
                   }   
             }
+      }
+      .oa-message-preview-message {
+        display: flex;
+        .oa-message-preview-message-icon {
+          width: 20px;
+          margin-right: 4px;
+        }
+        .oa-message-preview-message-text {
+          font-size: 14px;
+        }
       }
   }
 </style>>

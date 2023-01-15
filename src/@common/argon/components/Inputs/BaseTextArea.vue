@@ -56,11 +56,11 @@
               v-on="listeners"
               v-bind="$attrs" 
               :valid="valid" :disabled="disabled"
-              :placeholder="$attrs.placeholder"
+              :placeholder="question ? '' : $attrs.placeholder"
               :required="required"
               class=""
               :areaClass="[ 
-                size ? 'form-control-'+size : '',
+                size ? 'form-control-'+size : 'form-control',
                 (valid && validated && successMessage) ? 'is-valid' : '',
                 (invalid && validated) ? 'is-invalid' : '',
                 inputClasses].join(' ')"
@@ -361,10 +361,10 @@
   };
 </script>
 <style>
-  .basic-text-area textarea{
+  .bc-text-area textarea{
     resize: none;
   }
-  .basic-text-area .resizable textarea{
+  .bc-text-area .resizable textarea{
     resize: both;
   }
 </style>
