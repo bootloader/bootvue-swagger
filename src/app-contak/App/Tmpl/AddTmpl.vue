@@ -50,7 +50,7 @@
                 <b-col cols="12">
                     <base-input name="Title" v-model="template.title" hidden
                       alternative question feedback :disabled="!editable"
-                      rules="required|max:30" />
+                      rules="max:30" />
                     <base-text-area  name="Body" alternative question feedback required :disabled="!editable"
                           placeholder="Type here" v-model="template.body"  class="template-body"
                           rules="required|max:360" :rows="6" 
@@ -70,7 +70,7 @@
                    <b-col cols="8" class="text-right">
                    </b-col>
                    <b-col cols="4" class="text-right">
-                    <b-button  @click="addButton" variant="outline-oa-blue" :disabled="ctas.length>2" size="sm" class="m-2 mx-1">
+                    <b-button  @click="addButton" variant="outline-oa-blue" :disabled="(ctas.length>2) || !editable" size="sm" class="m-2 mx-1">
                         Add Button <i class="fa fa-plus"/> 
                     </b-button>
                    </b-col>
@@ -95,11 +95,11 @@
                       </b-button>
                   </b-col>
                   <b-col cols="11" v-if="cta.type" >
-                      <base-input v-if="cta.type=='URL'" :name="`Button-${i+1} URL`" v-model="cta.url"  @change="templateTextChange"
+                      <base-text-area v-if="cta.type=='URL'" :name="`Button-${i+1} URL`" v-model="cta.url"  @change="templateTextChange"
                       alternative question feedback required :disabled="!editable"
                       :textCompleteStrategies="strategies" :rows="1" nonewline
                       rules="required|URL" />
-                      <base-input v-if="cta.type=='PHONE'" :name="`Button-${i+1} Phone No.`" v-model="cta.phone" @change="templateTextChange"
+                      <base-text-area v-if="cta.type=='PHONE'" :name="`Button-${i+1} Phone No.`" v-model="cta.phone" @change="templateTextChange"
                       alternative question feedback required :disabled="!editable"
                       :textCompleteStrategies="strategies" :rows="1" nonewline
                       rules="required|phone" />
@@ -238,7 +238,7 @@ export default {
         ]
       } ,
       strategies: [{
-        match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
+        match: /(^|\s|\w|[\/\=\?])\{+([a-z0-9+\-\_\.]*)$/,
         search(term, callback) {
           let data = "data.".startsWith(term) ? "data." : null;
           let global = "global.".startsWith(term) ? "global." : null;
@@ -311,6 +311,7 @@ export default {
          for(var i in resp.results){
           if(resp.results[i].templateId == this.$route.params.templateId){
             this.template = resp.results[i];
+            this.template.model = { ...newTemplate().model || {}, ...this.template.model };
             break;
           }
          }
@@ -344,6 +345,7 @@ export default {
       }
     },
     async saveTemplate(){
+      console.log("Saving...")
        let resp = await this.$service.post("/panel/api/v1/hsm/tmpl",{
           ...this.template,
           cta : this.ctas,
@@ -351,6 +353,7 @@ export default {
         },{
          ref : this.$refs.formValidator
        });
+       console.log("Saving...")       
        this.$router.push({
         name : "Templates"
        });
@@ -370,8 +373,8 @@ export default {
         resultType: "all",
         value : e.detail.model.sample
       });
-      this.template.model.__ob__.dep.notify();
       console.log("this.template.model",this.template.model)
+      this.template.model.__ob__.dep.notify();
     },
     templateTextChange(){
       let neVal = ( JSON.stringify([

@@ -366,6 +366,9 @@ var formatter = {
     } catch (_) {
       return "errors.ValidURL";  
     }
+    if(/\s/.test(string)){
+      return "errors.ValidURL";
+    }
     return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
   },
   oneline : function(contents){
