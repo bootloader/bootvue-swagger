@@ -104,8 +104,6 @@
     import pebounce from "pebounce";
     
     import AudioVisual from 'vue-audio-visual'
-    import ElementUI from 'element-ui';
-    Vue.use(ElementUI);
     Vue.use(AudioVisual);
 
     var userAgent = window.navigator.userAgent.toLowerCase(),
