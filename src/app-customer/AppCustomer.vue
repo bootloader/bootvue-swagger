@@ -11,8 +11,7 @@
 
 <script>
   import Vue from 'vue';
-  import ElementUI from 'element-ui';
-  Vue.use(ElementUI);
+  
   import router from "./router";
 
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';

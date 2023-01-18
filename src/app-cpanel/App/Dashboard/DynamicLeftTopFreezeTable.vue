@@ -83,7 +83,6 @@
     </b-card>
 </template>
 <script>
-  import { Table, TableColumn} from 'element-ui'
   import moment from 'moment'
   import VueMoment from 'vue-moment';
   import DateRangePicker from 'vue2-daterange-picker'
@@ -99,8 +98,6 @@
   export default {
     name: 'dynamic-left-top-freeze-table',
     components: {
-      [Table.name]: Table,
-      [TableColumn.name]: TableColumn,
       DateRangePicker
     },
     props:{
