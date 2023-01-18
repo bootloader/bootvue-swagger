@@ -83,11 +83,16 @@
   </b-card>
 </template>
 <script>
+import { Table, TableColumn} from 'element-ui'
 import moment from 'moment'
 import VueMoment from 'vue-moment';
 import DateRangePicker from 'vue2-daterange-picker'
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import {Parser} from 'json2csv';
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
+// configure language
+locale.use(lang)
 
 function hour0(mmt){
   return mmt.hour(0).minute(0).seconds(0).milliseconds(0);
@@ -98,6 +103,8 @@ function hour24(mmt){
 export default {
   name: 'dynamic-left-top-freeze-table',
   components: {
+    [Table.name]: Table,
+    [TableColumn.name]: TableColumn,
     DateRangePicker
   },
   props:{

@@ -152,6 +152,7 @@
 </template>
 
 <script>
+import {Row,Col,Card, Avatar} from 'element-ui';
 import store from './store'
 import ChatWindow from './ChatWindow.vue'
 
@@ -160,7 +161,11 @@ import OpenIcon from '@/assets/vendor/webchat/logo-no-bg.svg'
 
 export default {
   components: {
-    ChatWindow
+    ChatWindow,
+    Row,
+    Col,
+    Card,
+    Avatar
   },
   props: {
     headerLogo:String,

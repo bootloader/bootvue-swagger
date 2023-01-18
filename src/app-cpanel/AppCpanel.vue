@@ -6,12 +6,7 @@
 import Vue from 'vue';
 import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
 Vue.component('BaseVSelect', () => import('@/@common/custom/components/base/BaseVSelect.vue'));
-import ElementUI from 'element-ui';
-import lang from 'element-ui/lib/locale/lang/en'
-import locale from 'element-ui/lib/locale'
-// configure language
-locale.use(lang)
-Vue.use(ElementUI, { locale });
+
 Vue.use(DashboardPlugin);
 
 console.log("This is AppPartner")
