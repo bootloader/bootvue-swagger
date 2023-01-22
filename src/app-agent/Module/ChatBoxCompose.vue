@@ -173,20 +173,16 @@
             m() {
                 return this.message
             },
-            selectedTemplate(){
+            selectedTemplates(){
               if(this.model.templateId){
-                return {
-                    ...this.$refs.selectedTemplate?.selected().item,
-                   // attachments : this.attachments 
-                }
+                this.selectedTemplate = this.$refs.selectedTemplate?.selected().item || null
               }
-              return null;  
             },
             hasAttachment(){
-                return this.selectedTemplate.formatType && !(this.selectedTemplate.formatType == 'TEXT')
+                return this.selectedTemplate?.formatType && !(this.selectedTemplate?.formatType == 'TEXT')
             },
             acceptedFiles(){
-                switch(this.selectedTemplate.formatType){
+                switch(this.selectedTemplate?.formatType){
                     case "IMAGE":
                         return 'image/png, image/jpeg';
                     case "VIDEO":
@@ -198,8 +194,8 @@
                 }
             },
             sampleVarData(){
-              if(this.model.templateId){
-                let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer)
+              if(this.model.templateId && this.selectedTemplate){
+                let neVal = (this.selectedTemplate?.header + this.selectedTemplate?.template + this.selectedTemplate?.footer);
                  let THAT = this;
                   return TmplUtils.getVars(neVal,/({{((data|global)\.[\w\d\.]+)}})/g
                   ).map(function(v,i){
@@ -219,6 +215,7 @@
                 contactId : null,
                 templateId : null,
             },
+            selectedTemplate:null,
             vars : {
                 contact : null, 
                 data : {}, 
