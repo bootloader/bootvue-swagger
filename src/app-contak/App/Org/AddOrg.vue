@@ -42,12 +42,11 @@
               <b-col cols="6">
                   <base-input name="Website" v-model="company.websiteUrl" 
                     alternative question feedback  required/>
-                  <MyUpload ref="myVueDropzone" autoProcessQueue disablePreviews
+                  <MyUpload ref="myVueDropzone" autoProcessQueue disablePreviews v-model="company.logoUrl"
+                      @uploaded="uploaded"
                       :upload-url="$global.MyConst.context + '/panel/api/v1/logo'"
-                      class="myVueDropzone justify-content-center align-items-end d-flex">
-                      <div class="dropzone-custom-content">
-                        <h3 class="dropzone-custom-title">Select new Logos</h3>
-                      </div>
+                      placeholder="Upload new Logo"
+                      class="myVueDropzone">
                     </MyUpload>
               </b-col>
               
@@ -122,6 +121,10 @@ export default {
             break;
           }
         }
+    },
+    uploaded(file){
+      console.log("uploaded",file);
+      this.company.logoUrl = file.url;
     }
   },
   components: {

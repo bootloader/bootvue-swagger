@@ -47,7 +47,7 @@
                   </base-v-select>
                 </b-col>
                 
-                <b-col cols="12">
+                <b-col cols="12" v-if="iCompany">
                     <base-input name="Title" v-model="template.title" hidden
                       alternative question feedback :disabled="!editable"
                       rules="max:30" />
@@ -62,8 +62,15 @@
                       alternative question feedback  hidden
                       :textCompleteStrategies="strategies" :rows="1" nonewline
                       rules="max:60"/>
+                    <MyUpload ref="myVueDropzone" autoProcessQueue disablePreviews  :readonly="!editable"
+                        :type.sync="template.header.mediaType" 
+                        :thumb.sync="template.header.mediaThumb"
+                        v-model="template.header.mediaUrl"
+                        :upload-url="`${$global.MyConst.context}/panel/api/v2/org/${iCompany.companyId}/hsm/tmpl/${templateCode}/media`"
+                        placeholder="Select Media" add-remove-links @uploaded="uploaded"
+                        class="mb-2">
+                    </MyUpload>
                 </b-col>
-
 
               <b-col cols="12">
                 <b-row class="bg-nightish m-0 button-detail">
@@ -123,6 +130,10 @@
                   </base-v-select>    
 
                   <div class="oa-message-preview-wrapper" v-if="template.model">
+                    <span v-if="template.header.mediaUrl">
+                        <img v-if="template.header.mediaType=='IMAGE'" :src="template.header.mediaUrl" />
+                        <video v-else-if="template.header.mediaType=='VIDEO'" :src="template.header.mediaUrl"></video>
+                    </span>  
                     <div class="oa-message-preview-header">
                       <div class="oa-message-preview-header-body row">
                         <div class="col-6" >
@@ -148,7 +159,7 @@
                         </div>  
                     </div>    
                   </div>
-                   <div class="oa-message-preview-buttons" v-if="template.model">
+                  <div class="oa-message-preview-buttons" v-if="template.model && ctas.length>0">
                         <div class="oa-message-preview-button" v-for="(cta,i) in ctas" v-bind:key="i">
                          <i class="fa" :class="{
                           'fa-external-link' : cta.type == 'URL',
@@ -159,12 +170,12 @@
 
                   <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
                     <VGrid theme="default" class="w-100 position-relative" 
-                      :columns="sampleVar.columns"
+                      :columns="sampleVar.columns" :readonly="!editable"
                       :source="vars"
                       @afteredit=afterEdit
                     ></VGrid>
                    </div> 
-                   <div>{{template.model | json}}
+                   <div hidden>{{template.header | json}}
                    </div> 
               </b-col>  
    
@@ -190,6 +201,8 @@ import VGrid, { VGridVueTemplate } from "@revolist/vue-datagrid";
 import JsonXPath from "@/@common/utils/JsonXPath";
 import JsonUtils from '@/@common/utils/JsonUtils';
 import TmplUtils from "@/@common/utils/TmplUtils";
+import MyUpload from '@/@common/custom/components/MyUpload.vue';
+
 
   function newTemplate(){
     return {
@@ -198,7 +211,8 @@ import TmplUtils from "@/@common/utils/TmplUtils";
         code : "",
         type : "OTP", category : "",
         header :  {
-          label : '', variant : "MAJOR"
+          label : '', variant : "MAJOR",
+          mediaUrl : "", mediaThumb : "", mediaType : "",
         }, 
         //title : '', 
         body : '',
@@ -223,7 +237,7 @@ export default {
       sampleVar : {
         columns: [
           { name: 'Variable', prop: "variable", readonly : true},
-          { name: 'Sample Value', prop: "sample"}
+          { name: 'Sample Value', prop: "sample", readonly : false}
           //,{ name: 'Description', prop: "desc",readonly : true}
         ] ,
         contact : [],
@@ -280,6 +294,9 @@ export default {
     },
     vars(){
       return [...this.sampleVar.model,...this.sampleVar.data]
+    },
+    templateCode(){
+      return this.template?.code || "new"
     }
   },
   watch : {
@@ -317,8 +334,9 @@ export default {
          }
          this.isTemplateLoding = false;
       } else {
-        this.loadDefault();
+        await this.loadDefault();
       }
+      this.sampleVar.columns[1].readonly = !this.editable
     },
     async loadDefault(catChanged){
       if(catChanged === true){
@@ -391,8 +409,13 @@ export default {
       });
       this.template.model.__ob__.dep.notify();
     },
+    uploaded(file){
+      console.log("uploaded",file);
+      this.template.header.mediaUrl = file.url;
+      this.template.header.mediaType = file.fileType;
+    }
   },
-  components: { VGrid
+  components: { VGrid,MyUpload
   },
 };
 </script>
@@ -441,6 +464,11 @@ export default {
       background-color: rgba(255,255,255, 1);
       padding: 4px;
       font-family: sans-serif;
+
+      img,video {
+        width :100%;
+        padding-bottom: 5px;
+      }
       
       .oa-message-preview-header {
         border-radius: 2px;
