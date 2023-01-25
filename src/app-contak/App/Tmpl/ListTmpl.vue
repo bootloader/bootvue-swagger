@@ -19,25 +19,34 @@
         <el-table class="table-responsive table"
                   :data="tableData"
                   header-row-class-name="thead-light">
-          <el-table-column label="Template Code"
-                          min-width="50px"
+          <el-table-column label="Template Code" sortable
+                          min-width="40px"
                           prop="code">
           </el-table-column>
-          <el-table-column label="Template Title"
-                          min-width="50px"
-                          prop="title">
+          <el-table-column label="Template Category" sortable
+                          min-width="40px"
+                          prop="category">
           </el-table-column>
-
+          <el-table-column label="Media" sortable
+                          min-width="40px"
+                          prop="header.mediaType">
+              <template v-slot="{row}">
+                <my-icon v-if="row" type="messageType" :status="row.header.mediaType" :value="row.header.mediaType"/>
+              </template>
+          </el-table-column>
           <el-table-column label="Status"
-                          min-width="30px"
+                          min-width="20px"
                           prop="approved">
             <template v-slot="{row}">
               <my-icon v-if="row" type="status" status="approved" value="Approved"/>
             </template>
           </el-table-column>
-          <el-table-column label="Status"
-                          min-width="30px"
+          <el-table-column label="Action"
+                          min-width="40px"
                           prop="templateId">
+            <template #header>
+              <el-input v-model="search" size="small" placeholder="Type to search" />
+            </template>             
             <template v-slot="{row}">
                 <b-button v-if="iCompany"
                         variant="outline-oa-blue" size="sm"
@@ -49,6 +58,9 @@
                             },
                         }">
                         View
+                </b-button>
+                <b-button v-if="iCompany" variant="outline-danger" size="sm" @click="deletTmpl(row)">
+                  <i  class="fa fa-trash"/>
                 </b-button>
             </template>
           </el-table-column>
@@ -73,11 +85,15 @@ export default {
     data() {
       return {
         tmpl : [],
+        search : "",
       }
     },
     computed : {
       tableData(){
-        return this.tmpl;
+        let search = this.search.toLowerCase();
+        return this.tmpl.filter((row)=>{
+          return !row.deleted && row.code.toLowerCase().indexOf(search)>-1;
+        });;
       }
     },
     mounted(){
@@ -88,9 +104,15 @@ export default {
          await this.loadBasic();
          await this.selectDefaultCompany();
          let resp = await this.$service.get('/panel/api/v1/hsm/tmpl',{
-          companyId : this.iCompany.companyId
+            companyId : this.iCompany.companyId
          });
         this.tmpl = resp.results;
+      },
+      async deletTmpl(row){
+         let resp = await this.$service.delete(
+            `/panel/api/v2/org/${this.iCompany.companyId}/hsm/tmpl/${row.templateId}`,{
+         });
+         this.load();
       }
     }
 };

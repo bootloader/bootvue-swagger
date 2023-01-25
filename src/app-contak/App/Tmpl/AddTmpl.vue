@@ -22,6 +22,7 @@
               <b-row>
                 <b-col cols="6" v-if="companies">
                   <base-input name="Template Code" v-model="template.code" 
+                    format-filter="item_code" :format-value="template.code" format-live
                     alternative question feedback  required :disabled="!editable"/>
                 <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
                     alternative question feedback  :required="!isOTP" clearable
@@ -131,7 +132,8 @@
 
                   <div class="oa-message-preview-wrapper" v-if="template.model">
                     <span v-if="template.header.mediaUrl">
-                        <img v-if="template.header.mediaType=='IMAGE'" :src="template.header.mediaUrl" />
+                        <img v-if="template.header.mediaThumb" :src="template.header.mediaThumb" />
+                        <img v-else-if="template.header.mediaType=='IMAGE'" :src="template.header.mediaUrl" />
                         <video v-else-if="template.header.mediaType=='VIDEO'" :src="template.header.mediaUrl"></video>
                     </span>  
                     <div class="oa-message-preview-header">
@@ -468,6 +470,7 @@ export default {
       img,video {
         width :100%;
         padding-bottom: 5px;
+        max-height: 150px;
       }
       
       .oa-message-preview-header {
