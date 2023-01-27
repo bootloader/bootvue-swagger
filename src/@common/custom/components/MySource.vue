@@ -186,13 +186,15 @@
                     //this.fromOptions(resp.results ? resp.results : resp);
                     this.fromOptions(json.options);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('getx:') == 0){
-                    let url = this.options.replace("getx:","");
-                    let resp = await this.$service.getX(url);
-                    this.fromOptions(resp.results ? resp.results : resp);
+                    let url = this.options.replace("getx:","").split("#");
+                    let resp = await this.$service.getX(url[0]);
+                    let results = url[1] || 'results';
+                    this.fromOptions(resp[results] ? resp[results] : resp);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('get:') == 0){
-                    let url = this.options.replace("get:","");
-                    let resp = await this.$service.get(url);
-                    this.fromOptions(resp.results ? resp.results : resp);
+                    let url = this.options.replace("get:","").split("#");
+                    let resp = await this.$service.get(url[0]);
+                    let results = url[1] || 'results';
+                    this.fromOptions(resp[results] ? resp[results] : resp);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('dispatch:') == 0){
                     let evenName = this.options.replace("dispatch:","");
                     let resp = await this.$store.dispatch(evenName);

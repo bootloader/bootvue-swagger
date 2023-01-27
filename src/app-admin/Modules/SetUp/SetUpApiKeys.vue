@@ -1,16 +1,18 @@
 <template>
     <div>
 
-      <master-view 
-          :header="{
-            heading : 'Client Apps',
-            subheading : 'Client Apps are containers that bundle messaging functionality for your specific use cases and messaging campaigns.',
-            icon : 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-th-large',
-          }"
+      <master-view  ref="masterView"
+          :header=header
           :table=table
-          :actions=actions
-          @action="onAction"      
+          :actions="[{name :'add'}]"
+          sidebar-footer-right
+          sidebarWidth="50%" size="sm"
+           :newItem="newItem" :fixItem="newItem" 
+           @save-item="onSaveItem"
        >
+          <template #action(add)="{createItem}">
+            <b-button variant="success" @click="createItem"><i class="fa fa-plus"/> Create App</b-button>
+          </template>
           <template #cell(appType)="row">
               <my-icon type="chatmode" :value="row.item.appType">&nbsp;<small>{{row.item.appType}}</small></my-icon>
           </template>
@@ -29,12 +31,12 @@
           </template>
           <template #cell(actions)="row">
             <b-button  href="#" :disabled="row.item.readOnly"
-                size="sm" @click="showItem(row.item, row.index, $event.target)"   class="mg-1"
+                size="sm" @click="row.openView" class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-eye"></i>
             </b-button>
             <b-button  href="#" :disabled="row.item.readOnly" 
-                size="sm" @click="editItem(row.item, row.index, $event.target)"  class="mg-1"
+                size="sm" @click="row.editItem" class="mg-1"
                 v-tooltip="row.item.message" variant="outline-primary">
                 <i class="fas fa-cog"></i>
             </b-button>
@@ -46,100 +48,108 @@
             </b-button>
             <b-button  href="#" :disabled="row.item.readOnly"
                 size="sm" class="mg-1" variant="outline-primary"
-                @click="deleteItem(row.item, row.index, $event.target)"
+                @click="row.removeItem"
                 v-tooltip="row.item.message" >
                 <i class="fas fa-trash"></i>
             </b-button>
           </template>
-      </master-view>
-          
-      <div class="row">
-          <div class="col-md-12">
-              <div class="main-card mb-3 card">
 
-              </div>
-          </div>
-      </div>
+          <template #sidebar(edit)="{itemCopy}">
+              <ValidationObserver v-if="itemCopy" ref="form" class="template-form" :id="modelName">
+                        <base-input class="mb-0" size="sm" autocomplete="off"
+                            label="App Name" placeholder="My API Key 1 or Slack Connector"
+                            v-model="itemCopy.name" :textLimit="60" required
+                            rules="required|min:4|max:512" >
+                        </base-input>
+                        <base-input class="mb-0" size="sm" autocomplete="off" :readonly="itemCopy.id && itemCopy.code"
+                            label="Queue Code" placeholder="my_api_connector"
+                            v-model="itemCopy.code" :textLimit="60" required
+                            format-filter="item_code" :format-value="itemCopy.name" :format-live="!itemCopy.id"
+                            rules="required|min:4|max:512" >
+                        </base-input>
+                        <BaseVSelect class="mb-0" size="sm" :disabled="!!itemCopy.id && !!itemCopy.code"
+                          name="App Type" :clearable="false"
+                          options="getx:/api/meta/app_types"
+                          v-model="itemCopy.appType"
+                          placeholder="Select App Type">
+                        </BaseVSelect>
+                        <b-tabs content-class="mt-3" align="right" small>
+                          <b-tab title="App Options" active>
+                             <my-model-form size="sm" 
+                              :configs="`getx://api/meta/app_types/${itemCopy.appType}/config`"
+                              :model="itemCopy">
+                            </my-model-form> 
+                          </b-tab>
+                          <b-tab title="Common Configuration" :disabled="!itemCopy.id || !itemCopy.code">
+                            <my-model-form size="sm"
+                              :configs="`getx://api/meta/app_types/common/config`"
+                              :model="itemCopy.config">
+                            </my-model-form> 
+                          </b-tab>
+                        </b-tabs>
+              </ValidationObserver>
+          </template>
 
-        <ValidationObserver ref="form" class="template-form">
-          <b-modal v-if="oneItem" :id="modelName" :title="'Client App Details'" size="md"
-          @hidden="cancelItem">
-                  <base-input class="mb-0" size="sm" autocomplete="off"
-                      label="App Name" placeholder="My API Key 1 or Slack Connector"
-                      v-model="oneItem.name" :textLimit="60" required
-                      rules="required|min:4|max:512" >
-                  </base-input>
-                  <base-input class="mb-0" size="sm" autocomplete="off" :readonly="oneItem.id && oneItem.code"
-                      label="Queue Code" placeholder="my_api_connector"
-                      v-model="oneItem.code" :textLimit="60" required
-                      rules="required|min:4|max:512" >
-                  </base-input>
-                  <BaseVSelect class="mb-0" size="sm" :disabled="!!oneItem.id && !!oneItem.code"
-                    name="App Type" :clearable="false"
-                    options="getx:/api/meta/app_types"
-                    v-model="oneItem.appType"
-                    placeholder="Select App Type">
-                  </BaseVSelect>
-                  <my-model-form size="sm" 
-                    :configs="`getx://api/meta/app_types/${oneItem.appType}/config`"
-                    :model="oneItem">
+          <template #sidebar(view)="{item}">
+              <base-copy class="mt-3" size="sm"
+                  label="App Queue Code"
+                  :value="item.code">
+              </base-copy>
+              <base-copy class="mt-3" size="sm"
+                  label="API Id"
+                  :value="item.id">
+              </base-copy>
+              <base-copy class="mt-3" size="sm"
+                  label="API Key" reset
+                  :value="item.key"
+                  @reset="resetItem(item)" >
+              </base-copy>
+              <base-copy class="mt-3" size="sm"
+                  label="API Endpoint"
+                  :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_SERVER}/xms`">
+              </base-copy>
+              <base-copy class="mt-3" size="sm" v-if="item.appHook"
+                  label="APP Hook"
+                  :value="lastItemAppHook">
+              </base-copy>
+              <base-copy class="mt-3 mb-0" size="sm" v-if="item.webhook"
+                  label="Webhook URL"
+                  :value="item.webhook">
+              </base-copy>
+              <b-tabs class="mt-3" align="right"  small>
+                <b-tab title="App Options" active>
+                  <my-model-form size="sm" class="mt-3 d-block" readonly disabled
+                    :configs="`getx://api/meta/app_types/${item.appType}/config`"
+                    :model="item">
                   </my-model-form> 
-                  <template #modal-footer>
-                      <div class="position-relative">
-                          <button @click="deleteItem(oneItem)" v-if="oneItem.id"
-                            name="generate" id="resetKeys"
-                            class="btn btn-outline-danger btn-sm mg-1">Delete</button>
-                          <button @click="saveItem(false)"
-                            name="save" id="saveitem" :disabled="!(isChanged)"
-                            class="btn btn-primary btn-sm mg-1">Save</button>
-                        </div>
-                  </template>
-          </b-modal>
-        </ValidationObserver>
-        <b-modal v-if="lastItem" :id="modelName+'_VIEW'" :title="`Details : ${lastItem.name}`" size="md">
-            <base-copy class="mt-3" size="sm"
-                label="App Queue Code"
-                :value="lastItem.code">
-            </base-copy>
-            <base-copy class="mt-3" size="sm"
-                label="API Id"
-                :value="lastItem.id">
-            </base-copy>
-            <base-copy class="mt-3" size="sm"
-                label="API Key" reset
-                :value="lastItem.key"
-                @reset="resetItem(lastItem)" >
-            </base-copy>
-            <base-copy class="mt-3" size="sm"
-                label="API Endpoint"
-                :value="`https://${$global.MyConst.tenant}.${$global.MyConst.config.PROP_SERVICE_SERVER}/xms`">
-            </base-copy>
-            <base-copy class="mt-3" size="sm" v-if="lastItem.appHook"
-                label="APP Hook"
-                :value="lastItemAppHook">
-            </base-copy>
-            <base-copy class="mt-3" size="sm" v-if="lastItem.webhook"
-                label="Webhook URL"
-                :value="lastItem.webhook">
-            </base-copy>
-            
-            <my-model-form size="sm" class="mt-3 d-block" readonly disabled
-              :configs="`getx://api/meta/app_types/${lastItem.appType}/config`"
-              :model="lastItem">
-            </my-model-form> 
-
-            <template #modal-footer="{cancel}">
-                <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
+                </b-tab>
+                <b-tab title="Common Configurations" >
+                  <my-model-form size="sm" class="mt-3 d-block" readonly disabled
+                    :configs="`getx://api/meta/app_types/common/config`"
+                    :model="item.config">
+                  </my-model-form> 
+                </b-tab>
+              </b-tabs>
+          </template>
+          <template #sidebar-footer(view)="{editItem,cancelItem}">
+              <b-button variant="outline-grey"
+                  class="mg-1 float-start mr-auto mx-1" size="sm"
+                  name="generate" @click="cancelItem"
+                  >Close</b-button>
+              <b-button variant="outline-primary"
+                  class="mg-1 float-start mr-auto mx-1" size="sm"
+                  name="generate" @click="editItem"
+                  >Edit</b-button> 
+              <a id="resetKeys" :href="$global.MyConst.config.PROP_SERVICE_DOCS_API_LINK" 
                   target="_blank"
-                  class="btn btn-outline-greyer btn-sm mg-1 float-start ml-0 mr-auto"
+                  class="btn btn-outline-greyer btn-sm mg-1 float-start ml-auto mr-2 float-right"
                   name="generate" 
                   >View Docs</a>
-                <button @click="cancel()"
-                  name="save" id="saveitem"
-                  class="btn btn-primary btn-sm mg-1">OK</button>
-            </template>
-        </b-modal>
+  
+          </template>
 
+      </master-view>
+          
     </div>
 </template>
 
@@ -165,7 +175,7 @@
           appType : item?.appType ||  "WEBHOOK", 
           webhook : item?.webhook || null, outboundhook : item?.outboundhook || null, 
           key : item?.key || null, appHook : item?.appHook || null,
-          props : item?.props || {}, secret : item?.secret || {}
+          props : item?.props || {}, secret : item?.secret || {}, config : item?.config || {}
       };
     }
     export default {
@@ -174,10 +184,13 @@
                 MySource,MyModelForm
         },
         data: () => ({
+            header : {
+              name : 'Client App',
+              heading : 'Client Apps',
+              subheading : 'Client Apps are containers that bundle messaging functionality for your specific use cases and messaging campaigns.',
+              icon : 'pe-7s-key icon-gradient bg-happy-itmeo fa fa-th-large',
+            },
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
-            actions : [{
-              label : "Create App", icon : "fa fa-plus", name : "ADD_ITEM", action : "ADD_ITEM"
-            }],
             table : {
               fields: [ 
                 { key : 'name', label : "Name" },
@@ -187,6 +200,7 @@
                 { key : 'actions', label : "Actions" },
                 { key : 'changelog', label : "Changelog" },
               ],
+              api : 'api/config/clientapikey',
               sortBy: 'name',
               items : [],
               perPage: 25,
@@ -194,6 +208,7 @@
               rows : 0
             },
             oneItem : newItem(),
+            newItem : newItem,
             lastItem : {},
             modelName :  "MODAL_ADD_ITEM",
         }),
@@ -228,79 +243,23 @@
             },
         },
         created : function (argument) {
-          this.loadItems();
+          //this.loadItems();
         },
         methods : {
-          async loadItems (){
-            let resp = await this.$service.get('api/config/clientapikey');
-            this.table.items = resp.results;
-          },
-          async saveItem (reset) {
-              console.log("saveItem",reset)
-              var resp = await this.$service.post('api/config/clientapikey', {
-                id : this.oneItem.id,
-                name : this.oneItem.name,
-                code : this.oneItem.code,
+          async onSaveItem(row,reset,b){
+            console.log("onSaveItem",row,reset,b)
+            var resp = await this.$refs.masterView.editItemSave({
+              itemCopy : {
+                ...row.itemCopy,
                 key : (reset==true) ? '' : "**********",
-                appType : this.oneItem.appType,
-                webhook : this.oneItem.webhook,
-                outboundhook : this.oneItem.outboundhook,
-                props : this.oneItem.props,
-                secret : this.oneItem.secret,
-              });
-              this.lastItem = resp.data;
-              this.oneItem = newItem();
-              this.onAction({name : "CANCEL"});
-              this.loadItems();
-              this.$bvModal.show(this.modelName + "_VIEW");
-          },
-          async showItem(item) {
-            this.lastItem = item;
-            this.$bvModal.show(this.modelName + "_VIEW");
-          }, 
-          async resetItem(item) {
-            console.log("resetItem",item)
-            this.oneItem = item;
-            this.saveItem(true);
-          }, 
-          async cancelItem(item) {
-             this.oneItem = newItem();
-             this.onAction({name : "CANCEL"});
-          }, 
-          async deleteItem(item) {
-            await this.$service.delete('api/config/clientapikey/'+item.id,{id : item.id});
-            this.loadItems();
-            this.cancelItem();
-          },
-          async editItem(item) {
-              this.oneItem = newItem(item);
-              console.log("this.oneItem",this.oneItem);
-              for(var i in item){
-                this.oneItem[i] = JSON.parse(JSON.stringify(item[i])) || this.oneItem[i];
               }
-              this.onAction({name : "EDIT_ITEM"});
-             //await this.$store.dispatch('DeleteQuickReps', item);
+            });
+            this.lastItem = resp.data;
+            this.$refs.masterView.openView({ item :this.lastItem })
           },
-          onAction : function (argument) {
-            switch(argument.name){
-              case "ADD_ITEM" :
-                this.oldHash = JSON.stringify(this.oneItem);
-                this.$bvModal.show(this.modelName);
-                console.log("ADD_ITEM",argument);
-                break;
-              case "EDIT_ITEM" :
-                this.oldHash = JSON.stringify(this.oneItem);
-                this.$bvModal.show(this.modelName)
-                console.log("ADD_ITEM",argument);
-                break;
-              case "CANCEL" :
-                this.$bvModal.hide(this.modelName)
-                break;
-              default:
-                console.log("NoMapping",argument) 
-            }
-          },
-
+          async resetItem(item) {
+            this.onSaveItem({itemCopy:item},true);
+          }, 
         }
     }
 </script>

@@ -636,7 +636,9 @@
             },
             async deleteItem(item) {
                 if(item.id){
-                    await this.$service.delete(this.table.api, item);
+                    await this.$service.delete(this.table.api, {
+                        id : item.id, channelId : item.channelId
+                    });
                     this.$refs.templatesView.apply();
                 } else {
                     this.onDelete(item);

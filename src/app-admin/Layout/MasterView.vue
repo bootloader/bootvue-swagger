@@ -52,9 +52,9 @@
                   <span v-if="$scopedSlots['cell('+ props.column.field  + ')']">
                     <slot :name="'cell('+ props.column.field  + ')'" v-bind="(function(slotScope){
                       return {
-                        openView :()=>openView(slotScope),
-                        removeItem:() => removeItem(slotScope),
-                        editItem :() => editItem(slotScope),
+                        openView :()=>openView(slotScope,arguments),
+                        removeItem:() => removeItem(slotScope,arguments),
+                        editItem :() => editItem(slotScope,arguments),
                          ...slotScope
                       }
                     })({props, item : props.row})">
@@ -135,9 +135,9 @@
                 </template>
                 <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
                   <slot :name="slotName" v-bind="{
-                      openView:()=>openView(slotScope),
-                      removeItem:() => removeItem(slotScope),
-                      editItem:() => editItem(slotScope),
+                      openView:()=>openView(slotScope,arguments),
+                      removeItem:() => removeItem(slotScope,arguments),
+                      editItem:() => editItem(slotScope,arguments),
                     ...slotScope}"></slot>
                 </template>
                 <template #empty>
@@ -215,7 +215,7 @@
       </b-row></slot>  
 
       <b-modal :id="viewid+'_VIEW'" :title="'View'" size="lg">
-            <slot name="modal(view)" v-bind="selectedItem">
+            <slot name="modal(view)" v-bind="selectedItem" v-if="selectedItem">
                <pre v-if="selectedItem">{{selectedItem.item | json}}</pre>
             </slot>  
       </b-modal>
@@ -229,30 +229,79 @@
           <template #modal-footer>
                 <button @click="editItemCancel" class="btn btn-warning">Cancel</button>
                 &nbsp;
-                <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
+                <button v-if="selectedItem.itemCopy"  @click="editItemSave_" :disabled="!selectedItemChanged"
                       class="btn btn-primary">{{IS_MODE_EDIT ? 'Update' : 'Create'}}</button>
           </template>
       </b-modal>
 
       <div class="master-sidebar-container">
-        <b-sidebar :id="'SB_'+viewid+'_EDIT'" v-if="selectedItem"
-          :title="sidebarTitle" 
+        <b-sidebar :id="'SB_'+viewid+'_EDIT'" v-if="selectedItem" :width="sidebarWidth"
+          :title="sidebarTitle" header-class="bg-greyish text-md"
             right shadow backdrop lazy v-model="showSideBar"
                 :backdrop-variant="'transparent'" bg-variant="white" body-class="p-3">
            <slot name="sidebar(edit)" v-bind="selectedItem">
               <pre v-if="selectedItem">{{selectedItem.itemCopy | json}}</pre>
           </slot>  
-          <template v-if="sidebarFooter" #footer="{ hide }">
-            <div class="p-2 bg-dark">
-                <slot name="sidebar-footer(edit)" v-bind="selectedItem">
-                      <button @click="editItemCancel(); hide();" class="btn btn-warning">Close</button>
+          <template v-if="hasSidebarFooter" #footer="{ hide }">
+            <div class="p-2 bg-greyish">
+                <slot name="sidebar-footer(edit)"  v-bind="{
+                            openView:()=>openView(selectedItem,arguments),
+                            removeItem:() => removeItem(selectedItem,arguments),
+                            editItemSave:() => editItemSave_(selectedItem,arguments),
+                            editItemCancel:() => {editItemCancel(selectedItem,arguments);hide()},
+                          ...selectedItem}">
+                      <b-button @click="editItemCancel(); hide();" variant="outline-grey" :size="size">Close</b-button>
                       &nbsp;
-                      <button v-if="selectedItem.itemCopy"  @click="editItemSave" :disabled="!selectedItemChanged"
-                            class="btn btn-primary">{{IS_MODE_EDIT ? 'Update' : 'Create'}}</button>
+                      <b-button v-if="selectedItem.itemCopy"  @click="editItemSave_" :disabled="!selectedItemChanged" :size="size"
+                            variant="primary">{{IS_MODE_EDIT ? 'Update' : 'Create'}}</b-button>
+                      <div  v-if="sidebarFooterRight" class="position-relative float-right text-right mr-2">
+                            <slot name="sidebar-footer-right(edit)" v-bind="{
+                                  openView:()=>openView(selectedItem,arguments),
+                                  removeItem:() => removeItem(selectedItem,arguments),
+                                  editItemSave:() => editItemSave_(selectedItem,arguments),
+                                  editItemCancel:() => {editItemCancel(selectedItem,arguments);hide()},
+                                ...selectedItem}">
+                                <b-button v-if="selectedItem.itemCopy"  @click="removeItem(selectedItem);hide();"
+                                  v-tooltip="`Delete ${header.name}`" :size="size"
+                                  variant="outline-danger"><i class="fa fa-trash"/></b-button>  
+                            </slot>
+                      </div>    
                 </slot>
             </div>  
           </template>
- 
+        </b-sidebar>
+        <b-sidebar :id="'SB_'+viewid+'_VIEW'" v-if="selectedItem" :width="sidebarWidth"
+          :title="sidebarTitle" header-class="bg-greyish text-md"
+            right shadow backdrop lazy v-model="showSideBarView"
+                :backdrop-variant="'transparent'" bg-variant="white" body-class="p-3">
+           <slot name="sidebar(view)" v-bind="selectedItem">
+              <pre v-if="selectedItem">{{selectedItem.itemCopy | json}}</pre>
+          </slot>  
+          <template v-if="hasSidebarFooter" #footer="{ hide }">
+            <div class="p-2 bg-greyish">
+                <slot name="sidebar-footer(view)"  v-bind="{
+                            openView:()=>openView(selectedItem,arguments),
+                            removeItem:() => removeItem(selectedItem,arguments),
+                            editItem:() => {hide(); editItem(selectedItem,arguments)},
+                            cancelItem:() => {viewItemCancel();},
+                          ...selectedItem}">
+                      <b-button @click="editItemCancel(); hide();" variant="outline-grey" :size="size" >Close</b-button>
+                      &nbsp;
+                      <div  v-if="sidebarFooterRight" class="position-relative float-right text-right mr-2">
+                            <slot name="sidebar-footer-right(view)" v-bind="{
+                                  openView:()=>openView(selectedItem,arguments),
+                                  removeItem:() => removeItem(selectedItem,arguments),
+                                  editItem:() => {hide(); editItem(selectedItem,arguments)},
+                                  cancelItem:() => {viewItemCancel();},
+                                ...selectedItem}">
+                                <b-button v-if="selectedItem.item"  @click="removeItem(selectedItem,arguments);hide();"
+                                  v-tooltip="`Delete ${header.name}`" :size="size"
+                                  variant="outline-danger"><i class="fa fa-trash"/></b-button>  
+                            </slot>
+                      </div>    
+                </slot>
+            </div>  
+          </template>
         </b-sidebar>
       </div>
 
@@ -319,6 +368,11 @@
               type: Boolean,
               default : false
           },
+          sidebarFooterRight : {
+              type: Boolean,
+              default : false
+          },
+          sidebarWidth : { },
           busy : {
               type: Boolean,
               default : false
@@ -327,9 +381,15 @@
               type: Function
           },
           newItem : {
-            type : [Boolean,Object],
+            type : [Boolean,Object,Function],
             default: function () {
                 return { }
+            }
+          },
+          fixItem : {
+            type : [Function],
+            default: function (item) {
+                return item;
             }
           }
         },
@@ -349,7 +409,7 @@
             selectedItem : null,
             viewid : 'v'+ Date.now(),
             oldHash : "",
-            showSideBar : false,
+            showSideBar : false,showSideBarView : false,
             tableSearch : {},
         }),
         computed : {
@@ -361,8 +421,14 @@
               return newName;
             }
           },
+          hasSidebarView(){
+            return !!this.$scopedSlots['sidebar(view)'];
+          },
+          hasSidebarFooter(){
+            return this.sidebarFooter || this.sidebarFooterRight;
+          },
           hasSidebar(){
-            return this.sidebar || this.sidebarFooter;
+            return this.sidebar || this.hasSidebarFooter;
           },
           smallTable(){
             return this.table.small || (this.table.size == 'sm') || (this.size == 'sm')
@@ -541,8 +607,14 @@
               }
           },
           openView(row){
-            this.selectedItem = row;
-            this.$bvModal.show(this.viewid + "_VIEW")
+            this.selectedItem = { 
+                ...row, mode : this.mode,
+                item : this.fixItem(row.item)
+            };
+            if(this.hasSidebarView)
+              this.showSideBarViewDo(true);
+            else 
+              this.$bvModal.show(this.viewid + "_VIEW");
           },
           createItem(item){
             if(item && !(item instanceof Event)){
@@ -551,13 +623,12 @@
             } else {
               item  = this.newItem;
             }
-             console.log("----this.item",item)
             this.editItem({item})
           },
           editItem(row){
               this.selectedItem = { 
                 ...row,mode : this.mode,
-                itemCopy : JSON.parse(JSON.stringify(row.item))
+                itemCopy : this.fixItem(JSON.parse(JSON.stringify(row.item)))
               };
               console.log("----this.selectedItem",this.selectedItem)
               this.oldHash = JSON.stringify(this.selectedItem.itemCopy);
@@ -566,13 +637,31 @@
               else 
                 this.$bvModal.show(this.viewid + "_EDIT")
           },
-          async editItemSave ({item,index}) {
-              await this.$service.post(this.table.api, this.selectedItem.itemCopy);
+          async editItemSave_(row,args=[]){
+            if(this.$listeners['save-item']){
+              this.$emit('save-item',this.selectedItem,args[0],args[1],args[2],args[3],args[4])
+            } else {
+               await this.editItemSave(this.selectedItem,args);
+            }
+          },
+          async editItemSave (row,args) {
+              let resp = await this.$service.post(this.table.api,row.itemCopy);
               await this.loadItems();
               this.editItemCancel();
+              return resp;
           },
           async removeItem({item,index}){
-             await this.$service.delete(this.table.api, item);
+            let query = {};
+              for(let key in item){
+                switch(typeof item[key]){
+                  case 'object':
+                  case 'function':
+                    break;
+                  default :
+                    query[key] =  item[key]
+                }
+              }
+             await this.$service.delete(this.table.api, query);
              this.loadItems();
           },
           async editItemCancel() {
@@ -580,6 +669,12 @@
                 this.showSideBarDo(false);
               else 
                 await this.$bvModal.hide(this.viewid + "_EDIT")
+          },
+          async viewItemCancel() {
+              if(this.hasSidebar)
+                this.showSideBarViewDo(false);
+              else 
+                await this.$bvModal.hide(this.viewid + "_VIEW")
           },
           editItemCancelled(){
               this.selectedItem = null;
@@ -589,6 +684,9 @@
           },
           showSideBarDo(show=true){
             setTimeout(()=>this.showSideBar=show,0)
+          },
+          showSideBarViewDo(show=true){
+            setTimeout(()=>this.showSideBarView=show,0)
           }
         }
     }

@@ -4,13 +4,14 @@
                     <x-simple-form size="sm" 
                         :readonly="readonly" :prelabel="prelabel" :variant="variant"
                         :inputs="options.map(function({item}){
-                            let key = (item.path || item.key);
+                            let key  = item.ukey || item.key;
                             return {
                                 meta : item,
                                 config : { 
-                                    key : item.key,
+                                    key : key,
                                     path : item.path,
-                                    value : JsonXPath({ path : '$.'+key,json : model})[0] || item.defaultValue || ''
+                                    value : key ? model[key] 
+                                        : JsonXPath({ path : '$.'+item.path,json : model})[0] || item.defaultValue || ''
                                 }
                             }
                         })"
@@ -68,14 +69,18 @@
 
             },
             onChange({meta,config}){
-                var key = (meta.path || meta.key);
-                console.log("onChange",key)
-                const rs = JsonXPath({
-                    path : '$.' +key,
-                    json: this.model,
-                    resultType: "all",
-                    value : config.value
-                });
+                console.log("onChange",meta.path, meta.key)
+                if(meta.path){
+                    const rs = JsonXPath({
+                        path : '$.' +meta.path,
+                        json: this.model,
+                        resultType: "all",
+                        value : config.value
+                    });
+                } else {
+                    let key = meta.ukey || meta.key;
+                    this.model[key] = config.value;
+                }
                 console.log("this.model",this.model)
                 this.model.__ob__.dep.notify()
                 this.$emit('change',this.model);

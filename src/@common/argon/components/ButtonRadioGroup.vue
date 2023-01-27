@@ -8,7 +8,10 @@
       <template #data="{options}">
        <b-form-group :label="name" :size="size" :class="['text-'+size]"
               v-slot="{ ariaDescribedby }" label-for="'fmg-' + inputId">
-              <b-form-radio-group
+              <my-icon v-if="readonly" :value="model" type="switch" show-no-type
+                  :options="options">
+              </my-icon> 
+              <b-form-radio-group v-else
                 id="btn-radios-2"
                 v-model="model"
                 :options="options"
@@ -50,6 +53,9 @@
       name: {
         type: String,
         description: 'Label value'
+      },
+      readonly: {
+        type: Boolean,
       },
       buttonVariant: {
         type: [String, Object],
