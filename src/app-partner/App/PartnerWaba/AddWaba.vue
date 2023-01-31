@@ -250,6 +250,11 @@ export default {
         //this.selectedIndex=index;
     },
     async loadDetails(refresh){
+      if(refresh){
+          await this.$service.getX("/partner/pub/waba/clients",{
+            refresh : refresh
+          },{refresh : refresh });
+      }
       let resp = await this.$service.get("/partner/pub/waba/channels",{
         refresh : refresh
       });
