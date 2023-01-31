@@ -302,7 +302,7 @@
                     messageId : "", templateId : this.model.templateId, type :"O",
                     hsm : {
                         id : this.model.templateId,
-                        code : this.selectedTemplate.code,
+                        code : this.selectedTemplate?.code,
                         data : this.vars.data,
                     }
                 };
