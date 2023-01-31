@@ -154,12 +154,15 @@
         </b-row>
       </div>
 
-      <h6 class="heading-small text-muted mb-4" hidden>API</h6>
-      <div  class="pl-lg-4" hidden>
+      <h6 class="heading-small text-muted mb-4">API</h6>
+      <div  class="pl-lg-4">
         <b-row class="justify-content-center">
-            <b-col>   
-            </b-col>
-            <b-col>
+            <b-col>  
+              <base-input :copy="!!api.key" variant="outline-whatsapp" readonly :value="api.key">
+                  <template #actions >
+                    <b-button variant="outline-whatsapp" @click="generateKey">Generate API Key</b-button>
+                  </template> 
+              </base-input> 
             </b-col>
         </b-row>
       </div>
@@ -203,12 +206,13 @@ export default {
           customerSupportPhone : null
         }
       },
+      api : {
+        key : "",
+      },
       models : [],
       isEditDetail : false,
       selectedIndex : 0,
       domainUsersIndex : -1,
-
-
       search : {
         user : "", 
         domain : ''
@@ -268,6 +272,10 @@ export default {
         || option.item.client.contact_info.email.toLowerCase().replace('@mehery.com','').indexOf(_search) > -1
       });
     },
+    async generateKey(){
+      let resp = await this.$service.get(`/partner/api/waba/clients/channels/${this.model.channel.id}/api_keys`);
+      this.api.key = resp?.results?.[0]?.api_key;
+    }
   },
   components : {
     BaseVSelect,MyIcon,SummaryTile,
