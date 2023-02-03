@@ -315,7 +315,9 @@
             async sendNewMessage() {
                 let msg = this.prepareMessage();
                 let resp = null;
-                if(this.hasAttachment){
+                let defAttachment = this.selectedTemplate.options.attachment && (this.$refs.myVueDropzone.getQueuedFiles().length==0)
+
+                if(this.hasAttachment && !defAttachment){
                      await this.updaedNewMessage(msg);
                 } else {
                     resp = await this.$store.dispatch('SendChat', msg);
