@@ -64,8 +64,11 @@
 
         <b-modal v-if="newItem" :id="modelName" :title="(newItem.id ? 'Edit' : 'Add') + ' User '" size="lg"
         @hidden="cancelItem">
-
-                  <ValidationObserver ref="form">
+                  <div v-if="!teams.length">
+                    Please add at least one team.
+                    <b-button variant="link" :to="addTeamLinks">Add Team</b-button>
+                  </div>
+                  <ValidationObserver v-else ref="form">
                           <div class="row">
                              <div class="position-relative form-group col-md-6">
                                 <ValidationProvider v-slot="v" rules="required">
@@ -93,6 +96,7 @@
 
                             <div class="row">
                               <div class="position-relative form-group col-md-6">
+                                  <label for="Username" class="">Username</label>
                                   <base-input prepend="@" 
                                     :format-value="newItem.id ? newItem.code : newItem.name" format-filter="item_code" format-live
                                     v-model="newItem.code" label="Username" :readonly="newItem.id"
@@ -125,6 +129,7 @@
                               </div>
 
                               <div class="col-md-6">
+                                <label for="Username" class="">Skills</label>
                                     <vue-tags-input
                                         v-model="labelInput"
                                         :tags="labels"
@@ -227,7 +232,10 @@
             subheading: 'Add edit users',
             icon: 'pe-7s-users icon-gradient bg-happy-itmeo fa fa-user-friends',
             actions : [{
-              label : "Add User", name : "ADD_ITEM"
+              label : "Add User", name : "ADD_ITEM",
+            },
+            {
+              label : "Add Team", name : "ADD_TEAM",
             }],
             table : {
               fields: [ 
@@ -249,7 +257,13 @@
           newItem : newItem(),
           modelName :  "MODAL_ADD_USERS",
           includeInActive : false,
-          labelInput : "", newLabels : null
+          labelInput : "", newLabels : null,
+          addTeamLinks : {
+              name : 'AgentsTeams',
+              params : {
+                openTeamPopup:true
+              }
+            }
         }),
         computed : {
             filtered() {
@@ -382,12 +396,20 @@
               case "CANCEL" :
                 this.$bvModal.hide(this.modelName)
                 break;
+              case "ADD_TEAM" :
+                this.$router.push(this.addTeamLinks)
+                break;
               default:
                 console.log("NoMapping",argument) 
             }
           },
 
 
+        },
+        mounted(){
+            if(this.$route.params.openUserPopup){
+              this.onAction(this.actions[0])
+            }
         }
 
 
