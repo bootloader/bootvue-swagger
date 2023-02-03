@@ -1,7 +1,7 @@
 const varFinder = /({{([\w\d\.]+)}})/g
 function getVars(replaceVars, regex = varFinder) {
-    var myArray = replaceVars.match(regex) || []
     var varList = []
+    var myArray = (replaceVars ? replaceVars.match(regex) : null) || []
     let unique = [...new Set(myArray)]
     for (var i in unique) {
         varList.push({

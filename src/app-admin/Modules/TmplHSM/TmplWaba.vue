@@ -302,6 +302,7 @@
                             </b-card-body>
 
                             <b-card-footer>
+                                <b-button type="button" @click="onUpdateMappings" variant="outline-primary" class="float-left">Update Mappings</b-button>
                                 <b-button type="submit" variant="primary" class="float-right">Save</b-button>
                             </b-card-footer>
 
@@ -509,12 +510,6 @@
             ERROR_JSON : null
         }),
         computed: {
-            items: function () {
-                return this.$store.getters.StateAgents
-            },
-            teams: function () {
-                return this.$store.getters.StateTeams
-            },
             isValidNewItem: function () {
                 return this.newItem.category && this.newItem.name;
             },
@@ -658,7 +653,7 @@
                     this.$bvModal.hide(this.modelName);
                 }
             },
-            async onSubmit(){
+            async onSubmit(onlyMeta){
                 // this will be called only after form is valid. You can do an api call here to register users
                 try {
 
@@ -669,7 +664,7 @@
                         varMap : this.templateSimple.varMap
                     }
 
-                    if(!this.nonEditable || this.wabaEditable){
+                    if((!this.nonEditable || this.wabaEditable) && !onlyMeta){
                         templateRequest.template = {
                             category : this.template.template.category,
                             language : this.template.template.language,
@@ -702,6 +697,9 @@
             onSaveTamplete (){
                 this.$bvModal.show(this.modelNamePreview);
             },
+            onUpdateMappings(){
+                this.onSubmit(true);
+            },
             async onAction(argument) {
                 switch (argument.name) {
                     case "ADD_ITEM" : 
@@ -720,6 +718,8 @@
             refreshSelectedTemplates(){
                 this.templates = this.$refs.templatesView.getItems().filter((template)=>{
                     return template.code == this.template.code;
+                }).map(function(tmpl){
+                    return tmpl;
                 });
             },
             async selectTemplate(item) {

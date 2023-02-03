@@ -1,7 +1,7 @@
 <template>
     <component :is="tag">
         <slot name="data" v-bind="model">
-            {{myDisplay}}
+            <i v-if="prependIcon && myIcon" :class="myIcon">&nbsp;</i>{{myDisplay}}
         </slot>
     </component>
 </template>
@@ -41,6 +41,10 @@
             tag : {
                 type : String,
                 default : "span"
+            },
+            prependIcon : {
+                type : Boolean, 
+                default : true
             }
         },
         data: () => ({
@@ -52,6 +56,9 @@
         computed :{
             myDisplay : function(){
                 return this.model?.selected?.label; 
+            },
+            myIcon : function(){
+                return this.model?.selected?.item?.icon; 
             }
         },
         watch : {
@@ -60,6 +67,10 @@
             },
             options : function(newVal, oldVal){
                 this.loadOptions();
+            },
+            filter : function(newVal, oldVal){
+                if(JSON.stringify(newVal) != JSON.stringify(oldVal))
+                    this.loadOptions();
             }
         },
         mounted: function () {
@@ -97,7 +108,7 @@
                 let THIS = this;
                 let hasEmptyValue = false;
                 if(!options || !options.map){
-                    console.error("options",options)
+                    console.error("options",options,'for',this);
                 }
 
                 this.model.options = options.map(function(option){

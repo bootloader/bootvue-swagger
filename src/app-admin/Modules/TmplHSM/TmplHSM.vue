@@ -29,6 +29,11 @@
                   </router-link><br/>
                   <span>{{row.item.code}}</span>
                 </template>
+                <template #cell(categoryType)="row">
+                  <my-source  options="data:hsm/message_category_types" v-model="row.item.categoryType" prepend-icon
+                    type="messageType" :value="row.item.formatType"/>&nbsp;
+                  <my-icon type="messageType" :value="row.item.formatType" class="float-right"/>
+                </template>
                 <template #cell(actions)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
                     <b-button size="sm" @click="editItem(row.item, row.index, $event.target)"   v-tooltip="row.item.message" variant="outline-primary">
@@ -273,9 +278,6 @@
                                                     @afteredit=afterEdit
                                                 ></VGrid>
                                             </div> 
-                                            <span v-if="newItem">
-                                               {{newItem | json}}
-                                            </span>  
                                       </div>
                                       <div class="position-relative form-group col-md-4" v-if="newItem">
                                           <label for="examplePassword" class="text-sm">Template Preview</label>

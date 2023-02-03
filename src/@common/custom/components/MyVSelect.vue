@@ -132,7 +132,8 @@
                 this.loadOptions();
             },
             filter : function(newVal, oldVal){
-                this.loadOptions();
+                if(JSON.stringify(newVal) != JSON.stringify(oldVal))
+                    this.loadOptions();
             }
         },
         created : function(){
@@ -164,7 +165,7 @@
                 let THIS = this;
                 let hasEmptyValue = false;
                 if(!options || !options.map){
-                    console.error("options",options)
+                    console.error("options",options,'for',this);
                 }
                 this.model.options = options.map(function(option){
                     if(typeof option == 'string' || typeof option == 'number'){
