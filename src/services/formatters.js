@@ -212,7 +212,19 @@ var formatter = {
   clean_url : function(url){
     return url.replace(/(\/)\/+/g, "$1").replace(/^https?:/,'https:/');
   },
-
+  toMedia(attachment){
+    if(attachment){
+      return {
+        mediaCode : attachment.code,
+        mediaSrc : null,
+        mediaURL : attachment.url,
+        mediaType : attachment.type, mediaSubType : null,  mediaMimeType : attachment.mimeType, 
+        mediaId : attachment.id,
+        mediaName : attachment.title,
+        mediaCaption : null
+      }
+    } return null;
+  },
   keys : function keys(map,prefix){
       prefix = prefix || "" ;
       var list = [];

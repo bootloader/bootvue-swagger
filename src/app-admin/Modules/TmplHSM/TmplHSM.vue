@@ -247,19 +247,39 @@
                                         </div>
                                       </div>
                                       <div class="position-relative form-group col-md-4">
-                                            <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
-                                              <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
-                                            </label>
-                                            <VGrid theme="default" class="w-100"
-                                                :columns="sampleVar.columns"
-                                                :source="templateVariable"
-                                                @afteredit=afterEdit
-                                            ></VGrid>
-                                            
+                                          <base-v-select class="w-100" ref="default_attachment" @change="default_attachment_update"
+                                            :disabled="['IMAGE','VIDEO'].indexOf(newItem.formatType)<0"
+                                            label="Default Media" size="sm"
+                                            options="getx:/api/tmpl/quickmedia" :filter="{
+                                              type : newItem.formatType
+                                            }"
+                                            optionKey="code" optionLabel="title"
+                                            v-model="default_attachment.mediaCode">
+                                              <template #option="{ item }">
+                                                <my-icon type="fileType" :value="item.type"/>
+                                                {{item.title}}
+                                              </template>  
+                                              <template #selected-option="{ item }">
+                                                <my-icon type="fileType" :value="item.type"/>&nbsp;{{item.title}}
+                                              </template>
+                                          </base-v-select>
+                                            <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
+                                                <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
+                                                  <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
+                                                </label>
+                                                <VGrid theme="default" class="w-100"
+                                                    :columns="sampleVar.columns"
+                                                    :source="templateVariable"
+                                                    @afteredit=afterEdit
+                                                ></VGrid>
+                                            </div> 
+                                            <span v-if="newItem">
+                                               {{newItem | json}}
+                                            </span>  
                                       </div>
-                                      <div class="position-relative form-group col-md-4">
+                                      <div class="position-relative form-group col-md-4" v-if="newItem">
                                           <label for="examplePassword" class="text-sm">Template Preview</label>
-                                          <TemplatePreview 
+                                          <TemplatePreview
                                             :template="newItem" style="height: 400px;"
                                             />
                                       </div>
@@ -441,6 +461,9 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                   },
                   list_option_title:"",
                   more_option_title:"",
+                  default_attachment : {
+                    mediaCode : null
+                  },
                   table : {
                     fields: [ 
                               { key : 'category', label : "Grouping Category", sortable : true }, 
@@ -545,7 +568,10 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
             },
             "newItem.template" : function(neVal){
               this.templateTextChange(neVal)
-            }
+            },
+            // 'default_attachment.mediaCode' : function(){
+            //   this.default_attachment_update();
+            // }
         },
         created : function (argument) {
           this.mode = this.$route.params.mode;
@@ -555,12 +581,15 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
+          async default_attachment_update(){
+              this.newItem.options.attachment = this.$f.toMedia(this.$refs.default_attachment?.selected?.()?.item);
+          },
           async loadOptions (argument) {
           },
           async loadItems (){
             var resp = await this.$service.get("api/tmpl/hsm");
             this.table.items = resp.results;
-            await this.$refs.templatesView.apply();
+            await this.$refs.templatesView?.apply?.();
           },
           selectItem : function () {
             if(this.mode == "edit"){
@@ -636,6 +665,7 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                 }
                 this.newItem.meta = this.newItem.meta || {};
                 this.newItem.model = this.newItem.model || newItem().model;
+                this.default_attachment.mediaCode = item.options?.attachment?.mediaCode;
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);
