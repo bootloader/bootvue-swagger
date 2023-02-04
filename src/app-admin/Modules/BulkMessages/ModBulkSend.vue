@@ -8,35 +8,32 @@
           
               <b-card class="col-md-4" >
               
-                      <ValidationProvider v-slot="v" rules="required" tag="div" class="form-row">
+                      <ValidationProvider rules="required" tag="div" class="form-row">
                         <label>Account Details</label>
-                         <v-select :options="input.lane.values"  class="w-100"
+                         <my-select ref="selectedChannel" :options="input.lane.values"  class="w-100"
                                   v-model="input.lane.selected"
                                   :searchable="false" :clearable="false"
                                   placeholder="Select Account"
                                   >
                                   <template #selected-option="option">
-                                    <div class="user_assignment-selected">
+                                    <div class="user_assignment-selected" v-if="option.item">
                                        <span class="contact_type fab fac-bg"
-                                              v-bind:class="MyDict.social[option.contactType]"></span>&nbsp;&nbsp;{{ option.lane }}</div>
+                                              v-bind:class="MyDict.social[option.item.contactType]"></span>&nbsp;&nbsp;{{ option.item.lane }}</div>
                                   </template>
-                                  <template #open-indicator="{ attributes }">
-                                    <span v-bind="attributes" class="fa fa-caret-down"></span>
-                                  </template>
-                                  <template #option="{ contactType, lane }">
+                                  <template #option="{item}">
                                        <span class="contact_type fab fac-bg"
-                                              v-bind:class="MyDict.social[contactType]"></span>  {{ lane }}
+                                              v-bind:class="MyDict.social[item.contactType]"></span>  {{ item.lane }}
                                   </template>
-                          </v-select>
+                          </my-select>
                       </ValidationProvider>
                       <br>
                       <label>Template</label>
                         <base-v-select class="w-100" ref="selectedTemplate"
                           :options="input.templates.values"
                            optionKey="code" optionLabel="title"
-                          v-model="input.templates.selected"
+                          v-model="input.templates.selected" @change="onTemplateSelect"
                           :searchable="false" :clearable="false"
-                          placeholder="Select Account">
+                          placeholder="Select Template">
                              <template #selected-option="{ item }">
                                   <span class="">
                                     <div> <my-icon type="messageType" :value="item.formatType"></my-icon>&nbsp;{{ item.desc}}</div>
@@ -44,7 +41,7 @@
                                     <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
                                     <small class="text-md mg-2 btn-xs" 
                                       v-for="link in item.approved" v-bind:key="link.templateId"
-                                      v-show="link.channelId == input.lane.selected.channelId"
+                                      v-show="link.channelId == selectedChannel.channelId"
                                       >
                                       <my-icon type="channel" :value="link.channelId" :status="link.status"
                                         v-tooltip="`This template is ${link.status} for channel ${link.channelId}`"
@@ -53,7 +50,7 @@
                                   </span>  
                               </template>
                               <template #open-indicator="{ attributes }">
-                                <span v-bind="attributes" class="fa fa-caret-down"></span>
+                                  <span v-bind="attributes" class="fa fa-caret-down"></span>
                               </template>
                               <template #option="{ item }">
                                   <div class="text-bold"><my-icon type="messageType" :value="item.formatType"></my-icon>&nbsp;{{ item.desc}}</div>
@@ -62,7 +59,7 @@
                                   <small class="btn btn-xs btn-outline-dark text-xxs  mg-1">{{item.lang}}</small>
                                   <small class="text-md mg-2 btn-xs float-right" 
                                     v-for="link in item.approved" v-bind:key="link.templateId"
-                                    v-show="link.channelId == input.lane.selected.channelId"
+                                    v-show="link.channelId == selectedChannel.channelId"
                                     >
                                     <my-icon type="channel" :value="link.channelId" :status="link.status"
                                       v-tooltip="`This template is ${link.status} for channel ${link.channelId}`"
@@ -219,7 +216,7 @@
             input : {
                 lane : {
                   values : [],
-                  selected : [],
+                  selected : null,
                   sender : ""
                 },
                 templates : {
@@ -265,11 +262,13 @@
         computed : {
             attachments(){
               if(this.input.templates.attachment ){
-                let attachment = this.$refs.attachment.selected().item;
-                return [{
-                        mediaType : attachment.type,
-                        mediaURL : attachment.url
+                let attachment = this.$refs.attachment?.selected?.()?.item;
+                if(attachment){
+                    return [{
+                        mediaType : attachment?.type,
+                        mediaURL : attachment?.url
                   }];
+                }
               }
               return null;
             },
@@ -281,6 +280,12 @@
                 }
               }
               return null;  
+            },
+            selectedChannel(){
+              if(this.input.lane.selected){
+                  return this.$refs.selectedChannel?.selected?.().item
+              }
+              return null;
             },
             sampleVarData(){
               if(this.input.templates.selected){
@@ -313,7 +318,6 @@
         created : function (argument) {
           this.loadLanes();
           this.loadTemplates();
-          
         },
         methods : {
             async uploadCsv(){
@@ -338,6 +342,13 @@
           async loadTemplates (){
             let resp = await this.$service.get('/api/tmpl/hsm');
             this.input.templates.values = resp.results;
+          },
+          onTemplateSelect(){
+            if(this.selectedTemplate?.options?.attachment){
+                this.input.templates.attachment = this.selectedTemplate?.options?.attachment.mediaCode;
+            } else {
+              this.input.templates.attachment = null;
+            }
           },
           onAction : function (argument) {
             switch(argument.name){
@@ -376,7 +387,7 @@
             if(this.input.contactCSV && this.input.contactCSV.length && !referenceKey) return;
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
-              "subject": this.input.lane.selected.title,
+              "subject": this.selectedChannel.title,
               "referenceKey":referenceKey,
               hsm : {
                 id: this.selectedTemplate.id,
@@ -384,9 +395,9 @@
               },
               attachments : this.attachments,
               "contact" : {
-                "contactType": this.input.lane.selected.contactType,
-                "lane" : this.input.lane.selected.lane,
-                "channel" : this.input.lane.selected.channel
+                "contactType": this.selectedChannel.contactType,
+                "lane" : this.selectedChannel.lane,
+                "channel" : this.selectedChannel.channel
               },
               "to": this.input.contacts!= "" ? this.input.contacts.match(/[^\r\n\,]+/g).map(function(item) {
                   return item.trim()

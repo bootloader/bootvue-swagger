@@ -50,7 +50,8 @@
         data: () => ({
             model : {
                 options: [],
-                selected: null
+                selected: null,
+                value : null,
             }
         }),
         computed :{
@@ -82,9 +83,11 @@
             },
             selectModelValue(){
                 this.model.selected = null;
+                this.model.value = this.model.selected?.value;
                 for(var i in this.model.options){
                     if(this.model.options[i].value == this.value){
                         this.model.selected = this.model.options[i];
+                        this.model.value = this.model.selected?.value;
                     }
                 }
                 let oldOption = this.model.selected;
@@ -92,12 +95,14 @@
                 if((this.model.selected === undefined || this.model.selected === null)){
                     if(this.selectDefault && this.selectDefault==true && this.model.options[0]){
                         this.model.selected = this.model.options[0];
+                        this.model.value = this.model.selected?.value;
                         this.onChange(this.model.selected,oldOption);
                     } else if(this.invalidDisplay){
                         this.model.selected = {
                             label : this.invalidDisplay,
                             value : this.value
                         };
+                        this.model.value = this.model.selected?.value;
                         this.onChange(this.model.selected,oldOption);
                     } 
                 }

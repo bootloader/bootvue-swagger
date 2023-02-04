@@ -272,7 +272,7 @@
                 }
             },
             onChange: function () {
-                let value = this.model.value ? this.model.value.value : null;
+                let value = this.model?.value?.value;
                 this.$emit("input", value);
                 this.$emit("change", value);
             },

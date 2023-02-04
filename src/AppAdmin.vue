@@ -41,6 +41,7 @@
   Vue.component('MyDatePicker', () => import('./@common/custom/components/MyDatePicker.vue'));
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
   Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));
+  Vue.component('MySelect', () => import('./@common/custom/components/MySelect.vue'));
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
   Vue.component('MyAxon', () => import('./@common/custom/components/MyAxon.vue'));
   Vue.component('MyIcon', () => import('./@common/custom/components/MyIcon.vue'));
