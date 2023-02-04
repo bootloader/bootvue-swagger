@@ -53,7 +53,13 @@
             </b-row>
 
         <b-row align-v="center" slot="footer">
-          <b-col cols="8">
+          <b-col cols="4">
+               <b-button href="https://www.otpalerts.com/docs/guide/quick/business_verification.html" variant="outline-oa-blue"
+               target="_blank">
+                Verify your Business
+            </b-button>
+          </b-col>
+          <b-col cols="4">
           </b-col>
           <b-col cols="4" class="text-right" >
             <b-button @click="handleSubmit(saveCompany)" variant="oa-blue">

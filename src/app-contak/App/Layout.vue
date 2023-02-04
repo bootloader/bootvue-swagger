@@ -94,6 +94,11 @@
 
         <b-nav class="navbar-nav mb-md-3">
           <b-nav-item class="text-white text-bold"
+             :href="'https://www.otpalerts.com/docs/'" target="_blank">
+              <i class="ni ni-books text-white"></i>
+              <b-nav-text class="p-0 text-white">Documentation</b-nav-text>
+          </b-nav-item>
+          <b-nav-item class="text-white text-bold"
              :href="'https://mehery.atlassian.net/servicedesk/customer/portals'" target="_blank">
               <i class="ni ni-support-16 text-white"></i>
               <b-nav-text class="p-0 text-white">Support</b-nav-text>

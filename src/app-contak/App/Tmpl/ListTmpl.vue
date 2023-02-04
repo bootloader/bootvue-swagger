@@ -10,6 +10,9 @@
                 })" alternative question  />
             </b-col>
             <b-col cols="8" class="text-right">
+              <b-button variant="outline-oa-blue" size="sm" @click="show_deleted=!show_deleted">
+                <i class="fa fa-eye"/>
+                {{show_deleted ? `Show` : `Hide`}} Deleted</b-button>
               <b-button :to="{ name: 'Add Template',
                         params: { orgId: iCompany.companyId},
                  }" variant="oa-blue" size="sm" >Add Template</b-button>
@@ -59,8 +62,13 @@
                         }">
                         View
                 </b-button>
-                <b-button v-if="iCompany" variant="outline-danger" size="sm" @click="deletTmpl(row)">
-                  <i  class="fa fa-trash"/>
+                <b-button v-if="iCompany" :variant="row.deleted ? `grey` : `outline-danger`" size="sm" @click="deletTmpl(row)"
+                  v-tooltip='row.deleted ? `Restore` : `Delete`'
+                >
+                  <i  class="fa" :class="{
+                    'fa-trash-restore' : row.deleted,
+                    'fa-trash' : !row.deleted
+                  }"/>
                 </b-button>
             </template>
           </el-table-column>
@@ -86,13 +94,14 @@ export default {
       return {
         tmpl : [],
         search : "",
+        show_deleted : false
       }
     },
     computed : {
       tableData(){
         let search = this.search.toLowerCase();
         return this.tmpl.filter((row)=>{
-          return !row.deleted && row.code.toLowerCase().indexOf(search)>-1;
+          return (this.show_deleted || !row.deleted) && row.code.toLowerCase().indexOf(search)>-1;
         });;
       }
     },

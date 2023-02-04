@@ -4,7 +4,7 @@
          "id":"OTP",
          "label":"OTP",
          "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
-         "icon":"my-oa-type-otp",
+         "icon":"my my-oa-type-otp",
          "type" :  "OTP", 
          "suggestion" : {
            "Login" : "MAJOR",
@@ -17,7 +17,7 @@
           "id":"ACCOUNT",
           "label":"Account",
           "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
-          "icon":"my-oa-type-account",
+          "icon":"my my-oa-type-account",
           "type" :  "TRANSACTIONAL", 
           "suggestion" : {
             "Credit" : "CREDIT",
@@ -35,7 +35,7 @@
          "id":"APPOINTMENT",
          "label":"Appointments",
          "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
-         "icon":"my-oa-type-appointment",
+         "icon":"my my-oa-type-appointment",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
@@ -47,7 +47,7 @@
          "id":"RESERVATION",
          "label":"Reservations",
          "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
-         "icon":"my-oa-type-reservation",
+         "icon":"my my-oa-type-reservation",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
@@ -59,7 +59,7 @@
          "id":"TICKET",
          "label":"Ticket",
          "desc":"Send ticketing information or updates to customers.",
-         "icon":"my-oa-type-ticket",
+         "icon":"my my-oa-type-ticket",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Update" : "MAJOR",
@@ -72,7 +72,7 @@
           "id":"SERVICE",
           "label":"Service",
           "desc":"Respond to questions, concerns or feedback from customers about your business.",
-          "icon":"my-oa-type-service",
+          "icon":"my my-oa-type-service",
           "type" :  "TRANSACTIONAL", 
           "suggestion" : {
             "Issue" : "MAJOR",
@@ -87,7 +87,7 @@
          "id":"SHIPMENT",
          "label":"Shippments",
          "desc":"Send shipping updates to customers about their orders.",
-         "icon":"my-oa-type-shipment",
+         "icon":"my my-oa-type-shipment",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Dispatched" : "MAJOR",
@@ -101,7 +101,7 @@
          "id":"PAYMENT",
          "label":"Payment",
          "desc":"Send a message to customers about their payment.",
-         "icon":"my-oa-type-payment",
+         "icon":"my my-oa-type-payment",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Initiated" : "MAJOR",
@@ -114,7 +114,7 @@
          "id":"PROFILE",
          "label":"Profile",
          "desc":"Send a message to customers about their profile/credential changes",
-         "icon":"my-oa-type-profile",
+         "icon":"my my-oa-type-profile",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Created" : "MAJOR",
@@ -128,7 +128,7 @@
          "id":"ORDER",
          "label":"Order",
          "desc":"Send a message to customers about orders",
-         "icon":"my-oa-type-order",
+         "icon":"my my-oa-type-order",
          "type" :  "TRANSACTIONAL", 
          "suggestion" : {
             "Received" : "MAJOR",

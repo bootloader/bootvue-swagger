@@ -140,7 +140,7 @@
                       <div class="oa-message-preview-header-body row">
                         <div class="col-6" >
                           <div class="oa-message-preview-cat">
-                              <span class="oa-type-icon" v-if="messageCategory" :class="['my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
+                              <span class="oa-type-icon" v-if="messageCategory" :class="['my my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
                           </div> 
                           <div class="text-black text-truncate">{{template.model.title}}</div>
                             <div class="text-sm text-grey text-truncate">{{template.model.subtitle}}</div>
@@ -154,7 +154,7 @@
                     </div>
                     <div class="oa-message-preview-message">
                         <div class="oa-message-preview-message-icon">
-                            <i class="my-oa-chat text-white bg-grey bg-round-text"/>
+                            <i class="my my-oa-chat text-white bg-grey bg-round-text"/>
                         </div> 
                         <div class="oa-message-preview-message-text">
                           {{template.body | hb(template.model)}}
