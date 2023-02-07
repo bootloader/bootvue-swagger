@@ -25,7 +25,7 @@
             </b-col>
 
             <b-col cols="6">
-              <base-select name="Country of Operation" v-model="company.countryOfOperation" 
+              <base-v-select name="Country of Operation" v-model="company.countryOfOperation" latest
                 options="data:countries"
                 alternative question required/>
               <base-input name="Address" v-model="company.address" 

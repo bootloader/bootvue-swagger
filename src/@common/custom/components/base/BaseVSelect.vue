@@ -1,7 +1,7 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
   :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
-  disabled ? 'bc-disabled' : '']" ref="vp">
+  disabled ? 'bc-disabled' : '', isMySelect ? 'bc-v-select-MySelect' : '']" ref="vp">
     <b-form-group class="form-group-input" :label-for="'fmg-bvs-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
