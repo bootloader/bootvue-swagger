@@ -132,7 +132,7 @@
         data: () => ({
              refreshKey: false,
              cleanlog : function(logs){
-                 return (logs +'').replace('360dialog',"whatsapp");
+                 return (logs +'').replace(/360dialog/gi,"whatsapp");
              },
              disabledPopover:false
         }),
