@@ -20,6 +20,8 @@
                     alternative question feedback required  />
               <base-input name="Display Name" v-model="company.displayName" 
                 alternative question feedback  required/>
+              <base-input name="Website" v-model="company.websiteUrl" 
+                    alternative question feedback  required/>
             </b-col>
 
             <b-col cols="6">
@@ -28,6 +30,9 @@
                 alternative question required/>
               <base-input name="Address" v-model="company.address" 
                 alternative question feedback  required/>
+              <base-v-select name="Timezone" v-model="company.prefs.timeZone" latest searchable filterable
+                options="getx:/pub/meta/options/timezone"
+                alternative question required/>
             </b-col> 
 
             <b-col cols="6">
@@ -40,8 +45,7 @@
             </b-col>                          
  
               <b-col cols="6">
-                  <base-input name="Website" v-model="company.websiteUrl" 
-                    alternative question feedback  required/>
+
                   <MyUpload ref="myVueDropzone" autoProcessQueue disablePreviews v-model="company.logoUrl"
                       @uploaded="uploaded"
                       :upload-url="$global.MyConst.context + '/panel/api/v1/logo'"
@@ -75,10 +79,8 @@
 <script>
 import MyUpload from '@/@common/custom/components/MyUpload.vue';
 
-export default {
-  data() {
-    return {
-      company : {
+function defaultCmpany(){
+  return  {
         legalBusinessName : '', 
         displayName : '', 
         number : '',
@@ -93,7 +95,16 @@ export default {
         companyTimeZone : '',
         websiteUrl : '', 
         logoUrl : '',
-      },
+        prefs : {
+          timeZone : ''
+        }
+    };
+}
+
+export default {
+  data() {
+    return {
+      company : defaultCmpany(),
       loading : false
     };
   },
@@ -120,9 +131,14 @@ export default {
         let resp = await this.$service.get("/panel/api/v1/companys");
         for(var i in resp.results){
           if(resp.results[i].company.companyId == orgId){
+            let comp = defaultCmpany();
             this.company = {
-              ... this.company,
-              ... resp.results[i].company
+              ...  comp,
+              ... resp.results[i].company,
+              prefs : {
+                ... comp.prefs,
+                ... resp.results[i].company.prefs
+              }
             }
             break;
           }

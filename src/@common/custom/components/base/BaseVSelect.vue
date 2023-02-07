@@ -40,7 +40,28 @@
               </b-button>
             </slot>
         </div>
-        <my-v-select 
+        <my-select  v-if="isMySelect"
+            :id="'fmg-bvs-' + inputId" ref="myVSelect" :size="size"
+            :placeholder="$attrs.placeholder"
+            :value="value" 
+            v-on="listeners"
+            v-bind="$attrs" 
+            :options="options" :optionKey="optionKey" :optionLabel="optionLabel" :optionContext="optionContext"
+            :emptyDisplay="emptyDisplay"
+            :valid="valid" 
+            :required="required" :disabled="disabled"
+            :autoPosition="autoPosition"
+            :filter="filter" :search="search"
+             :searchable="searchable" :clearable="clearable"
+            :class="['text-'+size, 'v-select-'+size,
+              {'is-valid': valid && validated && successMessage}, 
+              {'is-invalid': invalid && validated}, inputClasses]"
+            >
+            <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="slotScope"></slot>
+            </template>
+        </my-select> 
+        <my-v-select v-else
             :id="'fmg-bvs-' + inputId" ref="myVSelect" :size="size"
             :placeholder="$attrs.placeholder"
             :value="value" 
@@ -269,6 +290,14 @@
       disabled : {
         type: Boolean,
         default: false
+      },
+      latest : {
+        type: Boolean,
+        default: false
+      },
+      version : {
+        type: String,
+        default: 'MyVSelect'
       }
     },
     data() {
@@ -318,6 +347,9 @@
       isPrelabel(){
         return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend || this.prependClass
       },
+      isMySelect(){
+        return this.latest || (this.version=='MySelect')
+      }
     },
     methods: {
       updateValue(value) {
