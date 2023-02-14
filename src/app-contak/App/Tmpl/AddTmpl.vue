@@ -19,21 +19,31 @@
         
         <b-row class="styler-height-fix">
            <b-col cols="8">
-              <b-row>
-                <b-col cols="6" v-if="companies">
-                  <base-input name="Template Code" v-model="template.code" 
+              <base-input name="Template Code" v-model="template.code" 
                     format-filter="item_code" :format-value="template.code" format-live
                     alternative question feedback  required :disabled="!editable"/>
-                <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
+              <b-row>
+                <b-col cols="6" v-if="companies">
+                  <base-v-select name="Message Type" v-model="template.type" 
+                    :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
+                    alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
+                  </base-v-select>
+                  <base-input name="Header Label" v-model="template.header.label" :disabled="!editable || isOTP"
                     alternative question feedback  :required="!isOTP" clearable
                     :suggestions="headerLabels"  @change="loadDefault"/>
                 </b-col>
 
                 <b-col cols="6">
-                  <base-v-select name="Message Type" v-model="template.type" 
-                    :options="[ { code : 'OTP'} ,{ code : 'TRANSACTIONAL', label : 'Transactional' }]"
-                    alternative question  required :disabled="!editable" @change="(template.category='') & loadDefault(true)">
-                  </base-v-select>
+                  <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
+                    options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
+                    alternative question required :filter="{
+                      type : template.type
+                    }">
+                      <template #selected-option="option">
+                          <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
+                              class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
+                      </template> 
+                  </base-v-select> 
                   <base-v-select name="Header Variant" v-model="template.header.variant" 
                     options="data:color_variant"
                     alternative question  required :disabled="!editable || isOTP">
@@ -119,17 +129,32 @@
              </b-col> 
 
               <b-col  cols="4">
-                  <base-v-select name="Message Category" v-model="template.category" :disabled="!editable || isOTP"
-                    options="json:hsm/message_categories_oa" ref="category" @change="loadDefault(true)"
-                    alternative question required :filter="{
-                      type : template.type
-                    }">
-                      <template #selected-option="option">
-                          <i v-if="option.item.header" :class="`text-${option.item.header.toLowerCase()}`"
-                              class="fa fa-circle"/>&nbsp;<span>{{option.label}}</span>
-                      </template> 
-                  </base-v-select>    
-
+                  <BaseComponent class="text-right">
+                      <b-button size="sm" @click="isPreviewCompact=!isPreviewCompact">
+                        Show {{isPreviewCompact ? 'Full' : 'Compact'}} Preview&nbsp;<i class="fa fa-eye"/>
+                      </b-button>
+                  </BaseComponent>  
+                  <span v-if="isPreviewCompact">
+                    <div class="oa-message-preview-wrapper" v-if="template.model">
+                    <div class="oa-message-preview-header">
+                      <div class="oa-message-preview-header-body row">
+                        <div class="col-6" >
+                          <div class="oa-message-preview-cat">
+                              <span class="oa-type-icon" v-if="messageCategory" :class="['my my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
+                          </div> 
+                          <div class="text-black text-truncate">{{template.model.title}}</div>
+                            <div class="text-sm text-grey text-truncate">{{template.model.subtitle}}</div>
+                        </div>  
+                        <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
+                          <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
+                          <span>{{template.model.value}}</span>
+                          <small class="oa-message-preview-header-suffix">{{template.model.suffix}}</small>
+                        </div> 
+                      </div>  
+                    </div> 
+                    </div>  
+                  </span>
+                  <span v-else>
                   <div class="oa-message-preview-wrapper" v-if="template.model">
                     <span v-if="template.header.mediaUrl">
                         <img v-if="template.header.mediaThumb" :src="template.header.mediaThumb" />
@@ -153,11 +178,11 @@
                       </div>  
                     </div>
                     <div class="oa-message-preview-message">
-                        <div class="oa-message-preview-message-icon">
+                        <div class="oa-message-preview-message-icon" hidden>
                             <i class="my my-oa-chat text-white bg-grey bg-round-text"/>
                         </div> 
-                        <div class="oa-message-preview-message-text">
-                          {{template.body | hb(template.model)}}
+                        <div class="oa-message-preview-message-text p-2">
+                          <span>{{template.body | hb(template.model)}}</span>
                         </div>  
                     </div>    
                   </div>
@@ -169,7 +194,7 @@
                          }"/>&nbsp;{{cta.label | hb(template.model)}}
                         </div>
                    </div>  
-
+                  </span> 
                   <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
                     <VGrid theme="default" class="w-100 position-relative" 
                       :columns="sampleVar.columns" :readonly="!editable"
@@ -274,6 +299,7 @@ export default {
         },
       }],
       isTemplateLoding : false,
+      isPreviewCompact : false,
       headerLabels : []
     };
   },
@@ -532,6 +558,7 @@ export default {
         }
         .oa-message-preview-message-text {
           font-size: 14px;
+          white-space: pre-wrap;
         }
       }
   }

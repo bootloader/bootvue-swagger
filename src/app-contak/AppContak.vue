@@ -31,6 +31,7 @@
 
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
   Vue.component('BaseVSelect', () => import('@/@common/custom/components/base/BaseVSelect.vue'));
+  Vue.component('BaseComponent', () => import('@/@common/custom/components/base/BaseComponent.vue'));
   Vue.component('MySelect', () => import('@/@common/custom/components/MySelect.vue'));
 
   console.log("ConTak App is loaded")
