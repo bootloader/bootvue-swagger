@@ -136,20 +136,33 @@
                   </BaseComponent>  
                   <span v-if="isPreviewCompact">
                     <div class="oa-message-preview-wrapper" v-if="template.model">
-                    <div class="oa-message-preview-header">
+                    <div class="oa-message-preview-header view-compact">
                       <div class="oa-message-preview-header-body row">
+                        <div  class="col-12">
+                          <div class="text-black text-truncate">
+                            <span class="bg-round-text">
+                              <img class="oa-message-preview-logo bg-round-text" :src="iCompany.logoUrl"/>
+                            </span>&nbsp;{{iCompany.displayName}}
+                             <span class="float-right"> {{Date.now()-2*24*3600*1000 | dateStamp}}</span>
+                          </div> 
+                        </div>
                         <div class="col-6" >
-                          <div class="oa-message-preview-cat">
+                          <div class="text-black text-truncate">{{template.model.title}}</div>
+                          <div class="text-sm text-grey text-truncate">{{template.model.subtitle}}</div>
+                          <div class="oa-message-preview-cat m-2">
                               <span class="oa-type-icon" v-if="messageCategory" :class="['my my-oa-type-'+messageCategory.toLowerCase()]"></span>{{template.header.label}}
                           </div> 
-                          <div class="text-black text-truncate">{{template.model.title}}</div>
-                            <div class="text-sm text-grey text-truncate">{{template.model.subtitle}}</div>
                         </div>  
-                        <div class="col-6 oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
-                          <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
-                          <span>{{template.model.value}}</span>
-                          <small class="oa-message-preview-header-suffix">{{template.model.suffix}}</small>
-                        </div> 
+                        <div class="col-6">
+                           <div class="oa-message-preview-header-value" :class="`text-oa-${template.header.variant.toLowerCase()}`">
+                            <small class="oa-message-preview-header-prefix">{{template.model.prefix}}</small>
+                            <small v-if="template.type=='OTP'">
+                              <i class="far fa-clone fa-flip-horizontal"></i>&nbsp;
+                            </small>
+                            <span>{{template.model.value}}</span>
+                            <small class="oa-message-preview-header-suffix">{{template.model.suffix}}</small>
+                          </div> 
+                        </div>  
                       </div>  
                     </div> 
                     </div>  
@@ -161,7 +174,7 @@
                         <img v-else-if="template.header.mediaType=='IMAGE'" :src="template.header.mediaUrl" />
                         <video v-else-if="template.header.mediaType=='VIDEO'" :src="template.header.mediaUrl"></video>
                     </span>  
-                    <div class="oa-message-preview-header">
+                    <div class="oa-message-preview-header view-full">
                       <div class="oa-message-preview-header-body row">
                         <div class="col-6" >
                           <div class="oa-message-preview-cat">
@@ -195,10 +208,10 @@
                         </div>
                    </div>  
                   </span> 
-                  <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
-                    <VGrid theme="default" class="w-100 position-relative" 
+                  <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:300px" v-if="renderGrid">
+                    <VGrid theme="default" class="w-100 position-relative" style="width:300px"
                       :columns="sampleVar.columns" :readonly="!editable"
-                      :source="vars"
+                      :source="vars" :autoSizeColumn="true"
                       @afteredit=afterEdit
                     ></VGrid>
                    </div> 
@@ -246,7 +259,7 @@ import MyUpload from '@/@common/custom/components/MyUpload.vue';
         footer : '', 
         cta : [],
         model : {
-          prefix : "", value : '', suffix : '',
+          prefix : "", value : '24 Dec', suffix : '',
           title : "",  subtitle : "",
           data : {
           },
@@ -263,9 +276,9 @@ export default {
       template : newTemplate(),
       sampleVar : {
         columns: [
-          { name: 'Variable', prop: "variable", readonly : true},
-          { name: 'Sample Value', prop: "sample", readonly : false}
-          //,{ name: 'Description', prop: "desc",readonly : true}
+          { name: 'Variable', prop: "variable", readonly : true,autoSize: true, size:100},
+          { name: 'Sample Value', prop: "sample", readonly : false,autoSize: true,size:150},
+          { name: '', prop: "descs",readonly : true,size:55}
         ] ,
         contact : [],
         model : [
@@ -300,6 +313,7 @@ export default {
       }],
       isTemplateLoding : false,
       isPreviewCompact : false,
+      renderGrid : false,
       headerLabels : []
     };
   },
@@ -389,6 +403,7 @@ export default {
         this.template.header.label = '';
         this.template.header.variant  = 'MAJOR';
       }
+      setTimeout(()=>this.renderGrid=true,1000)
     },
     async saveTemplate(){
       console.log("Saving...")
@@ -503,10 +518,16 @@ export default {
         border-radius: 2px;
         opacity: 1;
         background-color: rgba(255,255,255, 1);
-        background-image: url('~@/assets/images/oa/bg-oa-message.png');
-        background-repeat: repeat;
-        background-color: #cccccc;
         padding: 16px;
+          .oa-message-preview-logo{
+              width: 14px;
+              height: 12px;
+              margin: auto;
+              text-align: center;
+              padding: 0px;
+              margin-top: -2px;
+              line-height: 14px;
+          }
           .oa-message-preview-cat {
             opacity: 1;
             color: #666;
@@ -529,14 +550,12 @@ export default {
               text-align: left;
               line-height: 20px;
                   .oa-message-preview-header-value {
-                    padding: 10px;
                     margin: auto;
-                    font-size: 20px;
                     font-weight: 800;
                     font-style: normal;
                     letter-spacing: 0px;
                     text-align: right!important;
-                    line-height: 28px;
+                    
                   }
                    .oa-message-preview-header-prefix {
                       font-size: .6em;
@@ -549,6 +568,23 @@ export default {
                       padding-inline-start:3px;
                   }   
             }
+          &.view-full{
+            background-image: url('~@/assets/images/oa/bg-oa-message.png');
+            background-repeat: repeat;
+            background-color: #cccccc;
+             .oa-message-preview-header-value {
+                    padding: 10px;
+                    line-height: 28px;
+                    font-size: 20px;
+             }
+          }
+          &.view-compact{
+             .oa-message-preview-header-value {
+                    padding: 4px;
+                    line-height: 20px;
+                    font-size: 20px;
+             }
+          }
       }
       .oa-message-preview-message {
         display: flex;
