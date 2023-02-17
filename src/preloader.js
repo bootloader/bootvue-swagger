@@ -31,7 +31,9 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 	window.CONST.APP = "page";
 }else if(pathname.indexOf("/contak") == 0){
 	window.CONST.APP = "contak";
-} 
+} else if(pathname.indexOf("/entoc") == 0){
+	window.CONST.APP = "www";
+}
 window.callMobileEventListener = function(options){
 	console.log("callMobileEventListener",options)
 }

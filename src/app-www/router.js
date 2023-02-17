@@ -17,6 +17,11 @@ export default AppRouter.route({
           path: "/notpapi",
           name : "notpapi",
           component: () => import('./contakapi/NotpApiTest.vue'),
+        },
+        {
+          path: "/entoc",
+          name : "entoc",
+          component: () => import('./contakapi/NotpApiTest.vue'),
         }
       ];
     })()
