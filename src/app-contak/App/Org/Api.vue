@@ -6,10 +6,10 @@
         <b-card header="Reset Key" class="styler-20-80">
         <b-row align-v="center" slot="header" v-if="iCompany">
             <b-col cols="4">
-              <base-select v-model="iCompany.companyId"  size="sm"
+              <base-v-select v-model="iCompany.companyId"  size="sm" disabled
                 :options="companies.map((c)=> {
                   return {  id : c.companyId,  label : c.company.displayName}
-                })" />
+                })" alternative question  />
             </b-col>
           <b-col cols="8" class="text-right" >
             <b-button to="/app/"
@@ -72,15 +72,15 @@ export default {
     }
   },
   mounted(){
-    // if(this.$route.params.orgId)
-    //   this.loadCompany(this.$route.params.orgId);
-    this.loadBasic(()=>this.refresh());
+    this.load();
   },
   methods: {
+    async load(){
+      await this.selectDefaultCompany();
+      await this.loadBasic();
+    },
     refresh(){
        this.$store.getters.local?.notp?.phone;
-       //this.api.clientIds = this.company.clientId || "ss";
-      // console.log("this.company.clientId,",this.company.clientId)
     },
     async resetKey(){
         if(await this.$refs.formValidator.validate()){
@@ -90,7 +90,7 @@ export default {
           });
           this.api.id = resp.results[0].id;
           this.visibleApiKey = resp.meta;
-          this.loadBasicRefresh(()=>this.refresh());
+          await this.loadBasicRefresh();
         }
     }
   },

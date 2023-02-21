@@ -51,12 +51,12 @@ export default AppRouter.route({
             component: () => import('./App/Org/AddOrg.vue'),
           },
           {
-            path: "/app/org/edit/:orgId",
+            path: "/app/org/:orgId/edit",
             name: 'Edit Organization',
             component: () => import('./App/Org/AddOrg.vue'),
           },
           {
-            path: "/app/org/api/:orgId",
+            path: "/app/org/:orgId/api",
             name: 'APIKey',
             component: () => import('./App/Org/Api.vue'),
           },

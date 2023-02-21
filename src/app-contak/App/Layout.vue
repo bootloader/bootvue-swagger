@@ -22,10 +22,10 @@
                   }">
         </sidebar-item>
 
-        <sidebar-item nav-link-class="text-oa-grey text-bold" hidden
+        <sidebar-item nav-link-class="text-oa-grey text-bold"
                   :link="{
                     name: 'APIs',
-                    path: '/app/api',
+                    path: '/app/org/0/api',
                     icon: 'fa fa-code'
                   }">
         </sidebar-item>
