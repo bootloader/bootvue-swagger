@@ -27,7 +27,7 @@
             <base-input variant="outline-oa-blue" label="API Id" 
                   v-model="api.id" layout="flushed" prelabel readonly copy/>
             <base-input variant="outline-oa-blue" label="APIKey" 
-                      v-model="visibleApiKey" prelabel copy readonly>
+                      v-model="visibleApiKey" prelabel :copy="keyGenerated" readonly>
                   <template #actions>
                     <b-button class="w-20" @click="resetKey"
                         variant="outline-oa-blue">
@@ -48,27 +48,31 @@ import BaseButton from '@/@common/argon/components/BaseButton.vue';
 import DemoReciever from './DemoReciever.vue';
 import basic from '../mixin/basic.js'
 
+const KEY_MASK = "*****************";
 export default {
   mixins: [basic],
   data() {
     return {
       readonlyClientId : false,
-      visibleApiKey : "*****************",
+      visibleApiKey : KEY_MASK,
       navbarOpen: false,
-      domain : 'demo', otp : '', title : 'Login', apiKey : '*****************',validity : 60, otp : 321654
+      domain : 'demo', otp : '', title : 'Login', apiKey : KEY_MASK,validity : 60, otp : 321654
     };
   },
   computed : {
     api(){
       return {
-        id : "", key : '*****************',clientId : (this.iCompany?.displayName || ''),
+        id : "", key : KEY_MASK,clientId : (this.iCompany?.displayName || ''),
         ...this.iCompany?.api,
       };  
     },
     company(){
       return this.iCompany || {
-        apiKey : '*****************'
+        apiKey : KEY_MASK
       }
+    },
+    keyGenerated(){
+      return !!this.visibleApiKey && (this.visibleApiKey != KEY_MASK)
     }
   },
   mounted(){

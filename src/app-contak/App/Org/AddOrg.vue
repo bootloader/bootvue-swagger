@@ -10,7 +10,7 @@
               <ButtonRadioGroup buttonVariant="outline-grey"
                   v-model="tab"
                   size="sm"
-                  :options="['Details','Security','Support']"
+                  :options="tabs"
               />
           </b-col>
           <b-col cols="4" class="text-right" >
@@ -151,6 +151,9 @@ export default {
   computed : {
     isVerfied(){
       return this.company?.meta?.verified || false;
+    },
+    tabs() {
+        return this.company.id ? ['Details','Security','Support'] : ['Details'];
     }
   },
   mounted(){
