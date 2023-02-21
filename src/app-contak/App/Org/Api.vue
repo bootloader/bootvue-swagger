@@ -18,20 +18,23 @@
             </b-button>
           </b-col>
         </b-row>
-          <base-input variant="outline-oa-blue" label="From" 
-                v-model="company.displayName" layout="flushed" prelabel readonly />
-          <base-input variant="outline-oa-blue" label="OrgId" 
-                v-model="company.companyId" layout="flushed" prelabel readonly />
-          <base-input variant="outline-oa-blue" label="API Id" 
-                v-model="api.id" layout="flushed" prelabel readonly copy/>
-          <base-input variant="outline-oa-blue" label="APIKey" 
-                    v-model="visibleApiKey" prelabel copy readonly>
-                <template #actions>
-                  <b-button class="w-20" @click="resetKey"
-                      variant="outline-oa-blue">
-                      Reset</b-button>
-              </template> 
-          </base-input>
+        <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+            <base-input variant="outline-oa-blue" name="Client Id"  required
+                  format-filter="alphanumlower" :format-value="api.clientId" format-live
+                  v-model="api.clientId" layout="flushed" prelabel :readonly="!!company.clientId" />
+            <base-input variant="outline-oa-blue" label="OrgId" 
+                  v-model="company.companyId" layout="flushed" prelabel readonly />
+            <base-input variant="outline-oa-blue" label="API Id" 
+                  v-model="api.id" layout="flushed" prelabel readonly copy/>
+            <base-input variant="outline-oa-blue" label="APIKey" 
+                      v-model="visibleApiKey" prelabel copy readonly>
+                  <template #actions>
+                    <b-button class="w-20" @click="resetKey"
+                        variant="outline-oa-blue">
+                        Reset</b-button>
+                </template> 
+            </base-input>
+        </validation-observer>
         </b-card>  
       </b-col>
       <b-col hidden>
@@ -49,6 +52,7 @@ export default {
   mixins: [basic],
   data() {
     return {
+      readonlyClientId : false,
       visibleApiKey : "*****************",
       navbarOpen: false,
       domain : 'demo', otp : '', title : 'Login', apiKey : '*****************',validity : 60, otp : 321654
@@ -56,9 +60,10 @@ export default {
   },
   computed : {
     api(){
-      return this.iCompany?.api || {
-        id : "", key : '*****************'
-      }
+      return {
+        id : "", key : '*****************',clientId : (this.iCompany?.displayName || ''),
+        ...this.iCompany?.api,
+      };  
     },
     company(){
       return this.iCompany || {
@@ -69,18 +74,24 @@ export default {
   mounted(){
     // if(this.$route.params.orgId)
     //   this.loadCompany(this.$route.params.orgId);
-    this.loadBasic();
+    this.loadBasic(()=>this.refresh());
   },
   methods: {
     refresh(){
        this.$store.getters.local?.notp?.phone;
+       //this.api.clientIds = this.company.clientId || "ss";
+      // console.log("this.company.clientId,",this.company.clientId)
     },
     async resetKey(){
-        let resp = await this.$service.submit('/panel/api/v1/company/key',{
-          companyId : this.company.companyId
-        });
-        this.api.id = resp.results[0].id;
-        this.visibleApiKey = resp.meta;
+        if(await this.$refs.formValidator.validate()){
+          let resp = await this.$service.submit('/panel/api/v1/company/key',{
+            companyId : this.company.companyId,
+            clientId : this.api.clientId
+          });
+          this.api.id = resp.results[0].id;
+          this.visibleApiKey = resp.meta;
+          this.loadBasicRefresh(()=>this.refresh());
+        }
     }
   },
   components: {

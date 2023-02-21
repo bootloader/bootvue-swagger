@@ -393,6 +393,9 @@ var formatter = {
   item_code : function item_code (value) {
     return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9_]+/g,'_').replace(/[_]+/g,'_');
   },
+  alphanumlower : function alphanumlower (value) {
+    return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9]+/g,'').replace(/[\s]+/g,'');
+  },
 
   init : function () {
     var THAT = this;
@@ -488,6 +491,7 @@ var formatter = {
     });
 
     Vue.filter('item_code', THAT.item_code);
+    Vue.filter('alphanumlower', THAT.alphanumlower);
   }
 }
 

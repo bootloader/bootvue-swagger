@@ -30,13 +30,29 @@ export  default {
         }
     },
     methods : {
-        async loadBasic(){
+        async loadBasic(fun){
           this.basic.isLoding = true; 
             try {
               return await this.$service.getX("/panel/api/v1/companys");
             } finally {
                 this.basic.isLoding = false;  
+                if(fun){
+                  fun();
+                }
             }
+        },
+        async loadBasicRefresh(fun){
+          this.basic.isLoding = true; 
+          try {
+            return await this.$service.getX("/panel/api/v1/companys",{},{
+              refresh : true
+            });
+          } finally {
+              this.basic.isLoding = false;  
+              if(fun){
+                fun();
+              }
+          }
         },
         async selectDefaultCompany(){
             await this.loadBasic();

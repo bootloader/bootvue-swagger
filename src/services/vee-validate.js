@@ -2,7 +2,7 @@ import { extend, configure } from "vee-validate";
 import { required, email, min,max,regex,numeric,min_value,max_value } from "vee-validate/dist/rules";
 import { i18n } from "./i18n";
 import formatters from './../services/formatters'; 
-
+import validators from './../services/validators'; 
     // No message specified.
 extend('email', email);
 extend("regex", regex);
@@ -24,6 +24,22 @@ extend('required', {
             //console.log("validate", ruleName,value, args,a)
             //values._field_ = i18n.t(`fields.${field}`);
             let vResult = formatters[ruleName](value, args);
+            if(vResult === true){
+                return true;
+            }
+            else return i18n.t(vResult);
+        }
+      });
+    }
+  });
+
+  Object.keys(validators).forEach(ruleName => {
+    if(validators[ruleName]){
+      extend(ruleName, {
+        validate(value, args,a) { 
+            //console.log("validate", ruleName,value, args,a)
+            //values._field_ = i18n.t(`fields.${field}`);
+            let vResult = validators[ruleName](value, args);
             if(vResult === true){
                 return true;
             }

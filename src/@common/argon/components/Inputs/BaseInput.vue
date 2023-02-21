@@ -13,7 +13,7 @@
           {'focused': focused},
           {'is-valid': valid && validated }, 
           {'is-invalid': invalid && validated},
-          {'has-value': value != ''},
+          {'has-value': value != '' || autofilled},
           'text-'+size,
           labelClasses
         ]">
@@ -210,7 +210,7 @@
         description: "Input group css classes"
       },
       value: {
-        type: [String, Number],
+        type: [String, Number,Array],
         description: "Input value"
       },
       type: {
@@ -236,7 +236,7 @@
         description: "Prepend Class (left)"
       },
       rules: {
-        type: [String, Array, Object],
+        type: [String, Array, Object,Function],
         description: 'Vee validate validation rules',
         default: ''
       },
@@ -276,7 +276,8 @@
       return {
         focused: false,
         hovered : false,
-        inputId : ++ID_COUNTER
+        inputId : ++ID_COUNTER,
+        autofilled : false
       };
     },
     computed: {
@@ -360,6 +361,11 @@
           }
         }
       }
+    },
+    mounted(){
+      setTimeout(()=> {
+        this.autofilled = this.$refs?.input?.matches(':-internal-autofill-selected') || false;
+      },1000);
     },
     methods: {
       updateValue(evt) {
