@@ -1,9 +1,10 @@
 <template>
   <div>
 
-  <b-row  v-if="$global.User.isDuperUser" slot="header"  class="my-normalize-v2">
-    <b-col  cols="6">
-      <base-v-select options="getx:/partner/pub/waba/clients"  class="d-block" 
+  <b-row slot="header"  class="my-normalize-v2">
+    <!-- v-if="$global.User.isDuperUser" -->
+    <b-col cols="6">
+      <base-v-select options="getx:/partner/pub/waba/clients"  class="d-block" latest
           layout="default" size="sm"
           v-model="search.user" clearable searchable filterable
           optionKey="id"
@@ -20,17 +21,17 @@
         </template> 
        </base-v-select>
     </b-col> 
-     <b-col  cols="4">
+    <b-col  cols="4">
       <base-input  class="" layout="default" size="sm"
           placeholder="Search..."
           v-model="search.domain"
        ></base-input>
-     </b-col> 
-      <b-col cols="2">
+    </b-col> 
+    <b-col cols="2">
            <button class="btn btn-sm btn-whatsapp" 
            @click="loadDetails(true)"
            target="_blank"> <i class="fa fa-refresh"/> Refresh</button>
-     </b-col> 
+    </b-col> 
   </b-row>
 
 
@@ -216,7 +217,8 @@ export default {
       search : {
         user : "", 
         domain : ''
-      }
+      },
+      availableClients : {}
     };
   },
   computed : {
@@ -233,7 +235,7 @@ export default {
             || (model?.channel?.setup_info?.phone_number || '').toLowerCase().indexOf(domain) > -1
           )) 
       });
-    },
+    }
   },
   created() {
     this.loadDetails();
@@ -258,7 +260,8 @@ export default {
       let resp = await this.$service.get("/partner/pub/waba/channels",{
         refresh : refresh
       });
-      this.models = resp.results.map(function(result){
+      this.models = resp.results.map((result)=>{
+        this.availableClients[result.clientId] = result.clientId;
         return {
           id : result.id,
           channel : result.channel || {},
@@ -271,10 +274,11 @@ export default {
       return this.loadDetails();
     },
     clientFilter(options,search){
-      let _search = (search || "").toLowerCase()
-      return options.filter(function(option){
-        return option.item.client.name.toLowerCase().indexOf(_search) > -1
-        || option.item.client.contact_info.email.toLowerCase().replace('@mehery.com','').indexOf(_search) > -1
+      let _search = (search || "").toLowerCase();
+      return options.filter((option)=>{
+        return (option.item.client.name.toLowerCase().indexOf(_search) > -1
+        || option.item.client.contact_info.email.toLowerCase().replace('@mehery.com','').indexOf(_search) > -1)
+        //&& (this.$global.User.isDuperUser ? true : this.availableClients[option.item.client.id]);
       });
     },
     async generateKey(){

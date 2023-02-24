@@ -10,7 +10,7 @@
                 >
                 <template #data="{options}">
                     <v-select v-if="type=='dropdown'"
-                        :options="options"
+                        :options="search ? search(options) : search"
                         style="min-width: 220px;"
                         v-model="model.selected"
                         v-bind="$attrs"

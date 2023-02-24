@@ -127,11 +127,12 @@
 <script>
  
  import MyVSelect from '@/@common/custom/components/MyVSelect.vue';
+ import MySelect from '@/@common/custom/components/MySelect.vue';
 
  var ID_COUNTER = 0;
 
   export default {
-    components: {MyVSelect },
+    components: {MyVSelect ,MySelect},
     inheritAttrs: false,
     name: "base-text-area",
     props: {
