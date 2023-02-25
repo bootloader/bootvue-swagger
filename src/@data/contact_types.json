@@ -46,7 +46,7 @@
             "code": "SMS",
             "name": "SMS",
             "channelType" : "sms",
-            "enabled" : true
+            "enabled" : false
         }
     ]
  }
