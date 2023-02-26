@@ -239,6 +239,7 @@ const actions = {
         }
         _chat.messages =  state.chats[c].messages || _chat.messages;
         _chat.local = state.chats[c].local || _chat.local;
+        //console.log(" _chat.messages", _chat.messages.length);
 
         DataProcessor.session(state.chats[c])
         state.chats.splice(c,1);
@@ -517,6 +518,7 @@ const actions = {
       messages : response.data.results
     };
     DataProcessor.session(session);
+    //console.log("GetSessionChats", session.messages.length);
     if(session.local.active){
         dispatch("AddChat",session);
     } else {

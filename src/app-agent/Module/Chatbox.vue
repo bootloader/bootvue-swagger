@@ -958,7 +958,7 @@
             selectActiveChat () {
                 for(var i in this.$store.getters.StateChats){
                     var chat = this.$store.getters.StateChats[i];
-                    if(this.$route.params.sessionId == chat.sessionId){
+                    if(this.$route.params.sessionId == chat.sessionId && chat.local.active){
                         return chat;
                     }
                 }
@@ -1226,9 +1226,12 @@
                         let scrollTop = target.scrollTop;
                         this.loadingPrev = true;
                         let activeChat = this.activeChat;
-                        let prevSessionId = (this.prevChats[0] || activeChat).sessionId
+                        let prevSessionId = (this.prevChats[0] || activeChat)?.sessionId;
+                        if(!prevSessionId){
+                            return;
+                        }
                         let response = await this.$service.get("/api/session/messages",{
-                                contactId : activeChat.contactId,
+                                contactId : activeChat?.contactId,
                                 sessionId : prevSessionId,
                                 previous : true
                         },{ first :activeChat.sessionId });
