@@ -194,7 +194,7 @@
             table : {
               fields: [ 
                 { key : 'name', label : "Name" },
-                { key : 'id', label : "Id" },
+                //{ key : 'id', label : "Id" },
                 { key : 'code', label : "Queue" },
                 { key : 'appType', label : "Type" },
                 { key : 'actions', label : "Actions" },

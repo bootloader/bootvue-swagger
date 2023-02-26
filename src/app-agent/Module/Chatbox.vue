@@ -153,12 +153,6 @@
                                         <i v-if="showQuickReplies" class="fa fa-arrow-circle-down" ></i>
                                     </span> 
                                     <span v-if="quickReplies && quickReplies.length>0 " class="divider-v" ></span> 
-                                    <span class="msg_cotainer_smart" @click="activeChat.assignedToAgent && closSession()"
-                                        v-tooltip="'End Chat'" 
-                                        v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
-                                        <i class="fa fa-check-circle" ></i>
-                                    </span>
-
                                      <span class="msg_cotainer_smart" v-b-modal.stickynote v-tooltip="'Add Sticky Note'" 
                                             v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
                                              <i class="fas fa-sticky-note"></i> 
@@ -172,8 +166,11 @@
                                             @click="showPushNewHSM()" >
                                              <i class="fa fa-comment-medical"></i> 
                                     </span>
-
-                                   
+                                    <span class="msg_cotainer_smart" @click="activeChat.assignedToAgent && closSession()"
+                                        v-tooltip="'Resolve this Chat'" 
+                                        v-bind:class="{'my-disbaled' : !activeChat.assignedToAgent}">
+                                        <i class="fa fa-check-circle" ></i>&nbsp;Resolve
+                                    </span>
                                 </span>    
   
                                 <span v-if="quickReplies" class="quick-replies-less" ref="quickRepliesLess">
@@ -271,7 +268,7 @@
                 
 
                 <div class="card-footer">
-                    <slide-up-down :active="is_QUICK_ACTIONS && isActionable" :duration="200" class="action-events">
+                    <slide-up-down :active="is_QUICK_ACTIONS && isActionable && quickActions.length>0" :duration="200" class="action-events">
                             <span v-if="quickActions" v-for="quickAction in quickActions" v-bind:key="'qa-'+quickAction.action"
                              @click="sendQuickAction(quickAction.action)"
                             class="msg_cotainer_smart">  {{quickAction.title}}</span>
@@ -289,8 +286,8 @@
                                         'btn-active' : is_QUICK_MEDIA
                                     }"
                                     class="input-group-text input-group-text-left attach_btn"><i class="fa fa fa-photo-video"></i></span>
-                                    <span 
-                                    @click="toggleView('QUICK_ACTIONS')" v-tooltip="'Trigger Quick Action'"
+                                    <span
+                                    @click="toggleView('QUICK_ACTIONS')" v-tooltip="quickActions.length ? 'Trigger Quick Action' : 'No Actions'"
                                     :class="{
                                         'btn-active' : is_QUICK_ACTIONS
                                     }"
@@ -1220,10 +1217,13 @@
                 if(this.$config.isLagacy){
                     return;
                 }
-                console.log("handleScroll....",event.target.scrollTop)
-                if(event.target.scrollTop < 50){
-                        let scrollHeight = event.target.scrollHeight;
-                        let scrollTop = event.target.scrollTop;
+                await this.scrollHandler(event.target);
+            },500),
+            async scrollHandler(target){
+                console.log("handleScroll....",target.scrollTop)
+                if(target.scrollTop < 50){
+                        let scrollHeight = target.scrollHeight;
+                        let scrollTop = target.scrollTop;
                         this.loadingPrev = true;
                         let activeChat = this.activeChat;
                         let prevSessionId = (this.prevChats[0] || activeChat).sessionId
@@ -1244,10 +1244,10 @@
                         };
                         DataProcessor.session(session);
                         document.documentElement.style.scrollBehavior = 'auto';
-                        event.target.style.scrollBehavior = 'auto';
+                        target.style.scrollBehavior = 'auto';
                         this.prevChats.unshift(session);
                         this.loadingPrev  = false;
-                        this.mcb = event.target;
+                        this.mcb = target;
                         this.scrollAdjust({scrollTop,scrollHeight});
                         this.$nextTick(() => {
                             this.scrollAdjust({scrollTop,scrollHeight});
@@ -1255,8 +1255,8 @@
                         });
 
                 }
-            },500),
-             scrollAdjust : throttle(async function({scrollTop,scrollHeight}){
+            },
+            scrollAdjust : throttle(async function({scrollTop,scrollHeight}){
                 this.mcb.scrollTop =  scrollTop + (this.mcb.scrollHeight - scrollHeight);
              },50)
         },
@@ -1400,7 +1400,6 @@
         border-radius: 8px;
         background-color: #FFF;
         color: #212121;
-        padding: 6px;
         position: relative;
         font-size: 14px;
        /* border: 1px solid #4b56c0d1;*/
@@ -1411,17 +1410,19 @@
         margin-right: 3px;
         border-radius: 7px;
         background-color: #FFF;
-        padding: 6px;
+        padding: 4px 5px;
+        border: 1px solid var(--scheme-color);
+        color: var(--scheme-color);
         position: relative;
         font-size: 14px;
         -border : 1px solid #0000001c;
         box-shadow: 0 1.5px 1.5px #00000052;
     }
-    .msg_cotainer_smart.btn-active{
-         background-color: rgb(0 0 0 / 70%);
+    .msg_cotainer_smart.btn-active,.msg_cotainer_smart:hover{
+         background-color: var(--scheme-color);
          color: #FFF;
     }
-    
+
     .upload_card_body {
 /*    overflow-y: auto;
     height: 100%;*/
