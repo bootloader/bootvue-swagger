@@ -190,7 +190,11 @@ export default AppRouter.route({
             name: 'ErrorLogs',
             component: () => import('./Modules/Console/ErrorLogs.vue'),    
         },
-
+        {
+            path : "/app/console/activities",
+            name: 'ErrorLogs',
+            component: () => import('./Modules/Console/UserActivities.vue'),    
+        },
 
         {
             path: 'app/admins/components/modals',

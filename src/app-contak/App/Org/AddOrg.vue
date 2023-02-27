@@ -153,7 +153,7 @@ export default {
       return this.company?.meta?.verified || false;
     },
     tabs() {
-        return this.company.id ? ['Details','Security','Support'] : ['Details'];
+        return this.company.companyId ? ['Details','Security','Support'] : ['Details'];
     }
   },
   mounted(){
