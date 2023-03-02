@@ -381,10 +381,10 @@
             console.log("success",success, this.input.contactCSV);
             if(!success) return;
             let referenceKey;
-            if(this.input.contactCSV && this.input.contactCSV.length){
+            if(this.input.contactCSV){
                 referenceKey = await this.uploadCsv();
             }
-            if(this.input.contactCSV && this.input.contactCSV.length && !referenceKey) return;
+            if(this.input.contactCSV && !referenceKey) return;
             let resp = await this.$service.post('/api/message/bulk/push/send',{
               "message": this.preview.text,
               "subject": this.selectedChannel.title,
