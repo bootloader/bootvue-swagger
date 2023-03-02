@@ -14,7 +14,7 @@
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :disabled="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :placeholder="input.meta.example || 'Select'"
-                    searchable :clearable="!!input.meta.optional"
+                    searchable :clearable="!!input.meta.optional" filterable
                     @change="onChange(input.meta,input.config)" >
                     <template #help>
                       <small class="text-xs" v-if="input.meta.desc">  
