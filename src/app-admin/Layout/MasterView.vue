@@ -344,6 +344,8 @@
           table : {
               type: Object
           },
+          endpoint : {
+          },
           autoApply : {
               type: Boolean,
               default : true
@@ -509,7 +511,10 @@
               main : (12 - left - right),
               right : right
             }
-          }
+          },
+          apiEndPoint(){
+            return this.table?.api || this.endpoint
+          },
         },
         mounted : function (argument) {
           if(this.goodTable)
@@ -566,7 +571,8 @@
               } finally {
                   this.busyintenral = false;
               }
-            }
+            } 
+
             if(this.table?.items){
               this.$emit("rows", this.table.items);
             }
@@ -658,10 +664,11 @@
                   case 'function':
                     break;
                   default :
+                    //console.log(key,typeof item[key])
                     query[key] =  item[key]
                 }
               }
-             await this.$service.delete(this.table.api, query);
+             await this.$service.delete(this.apiEndPoint, query);
              this.loadItems();
           },
           async editItemCancel() {

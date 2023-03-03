@@ -11,11 +11,13 @@
               ...table,
               items :filtered
             }"
-                  :actions="[{
+            :actions="[{
               label : 'Add Template', icon : 'plus', name : 'ADD_ITEM',  link : '/app/admins/tmpl/pushtemplate/edit/new'
             }]"
+            :endpoint="endpoint"
             @action="onAction"
-            @rows="selectItem">
+            @rows="selectItem"
+            >
             <template #top-row="row">
                   <b-th><input type="text" v-model="filters.category"  class="form-control form-control-sm" /></b-th>
                   <b-th><input type="text" v-model="filters.desc"  class="form-control form-control-sm" /></b-th>
@@ -41,7 +43,7 @@
                     </b-button>   
                   </router-link>
                   &nbsp;
-                  <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
+                  <b-button size="sm" @click="deleteItem(row)" variant="outline-primary">
                     <font-awesome-icon icon="trash" title="Delete"/>
                   </b-button>
                   &nbsp;
@@ -478,8 +480,9 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                     currentPage: 1,
                     rows : 0,
                     tableClass : 'text-sm',
-                    sortBy : "name"
+                    sortBy : "name",
                   },
+                  endpoint : "/api/tmpl/hsm",
                   filters:{
                       category:"",
                       desc:"",
@@ -589,6 +592,7 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
           async loadOptions (argument) {
           },
           async loadItems (){
+           // return; //@Deprecated
             var resp = await this.$service.get("api/tmpl/hsm");
             this.table.items = resp.results;
             await this.$refs.templatesView?.apply?.();
@@ -651,8 +655,10 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
               this.loadItems ();
             }
           },
-          async deleteItem(item) {
-             await this.$service.delete('/api/tmpl/hsm', item);
+          async deleteItem(row) {
+             //await this.$service.delete('/api/tmpl/hsm', item);
+             await row.removeItem();
+             this.loadItems ();
           }, 
           async cancelItem(item) {
              this.newItem = newItem();
