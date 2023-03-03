@@ -301,7 +301,9 @@
   }
 </style>
 <style type="text/css">
-   
+    #chattags___BV_modal_outer_{
+        z-index: 1000000000001 !important;
+    }
   .user_info .user_assignment .vs__selected {
     color: rgb(255 255 255);
     background: transparent;
