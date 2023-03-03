@@ -39,6 +39,8 @@
                 :loading="loading.hourDataTable"
                 :optionOnChange="hourOptionOnChange" 
                 :refresh="loadHourwiseSummary"
+                :colHeadFormatter="hourHeaderFormatter"
+                :formatCSV="true"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -130,7 +132,9 @@
                 :loading="loading.outboundMsgHourlyDataTable"
                 :optionOnChange="outboundHourOptionOnChange" 
                 :refresh="loadOutboundMsgHourly"
+                :colHeadFormatter="hourHeaderFormatter"
                 :sortBy="sortBy()"
+                :formatCSV="true"
                 :options="hourOptions">
             </dynamic-left-top-freeze-table>
         </b-col>
@@ -460,6 +464,9 @@
                         return "Business Initiated" 
                 }
             },
+            hourHeaderFormatter(key){
+                return key.replace(/##(.*?)##/g, '');
+            },
             onDaysDaterangeChange(range){
                 this.daterangeBroadcast.startDate = range.startDate;
                 this.daterangeBroadcast.endDate = range.endDate;
@@ -565,15 +572,15 @@
                     let time = parseInt(_THAT.getMinute(i== 1 ? a[0] : b[0]));
 
                     if(time == 0 && i == 1){
-                        data[_THAT.getHourMin(a[0])+"-"+_THAT.getHour(a[0])] = b[1]
+                        data['##'+i+'##'+_THAT.getHourMin(a[0])+"-"+_THAT.getHour(a[0])] = b[1]
                         return b;
                     }
                     if(!a && length == i+1 && time != 0){
-                        data[_THAT.getHour(b[0])+"-"+_THAT.getHourPlus(b[0])] = b[1];
+                        data['##'+i+'##'+_THAT.getHour(b[0])+"-"+_THAT.getHourPlus(b[0])] = b[1];
                         return false;
                     }
                     if(a && b){
-                        data[_THAT.getHour(a[0])+"-"+_THAT.getHour(b[0])] = a[1]+b[1];
+                        data['##'+i+'##'+_THAT.getHour(a[0])+"-"+_THAT.getHour(b[0])] = a[1]+b[1];
                         return null;
                     } else return b;
                 });

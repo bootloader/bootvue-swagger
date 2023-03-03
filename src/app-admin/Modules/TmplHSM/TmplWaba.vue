@@ -40,10 +40,17 @@
                         v-tooltip="'Clone to HSM template'" variant="outline-primary">
                         <span class="fa fa-cloud-download-alt" title="Submit"/>
                 </b-button>  
-                <b-button size="sm" @click="deleteItem(item)" class="mx-1"
-                        v-tooltip="'Delete template'" variant="outline-danger">
-                        <span class="fa fa-trash-alt" title="Submit"/>
-                </b-button> 
+                <el-popconfirm
+                    title="Are you sure to delete this?"
+                    confirm-button-text='Yes'
+                    cancel-button-text='No'
+                    @confirm="deleteItem(item)"
+                  >
+                    <b-button slot="reference" size="sm" class="mx-1"
+                            v-tooltip="'Delete template'" variant="outline-danger">
+                            <span class="fa fa-trash-alt" title="Submit"/>
+                    </b-button> 
+                </el-popconfirm>
             </template>
             <template #cell(code)="{item}">
                 <b-button variant="link" :to="{
@@ -411,6 +418,7 @@
     import TmplUtils from '@/@common/utils/TmplUtils';
     import debounce from "debounce";
     import VGrid from "@revolist/vue-datagrid";
+    import {Popconfirm} from 'element-ui';
 
     export default {
         components: {
@@ -421,7 +429,8 @@
                 BaseTextArea,
                 BaseInput,
                 BaseSelect,
-                TemplatePreview,MyStatus,VGrid
+                TemplatePreview,MyStatus,VGrid,
+            [Popconfirm.name]: Popconfirm,
         },
         data: () => ({
             filters: [

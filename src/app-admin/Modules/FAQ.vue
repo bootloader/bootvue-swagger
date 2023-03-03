@@ -1,44 +1,22 @@
 <template>
     <div>
-       <!-- <master-view id="agent-session-list" 
-            :header="{
-                heading: heading,
-                subheading: subheading,
-                icon: icon,
-            }"
-            goodTable
-            :filters="[{ label : 'ADD FAQ Article', name : 'addfaq'}]"
-            :table="{...sessions}"
-            :busy="sessions.busy"
-            >
-            <template #filter(addfaq)>
-              <span class="btn btn-success" @click="faqAdd">
-                ADD FAQ Article
-              </span>
-          </template>
-
-            <template #groupBy="code">
-              <span class="text-successs badge btn btn-xs btn-dark">
-                {{code.item.label}}
-              </span>
-          </template>
-          <template #cell(actions)="row">
-                <span class="text-center">
-                <span class="far fa-edit mg-1 pointer text-primary text-bold" 
-                    v-tooltip="'View Chat'"
-                    @click="faqEdit(row.item, row.index, $event.target)" ></span>
-                    &nbsp;<span v-if="row.item.feedback"
-                    class="bi bi-emoji-smile mg-1 pointer text-primary text-bold" 
-                    v-tooltip="row.item.feedback.tag">
-                    {{row.item.feedback.score}}
-                    </span>
-                    </span>
-          </template>
-        </master-view> -->
-        <tree-table
-          class="table"
-          :columns="sessions.fields"
-          :table-data="sessions.items" />
+        <page-title :heading=heading :subheading=subheading :icon=icon :actions="actions" @action="onAction"></page-title>
+        <table class="table">
+            <tr>
+                <th width="10%">Parent</th>
+                <th width="10%">Code</th>
+                <th width="30%">Short Description</th>
+                <th width="40%">Title</th>
+                <th width="10%">Action</th>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <recursive-component :data="sessions.items" @action="onAction"></recursive-component>
+                </td>
+            </tr>
+        </table>
+        
+        
       <div class="chat_archive"  v-bind:class="{closed : !faqMode}" >
         <div class="card card-shadow chat_box_wrapper">
                 <div class="card-header msg_head chat-head d-flex justify-content-between">
@@ -124,7 +102,8 @@
     //import chart2 from './Analytics/chart2';
     //import chart3 from './Analytics/chart3';
     import formatters from '../../services/formatters';
-    import TreeTable from 'vue-tree-table-component'
+import RecursiveComponent from './RecursiveComponent.vue';
+    // import TreeTable from 'vue-tree-table-component';
 
 
     function hour0(mmt){
@@ -141,7 +120,7 @@
             AgentChat,
             DateRangePicker,
             vSelect,
-            TreeTable
+                RecursiveComponent
            // chart1,chart2,chart3,
         },
         computed:{
@@ -156,17 +135,19 @@
        
         
         data: () => ({
+            actions : [{
+                label : "Add FAQ", icon : "plus", name : "ADD_ITEM"
+            }],
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
             heading: 'FAQ',
             subheading: 'faq',
             icon: 'pe-7s-chat icon-gradient bg-tempting-azure fa fa-chalkboard-teacher',
             sessions : {
                 sortBy: 'lastSessionStamp',
-                sortDesc: true,
                 fields: [ 
-                    { id : 'parent', label : "Parent"},
-                    { id : 'shortdesc', label : "Short Title"},
-                    { id : 'tittle', label : "Title"}   
+                    { id : 'parent', label : "parent"},
+                    { id : 'shortdesc', label : "shortdesc"},
+                    { id : 'title', label : "title"}   
                 ],
                 items : [],
                 groupBy : 'code',
@@ -242,7 +223,15 @@
                         body:v.translation?.en?.body,
                         title:v.translation?.en?.title 
                     }
-                });
+                }).sort((a, b) => a.code?.localeCompare(b.code));;
+                this.parentList = data.map(v=>{
+                    return {
+                        label:v.translation?.en?.shortDesc || v.code,
+                        value:v.code
+                    }
+                })
+                console.log("this.parentList",this.parentList);
+
                 const idMapping = data.reduce((acc, el, i) => {
                     console.log("el.code",el.code,i);
                     acc[el.code?.toUpperCase()] = i;
@@ -262,15 +251,17 @@
                     parentEl.children = [...(parentEl?.children || []), el];
                 });
                 console.log("root",data );
-              this.sessions.items = data;
+
+              this.sessions.items = data.filter(v=> v.parent == "");
+              console.log("this.sessions.items",this.sessions.items);
               this.sessions.rows = this.sessions.items.length;
-            //   this.parentList = this.sessions.items.map(v=>{
-            //     return {
-            //         label:v.translation.en.shortdesc,
-            //         value:v.code
-            //     }
-            //     })
-            //     console.log("this.parentList",this.parentList);
+              this.parentList = this.sessions.items.map(v=>{
+                return {
+                    label:v.translation.en.shortdesc || v.code,
+                    value:v.code
+                }
+                })
+                console.log("this.parentList",this.parentList);
             } finally {
               this.sessions.busy=false
             }
@@ -312,6 +303,21 @@
             var resp = await this.$store.dispatch('UpdateFAQ', this.editModal);
             console.log("resp",resp);
             this.loadSessions();
+          },
+          onAction : function (argument) {
+            console.log("argument",argument);
+            switch(argument.name){
+              case "ADD_ITEM" :
+                this.faqAdd();
+                console.log("ADD_ITEM",argument);
+                break;
+              case "EDIT_ITEM" :
+                this.faqEdit(argument.item);
+                console.log("ADD_ITEM",argument);
+                break;
+              default:
+                console.log("NoMapping",argument) 
+            }
           }
 
         },
@@ -448,6 +454,21 @@
    .text-center{
         text-align: center;
         display: block;
+    }
+
+
+    .table{
+        margin: 0;
+        padding: 0;
+        border-collapse:collapse;
+        width: 100%;
+        table-layout: fixed;
+
+        td{
+            padding: 3px;
+            widows: calc(100% / 3);
+            background: #fff;
+        }
     }
 </style>
 

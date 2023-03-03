@@ -106,7 +106,7 @@
                 </div>  
           </b-card>
         <b-card class="col-md-4 session-list contact-list" >
-            <b-tabs card>
+            <b-tabs v-model="tabIndex" card>
                 <b-tab title="Copy/Paste" active>
                     <ValidationProvider v-slot="v" :rules="(input.contactCSV && input.contactCSV.length)  ? 'required|phoneML':''"  class="form-row" vid="input_contact_number" 
                         name="Contact Number" mode="lazy">
@@ -227,7 +227,7 @@
                   vars : {}
                 },
                 contacts : "",
-                contactCSV: [],
+                contactCSV:null,
                 csvUploadError:[]
             },
             table : {
@@ -257,7 +257,8 @@
                 { name: 'Value', prop: "value"}] ,
               contact : [],
               data : []
-            } 
+            },
+            tabIndex:1
         }),
         computed : {
             attachments(){

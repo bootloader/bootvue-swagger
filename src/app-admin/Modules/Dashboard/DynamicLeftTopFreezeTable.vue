@@ -114,6 +114,10 @@ export default {
     options:Array,
     daterangeChange:Function,
     colHeadFormatter:Function,
+    formatCSV: {
+      type: Boolean,
+      default: false
+    },
     daterange : {
       type: Object,
       default: function () {
@@ -204,7 +208,10 @@ export default {
       let _THAT = this;
       if(Object.keys(this.tableData).length){
           const json2csvParser = new Parser();
-          const csv = json2csvParser.parse(this.tableData);
+          let csv = json2csvParser.parse(this.tableData);
+          if(this.formatCSV){
+            csv = this.colHeadFormatter(csv);
+          }
           let csvContent = "data:text/csv;charset=utf-8,"+csv;
           var encodedUri = encodeURI(csvContent);
           var link = document.createElement("a");

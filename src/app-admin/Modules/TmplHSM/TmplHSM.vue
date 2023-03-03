@@ -43,9 +43,18 @@
                     </b-button>   
                   </router-link>
                   &nbsp;
-                  <b-button size="sm" @click="deleteItem(row)" variant="outline-primary">
-                    <font-awesome-icon icon="trash" title="Delete"/>
-                  </b-button>
+
+                  <el-popconfirm
+                    title="Are you sure to delete this?"
+                    confirm-button-text='Yes'
+                    cancel-button-text='No'
+                    @confirm="deleteItem(row)"
+                  >
+                    <b-button slot="reference" size="sm" variant="outline-primary">
+                      <font-awesome-icon icon="trash" title="Delete"/>
+                    </b-button>
+                  </el-popconfirm>
+ 
                   &nbsp;
                   <b-button size="sm" cursor-pointer  :id="'template-details-'+ row.item.id " variant="outline-primary">
                     <span class="fa fa-eye" title="View" /> 
@@ -416,6 +425,8 @@
 import MyStatus from '../../../@common/custom/components/MyStatus.vue';
 import MyIcon from '../../../@common/custom/components/MyIcon.vue';
 import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
+import {Popconfirm} from 'element-ui';
+
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -446,7 +457,8 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
             VGrid,
                 MyStatus,
                 MyIcon,
-                BaseRadio
+                BaseRadio,
+                [Popconfirm.name]: Popconfirm,
         },
         data: () => ({
                   input : {
