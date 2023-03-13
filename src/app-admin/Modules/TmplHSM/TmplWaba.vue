@@ -306,6 +306,12 @@
                                         </b-list-group-item>
                                     </b-list-group>
                                 </b-card-text>
+                                <span cols="12" class="body-card-body-variable-grid">
+                                    <VGrid v-if="templateSimple.varMap && hasUrlButtonVariable"  theme="default" class="w-100" style="min-height:100px"
+                                    :columns="sampleVar.columns"
+                                    :source="templateSimple.varMap.buttons[0]"
+                                    @afteredit=afterVarEdit></VGrid>
+                                </span>
                             </b-card-body>
 
                             <b-card-footer>
@@ -561,6 +567,11 @@
                     && this.templateSimple?.header?.text
                     && this.templateSimple?.header?.text.indexOf("{{1}}") > -1
                 );
+            },
+            hasUrlButtonVariable : function(){
+                return (this.templateSimple?.buttons?.buttons).filter(function(button){
+                    return button.type == "URL" && button.url.indexOf("{{1}}") > -1
+                })[0] || false;
             },
             templatePreview(){
                 return {

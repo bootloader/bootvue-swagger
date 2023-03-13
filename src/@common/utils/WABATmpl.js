@@ -188,6 +188,28 @@ function createWABATmplSample(template) {
     }
 }
 
+function fixWABATmplSimple(templateSimple,hsm) {
+    let hasUrlVar = (templateSimple?.buttons?.buttons).filter(function(button){
+        return button.type == "URL" && button.url.indexOf("{{1}}") > -1
+    })[0] || false;
+
+    if(hasUrlVar && !templateSimple?.varMap?.buttons?.[0]){
+        let buttonVars = [];
+        if(hasUrlVar.type == "URL"){
+            let btnTmpl = TmplUtils.convertToOrderedVars(hasUrlVar.url);
+            hasUrlVar.urlWaba = btnTmpl.text;
+            buttonVars = btnTmpl.vars;
+            for(var i in buttonVars){
+                buttonVars[i].component = "button";
+                buttonVars[i].sample = mustache.render(hasUrlVar.urlWaba, {});
+            }
+        } 
+        if(buttonVars.length)
+            templateSimple?.varMap?.buttons.push(buttonVars);
+    }
+    return templateSimple;
+}
+
 function createWABATmplSimple(template) {
     let templateSimple =  {
         header: {
@@ -215,7 +237,8 @@ function createWABATmplSimple(template) {
         },
         varMap : {
             body : [],
-            header  : []
+            header  : [],
+            buttons : []
         },
         model : TmplUtils.sampleModel()
     }
@@ -243,7 +266,7 @@ function createWABATmplSimple(template) {
         console.log("template.varMap",template.varMap)
         templateSimple.varMap = template.varMap || templateSimple.varMap;
     }
-    return templateSimple;
+    return fixWABATmplSimple(templateSimple);
 }
 
 
@@ -312,4 +335,4 @@ function whatsappLinkStyle(text) {
 
 
 
-export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample,toHSM, waMarkDown}
+export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample,toHSM, waMarkDown,fixWABATmplSimple}
