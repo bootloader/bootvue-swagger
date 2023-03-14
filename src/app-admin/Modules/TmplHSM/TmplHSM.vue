@@ -18,12 +18,12 @@
             @action="onAction"
             @rows="selectItem"
             >
-            <template #top-row="row">
+            <!-- <template #top-row="row">
                   <b-th><input type="text" v-model="filters.category"  class="form-control form-control-sm" /></b-th>
                   <b-th><input type="text" v-model="filters.desc"  class="form-control form-control-sm" /></b-th>
                   <b-th><input type="text" v-model="filters.categoryType"  class="form-control form-control-sm" /></b-th>
                   <b-th>&nbsp;</b-th>
-            </template>
+            </template> -->
                 <template #cell(desc)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id" class=" btn-outline-primary-link pointer">
                          <span class="fa fa-edit" title="Edit"/>

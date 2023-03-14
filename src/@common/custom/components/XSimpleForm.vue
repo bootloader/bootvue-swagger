@@ -1,6 +1,7 @@
 <template>
     <div class="x-form">
-        <span v-for="input in inputs" v-bind:key="input.key">
+        <span v-for="group in grouped" v-bind:key="group.superKey" class="x-form-group">
+        <span v-for="input in group.inputs" v-bind:key="input.key">
             <span v-if="!input.meta.hidden">
                 <BaseVSelect 
                     v-if=" input.meta.inputType=='OPTIONS' && (input.meta.optionsSource || input.meta.options.length > 5)" 
@@ -84,6 +85,7 @@
                 </b-form-group> -->
             </span>
         </span>
+        </span>
     </div>
 </template>
 
@@ -127,6 +129,19 @@
                 }
             }
         },
+        computed : {
+            grouped(){
+                let groupedMap = {};let groupedList = [];
+                return this.inputs.reduce(function(result, input) {
+                    if(!groupedMap[input.meta.superKey]){
+                        groupedMap[input.meta.superKey] = {superKey : input.meta.superKey,inputs : []};
+                        groupedList.push(groupedMap[input.meta.superKey]);
+                    }
+                    groupedMap[input.meta.superKey].inputs.push(input)
+                    return result;
+                },groupedList)
+            }
+        },
         mounted : function (argument) {
             
         },
@@ -146,3 +161,12 @@
         }
     };
 </script>
+<style>
+    .x-form-group {
+        background-color: #8181810d;
+        display: block;
+        padding: 8px;
+        outline: 1px solid #00000021;
+        border-radius: 2px;
+    }
+</style>

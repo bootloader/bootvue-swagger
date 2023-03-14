@@ -39,6 +39,7 @@ var MAP = {
         'on' : ["fa fa-toggle-on",'text-success'],
         'true' : ["fa fa-toggle-on",'text-success'],
         'off' : ['fa fa-toggle-on fa-rotate-180', 'text-danger'],
+        'undefined' : ['fa fa-toggle-on fa-rotate-180', 'text-danger'],
         'false' : ['fa fa-toggle-on fa-rotate-180', 'text-danger'],
         'null' : ['fa fa-toggle-off'],
         'none' : ['fa fa-toggle-on fa-rotate-180','text-danger']

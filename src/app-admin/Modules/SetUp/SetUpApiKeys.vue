@@ -73,14 +73,16 @@
                           v-model="itemCopy.appType"
                           placeholder="Select App Type">
                         </BaseVSelect>
-                        <b-tabs content-class="mt-3" align="right" small>
-                          <b-tab title="App Options" active>
+                        <b-tabs content-class="mt-3" align="left" small
+                          active-nav-item-class="text-primary"
+                          nav-class="font-weight-bold">
+                          <b-tab title="Standard Options" active>
                              <my-model-form size="sm" 
                               :configs="`getx://api/meta/app_types/${itemCopy.appType}/config`"
                               :model="itemCopy">
                             </my-model-form> 
                           </b-tab>
-                          <b-tab title="Common Configuration" :disabled="!itemCopy.id || !itemCopy.code">
+                          <b-tab title="Advanced Options" :disabled="!itemCopy.id || !itemCopy.code">
                             <my-model-form size="sm"
                               :configs="`getx://api/meta/app_types/common/config`"
                               :model="itemCopy.config">
@@ -116,14 +118,16 @@
                   label="Webhook URL"
                   :value="item.webhook">
               </base-copy>
-              <b-tabs class="mt-3" align="right"  small>
-                <b-tab title="App Options" active>
+              <b-tabs class="mt-3" align="left"  small
+                  active-nav-item-class="text-primary"
+                          nav-class="font-weight-bold">
+                <b-tab title="Standard Options" active>
                   <my-model-form size="sm" class="mt-3 d-block" readonly disabled
                     :configs="`getx://api/meta/app_types/${item.appType}/config`"
                     :model="item">
                   </my-model-form> 
                 </b-tab>
-                <b-tab title="Common Configurations" >
+                <b-tab title="Advanced Options" >
                   <my-model-form size="sm" class="mt-3 d-block" readonly disabled
                     :configs="`getx://api/meta/app_types/common/config`"
                     :model="item.config">
