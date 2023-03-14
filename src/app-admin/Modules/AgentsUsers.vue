@@ -70,7 +70,7 @@
                   </div>
                   <ValidationObserver v-else ref="form">
                           <div class="row">
-                             <div class="position-relative form-group col-md-6">
+                             <div class="position-relative form-group col-md-12">
                                 <ValidationProvider v-slot="v" rules="required">
                                       <label for="examplePassword" class="">Name</label>
                                       <input name="agent_name" id="examplePassword"
@@ -79,7 +79,8 @@
                                         <span class="v-input-error">{{ v.errors[0] }}</span>
                                 </ValidationProvider>
                                 </div>
-
+                            </div>
+                            <div class="row">
                               <div class="position-relative form-group col-md-6">
                                 <ValidationProvider v-slot="v" rules="required|email">
                                   <label for="exampleEmail" class="">Email</label>
@@ -91,8 +92,20 @@
                                    <span class="v-input-error" >{{ v.errors[0] }}</span>
                                 </ValidationProvider>
                               </div>
-                            </div>
 
+                              <div class="position-relative form-group col-md-6">
+                                <ValidationProvider v-slot="v" rules="required|phone">
+                                  <label for="exampleEmail" class="">Phone</label>
+                                  <input name="phone" autocomplete="off"
+                                          id="exampleEmail"
+                                          placeholder="+91 9988776655"
+                                          type="phone"
+                                          class="form-control" v-model="newItem.agent_number">
+                                   <span class="v-input-error" >{{ v.errors[0] }}</span>
+                                </ValidationProvider>
+                              </div>
+
+                            </div>  
 
                             <div class="row">
                               <div class="position-relative form-group col-md-6">
