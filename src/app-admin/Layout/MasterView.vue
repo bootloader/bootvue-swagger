@@ -105,19 +105,23 @@
                         :foot-clone="table.footClone || false"
                         :per-page="perPageSize"
                         :current-page="table_current_page"
-                        :items="table.items"
+                        :items="filteredItems"
                         :fields="table.fields"
                         :sort-by="table.sortBy"
                         :sort-desc="tableSortDesc"
                         :busy.sync="isbusy"
                         show-empty
-                        filter
-                        :aria-empty='table.items.length==0'
+                        :filter="table.filter"
+                        :aria-empty='filteredItems.length==0'
                         >
 
                 <template #top-row>
                       <b-th v-for="field in table.fields" v-bind:key="field.key">
-                        <input  v-if="field.filterOptions" 
+                        <base-select  v-if="field.filterOptions && field.filterOptions.filterDropdownItems" size="sm"
+                            type="search" v-model="tableSearch[field.key]" @keypress.enter="apply"  @change="apply"
+                            :options="field.filterOptions.filterDropdownItems" :placeholder="`---`" >
+                        </base-select>
+                        <input  v-else-if="field.filterOptions " 
                             type="search" v-model="tableSearch[field.key]" @keypress.enter="apply"  @change="apply"
                           class="form-control form-control-sm" />
                       </b-th>  
@@ -461,11 +465,29 @@
             return (totalPages == this.currentPage) ? ((this.table?.items?.length || 0) % this.perPageSize)
             : this.perPageSize;
           },
+          filteredItems() {
+            //return this.table.items;
+            let items = this.table.items;
+            if(!items?.length) return [];
+            let filterFields = this.table.fields.filter((field)=>!!field.filterOptions && this.tableSearch[field.key]);
+            if(!filterFields?.length) return items;
+            return items.filter(item => {
+              return filterFields.every(field =>{
+                    if(typeof field.filterOptions.filter == 'function'){
+                      return field.filterOptions.filter(item,this.tableSearch[field.key],field);
+                    } else if(this.tableSearch[field.key]){
+                      return String(item[field.key]).toLowerCase().includes(this.tableSearch[field.key]?.toLowerCase())
+                    }
+                    return true;
+                }
+              );
+            }) || [];
+          },
           rowItems(){
             if(this.goodTable &&  this.table.groupBy){
                 let map = {};
                 let groupBy = this.table.groupBy;
-                this.table.items.map(function(item){
+                this.filteredItems.map(function(item){
                   let groupByValue = JsonXPath({ path : '$.'+groupBy,json : item})[0] || " DEFAULT ";
                   map[groupByValue] = map[groupByValue] || { 
                     mode : 'span',html: false, 
@@ -476,7 +498,7 @@
                 },[]);
                 return Object.values(map);
             } else {
-              return this.table.items;
+              return this.filteredItems;
             }
           },
           selectedItemId(){
@@ -571,7 +593,9 @@
               } finally {
                   this.busyintenral = false;
               }
-            } 
+            } else {
+
+            }
 
             if(this.table?.items){
               this.$emit("rows", this.table.items);

@@ -32,7 +32,7 @@
                           :options="input.templates.values"
                            optionKey="code" optionLabel="title"
                           v-model="input.templates.selected" @change="onTemplateSelect"
-                          :searchable="false" :clearable="false"
+                          :searchable="true" :clearable="false" filterable
                           placeholder="Select Template">
                              <template #selected-option="{ item }">
                                   <span class="">

@@ -47,8 +47,11 @@
               {'is-invalid': invalid && validated}, 
               {'none-value': !value},
               'text-' + size,
+              'form-control-'+size,
               inputClasses]">
-              <option v-if="!question && ($attrs.placeholder || label || name)" :class="'text-' + size"
+              <option v-if="!question && ($attrs.placeholder || label || name) && !required" :class="'text-' + size"
+              value=""  selected >{{$attrs.placeholder || label || name}}</option>
+              <option v-else-if="!question && ($attrs.placeholder || label || name)" :class="'text-' + size"
               value="" disabled selected hidden >{{$attrs.placeholder || label || name}}</option>
               <slot name="default"> 
                 <option v-for="option in selectOptions" :value="option.id" v-bind:key="option.id" :class="'text-' + size">

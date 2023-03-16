@@ -482,9 +482,18 @@ import {Popconfirm} from 'element-ui';
                   },
                   table : {
                     fields: [ 
-                              { key : 'category', label : "Grouping Category", sortable : true }, 
-                              { key : 'desc', label : "Description",sortable : true  }, 
-                              { key : 'categoryType', label : "Message Type" , sortable : true }, 
+                              { key : 'category', label : "Grouping Category", sortable : true,filterOptions : {} }, 
+                              { key : 'desc', label : "Description",sortable : true ,filterOptions : { 
+                                  filter : (item,search)=>{ 
+                                    let s = search?.toLowerCase();
+                                    return  item.desc?.toLowerCase().indexOf(s)>-1 
+                                    || item.code?.toLowerCase().indexOf(s)>-1 
+                                  }
+                               } }, 
+                              { key : 'categoryType', label : "Message Type" , sortable : true,
+                                filterOptions : {
+                                   filterDropdownItems: 'data:hsm/message_category_types' 
+                                } }, 
                               { key: 'actions', label: 'Actions' },
                               { key : 'status', label : 'Status'}    ],
                     items : [],
@@ -539,7 +548,6 @@ import {Popconfirm} from 'element-ui';
         computed : {
             filtered() {
                 let items = this.table.items;
-                console.log("items",items);
                 if(!items?.length) return [];
                 return items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
