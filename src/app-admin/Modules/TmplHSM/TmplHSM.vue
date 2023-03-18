@@ -284,7 +284,7 @@
                                                   <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
                                                 </label>
                                                 <VGrid theme="default" class="w-100"
-                                                    :columns="sampleVar.columns"
+                                                    :columns="sampleVar.columns" :autoSizeColumn="true"
                                                     :source="templateVariable"
                                                     @afteredit=afterEdit
                                                 ></VGrid>
@@ -539,7 +539,7 @@ import {Popconfirm} from 'element-ui';
                   }],
                   sampleVar : {
                     columns: [
-                      { name: 'Variable', prop: "variable", readonly : true},
+                      { name: 'Variable', prop: "variable", readonly : true,autoSize: true,size:150},
                       { name: 'Sample Value', prop: "sample"}] ,
                     contact : [],
                     data : []

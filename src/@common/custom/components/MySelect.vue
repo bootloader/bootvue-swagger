@@ -20,6 +20,7 @@
                         :clearable="clearable"
                         :filter="search"
                          @search="onSearch"
+                         :filterBy="filterBy"
                         :appendToBody="appendToBody"
                         :calculatePosition="calculatePosition"
                         @input="onChange"
@@ -75,6 +76,10 @@
                 default: false  
             },
             clearable: {
+                type: Boolean,
+                default: true
+            },
+            fullOptionSearch : {
                 type: Boolean,
                 default: true
             },
@@ -155,6 +160,10 @@
                 let value = newVal?.value;
                 this.$emit("input", value);
                 this.$emit("change", value);
+            },
+            filterBy(option, label, search) {
+                let optionString = this.fullOptionSearch ? JSON.stringify(option) : label;
+                return (optionString || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1
             },
             onSearch : function (search, loading) {
                 this.$emit("search", search, loading);

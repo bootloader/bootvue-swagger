@@ -281,7 +281,8 @@
           background-color: #0000;
         }
         input {
-          display: none;
+          // display: none;
+          visibility: hidden;
         }
         .vs__actions {
           display: none;

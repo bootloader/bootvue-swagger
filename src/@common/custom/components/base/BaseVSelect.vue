@@ -51,7 +51,7 @@
             :valid="valid" 
             :required="required" :disabled="disabled"
             :autoPosition="autoPosition"
-            :filter="filter" :search="search"
+            :filter="filter" :search="search" :fullOptionSearch="fullOptionSearch"
              :searchable="searchable" :clearable="clearable"
             :class="['text-'+size, 'v-select-'+size,
               {'is-valid': valid && validated && successMessage}, 
@@ -285,6 +285,10 @@
         default: false
       },
       searchable : {
+        type: Boolean,
+        default: false
+      },
+      fullOptionSearch : {
         type: Boolean,
         default: false
       },

@@ -28,11 +28,11 @@
                       </ValidationProvider>
                       <br>
                       <label>Template</label>
-                        <base-v-select class="w-100" ref="selectedTemplate"
-                          :options="input.templates.values"
+                        <base-v-select class="w-100" ref="selectedTemplate" :disabled="!input.lane.selected"
+                          :options="input.templates.values" latest
                            optionKey="code" optionLabel="title"
                           v-model="input.templates.selected" @change="onTemplateSelect"
-                          :searchable="true" :clearable="false" filterable
+                          :searchable="true" :clearable="false" filterable full-option-search
                           placeholder="Select Template">
                              <template #selected-option="{ item }">
                                   <span class="">
@@ -84,9 +84,12 @@
 
           <b-card class="col-md-4 session-list" >
                 <label>Placeholder</label>
-                <base-v-select class="w-100" ref="attachment"
+                <base-v-select class="w-100" ref="attachment" :disabled="!input.templates.selected || !selectableMediaType"
                   options="getx:/api/tmpl/quickmedia"
-                  optionKey="code" optionLabel="title"
+                  optionKey="code" optionLabel="title" 
+                  :filter="{
+                      type : selectableMediaType
+                  }"
                   v-model="input.templates.attachment">
                     <template #option="{ item }">
                       <my-icon type="fileType" :value="item.type"/>
@@ -315,6 +318,11 @@
                 options : formatters.message_form_options(formatters.map_from_string(content[1]))
               };
             },
+            selectableMediaType(){
+              if(this.input.templates.selected && this.selectedTemplate.formatType && this.selectedTemplate.formatType!='TEXT'){
+                return this.selectedTemplate.formatType;
+              } else return null;
+            }
         },
         created : function (argument) {
           this.loadLanes();
