@@ -18,7 +18,9 @@ export const MyConst = {
 	config : (function(config){
 		//Derived Constants
 		config.chatRefreshInterval = config.chatIdleTimeout/5; //Chats/sessions should be refreshed after this interval
-		config.PERMS = config.PERMS || {};
+		config.PERMS = {
+			...(config.PERMS|| {})
+		};
 		config.isLagacy = ( config?.PERMS?.BUILD_VERSION<2 );
 		return config;
 	})(Object.assign({
@@ -50,11 +52,13 @@ export const User = (function(){
 		isDuperUser : (window.CONST.APP_USER_ROLE || []).indexOf('DUPER_USER')>=0,
 		isSuperDev : (window.CONST.APP_USER_ROLE || []).indexOf('SUPER_DEV')>=0,
 		isPartner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_PARTNER')>=0,
+		isDomainOwner : (window.CONST.APP_USER_ROLE || []).indexOf('BUSINESS_USER')>=0,
 		isWabaManager : (window.CONST.APP_USER_ROLE || []).indexOf('WABA_MANAGER')>=0,
 	}
 	user.isMultiDomainUser = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	user.canAddOwner = (user.isDuperUser || user.isSuperDev || user.isPartner);
 	user.canAddWaba = 	user.isDuperUser || user.isWabaManager;
+	user.canDebugDomain = 	user.isDuperUser || user.isSuperDev || user.isDomainOwner;
 	return user;
 })();
 
