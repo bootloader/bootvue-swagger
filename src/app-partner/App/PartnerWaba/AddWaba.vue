@@ -2,8 +2,8 @@
   <div>
 
   <b-row slot="header"  class="my-normalize-v2">
-    <!-- v-if="$global.User.isDuperUser" -->
-    <b-col cols="6">
+    <!-- -->
+    <b-col cols="6" v-if="$global.User.isDuperUser">
       <base-v-select options="getx:/partner/pub/waba/clients"  class="d-block" latest
           layout="default" size="sm"
           v-model="search.user" clearable searchable filterable
@@ -21,17 +21,21 @@
         </template> 
        </base-v-select>
     </b-col> 
-    <b-col  cols="4">
-      <base-input  class="" layout="default" size="sm"
-          placeholder="Search..."
-          v-model="search.domain"
-       ></base-input>
-    </b-col> 
-    <b-col cols="2">
-           <button class="btn btn-sm btn-whatsapp" 
-           @click="loadDetails(true)"
-           target="_blank"> <i class="fa fa-refresh"/> Refresh</button>
-    </b-col> 
+     <b-col cols="6" >
+        <b-row>
+          <b-col  cols="9" v-if="modelValid.length>1 || $global.User.canManageWaba">
+            <base-input  class="" layout="default" size="sm"
+                placeholder="Search..."
+                v-model="search.domain"
+            ></base-input>
+          </b-col> 
+          <b-col cols="3" v-if="$global.User.canManageWaba">
+                <button class="btn btn-sm btn-whatsapp" 
+                @click="refresh"
+                target="_blank"> <i class="fa fa-refresh"/> Refresh</button>
+          </b-col> 
+        </b-row> 
+     </b-col> 
   </b-row>
 
 
@@ -173,7 +177,6 @@
   </div>  
 </template>
 <script>
-import formatters from '@/services/formatters';
 import BaseVSelect from '../../../@common/custom/components/base/BaseVSelect.vue';
 import MyIcon from '../../../@common/custom/components/MyIcon.vue';
 import SummaryTile from '@/@common/custom/components/SummaryTile.vue';
@@ -284,6 +287,13 @@ export default {
     async generateKey(){
       let resp = await this.$service.get(`/partner/api/waba/clients/channels/${this.model.channel.id}/api_keys`);
       this.api.key = resp?.results?.[0]?.api_key;
+    },
+    async reLogin(){
+      return await this.$service.submit(`/partner/api/waba/login`);
+    },
+    async refresh(){
+      await this.reLogin();
+      await this.loadDetails(true);
     }
   },
   components : {
