@@ -265,6 +265,10 @@
         type : Boolean,
         default : false
       },
+      formatSync : {
+        type : Boolean,
+        default : true
+      },
       suggestions : {
         type : [Array,Object],
         default : function(){
@@ -354,7 +358,7 @@
     },
     watch : {
       'formatValue' :  function(n,o){
-        if(this.formatFilter && this.$options.filters[this.formatFilter]){
+        if(this.formatSync && this.formatFilter && this.$options.filters[this.formatFilter]){
           let oldValue = this.$options.filters[this.formatFilter](o);
           if(!this.value || this.value == oldValue){
             this.displayValue = n;

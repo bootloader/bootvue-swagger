@@ -63,8 +63,8 @@
                         </base-input>
                         <base-input class="mb-0" size="sm" autocomplete="off" :readonly="itemCopy.id && itemCopy.code"
                             label="Queue Code" placeholder="my_api_connector"
-                            v-model="itemCopy.code" :textLimit="60" required
-                            format-filter="item_code" :format-value="itemCopy.name" :format-live="!itemCopy.id"
+                            v-model="itemCopy.code" :textLimit="60" required :format-sync="!(itemCopy.id && itemCopy.code)"
+                            format-filter="item_code" :format-value="itemCopy.name" :format-live="!(itemCopy.id && itemCopy.code)"
                             rules="required|min:4|max:512" >
                         </base-input>
                         <BaseVSelect class="mb-0" size="sm" :disabled="!!itemCopy.id && !!itemCopy.code"

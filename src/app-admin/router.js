@@ -188,14 +188,27 @@ export default AppRouter.route({
         {
             path : "/app/console/logs",
             name: 'ErrorLogs',
-            component: () => import('./Modules/Console/ErrorLogs.vue'),    
+            component: () => import('./Modules/Console/ErrorLogs.vue'),   
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            }  
         },
         {
             path : "/app/console/activities",
-            name: 'ErrorLogs',
-            component: () => import('./Modules/Console/UserActivities.vue'),    
+            name: 'ActivityLogs',
+            component: () => import('./Modules/Console/UserActivities.vue'),   
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            } 
         },
-
+        {
+            path : "/app/console/change_logs",
+            name: 'ChangeLogs',
+            component: () => import('./Modules/Console/ChangeLogs.vue'),    
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            } 
+        },
         {
             path: 'app/admins/components/modals',
             name: 'modals',

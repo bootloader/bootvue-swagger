@@ -44,10 +44,18 @@ export default {
       } else if(!to.matched.some(function (record) {
         if(!record.meta || !window.CONST.APP_USER_ROLE) return true;
         console.log(record.meta.role , window.CONST.APP_USER_ROLE)
-        if(record.meta.role && record.meta.role.indexOf(window.CONST.APP_USER_ROLE) < 0){
-          return false
+        let APP_USER_ROLE = Array.isArray(window.CONST.APP_USER_ROLE) ? window.CONST.APP_USER_ROLE : [window.CONST.APP_USER_ROLE];
+        let role = Array.isArray(record.meta.role) ? (record.meta.role || []) : [record.meta.role];
+        if(!role.length || !role[0]){
+          return true;
         }
-        return true;
+        for(var r in role){
+          if(role[r] && APP_USER_ROLE.indexOf(role[r]) < 0){
+            return true
+          }
+        }
+        console.log("NoRoleFound")
+        return false;
       })){
         console.log("NextFailed")
         options.accessDenied(to, from, next);
