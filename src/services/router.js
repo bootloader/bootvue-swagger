@@ -43,14 +43,14 @@ export default {
         options.matchNotFound(to, from, next)
       } else if(!to.matched.some(function (record) {
         if(!record.meta || !window.CONST.APP_USER_ROLE) return true;
-        console.log(record.meta.role , window.CONST.APP_USER_ROLE)
         let APP_USER_ROLE = Array.isArray(window.CONST.APP_USER_ROLE) ? window.CONST.APP_USER_ROLE : [window.CONST.APP_USER_ROLE];
         let role = Array.isArray(record.meta.role) ? (record.meta.role || []) : [record.meta.role];
+        console.log("Required",role , "Assigned",APP_USER_ROLE)
         if(!role.length || !role[0]){
           return true;
         }
         for(var r in role){
-          if(role[r] && APP_USER_ROLE.indexOf(role[r]) < 0){
+          if(role[r] && APP_USER_ROLE.indexOf(role[r]) > -1){
             return true
           }
         }
