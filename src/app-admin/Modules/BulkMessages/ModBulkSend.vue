@@ -117,6 +117,7 @@
                         <textarea class="form-control" rows="10" v-model="input.contacts" >
 
                         </textarea>
+                        <span>Use Country code prefix with phone numbers e.g. +9196xxxxxxxx or +9655255xxxx</span>
                         <span class="v-input-error">{{ v.errors[0] }}</span>
                     </ValidationProvider> 
                 </b-tab>

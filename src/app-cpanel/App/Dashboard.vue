@@ -70,6 +70,7 @@
       </b-row>
       <!--End tables-->
     </b-container>
+
     <!-- <br/>
     <br/>
     <br/>
@@ -111,6 +112,30 @@
                 :refresh="loadWabaMonthwiseSummary" 
                 :colHeadFormatter="headerFormatter"
                 :options="monthOptions">
+            </dynamic-left-top-freeze-table>
+        </b-col>
+      </b-row>
+      <!--End tables-->
+    </b-container>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <b-container fluid class="mt--9">
+        <!--Tables-->
+      <b-row class="mt-5">
+        <b-col xl="12" class="mb-5 mb-xl-0">
+
+            <dynamic-left-top-freeze-table 
+                headerTitle="Number of conversation (Non WABA)" 
+                :tableData="getDayDataTable" 
+                :daterangeChange="onDaysDaterangeChangeNon"
+                :loading="loading.nonWabaDataTable"
+                :refresh="loadNonWabaMonthwiseSummary"
+                :colHeadFormatter="dateFormatter"
+                :daterange="daterange">
             </dynamic-left-top-freeze-table>
         </b-col>
       </b-row>
@@ -193,7 +218,7 @@
        return {
 
             GUPSHUPW: {
-                label: 'WhatsApp',
+                label: 'WA - ',
                 icon: 'ni ni-chart-pie-35',
                 type: 'gradient-info',
                 total:0,
@@ -228,28 +253,28 @@
                 mode: mode,
             },
             wa: {
-                label: 'WhatsApp',
+                label: 'WA - ',
                 icon: 'ni ni-chart-pie-35',
                 type: 'gradient-info',
                 total:0,
                 mode: mode,
             },
             waba: {
-                label: 'WhatsApp',
+                label: 'WA - ',
                 icon: 'ni ni-chart-pie-35',
                 type: 'gradient-info',
                 total:0,
                 mode: mode,
             },
             wags: {
-                label: 'WhatsApp',
+                label: 'WA - ',
                 icon: 'ni ni-chart-pie-35',
                 type: 'gradient-info',
                 total:0,
                 mode: mode,
             },
             wa360: {
-                label: 'WhatsApp',
+                label: 'WA - ',
                 icon: 'ni ni-chart-pie-35',
                 type: 'gradient-red',
                 total:0,
@@ -284,7 +309,8 @@
                     outboundMsgHourlyDataTable:false,
                     broadcastDayDataTable:false,
                     dayDataTable:false,
-                    wabaDataTable:false
+                    wabaDataTable:false,
+                    nonWabaDataTable:false,
                 },
                 domainOptions: [],
                 monthOptions: [],
@@ -293,6 +319,7 @@
                 },
                 timestamp: '',
                 wabaTimestamp: '',
+                nonWabaTimestamp: '',
                 hrMsg:12,
                 dateWiseSummaryCount: initialChannelState(initialModeState()),
                 hourWiseCountMap:initialChannelState(null),
@@ -331,6 +358,7 @@
                     days:7
                 },
                 wabaUsesData:initialChannelState(initialModeState()) ,
+                nonWabaUsesData:initialChannelState(initialModeState()) ,
                 hourOptions:[
                     {label:"Last 12 hours", value:12},
                     {label:"Last 24 hours", value:24}
@@ -413,9 +441,24 @@
 
                 return data;
             },
+           
             getWabaDataTable(){
                 let data = [];
                 Object.entries(this.wabaUsesData).map(v=>{
+                    if(v[1].total){
+                        let row =  {
+                            name: v[1].label,
+                            ...v[1].mode
+                        }
+                        data.push(row)
+                    }
+                    
+                })
+                return data;
+            },
+            getNonWabaDataTable(){
+                let data = [];
+                Object.entries(this.nonWabaUsesData).map(v=>{
                     if(v[1].total){
                         let row =  {
                             name: v[1].label,
@@ -475,6 +518,14 @@
                 this.daterangeBroadcast.days = endDate.diff(startDate, 'days');
                 this.loadDaywiseSummary();
             },
+            onDaysDaterangeChangeNon(range){
+                this.daterangeBroadcast.startDate = range.startDate;
+                this.daterangeBroadcast.endDate = range.endDate;
+                let startDate = moment(range.startDate);
+                let endDate = moment(range.endDate);
+                this.daterangeBroadcast.days = endDate.diff(startDate, 'days');
+                this.loadDaywiseSummary();
+            },
             onBroadcastDaysDaterangeChange(range){
                 this.daterange.startDate = range.startDate;
                 this.daterange.endDate = range.endDate;
@@ -522,11 +573,13 @@
                 })
                 this.timestamp = this.monthOptions[0].value
                 this.wabaTimestamp = this.monthOptions[0].value
+                this.nonWabaTimestamp = this.monthOptions[0].value
                 this.timestampMonthwiseCount = this.monthOptions[0].value
                 this.loadHourwiseSummary()
                 this.loadDaywiseSummary()
                 this.loadMonthwiseSummarySave()
                 this.loadWabaMonthwiseSummary()
+                this.loadNonWabaMonthwiseSummary()
                 this.loadOutboundMsgHourly()
                 this.loadBroadcastDaywiseSummary()
 
@@ -635,6 +688,39 @@
                     }
                 )
             },
+            async loadNonWabaMonthwiseSummary(){
+                let _THAT = this;
+                this.loading.NonWabaDataTable = true;
+                let wabaResp = await this.$service.get(
+                    '/partnerdashboard/pub/non-whatsup-msg-summary',
+                    { ...this.model, timestamp:this.nonWabaTimestamp }
+                )
+                this.loading.nonWabaDataTable = false;
+                this.nonWabaUsesData = initialChannelState(initialModeState());
+                // wabaResp.results.map( v => {
+                //         let channel = key[1]+"("+key[2]+")";
+                //         let mode = v.type == "user_initiated" ? "I" : "O";
+                //         _THAT.nonWabaUsesData[channel].mode[mode] = _THAT.nonWabaUsesData[channel].mode[mode] + 1 ;
+                //         _THAT.nonWabaUsesData[channel].total = _THAT.nonWabaUsesData[channel].total + 1;
+                //     }
+                // )
+
+                Object.entries(wabaResp.results[0].dateWiseCountMap).map(
+                    (v) => {
+                        let channel = v[0].split('_')[2]
+                        Object.entries(v[1]).map((w) => {
+                            let mode = w[0];
+                            if(this.modes.indexOf(mode) < 0) return;
+                            _THAT.nonWabaUsesData[channel].mode[
+                                mode
+                            ] =
+                                _THAT.nonWabaUsesData[channel].mode[mode] + w[1];
+                            _THAT.nonWabaUsesData[channel].total = _THAT.nonWabaUsesData[channel].total +  + w[1];
+                        })
+                    }
+                )
+                console.log("_THAT.nonWabaUsesData",_THAT.nonWabaUsesData);
+            },
             async loadMonthwiseSummarySave(){
                 let _THAT = this;
                 this.loading.dataTable = true;
@@ -711,6 +797,10 @@
             wabaOnMonthChange(e) {
                 this.wabaTimestamp = e.target.value
                 this.loadWabaMonthwiseSummary()
+            },
+            nonWabaOnMonthChange(e) {
+                this.nonWabaTimestamp = e.target.value
+                this.loadNonWabaMonthwiseSummary()
             },
             outboundHourOptionOnChange(e){
                 this.hrMsg = e.target.value

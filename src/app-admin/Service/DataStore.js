@@ -149,6 +149,19 @@ const actions = {
     return response.data;
   },
 
+  async LoadContactType({ commit },options) {
+    let response = await axios.get("/admin/fetch-contact-type",options);
+    let contactList = response.data.map(v=>{
+      if(["HOLD","ORIGINAL","QUEUED","REJECTED"].indexOf(v.split("_")[1]) == -1){
+        return {
+          label : v.split("_")[1],
+          value: v
+        }
+      } else return null;
+    }).filter(v=> v)
+    return contactList;
+  },
+
   async LoadAgentList() {
     let response = await axios.get("/admin/fetch-agent-chat-session-list");
     return response.data;
