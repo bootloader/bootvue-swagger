@@ -138,9 +138,15 @@
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
                             item : option,
-                            prefixClass : option.prefixClass || option.icon
+                            prefixClass : option.prefixClass || option.icon,
+                            _disabled : option._disabled
                         };
                     }
+                }).filter(function(option){
+                    if(option._disabled){
+                        return false;
+                    }
+                    return true;
                 });
                 if(!hasEmptyValue && THIS.emptyDisplay){
                    this.model.options = [{

@@ -539,7 +539,7 @@ import {Popconfirm} from 'element-ui';
                   }],
                   sampleVar : {
                     columns: [
-                      { name: 'Variable', prop: "variable", readonly : true,autoSize: true,size:150},
+                      { name: 'Variable', prop: "variable", readonly : true,autoSize: true,size:250},
                       { name: 'Sample Value', prop: "sample"}] ,
                     contact : [],
                     data : []

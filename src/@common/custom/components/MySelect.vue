@@ -28,12 +28,12 @@
                         <template #selected-option="option">
                             <span :class="option.selectedClass">
                                 <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
-                                <span v-if="option.item && option.item.prefixClass" :class="[option.item.prefixClass,'mr-1']">&nbsp;</span>{{option.label}}
+                                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label}}
                             </span>
                         </template>
                         <template #option="option">
                             <span :class="[option.item.optionClass]">
-                                <span v-if="option.item.prefixClass" :class="[option.item.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+                                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
                             </span>  
                         </template>
                         <template #open-indicator="{ attributes }">

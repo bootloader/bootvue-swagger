@@ -70,7 +70,7 @@
         <master-view v-if="template.code"
             :header="{
                 heading: template.code,
-                subheading: template.category,
+                subheading: `${template.wabaType} - ${template.category}`,
                 icon: 'icon-gradient bg-happy-itmeo fa fa-whatsapp',
             }"  
             :actions="[{ name : 'cancel'}]"      
@@ -351,10 +351,15 @@
                 class="mb-0"/>
 
             <BaseVSelect size="sm" label="Message Category"  placeholder="Select Message Category"
-                options="data:hsm/message_category_types"
+                options="data:hsm/message_category_types"  @change="newItemCategoryChange"
                 v-model="newItem.category"  filterable searchable required rules="required"
                 class="mb-0"/>
-                
+            
+            <BaseVSelect size="sm" label="WABA Category"  placeholder="Select WABA Category" latest
+                options="json:hsm/message_categories_waba"
+                v-model="newItem.wabaType"  filterable searchable required rules="required"
+                class="mb-0"/>   
+
             <base-input  size="sm"  :disabled="nonEditable" class="mb-0"
                 label="Template Name"
                 v-model="newItem.name" :textLimit="512" required rules="required|min:4|max:512" >
@@ -398,7 +403,7 @@
         </b-modal>
         <b-modal v-if="templatePreview" :id="modelNamePreview" 
             :title="'Template Preview'"
-            @ok="onSubmit">
+            @ok="onSubmit()">
                 <template-preview :template="templatePreview" />
         </b-modal>
         <b-modal id="SHOW_CLIENT_ERROR" size="lg"
@@ -417,7 +422,7 @@
     import MyStatus from '../../../@common/custom/components/MyStatus.vue'
     import BaseTextArea from '../../../@common/argon/components/Inputs/BaseTextArea.vue'
     import BaseInput from '../../../@common/argon/components/Inputs/BaseInput.vue'
-    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM} from "@/@common/utils/WABATmpl";
+    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM,wabaType} from "@/@common/utils/WABATmpl";
     import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue'
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
     import JsonXPath from "@/@common/utils/JsonXPath";
@@ -495,7 +500,7 @@
             templates : [],
             newLanguage : null,
             newItem : {
-                name : null, category : null, lang : null
+                name : null, category : null, lang : null,wabaType : null
             },
             strategies: [{
                 match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
@@ -519,7 +524,7 @@
               columns: [
                 { name: 'component', prop: "component", readonly : true},
                 { name: 'Variable', prop: "numVar", readonly : true},
-                { name: 'Data Path', prop: "path"},
+                { name: 'Data Path', prop: "path",autoSize: true,size:250},
                 { name: 'Sample Value', prop: "sample"}],
             },
             ERROR_JSON : null
@@ -645,9 +650,13 @@
                     this.newItem.category = (option.item.categoryType || option.item?.meta?.messageType || "").toUpperCase();
                     this.newItem.lang = option.item.lang;
                     this.newItem.hsm = option.item;
+                    this.newItemCategoryChange();
                 } else {
                     this.newItem.hsm = null;
                 }
+            },
+            newItemCategoryChange(){
+                this.newItem.wabaType = wabaType(this.newItem.category);
             },
             async deleteItem(item) {
                 if(item.id){
@@ -662,10 +671,12 @@
             async createItem () {
                 let success = await this.$refs.form.validate();
                 if(success === true){
+                    console.log("createItem",this.newItem)
                     this.selectTemplate({
                         channelId : this.newItem.channelId || this.filters[1].value,
                         code : this.newItem.name,
                         category : this.newItem.category,
+                        wabaType : this.newItem.wabaType,
                         lang : this.newItem.lang
                     });
                     this.addTemplate(this.newItem.lang,this.newItem.hsm);
@@ -681,7 +692,8 @@
                         channelId : this.template.channelId,
                         id : this.template.id,
                         hsmTemplateId : this.template.hsmTemplateId,
-                        varMap : this.templateSimple.varMap
+                        varMap : this.templateSimple.varMap,
+                        category : this.template.category,
                     }
 
                     if((!this.nonEditable || this.wabaEditable) && !onlyMeta){
@@ -852,7 +864,7 @@
             },
             afterVarEdit(e){
                 let path = e.detail.model.path || "data." + e.detail.model.component + "_var_"+ e.detail.model.numVar.replace(/(\{\{)|(\}\})/g, '');
-                e.detail.model.path = path;
+                e.detail.model.path = path.replace(/[^0-9a-zA-Z\.\_]/ig,'');
                 if(e.detail.prop == "path"){
                     e.detail.model.sample = JsonXPath({path : '$.' +path,json: this.templateSimple.model})[0] || e.detail.model.sample;
                 }
