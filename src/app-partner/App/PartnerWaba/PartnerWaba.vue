@@ -11,7 +11,7 @@
     >
       <b-container fluid>
         <!-- Mask -->
-        <span class="mask bg-default min-vh-100"></span>
+        <span class="mask bg-whatsapp-dark min-vh-100"></span>
         <!-- Header container -->
         <b-container fluid class="d-flex-x align-items-center">
           <b-row>
