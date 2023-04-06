@@ -14,21 +14,21 @@
         <img v-else class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" />
       </div>
 
-    <el-card class="box-card chat-landing" :body-style="{padding:0, height:'100%'}" :class="isOpen ? 'open' : 'close'">
+    <Card class="box-card chat-landing" :body-style="{ padding: '0px', height:'100%' }" :class="isOpen ? 'open' : 'close'">
       <div class="icebreaker" v-if="showIcebreaker">
         <div class="chat-landing-header" :style="'background-color:'+colors.header.bg">
           <div slot="header" class="clearfix">
-            <el-row :gutter="10">
-              <el-col :sm="1" :xs="1">
+            <Row :gutter="10">
+              <Col :sm="1" :xs="1">
                 <span style="padding: 5px;">      
-                  <el-avatar :src="headerLogo"></el-avatar>
+                  <Avatar :src="headerLogo"></Avatar>
                 </span>
-              </el-col>
-              <el-col :sm="20" :xs="21"><span> &nbsp;</span></el-col>
-              <el-col :sm="1" :xs="1" v-if="isOpen">
+              </Col>
+              <Col :sm="20" :xs="21"><span> &nbsp;</span></Col>
+              <Col :sm="1" :xs="1" v-if="isOpen">
                 <i @click.prevent="close()" class="el-icon-close" style="color:#fff; font-size: 26px; cursor: pointer;"></i>
-              </el-col>
-            </el-row>
+              </Col>
+            </Row>
             
             
           </div>
@@ -39,7 +39,7 @@
             <el-col :xs="12" :sm="12" ><div class="grid-content bg-purple-light">BRB in 2 hour</div></el-col>
           </el-row> -->
         </div>
-        <el-card class="box-card" style="border:0;" shadow="never" >
+        <Card class="box-card" style="border:0;" shadow="never" >
           <!-- <el-card class="box-card" :body-style="{padding:'10px 10px 4px'}">
             <div slot="header" class="clearfix">
               <span>You have 1 open conversations</span>
@@ -59,35 +59,35 @@
             </el-row>
           </el-card> -->
 
-          <el-card class="box-card" :body-style="{padding:'0 '}" style="margin-top: 20px;">
+          <Card class="box-card" :body-style="{padding:'0 '}" style="margin-top: 20px;">
             <div slot="header" class="clearfix">
               <span>Quick Links</span>
             </div>
             <div>
               <div v-for="suggestion in this.messageList[0].suggestions" :key="suggestion.code" @click="sendSuggestion(suggestion.code)">
-                <el-row :gutter="10" class="agent-available" type="flex" align="middle" >
-                  <el-col :xs="3" :sm="3" class="icon"><i class="el-icon-chat-line-square"></i></el-col>
-                  <el-col :xs="18" :sm="18" >
+                <Row :gutter="10" class="agent-available" type="flex" align="middle" >
+                  <Col :xs="3" :sm="3" class="icon"><i class="el-icon-chat-line-square"></i></Col>
+                  <Col :xs="18" :sm="18" >
                     <div class="title">{{ suggestion.label }}</div>
-                  </el-col>
-                  <el-col :xs="2" :sm="2" ><i class="el-icon-arrow-right"></i></el-col>
-                </el-row>
+                  </Col>
+                  <Col :xs="2" :sm="2" ><i class="el-icon-arrow-right"></i></Col>
+                </Row>
               </div>
               <div class="divider"></div>
             </div>
             <div>
               <div @click="sendSuggestion('#')">
-                <el-row :gutter="10" class="agent-available" type="flex" align="middle" >
-                  <el-col :xs="3" :sm="3" class="icon"><i class="el-icon-chat-line-square"></i></el-col>
-                  <el-col :xs="18" :sm="18" >
+                <Row :gutter="10" class="agent-available" type="flex" align="middle" >
+                  <Col :xs="3" :sm="3" class="icon"><i class="el-icon-chat-line-square"></i></Col>
+                  <Col :xs="18" :sm="18" >
                     <div class="title">Chat with human</div>
-                  </el-col>
-                  <el-col :xs="2" :sm="2" ><i class="el-icon-arrow-right"></i></el-col>
-                </el-row>
+                  </Col>
+                  <Col :xs="2" :sm="2" ><i class="el-icon-arrow-right"></i></Col>
+                </Row>
               </div>
             </div>
-          </el-card>
-        </el-card>
+          </Card>
+        </Card>
       </div>
       <div class="chat-box" v-if="!showIcebreaker">
         <ChatWindow
@@ -145,7 +145,7 @@
           </template>
         </ChatWindow>
       </div>
-    </el-card>
+    </Card>
     
       
   </div>
