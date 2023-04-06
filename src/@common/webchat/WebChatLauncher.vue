@@ -398,6 +398,7 @@ export default {
 }
 .sc-launcher.right-sticky .sc-open-icon{
     padding: 20px 10px 20px 30px;
+    right: 7px;
 }
 
 .sc-launcher.left-sticky{
@@ -406,6 +407,7 @@ export default {
 }
 .sc-launcher.left-sticky .sc-open-icon{
     padding: 20px 30px 20px 10px;
+    left: 7px;
 }
 
 .sc-launcher:before {
