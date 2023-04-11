@@ -246,7 +246,8 @@ import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
                     return response.text();
                 }).then(function(response) {
                     return JSON.parse(response);
-                }).then(function(response) {
+                }).then(function(responses) {
+                    let response = responses[1] || responses;
                     THAT.deployed.version = (response.results[0].value || "").split("@")[1] || "NULL";
                 }).catch(function(e){
                     console.error(e);
@@ -283,8 +284,9 @@ import BaseInput from '../@common/argon/components/Inputs/BaseInput.vue';
                     return response.text();
                 }).then(function(response) {
                     return JSON.parse(response);
-                }).then(function(response) {
+                }).then(function(responses) {
                     //1.0 - 2022-05-19 08:58 am UTC
+                    let response = responses[1] || responses;
                     server.version = response.info.version;
                     server.stamp = new Date(server.version.replace('1.0 - ','')).toString();
                 }).catch(function(e){

@@ -281,7 +281,8 @@
           background-color: #0000;
         }
         input {
-          // display: none;
+          // just => visibility: hidden; created some gap under widget
+          display: none; 
           visibility: hidden;
         }
         .vs__actions {

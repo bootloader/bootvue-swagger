@@ -134,7 +134,7 @@ function defaultCmpany(){
         },
         meta: {
           updateStamp : 0,
-          verified : true,
+          verified : false,
           verifiedStamp : 0
         },
     };
