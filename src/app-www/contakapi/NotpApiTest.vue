@@ -58,7 +58,7 @@
       </b-col> 
       <b-col cols="4" class="pt-4" v-if="isLoggedIn">
         <pre class="text-sm">
-curl -X POST {{apiEndPoint}} \
+curl -X POST <b>{{apiEndPoint}}</b> \
 -H 'Content-Type: application/json' \
 -H 'x-api-key: {{apiRequest.apiKey}}'
 -d {{apiRequest|json}}
@@ -111,7 +111,7 @@ export default {
       },
       modelData : "{}",
       sample : {},
-      apiEndPoint : document.location.origin + 'entoc/send',
+      apiEndPoint : document.location.origin + '/entoc/send',
       sampleVar : {
         modelColumns: [
           { name: 'Key', prop: "path", readonly : true, autoSize: true},
