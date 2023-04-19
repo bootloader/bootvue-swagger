@@ -229,7 +229,7 @@
             </div>
         </div>
 
-
+        <div v-if="loading" class="nb-spinner"></div>
     </div>
 
 </template>
@@ -394,6 +394,7 @@
             model: {
                 agent: '',
             },
+            loading:false
         }),
         computed :  {
             // summaryChart : function (argument) {
@@ -410,12 +411,14 @@
               return date ? date.getTime(): date;
           },
           async loadAnalytics (){
+            this.loading = true;
             var resp = await this.$store.dispatch('LoadAnalytics',{
               "agent": this.filters[0].value ? this.filters[0].value : "TEAM",
               "contactType": this.filters[1].value ? [this.filters[1].value] : null,
               "dateRange1": this.getTime(this.input.daterange.startDate),
               "dateReange2": this.getTime(this.input.daterange.endDate)
             });
+            this.loading = false;
             this.summary = (resp.data || {});
             this.summaries = (resp.results || []);
 
