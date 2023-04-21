@@ -243,7 +243,7 @@
           async onMounted(){
             await this.getItems();
             if(this.session?.status != "COMPLETED"){
-                setTimeout(()=>{ this.tally()},1000);
+                setTimeout(()=>{ this.retryJob('tally')},1000);
             }
           },
           async getItems (){
@@ -262,13 +262,6 @@
               });
               this.sessions.items = resp.results;
               this.sessions.rows = this.sessions.items.length;
-          },
-          async tally(){
-            var resp = await this.$service.submit("/api/message/bulk/push/retry",{
-                "action": "tally",
-                "jobId" : this.$route.params.bulkSessionId
-            });
-            await this.getItems();
           },
           async retryJob(action){
             var resp = await this.$service.submit("/api/message/bulk/push/retry",{
