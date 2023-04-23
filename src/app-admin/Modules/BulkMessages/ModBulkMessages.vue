@@ -18,8 +18,15 @@
           </template>
 
           <template #filters>
-             <b-button variant="success" class="fa fa-download mg-1" @click="downloadCSVtemplate"> </b-button>
-            <b-button variant="success" class="fa fa-sync mg-1" @click="tally"> </b-button>
+              <b-button size="sm" variant="outline-success" class="fa fa-download mg-1" @click="downloadCSVtemplate"
+               v-tooltip="`Download`" > </b-button>
+              <b-button size="sm" variant="success" class="fa fa-sync mg-1" @click="retryJob('tally')" v-tooltip="`Refresh Status`"> 
+              </b-button>
+              <b-button size="sm" v-if="$global.User.canDebugDomain" variant="danger" v-tooltip="`Stop Job`"
+                class="fa fa-power-off mg-1" @click="retryJob('stop')"> </b-button>
+              <b-button size="sm" v-if="$global.User.canDebugDomain"  variant="success" class="fa fa-redo mg-1" 
+                @click="retryJob('restart')" v-tooltip="`Resume Job`"> 
+              </b-button>
           </template>
 
           <template #leftSummary>
@@ -236,7 +243,7 @@
           async onMounted(){
             await this.getItems();
             if(this.session?.status != "COMPLETED"){
-                setTimeout(()=>{ this.tally()},1000);
+                setTimeout(()=>{ this.retryJob('tally')},1000);
             }
           },
           async getItems (){
@@ -256,9 +263,9 @@
               this.sessions.items = resp.results;
               this.sessions.rows = this.sessions.items.length;
           },
-          async tally(){
+          async retryJob(action){
             var resp = await this.$service.submit("/api/message/bulk/push/retry",{
-                "action": "tally",
+                "action": action,
                 "jobId" : this.$route.params.bulkSessionId
             });
             await this.getItems();

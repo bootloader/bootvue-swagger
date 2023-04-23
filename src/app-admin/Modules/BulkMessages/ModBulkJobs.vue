@@ -53,7 +53,7 @@
                     {{ row.item.createdStamp | formatDate}}
                 </template>  
                 <template #cell(message)="row">
-                    {{ row.item.messageCount}}&nbsp;<router-link v-if="row.item.bulkSessionId" tag="a" 
+                    {{row.item.job ? row.item.job.pushedTaskCount : row.item.messageCount}}&nbsp;<router-link v-if="row.item.bulkSessionId" tag="a" 
                       :to="'/app/moderate/bulk-push-msgs/'+row.item.bulkSessionId">
                       view
                     </router-link>
