@@ -186,10 +186,11 @@ export default {
     },
     async login(){
       try{
-        let resp = await this.$service.post("/entoc/login",{
+        // let resp = await this.$service.post("/entoc/login",{
+        let resp = await this.$service.post("/entoc/api/v1/e2ee/login",{
           apiKey : this.apiKey
         });
-          this.setError(resp);
+        this.setError(resp);
         if(!this.errorMessage){
           this.isLoggedIn = true;
         }
@@ -208,7 +209,8 @@ export default {
         });
     },
     async sendMessage(){
-      await this.$service.post("/entoc/send",{
+      // await this.$service.post("/entoc/send",{
+      await this.$service.post("/entoc/api/v1/e2ee/send",{
         ...this.message,
           otp : this.message?.header?.otp || this.message?.header?.value,
         });
