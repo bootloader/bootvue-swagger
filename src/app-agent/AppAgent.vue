@@ -183,6 +183,7 @@
     @import '@/assets/utils/_popular.scss';
     @import "@/assets/demo-ui/_agent-panel.scss";
     @import "./../assets/fonts/openweb/css/openwebicons.css";
+    @import "./../assets/fonts/my-icon/my-icon.css";
     .v-input-error {
       color : red;
     }
