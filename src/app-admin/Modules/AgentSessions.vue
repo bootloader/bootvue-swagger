@@ -103,7 +103,11 @@
                       :daterange="input.daterange"
                       @dateRangeOninit="dateRangeOnUpdate"
                       @dateRangeOnUpdate="dateRangeOnUpdate"
-                    > </MyDatePicker>
+                    > 
+                   <template #input="picker" style="min-width: 350px;">
+                      <i class="fa fa-calendar-alt" />&nbsp;{{ picker.startDate | date2 }} - {{ picker.endDate | date2 }}
+                  </template>
+                  </MyDatePicker>
                 </template>
         </master-view>
       <b-modal :id="modelName" :title="'Session Filter'" size="lg" hide-footer>
@@ -248,6 +252,9 @@
           },
           date(val) {   
             return val ? val.toLocaleDateString() : ''
+          },
+          date2(val) {   
+            return val ? moment(val.toLocaleDateString()).format('DD/MM/YYYY') : ''
           }
         },
         data: () => ({
