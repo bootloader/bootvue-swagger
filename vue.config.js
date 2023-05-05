@@ -67,6 +67,13 @@ module.exports = {
         title: 'Front Page',
         chunks: ['chunk-vendors', 'chunk-common', 'front']
       },
+      'linq' : {
+        entry: './src/main.js',
+        template: 'public/app-linq.html',
+        filename: 'app-linq.html',
+        title: 'linq Page',
+        chunks: ['chunk-vendors', 'chunk-common', 'linq']
+      },
       'account' : {
         entry: './src/main.js',
         template: 'public/app-account.html',
