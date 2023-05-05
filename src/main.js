@@ -101,9 +101,6 @@ import AppWrapper from './AppWrapper';
 	"page" : { //Account App
 		component : () => import('./app-page/AppPage.vue')
 	},
-	"contak" : { //Notp App
-		component : () => import('./app-contak/AppContak.vue')
-	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
 	},
