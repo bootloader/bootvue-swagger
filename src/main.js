@@ -98,14 +98,8 @@ import AppWrapper from './AppWrapper';
 		},
 		component : () => import('./app-cpanel/AppCpanel.vue')
 	},
-	"front" : { //Account App
-		component : () => import('./app-front/AppFront.vue')
-	},
 	"page" : { //Account App
 		component : () => import('./app-page/AppPage.vue')
-	},
-	"linq" : { //Account App
-		component : () => import('./app-linq/AppLinq.vue')
 	},
 	"contak" : { //Notp App
 		component : () => import('./app-contak/AppContak.vue')
