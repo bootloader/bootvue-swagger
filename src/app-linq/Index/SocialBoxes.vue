@@ -58,8 +58,24 @@
                 </span>
             </span>
         </div>
-
-
+        <div class="social-btns">
+            <span class="w-full lg:w-4/12   social-tile"> 
+                <span class="social-tile-inner">
+                <span href="#" 
+                    class="btn grey bg-grey:before">
+                    <i class="icon fa fa-plus text-grey"></i></span> 
+                <a href="/linq/app/v1/connect/linkedin" v-tooltip="`Verify LinkedIn`" 
+                    class="btn linkedin bg-grey:before">
+                    <i class="icon fab fa-linkedin-in text-grey"></i></a>
+                <a href="/linq/app/v1/connect/outlook"  v-tooltip="`Verify Outlook`" 
+                    class="btn linkedin bg-grey:before">
+                    <i class="icon fab fa-microsoft text-grey"></i></a>
+                <a href="/linq/auth/logout" title="Logout"  v-tooltip="`Logout`" 
+                    class="btn  bg-black:before float-right">
+                    <i class="icon fa fa-power-off text-black"></i></a>
+                </span>
+            </span>
+        </div>
 
     </div>    
 

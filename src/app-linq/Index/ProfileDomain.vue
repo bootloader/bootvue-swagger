@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navbar />
     <profile-no-domain  v-if="!domainProfile">
       
     </profile-no-domain> 
@@ -42,64 +41,24 @@
           >
             <div class="px-6">
               <div class="flex flex-wrap justify-center">
-                <div
-                  class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center"
-                >
+                <div class="lg:w-4/12 px-4 lg:order-1">
+                </div>
+                <div class="lg:w-4/12 px-4 lg:order-2 flex justify-center text-center ">
                   <div class="relative" v-lazy-container="{ selector: 'img' }">
-                    <img 
-                        :data-src="$formatters.https_thumburl(domainProfile.profile.picture,150,150)"
+                    <img :data-src="$formatters.https_thumburl(domainProfile.profile.picture,150,150)"
                         :data-error="defaultCompanyLogo"
-                      class="defaultCompanyLogo shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                    />
+                      class="defaultCompanyLogo shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"/>
                   </div>
                 </div>
-                <div 
-                  class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"
-                >
-                  <div class="py-6 px-3 mt-32 sm:mt-0" >
-                    <button  hidden
-                      class="bg-emerald-500 active:bg-emerald-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      Connect
-                    </button>
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4 lg:order-1">
-                  <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                    <div class="mr-4 p-3 text-center" hidden>
-                      <span
-                        class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                      >
-                        22
-                      </span>
-                      <span class="text-sm text-blueGray-400">Friends</span>
-                    </div>
-                    <div class="mr-4 p-3 text-center" hidden>
-                      <span
-                        class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                      >
-                        10
-                      </span>
-                      <span class="text-sm text-blueGray-400">Photos</span>
-                    </div>
-                    <div class="lg:mr-4 p-3 text-center" hidden>
-                      <span
-                        class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                      >
-                        89
-                      </span>
-                      <span class="text-sm text-blueGray-400">Comments</span>
-                    </div>
-                  </div>
+                <div class="lg:w-4/12 px-4 lg:order-3">
                 </div>
               </div>
-              <div class="text-center mt-5">
-                <h5
-                  class="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
+              <div class="text-center mt-10 pt-10 ">
+                <h6
+                  class="text-3xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 pt-5"
                 >
                   {{domainProfile.profile.name}}
-                </h5>
+                </h6>
                 <div v-if="domainProfile.profile.jobTitle"
                   class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
                 >
@@ -110,18 +69,11 @@
                     <span class="text-comma">{{domainProfile.profile.jobTitle}}</span>
                   </span> 
                 </div>
-                <div class="mb-2 text-blueGray-600" hidden>
-                  <i
-                    class="fa fa-envelope mr-2 text-lg text-blueGray-400"
-                  ></i>
-                  {{domainProfile.profile.email}}
-                </div>
               </div>
               <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-        
                   </div>
                 </div>
               </div>
