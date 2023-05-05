@@ -77,29 +77,11 @@ import AppWrapper from './AppWrapper';
 	"admin" : {
 		component : () => import('./AppAdmin.vue')	
 	},
-	"agent" : { 
-		component : () => import('./app-agent/AppAgent.vue')
-	},
-	"customer" : { //Customer App
-		component : () => import('./app-customer/AppCustomer.vue')
-	},
-	"account" : { //Account App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-account/AppAccount.vue')
-	},
-	"partner" : { //Partner App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-partner/AppPartner.vue')
-	},
-    "cpanel" : { //Partner App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-cpanel/AppCpanel.vue')
-	},
 	"page" : { //Account App
 		component : () => import('./app-page/AppPage.vue')
+	},
+	"linq" : { //Linq App
+		component : () => import('./app-page/AppLinq.vue')
 	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')

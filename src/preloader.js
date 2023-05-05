@@ -25,8 +25,8 @@ if(/^\/[a-z]+\/plugin\/customer\/.*$/.test(pathname) || /^\/[a-z]+\/[a-z]+\/plug
 	window.CONST.APP = "dev";
 } else if(pathname.indexOf("/content") == 0){
 	window.CONST.APP = "content";
-} else if(pathname.indexOf("/front") == 0){
-	window.CONST.APP = "front";
+} else if(pathname.indexOf("/linq") == 0){
+	window.CONST.APP = "linq";
 }else if(pathname.indexOf("/page") == 0){
 	window.CONST.APP = "page";
 }else if(pathname.indexOf("/contak") == 0){

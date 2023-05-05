@@ -5,13 +5,9 @@ export default AppRouter.route({
     base : "/linq",
     routes:  [
         {
-          path: '/page',
-          redirect: '/page/auth',
+          path: '/app',
+          redirect: '/app/home',
           name : "app"
-        },
-        {
-          path: "/page/pub/read/:content",
-          component: () => import('./Index/ReadGuide.vue'),
         },
         {
           path: "/@:domain",
