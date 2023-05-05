@@ -50,7 +50,10 @@ Vue.use(Vue2TouchEvents)
 import AppWrapper from './AppWrapper';
 
 (function(configs,app){
-	var config = configs[app] || configs.dev;
+	let appFile = app[0].toUpperCase() + app.substring(1); 
+	var config = configs[app] || {
+		component : () => import(`./app-${app}/App${appFile}.vue`)
+	};
 	//console.log("ALWAYS",app,config);
 
 	if(typeof config.beforeLoad == 'function'){
@@ -100,6 +103,9 @@ import AppWrapper from './AppWrapper';
 	},
 	"page" : { //Account App
 		component : () => import('./app-page/AppPage.vue')
+	},
+	"linq" : { //Account App
+		component : () => import('./app-linq/AppLinq.vue')
 	},
 	"contak" : { //Notp App
 		component : () => import('./app-contak/AppContak.vue')
