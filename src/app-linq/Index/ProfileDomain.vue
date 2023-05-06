@@ -40,37 +40,51 @@
             class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
           >
             <div class="px-6">
-              <div class="flex flex-wrap justify-center">
-                <div class="lg:w-4/12 px-4 lg:order-1">
+              <div class="flex flex-wrap justify-center profile-bar">
+                <div class="lg:w-4/12 px-4 lg:order-1x">
                 </div>
-                <div class="lg:w-4/12 px-4 lg:order-2 flex justify-center text-center ">
+                <div class="lg:w-4/12 px-4 lg:order-2x flex justify-center text-center ">
                   <div class="relative" v-lazy-container="{ selector: 'img' }">
                     <img :data-src="$formatters.https_thumburl(domainProfile.profile.picture,150,150)"
                         :data-error="defaultCompanyLogo"
                       class="defaultCompanyLogo shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"/>
                   </div>
                 </div>
-                <div class="lg:w-4/12 px-4 lg:order-3">
+                <div class="lg:w-4/12 px-4 lg:order-3x">
                 </div>
               </div>
               <div class="text-center mt-10 pt-10 ">
-                <h6
-                  class="text-3xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 pt-5"
-                >
-                  {{domainProfile.profile.name}}
-                </h6>
-                <div v-if="domainProfile.profile.jobTitle"
-                  class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
-                >
-                  <i
-                    class="fas fa-briefcase mr-2 text-lg text-blueGray-400"
-                  ></i>
-                  <span>
-                    <span class="text-comma">{{domainProfile.profile.jobTitle}}</span>
-                  </span> 
-                </div>
+               
               </div>
-              <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
+              <div class="section-wrapper mt-20">
+                <div class="social-tile-container ">
+                  <social-tile class="w-full lg:w-4/12"
+                    :title="domainProfile.profile.name"  :subtitle="domainProfile.profile.jobTitle" provider="google"> 
+                    <template #thumb>
+                      <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="black"/>
+                    </template>  
+                  </social-tile>
+                </div>  
+              </div> 
+              <div class="section-wrapper">
+                  <div class="section-divider">Profiles</div>
+                  <SocialBoxes :items="profiles" class="py-5 text-center type-1"/>
+              </div>  
+              <div class="section-wrapper">
+                  <div class="section-divider">Verifications</div>
+                  <SocialBoxes :items="memberships" class="py-5 text-center type-1">
+                    <template #actions>
+                      <social-tile class="w-full" 
+                              title="Create new Verification"
+                              subtitle="Start your own Verification" >
+                        <template #thumb>
+                            <social-icon provider="plus" icon="fa fa-plus" variant="grey"
+                              href="/linq/app/v1/connect/linkedin"/>
+                        </template>   
+                      </social-tile>
+                    </template>  
+                  </SocialBoxes>
+              </div>  
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
@@ -118,6 +132,7 @@ import SocialBoxes from "./SocialBoxes.vue";
 const defaultCompanyLogo = __webpack_public_path__ + '/_common/static/company-profile-1.png';
 //import defaultCompanyLogo from "@/assets/vendor/notus/img/company-profile-2.png";
 import ProfileNoDomain from './ProfileNoDomain.vue';
+import SocialIcon from '../components/SocialIcon.vue';
 
 export default {
   data() {
@@ -141,7 +156,8 @@ export default {
             verified :false
          }
       },
-      channels :[],
+      profiles :[],
+      memberships :[],
       date: new Date().getFullYear(),
     };
   },
@@ -150,6 +166,7 @@ export default {
   created (){
     this.loadDomainProfile();
     this.loadChannels();
+    this.loadMemberships();
   },
   computed : {
   },
@@ -162,17 +179,35 @@ export default {
     async loadChannels(){
       var resp = await this.$service.get('/api/v1/profiles',{
       });
-      this.channels = resp.results || [];
+      this.profiles = (resp.results || []).map(function(profile){
+        return {
+          title : profile.name,
+          subtitle : profile.email,
+          provider : profile.provider,
+        }
+      });
+    },
+    async loadMemberships(){
+      var resp = await this.$service.get('/api/v1/user/membership',{
+      });
+      this.memberships = (resp.results || []).map(function(profile){
+        return {
+          title : profile.name,
+          subtitle : profile.email,
+          provider : profile.provider,
+        }
+      });
     },
   },
   components: {
     Navbar,SocialBoxes,
     FooterComponent,
     ProfileNoDomain,
+    SocialIcon,
   },
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 
 .bg-cover-x {
   background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
@@ -203,6 +238,44 @@ export default {
 .h-300-px {
   height: 300px;
 }
+
+.section-wrapper {
+    padding:15px 20px;
+    display: block;
+    background: #fff;
+    overflow-y: scroll;
+    height: 100%;
+
+    .section-divider {
+        width: 100%;
+        height: 13px; 
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        text-align: left;
+        .section-title {
+            font-size: 12px; 
+            background-color: #ffffff; 
+            padding: 0 5px;
+            border-radius: 5px;
+        }
+    }
+
+}
+
+.social-tile-container {
+  margin: auto;
+  font-size: 0;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+
+.profile-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
 
 
 </style>

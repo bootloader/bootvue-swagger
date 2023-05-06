@@ -16,6 +16,10 @@
   Vue.component('ValidationProvider', ValidationProvider);
   Vue.component('ValidationObserver', ValidationObserver);
 
+  Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
+  Vue.component('SocialIcon', () => import('./components/SocialIcon.vue'));
+
+  
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
