@@ -81,7 +81,7 @@ import AppWrapper from './AppWrapper';
 		component : () => import('./app-page/AppPage.vue')
 	},
 	"linq" : { //Linq App
-		component : () => import('./app-page/AppLinq.vue')
+		component : () => import('./app-linq/AppLinq.vue')
 	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
