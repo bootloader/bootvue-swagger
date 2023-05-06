@@ -1,5 +1,5 @@
 <template>
-  <div class="social-tile">
+  <div class="social-tile" @click="onClick">
     <span class="social-tile-inner">
       <slot name="thumb">
             <social-icon  :provider="provider"></social-icon>
@@ -16,7 +16,7 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {},provider : {}
+    title : {}, subtitle : {},provider : {}, path : {}
   },
   data() {
     return {
@@ -26,6 +26,13 @@ export default {
   computed : {
   },
   methods: {
+    onClick(e){
+      if(this.path){
+        console.log("this.path",this.path)
+        this.$router.push( this.path)
+      }
+      this.$emit('click',e);
+    }
   },
   components: {
   },

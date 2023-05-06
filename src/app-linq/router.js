@@ -10,12 +10,24 @@ export default AppRouter.route({
           name : "app"
         },
         {
-          path: "/@:domain",
-          component: () => import('./Index/Index.vue'),
+          path: "/",
+          component: () => import('./Index/MyProfile.vue'),
         },
         {
-          path: "/",
-          component: () => import('./Index/Index.vue'),
+          path: "/app/verification/create",
+          component: () => import('./Index/VerificationDetails.vue'),
+        },
+        {
+          path: "/app/v/:verificationId/edit",
+          component: () => import('./Index/VerificationDetails.vue'),
+        },
+        {
+          path: "/app/v/:verificationId/m/:membershipId",
+          component: () => import('./Index/Membership.vue'),
+        },
+        {
+          path: "/app/v/:verificationId/members",
+          component: () => import('./Index/Memberships.vue'),
         },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]

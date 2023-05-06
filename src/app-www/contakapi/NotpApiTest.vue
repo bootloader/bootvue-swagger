@@ -258,7 +258,7 @@ export default {
 };
 </script>
 <style lang="scss">
-    @import "@/assets/app-contak.scss";
+    @import "@/assets/app-linq.scss";
     .vgrid-wrapper {
       height: 50px;
       min-height: 50px;
