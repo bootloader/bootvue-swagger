@@ -28,11 +28,11 @@
         </div> 
         <div class="section-wrapper">
             <div class="section-divider">My Profiles</div>
-            <SocialBoxes :items="profiles" class="py-5 text-center type-1" allowadd/>
+            <SocialBoxes :items="profiles" class="py-3 text-center type-1" allowadd/>
         </div>  
         <div class="section-wrapper">
             <div class="section-divider">My Memberships</div>
-            <VerificationBoxes :items="memberships" class="py-5 text-center type-1">
+            <VerificationBoxes :items="memberships" class="py-3 text-center type-1">
             </VerificationBoxes>
         </div>  
         <div class="py-5 text-center">

@@ -63,7 +63,7 @@ export default {
   mounted : function () {
   },
   created (){
-    this.loadMembership();
+    this.loadMemberships();
   },
   computed : {
     canViewMembers(){
@@ -74,12 +74,6 @@ export default {
     }
   },
   methods : {
-    async loadMembership(){
-      var resp = await this.$service.get('/api/v1/verification/membership',{
-        verificationId : this.$route.params.verificationId
-      });
-      this.membership = resp.results[0];
-    },
     async loadMemberships(){
       var resp = await this.$service.get('/api/v1/verification/membership',{
         verificationId : this.$route.params.verificationId

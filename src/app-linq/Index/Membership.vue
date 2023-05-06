@@ -76,7 +76,8 @@ export default {
   methods : {
     async loadMembership(){
       var resp = await this.$service.get('/api/v1/verification/membership',{
-        verificationId : this.$route.params.verificationId
+        verificationId : this.$route.params.verificationId,
+        membershipId : this.$route.params.membershipId
       });
       this.membership = resp.results[0];
     },

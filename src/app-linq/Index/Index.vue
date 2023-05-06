@@ -30,7 +30,7 @@
           </svg>
         </div>
       </section>
-      <section class="relative py-16 bg-blueGray-200">
+      <section class="relative pt-16 pb-2 bg-blueGray-200">
         <div class="container mx-auto px-4">
           <div
             class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
@@ -40,12 +40,11 @@
           </div>
         </div>
 
-
       </section>
 
       <footer class="relative bg-blueGray-200 pt-1 pb-6">
           <div class="container mx-auto px-4">
-            <hr class="my-6 border-blueGray-300" />
+            <hr class="my-1 border-blueGray-300" />
             <div
               class="flex flex-wrap items-center md:justify-between justify-center"
             >
