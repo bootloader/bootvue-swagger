@@ -2,8 +2,8 @@
     <div class="px-6-x">
         <div class="section-wrapper">
           <div class="social-tile-container ">
-            <social-tile class="w-full lg:w-4/12"
-              :title="membership.verification.title" :subtitle="membership.membershipType" provider="google"> 
+            <social-tile class="w-full lg:w-4/12" v-if="membership"
+              :title="membership.verification.title" :subtitle="membership.membershipType || 'You are not member yet'" provider="google"> 
               <template #thumb>
                 <social-icon icon="fas fa-certificate"></social-icon>
               </template>  
@@ -23,18 +23,25 @@
               </div>  
               <div class="section-wrapper">
                   <div class="section-divider">Profiles Shared</div>
-                  <SocialBoxes :items="membership.profiles" class="py-5 text-center type-1"/>
+                  <SocialBoxes v-if="membership.profiles && membership.profiles.length>0" 
+                      :items="membership.profiles" class="py-2 text-center type-1" />
               </div>  
+              <div class="section-wrapper">
+                  <div class="section-divider"></div>
+                   <base-input label="Share Link" copy readonly v-model="sharelink" size="sm"
+                        variant="outline-evening"
+                        prelabel alternative required rules="required|max:90" />
+              </div> 
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
-                  <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-                    <b-button variant="outline-greyer" v-if="canEdit"
+                  <div class="w-full lg:w-9/12 px-2 flex flex-wrap justify-center">
+                    <b-button variant="outline-evening" v-if="canEdit"
                      :to="`/app/v/${$route.params.verificationId}/edit`">
-                      Edit Details
+                      Edit
                     </b-button> 
-                    <b-button variant="greyer" v-if="canViewMembers"
-                      :to="`/app/v/${$route.params.verificationId}/members`">
-                      View Members
+                    <b-button variant="evening" v-if="canViewMembers"
+                      :to="`/app/v/${$route.params.verificationId}/m/${$route.params.membershipId}/members`">
+                      Members
                     </b-button> 
                   </div>
                 </div>  
@@ -71,6 +78,9 @@ export default {
     },
     canEdit(){
       return ['OWNER'].indexOf(this.membership.membershipType) > -1
+    },
+    sharelink(){
+      return  `${document.location.origin}/linq/pub/v/${this.$route.params.verificationId}`;
     }
   },
   methods : {

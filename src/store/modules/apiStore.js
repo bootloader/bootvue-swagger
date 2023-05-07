@@ -21,7 +21,8 @@ const actions = {
   	await commit('SET_API_STORE',state.api);
   },
   async UPDATE_REST_STORE({ commit },options) {
-  	state.rest[options.pathKey] = options.data;
+    state.rest[options.pathKey] = (options.target ?  options.data[options.target] : options.data);
+    console.log('UPDATE_REST_STORE',options.pathKey,options.target,state.rest[options.pathKey])
   	await commit('UPDATE_REST_STORE',state.rest);
   },
 };

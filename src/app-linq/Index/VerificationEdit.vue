@@ -71,9 +71,6 @@ import Navbar from "./ProfileNavbar.vue";
 import FooterComponent from "./Footer.vue";
 import SocialBoxes from "./SocialBoxes.vue";
 
-import ProfileNoDomain from './ProfileNoDomain.vue';
-import SocialIcon from '../components/SocialIcon.vue';
-
 export default {
   data() {
     return {

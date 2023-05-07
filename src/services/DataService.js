@@ -134,7 +134,8 @@ const DataService = {
     return results;
   },
   async get(url,query,config) {
-    url = slashUrl(url);
+    let urls = url.split("#");
+    url = slashUrl(urls[0]);
     let _config = config || {};
     _config.params = query;
     let response = null;
@@ -148,7 +149,8 @@ const DataService = {
     return processor(query,response.data,_config);
   },
   async getX(url,query,config) {
-    url = slashUrl(url);
+    let urls = url.split("#");
+    url = slashUrl(urls[0]);
     var pathKey = path2key(url);
     let _config = config || {};
 
@@ -168,9 +170,9 @@ const DataService = {
     let results = responseData.results ? responseData.results : responseData;
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",pathKey,results, response.data)
-      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results,target : urls[1]});
     } else {
-      store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results });
+      store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results, target : urls[1] });
     }
     return results;
   },

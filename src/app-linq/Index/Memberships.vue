@@ -11,35 +11,55 @@
           </div>  
         </div> 
 
-         <validation-observer v-slot="{}" ref="formValidator">
-              <div class="section-wrapper styler-height-fix">
-                    <div class="section-divider">Details</div>
-                    <div class="mb-1">&nbsp;</div>
-                    <b-row>
-                        <b-col cols="12" class="text-center">
-                           {{membership.verification.description}}
-                        </b-col> 
-                    </b-row>  
-              </div>  
-              <div class="section-wrapper">
-                  <div class="section-divider">Profiles Shared</div>
-                  <SocialBoxes :items="membership.profiles" class="py-5 text-center type-1"/>
-              </div>  
-              <div class="py-5 text-center">
-                <div class="flex flex-wrap justify-center">
-                  <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-                    <b-button variant="outline-greyer" v-if="canEdit"
-                     :to="`/app/v/${$route.params.verificationId}/edit`">
-                      Edit Details
-                    </b-button> 
-                    <b-button variant="greyer" v-if="canViewMembers"
-                      :to="`/app/v/${$route.params.verificationId}/members`">
-                      View Members
-                    </b-button> 
-                  </div>
-                </div>  
-              </div>
-         </validation-observer> 
+        <div class="py-5 text-center">
+          <div class="flex flex-wrap justify-center">
+            <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
+              <b-button variant="outline-evening" size="sm" v-if="membership.membershipId"
+                :to="`/app/v/${$route.params.verificationId}/m/${membership.membershipId}`">
+                Back
+              </b-button> 
+              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='ACTIVE'"
+                 :variant="table.filter.membershipType=='ACTIVE' ? 'evening' : 'outline-evening'">
+                Members
+              </b-button>
+              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='NONE'"
+                :variant="table.filter.membershipType=='NONE' ? 'evening' : 'outline-evening'">
+                Pending
+              </b-button> 
+              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='REJECTED'"
+                :variant="table.filter.membershipType=='REJECTED' ? 'evening' : 'outline-evening'">
+                Rejected
+              </b-button> 
+            </div>
+          </div>  
+        </div>
+
+          <div class="section-wrapper styler-height-fix">
+              <div class="position-relative">
+                <b-table ref="my-table" id="table-id" :items="table.items" 
+                    :fields="table.fields" 
+                     sticky-header responsive bordered no-border-collapse show-empty primary-key="id"
+                     stacked="sm"
+                >
+                    <template #cell(actions)="row">
+                        <b-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="evening"
+                          @click="modify(row.item.membershipId,'MEMBER')">
+                            Approve
+                        </b-button>
+                        <b-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="danger"
+                          @click="modify(row.item.membershipId,'REJECTED')">
+                            Reject
+                        </b-button>
+                         <b-button v-if="row.item.approved" size="sm" variant="evening"
+                          @click="modify(row.item.membershipId,'NONE')">
+                            Remove
+                        </b-button>  
+                    </template>
+                    </b-table>
+                <b-overlay :show="table.isBusy" no-wrap opacity="0.5"></b-overlay>
+              </div> 
+          </div>  
+
 
     </div>
 </template>
@@ -48,6 +68,22 @@ import SocialBoxes from "./SocialBoxes.vue";
 export default {
   data() {
     return {
+      table : {
+        fields: [
+          { key : "user.name", label : "Member"},
+          { key : "user.email", label : "Email"},
+          { key : "actions", label : ""},
+        ],
+        items: [],
+        currentPage: 0,
+        perPage: 50,
+        totalItems: 10000,
+        isBusy: false,
+        filter : {
+          approved : true,
+          membershipType : 'ACTIVE'
+        }
+      },
       membership : {
         membershipType : 'NONE',
         verification : {
@@ -60,10 +96,37 @@ export default {
       },
     };
   },
-  mounted : function () {
+  created() {
+    this.loadMembership();
+    this.fetchItems();
   },
-  created (){
-    this.loadMemberships();
+  mounted() {
+    const tableScrollBody = this.$refs["my-table"].$el;
+    /* Consider debouncing the event call */
+    tableScrollBody.addEventListener("scroll", this.onScroll);
+  },
+  beforeDestroy() {
+    /* Clean up just to be sure */
+    const tableScrollBody = this.$refs["my-table"].$el;
+    tableScrollBody.removeEventListener("scroll", this.onScroll);
+  },
+  watch: {
+    /* Optionally hide scrollbar when loading */
+    "table.isBusy" : function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        const tableScrollBody = this.$refs["my-table"].$el;
+        if (newVal === true) {
+          tableScrollBody.classList.add("overflow-hidden");
+        } else {
+          tableScrollBody.classList.remove("overflow-hidden");
+        }
+      }
+    },
+    "table.filter.membershipType" : function () {
+      this.table.items = [];
+      this.table.currentPage = 0;
+      this.fetchItems();
+    }
   },
   computed : {
     canViewMembers(){
@@ -74,11 +137,65 @@ export default {
     }
   },
   methods : {
-    async loadMemberships(){
+    async loadMembership(){
       var resp = await this.$service.get('/api/v1/verification/membership',{
-        verificationId : this.$route.params.verificationId
+        verificationId : this.$route.params.verificationId,
+        membershipId : this.$route.params.membershipId
       });
       this.membership = resp.results[0];
+    },
+    async loadMemberships(currentPage,perPage){
+      var resp = await this.$service.get('/api/v1/verification/membership',{
+        verificationId : this.$route.params.verificationId,
+        approved : this.table.filter.approved,
+        membershipType : this.table.filter.membershipType,
+        pageNo :    currentPage,
+        pageSize :  perPage,
+      });
+      return resp.results;
+    },
+    async modify(membershipId,membershipType){
+      try {
+        var resp = await this.$service.submit('/api/v1/membership',{
+          membershipType : membershipType,
+          membershipId : membershipId
+        });
+        for(var i in this.table.items){
+          if(this.table.items[i].membershipId == resp.results[0].membershipId){
+            this.table.items.splice(i, 1, resp.results[0]);
+          }
+        }
+      } catch(e){
+
+      }
+    },
+    async fetchItems() {
+      /* No need to call if all items retrieved */
+      if (this.table.items.length === this.table.totalItems) return;
+
+      /* Enable busy state */
+      this.table.isBusy = true;
+
+      /* Missing error handling if call fails */
+      //const startIndex = this.table.currentPage++ * this.table.perPage;
+      //const endIndex = startIndex + this.table.perPage;
+      const newItems= await this.loadMemberships(this.table.currentPage++,this.table.perPage);
+      /* Add new items to existing ones */
+    
+      this.table.items = this.table.items.concat(newItems);
+      console.log("ITEMS",this.table.items.length,"ADDED:",newItems.length);
+
+      /* Disable busy state */
+      this.table.isBusy = false;
+    },
+    onScroll(event) {
+      if (
+        event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight
+      ) {
+        if (!this.table.isBusy) {
+          this.fetchItems();
+        }
+      }
     }
   },
   components: {

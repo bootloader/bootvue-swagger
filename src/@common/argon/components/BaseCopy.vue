@@ -11,10 +11,10 @@
 
                 <b-button v-if="reset && !value"
                   @click="onReset" 
-                  variant="outline-success">Reset</b-button>
+                  :variant="variant">Reset</b-button>
                 <b-button v-else class="w-20"
                   v-clipboard:copy="value" 
-                  variant="outline-success">Copy</b-button>
+                  :variant="variant">Copy</b-button>
 
             </b-input-group-append>
       </b-input-group>
@@ -42,6 +42,11 @@
       reset: {
         type: Boolean,
         description: "Is it reset"
+      },
+      variant: {
+        type: String,
+        description: "Size value",
+        default : 'outline-success'
       },
     },
     data() {

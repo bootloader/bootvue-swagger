@@ -21,7 +21,7 @@
             <social-tile class="w-full lg:w-4/12"
               :title="domainProfile.profile.name"  :subtitle="domainProfile.profile.jobTitle" provider="google"> 
               <template #thumb>
-                <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="black"/>
+                <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="evening"/>
               </template>  
             </social-tile>
           </div>  
@@ -48,7 +48,7 @@ import Navbar from "./ProfileNavbar.vue";
 import FooterComponent from "./Footer.vue";
 import SocialBoxes from "./SocialBoxes.vue";
 
-const defaultCompanyLogo = __webpack_public_path__ + '/_common/static/company-profile-1.png';
+const defaultCompanyLogo = __webpack_public_path__ + '/_common/static/person-profile.png';
 //import defaultCompanyLogo from "@/assets/vendor/notus/img/company-profile-2.png";
 import ProfileNoDomain from './ProfileNoDomain.vue';
 import SocialIcon from '../components/SocialIcon.vue';
@@ -89,12 +89,17 @@ export default {
     this.loadMemberships();
   },
   computed : {
+    meta(){
+    }
   },
   methods : {
     async loadDomainProfile (){
       var resp = await this.$service.get('/auth/meta',{
       });
       this.domainProfile = resp.results[0];
+      if(this.domainProfile.intentVerification){
+        this.$router.push("/app/v/"+this.domainProfile.intentVerification)
+      }
     },
     async loadChannels(){
       var resp = await this.$service.get('/api/v1/profiles',{

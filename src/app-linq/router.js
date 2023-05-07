@@ -15,18 +15,26 @@ export default AppRouter.route({
         },
         {
           path: "/app/verification/create",
-          component: () => import('./Index/VerificationDetails.vue'),
+          component: () => import('./Index/VerificationEdit.vue'),
         },
         {
           path: "/app/v/:verificationId/edit",
-          component: () => import('./Index/VerificationDetails.vue'),
+          component: () => import('./Index/VerificationEdit.vue'),
+        },
+        {
+          path: "/app/v/:verificationId",
+          component: () => import('./Index/VerificationView.vue'),
+        },
+        {
+          path: "/pub/v/:verificationId",
+          component: () => import('./Index/VerificationView.vue'),
         },
         {
           path: "/app/v/:verificationId/m/:membershipId",
           component: () => import('./Index/Membership.vue'),
         },
         {
-          path: "/app/v/:verificationId/members",
+          path: "/app/v/:verificationId/m/:membershipId/members",
           component: () => import('./Index/Memberships.vue'),
         },
         { path: "/:pathMatch(.*)*", redirect: "/" },

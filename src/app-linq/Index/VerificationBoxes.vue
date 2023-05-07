@@ -8,7 +8,6 @@
                 <span class="social-tile-inner-desc">
                   <div class="social-tile-inner-desc-title"> {{c.title}} </div>
                   <div class="social-tile-inner-desc-subtitle"> 
-                    {{c.path}}
                   </div>
                 </span>
               </template>

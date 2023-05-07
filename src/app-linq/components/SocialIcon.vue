@@ -43,7 +43,7 @@ export default {
   },
   computed : {
     myVariant(){
-      return this.variant || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "grey"
+      return this.variant || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "evening"
     },
     myIcon(){
       return this.icon || DEFAULT_PROVIDERS[this.provider]?.icon || this.provider  || ("fab fa-" + this.provider);

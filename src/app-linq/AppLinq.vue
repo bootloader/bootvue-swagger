@@ -11,10 +11,16 @@
   import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
   Vue.use(DashboardPlugin);
   import "@/assets/vendor/notus/styles/tailwind.css";
+  import 'bootstrap-vue/dist/bootstrap-vue.css';
   import ReadMore from 'vue-read-more';
   import { ValidationProvider,ValidationObserver } from 'vee-validate';
+
   import mixin from './../services/mixin.js'
   mixin.init();
+
+  import VueClipboard from 'vue-clipboard2';
+  VueClipboard.config.autoSetContainer = true // add this line
+  Vue.use(VueClipboard)
 
   import Index from './Index/Index.vue';
 
@@ -23,11 +29,13 @@
   Vue.component('ValidationObserver', ValidationObserver);
   Vue.component('BaseInput', () => import('@/@common/argon/components/Inputs/BaseInput.vue'));
   Vue.component('BaseTextArea', () => import('@/@common/argon/components/Inputs/BaseTextArea.vue'));
+  Vue.component('BaseCopy', () => import('@/@common/argon/components/BaseCopy.vue'));
 
   Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
   Vue.component('SocialIcon', () => import('./components/SocialIcon.vue'));
 
-  
+
+
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'

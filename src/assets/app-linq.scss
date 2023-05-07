@@ -10,6 +10,16 @@
 
 @import "themes/layout-variables";
 
+
+// BOOTSTRAP 4 IMPORTS
+@import "components/bootstrap4/root";
+@import "components/bootstrap4/reboot";
+@import "components/bootstrap4/type";
+@import "components/bootstrap4/images";
+@import "components/bootstrap4/code";
+@import "components/bootstrap4/grid";
+@import "components/bootstrap4/tables";
+
 @import 'utils/_helpers.scss';
 @import 'utils/_sizes';
 @import 'utils/_popular.scss';
