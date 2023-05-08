@@ -14,6 +14,8 @@
                         href="/linq/app/v1/connect/linkedin"  />
                   </template>   
                     <template #details>
+                      <social-icon provider="facebook" variant="grey"  v-tooltip="`Verify Facebook`" 
+                      href="/linq/app/v1/connect/facebook"/>
                       <social-icon provider="outlook" variant="grey"  v-tooltip="`Verify Outlook`" 
                       href="/linq/app/v1/connect/outlook"/>
                     </template> 
