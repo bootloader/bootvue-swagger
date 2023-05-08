@@ -11,13 +11,13 @@
                 <social-tile class="w-full">
                   <template #thumb>
                       <social-icon provider="linkedin" variant="grey" v-tooltip="`Verify LinkedIn`"
-                        href="/linq/app/v1/connect/linkedin"  />
+                        :href="`/linq/app/v1/connect/linkedin?_${nounce}`"  />
                   </template>   
                     <template #details>
                       <social-icon provider="facebook" variant="grey"  v-tooltip="`Verify Facebook`" 
-                      href="/linq/app/v1/connect/facebook"/>
+                      :href="`/linq/app/v1/connect/facebook?_${nounce}`"/>
                       <social-icon provider="outlook" variant="grey"  v-tooltip="`Verify Outlook`" 
-                      href="/linq/app/v1/connect/outlook"/>
+                      :href="`/linq/app/v1/connect/outlook?_${nounce}`"/>
                     </template> 
                 </social-tile>
             </span>  
@@ -34,6 +34,11 @@ export default {
         allowadd : {
           type : Boolean
         }
+    },
+    data (){
+      return {
+        nounce : Date.now()
+      } 
     },
     computed : {
         channelsEnabled(){
