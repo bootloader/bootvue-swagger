@@ -204,7 +204,12 @@ const DataService = {
         }
     }
     try{
-      let response = await axios.post(url, SubmitForm,_config);
+      let response = null;
+      if(config.put){
+        response = await axios.put(url, SubmitForm,_config);
+      } else {
+        response = await axios.post(url, SubmitForm,_config);
+      }
       return processor(params,response.data,_config);
     } catch(e){
         if(_config && _config.ref && typeof _config.ref.setErrors == 'function'){

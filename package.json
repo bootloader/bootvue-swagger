@@ -33,6 +33,8 @@
     "emoji-js": "^3.4.0",
     "es6-promise": "^4.2.6",
     "escape-goat": "^1.3.0",
+    "firebase": "^9.21.0",
+    "firebaseui": "^6.0.2",
     "get-user-media-promise": "^1.1.4",
     "google-maps": "^4.3.3",
     "imagemin": "^6.1.0",

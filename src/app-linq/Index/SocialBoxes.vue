@@ -10,14 +10,20 @@
             <span class="w-full lg:w-4/12 display-inline-block">
                 <social-tile class="w-full">
                   <template #thumb>
-                      <social-icon provider="linkedin" variant="grey" v-tooltip="`Verify LinkedIn`"
-                        :href="`/linq/app/v1/connect/linkedin?_${nounce}`"  />
+                      <social-icon provider="google" variant="grey" title="Add Google"
+                        :href="`/linq/app/v1/connect/google?_${nounce}`"  />
                   </template>   
                     <template #details>
-                      <social-icon provider="facebook" variant="grey"  v-tooltip="`Verify Facebook`" 
+                      <social-icon provider="linkedin" variant="grey" title="Verify LinkedIn"
+                        :href="`/linq/app/v1/connect/linkedin?_${nounce}`"  />
+                      <social-icon provider="facebook" variant="grey"  title="Verify Facebook" 
                       :href="`/linq/app/v1/connect/facebook?_${nounce}`"/>
-                      <social-icon provider="outlook" variant="grey"  v-tooltip="`Verify Outlook`" 
+                      <social-icon provider="outlook" variant="grey"  title="Verify Outlook" 
                       :href="`/linq/app/v1/connect/outlook?_${nounce}`"/>
+                      <social-icon provider="mobile" variant="grey"  title="Verify Mobile" 
+                      :href="`/linq/app/v1/connect/mobile?_${nounce}`"/>
+                      <social-icon provider="whatsapp" variant="grey"  title="Verify WhatsApp" 
+                      :href="`/linq/app/v1/connect/whatsapp?_${nounce}`"/>
                     </template> 
                 </social-tile>
             </span>  
@@ -45,7 +51,6 @@ export default {
           return this.items?.filter((c)=>!c.disabled && c.contactType!='WEBSITE');
         }
     }
-
 };
 </script>
 <style lang="scss" scoped>

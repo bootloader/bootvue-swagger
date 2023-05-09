@@ -85,7 +85,7 @@
         </div> 
         <div v-if="append || appendIcon || $slots.append || (textLimit>0) ||  $slots.actions" class="input-group-append">
           <span v-if="append || appendIcon || $slots.append || (textLimit>0)" 
-            class="input-group-text">
+            class="input-group-text" :class="[ 'border-'+variant, 'text-'+variant, appendClass ]" @click="onCommit">
               <slot name="append" >
                   <span v-if="textLimit>0" class="">
                     {{value ? value.length : 0}}/{{textLimit}}
@@ -222,6 +222,8 @@
         type: String,
         description: "Append icon (right)"
       },
+      appendClass : {
+      },
       append : {
       },
       prepend : {
@@ -291,7 +293,7 @@
           input: this.updateValue,
           focus: this.onFocus,
           blur: this.onBlur,
-          score : this.onScore
+          score : this.onScore,
         };
       },
       slotData() {
@@ -387,6 +389,9 @@
       onBlur(evt) {
         this.focused = false;
         this.$emit("blur", evt);
+      },
+      onCommit(evt) {
+        this.$emit("commit", evt);
       },
       mouseEnter(){
         this.hovered = true;

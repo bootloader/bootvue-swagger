@@ -37,6 +37,10 @@ export default AppRouter.route({
           path: "/app/v/:verificationId/m/:membershipId/members",
           component: () => import('./Index/Memberships.vue'),
         },
+        {
+          path: "/pub/v1/connect/firebase/mobile",
+          component: () => import('./Index/PhoneVerify.vue'),
+        },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]
 })
