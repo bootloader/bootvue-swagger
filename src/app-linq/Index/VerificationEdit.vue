@@ -39,14 +39,26 @@
                               title="Create new Verification"
                               subtitle="Start your own Verification" >
                         <template #thumb>
-                            <social-icon provider="linkedin" 
-                              @click="profileTypes.linkedin=!profileTypes.linkedin"
-                              :variant="profileTypes.linkedin ? 'linkedin' : 'greyed'"/>
+                            <social-icon provider="google" 
+                              @click="profileTypes.google=true"
+                              :variant="profileTypes.google ? 'google' : 'greyed'"/>
                         </template>  
                         <template #details>
+                            <social-icon provider="linkedin" 
+                              @click="profileTypes.linkedin=!profileTypes.linkedin"
+                              :variant="profileTypes.linkedin ? 'linkedin' : 'greyed'"/> 
+                            <social-icon provider="facebook" 
+                              @click="profileTypes.facebook=!profileTypes.facebook"
+                              :variant="profileTypes.facebook ? 'facebook' : 'greyed'"/> 
                             <social-icon provider="outlook" 
                               @click="profileTypes.outlook=!profileTypes.outlook"
                               :variant="profileTypes.outlook ? 'outlook' : 'greyed'"/>
+                             <social-icon provider="mobile" 
+                              @click="profileTypes.mobile=!profileTypes.mobile"
+                              :variant="profileTypes.mobile ? 'mobile' : 'greyed'"/> 
+                             <social-icon provider="whatsapp" 
+                              @click="profileTypes.whatsapp=!profileTypes.whatsapp"
+                              :variant="profileTypes.whatsapp ? 'whatsapp' : 'greyed'"/>
                         </template>  
                   </social-tile>
               </div>  
@@ -78,11 +90,12 @@ export default {
         "title": "",
         "description": "",
         "profileTypes": [
+          'google'
         ],
         "verificationId": null
       },
       profileTypes : {
-        linkedin : false, outlook : false, whatsapp : false, twitter : false
+        google : true, linkedin : false, outlook : false, whatsapp : false, twitter : false, mobile : false,facebook : false,
       },
       domainProfile : {
          userId : "-----------",
