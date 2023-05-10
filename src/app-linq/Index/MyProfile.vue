@@ -35,6 +35,21 @@
             <VerificationBoxes :items="memberships" class="py-3 text-center">
             </VerificationBoxes>
         </div>  
+        <div class="section-wrapper">
+            <div class="section-divider">Profile/Settings</div>
+            <div class="social-tile-container">
+                <span class="w-full lg:w-4/12 d-inline-block">
+                    <social-tile class="w-full" variant="danger" 
+                            title="Delete My Profile" @click="deleteMyProfile"
+                            subtitle="Completely erase your data" >
+                      <template #thumb>
+                          <social-icon provider="plus" icon="fa fa-trash-alt" variant="danger"
+                            />
+                      </template>   
+                    </social-tile> 
+                </span>  
+            </div>
+        </div> 
         <div class="py-5 text-center">
           <div class="flex flex-wrap justify-center">
             <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
@@ -118,12 +133,18 @@ export default {
       this.memberships = (resp.results || []).map(function(membership){
         return {
           title : membership.verification?.title,
-          //subtitle : membership.email,
+          subtitle : membership.membershipType,
           provider : 'certificate',
           path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
         }
       });
     },
+    async deleteMyProfile(){
+      if(confirm("All Your Data will be deleted, You Sure?")){
+        var resp = await this.$service.delete('/auth/meta',{
+        });
+      }
+    }
   },
   components: {
     Navbar,SocialBoxes,

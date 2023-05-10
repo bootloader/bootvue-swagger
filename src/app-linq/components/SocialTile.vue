@@ -1,12 +1,12 @@
 <template>
-  <div class="social-tile" @click="onClick">
+  <div class="social-tile pointer" @click="onClick" >
     <span class="social-tile-inner">
       <slot name="thumb">
-            <social-icon  :provider="provider"></social-icon>
+            <social-icon  :provider="provider" :variant="variant"></social-icon>
       </slot>
       <slot name="details">
-        <span class="social-tile-inner-desc">
-          <div class="social-tile-inner-desc-title"> {{title}} </div>
+        <span class="social-tile-inner-desc" :class="'text-'+variant">
+          <div class="social-tile-inner-desc-title"> {{title}}&nbsp;</div>
           <div class="social-tile-inner-desc-subtitle"> {{subtitle}} </div>
         </span>
       </slot>
@@ -16,7 +16,7 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {},provider : {}, path : {}
+    title : {}, subtitle : {},provider : {}, path : {}, variant : {}
   },
   data() {
     return {
