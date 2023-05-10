@@ -18,7 +18,7 @@ const DEFAULT_PROVIDERS = {
   telegram : { icon : "fab fa-telegram-plane"},
   instagram : { icon : "fab fa-instagram"},
   certificate : { icon : "fas fa-certificate", variant : 'evening'},
-  mobile : { icon : "fas fa-phone-square", variant : 'evening'},
+  mobile : { icon : "fas fa-phone-square", variant : 'whatsapp-dull'},
 }
 
 export default {
