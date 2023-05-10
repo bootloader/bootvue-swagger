@@ -143,6 +143,7 @@ export default {
       if(confirm("All Your Data will be deleted, You Sure?")){
         var resp = await this.$service.delete('/auth/meta',{
         });
+        window.location.reload()
       }
     }
   },
