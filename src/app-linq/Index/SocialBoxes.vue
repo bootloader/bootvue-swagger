@@ -7,7 +7,7 @@
             </social-tile>
         </div>
         <div class="social-tile-container" v-if="allowadd">
-            <span class="w-full lg:w-4/12 display-inline-block">
+            <span class="display-inline-block">
                 <social-tile class="w-full">
                   <template #thumb>
                       <social-icon provider="google" variant="grey" title="Add Google"

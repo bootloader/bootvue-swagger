@@ -15,12 +15,12 @@
         </div>
         <div class="social-tile-container">
             <span class="w-full lg:w-4/12 display-inline-block">
-                <social-tile class="w-full" 
-                        title="Create new Verification"
-                        subtitle="Start your own Verification" >
+                <social-tile class="w-full" path="/app/verification/create"
+                        title="Create New"
+                        subtitle="Membership Program" >
                   <template #thumb>
                       <social-icon provider="plus" icon="fa fa-plus" variant="grey"
-                        to="/app/verification/create"/>
+                        />
                   </template>   
                 </social-tile> 
             </span>  

@@ -41,6 +41,10 @@ export default AppRouter.route({
           path: "/pub/v1/connect/firebase/mobile",
           component: () => import('./Index/PhoneVerify.vue'),
         },
+        {
+          path: "/pub/v1/connect/whatsapp",
+          component: () => import('./Index/WaVerify.vue'),
+        },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]
 })

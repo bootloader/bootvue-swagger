@@ -139,11 +139,6 @@ export default {
   background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
   background-position: bottom;
 }
-.type-1 {
-  min-width: 300px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
-}
 .h-300-px {
   height: 300px;
 }

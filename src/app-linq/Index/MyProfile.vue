@@ -28,11 +28,11 @@
         </div> 
         <div class="section-wrapper">
             <div class="section-divider">My Profiles</div>
-            <SocialBoxes :items="profiles" class="py-3 text-center type-1" allowadd/>
+            <SocialBoxes :items="profiles" class="py-3 text-center" allowadd/>
         </div>  
         <div class="section-wrapper">
             <div class="section-divider">My Memberships</div>
-            <VerificationBoxes :items="memberships" class="py-3 text-center type-1">
+            <VerificationBoxes :items="memberships" class="py-3 text-center">
             </VerificationBoxes>
         </div>  
         <div class="py-5 text-center">
@@ -107,7 +107,7 @@ export default {
       this.profiles = (resp.results || []).map(function(profile){
         return {
           title : profile.name,
-          subtitle : profile.email,
+          subtitle : profile.email || profile.phone,
           provider : profile.provider,
         }
       });
@@ -155,11 +155,6 @@ export default {
     background-color: #f9f9f9;
     padding: 14px;
   }
-}
-.type-1 {
-  min-width: 300px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
 }
 .h-300-px {
   height: 300px;

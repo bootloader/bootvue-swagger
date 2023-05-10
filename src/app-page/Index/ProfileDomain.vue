@@ -151,7 +151,7 @@
           </div>
         </div>
 
-        <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
+        <SocialBoxes :channels="channels" class="py-5 text-center"/>
 
       </section>
 
@@ -302,11 +302,6 @@ export default {
     background-color: #f9f9f9;
     padding: 14px;
   }
-}
-.type-1 {
-  min-width: 300px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
 }
 
 

@@ -24,7 +24,7 @@
               <div class="section-wrapper">
                   <div class="section-divider">Profiles Shared</div>
                   <SocialBoxes v-if="membership.profiles && membership.profiles.length>0" 
-                      :items="membership.profiles" class="py-2 text-center type-1" />
+                      :items="membership.profiles" class="py-2 text-center" />
               </div>  
               <div class="section-wrapper">
                   <div class="section-divider"></div>
@@ -104,11 +104,6 @@ export default {
 .bg-cover-x {
   background-image: url('~@/assets/vendor/notus/img/social-bg-bottom.png');
   background-position: bottom;
-}
-.type-1 {
-  min-width: 300px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
 }
 .h-300-px {
   height: 300px;
