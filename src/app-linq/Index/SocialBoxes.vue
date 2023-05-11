@@ -10,19 +10,19 @@
             <span class="display-inline-block">
                 <social-tile class="w-full">
                   <template #thumb>
-                      <social-icon provider="google" variant="grey" title="Add Google"
+                      <social-icon provider="google" variant="grey" title="Link Google"
                         :href="`/linq/app/v1/connect/google?_${nounce}`"  />
                   </template>   
                     <template #details>
-                      <social-icon provider="linkedin" variant="grey" title="Verify LinkedIn"
+                      <social-icon provider="linkedin" variant="grey" title="Link LinkedIn"
                         :href="`/linq/app/v1/connect/linkedin?_${nounce}`"  />
-                      <social-icon provider="facebook" variant="grey"  title="Verify Facebook" 
+                      <social-icon provider="facebook" variant="grey"  title="Link Facebook" 
                       :href="`/linq/app/v1/connect/facebook?_${nounce}`"/>
-                      <social-icon provider="outlook" variant="grey"  title="Verify Outlook" 
+                      <social-icon provider="outlook" variant="grey"  title="Link Outlook" 
                       :href="`/linq/app/v1/connect/outlook?_${nounce}`"/>
-                      <social-icon provider="mobile" variant="grey"  title="Verify Mobile" 
+                      <social-icon provider="mobile" variant="grey"  title="Link Mobile" 
                       :href="`/linq/app/v1/connect/mobile?_${nounce}`"/>
-                      <social-icon provider="whatsapp" variant="grey"  title="Verify WhatsApp" 
+                      <social-icon provider="whatsapp" variant="grey"  title="Link WhatsApp" 
                       :href="`/linq/app/v1/connect/whatsapp?_${nounce}`"/>
                     </template> 
                 </social-tile>

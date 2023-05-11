@@ -205,7 +205,7 @@ const DataService = {
     }
     try{
       let response = null;
-      if(config.put){
+      if(_config.put){
         response = await axios.put(url, SubmitForm,_config);
       } else {
         response = await axios.post(url, SubmitForm,_config);
