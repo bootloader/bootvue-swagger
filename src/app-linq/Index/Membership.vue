@@ -35,6 +35,14 @@
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-2 flex flex-wrap justify-center">
+                    <b-button variant="outline-danger" v-if="canLeave"
+                      @click="cancelMembership">
+                      Leave
+                    </b-button>
+                    <b-button variant="outline-evening" v-if="canCancel"
+                      @click="cancelMembership">
+                      Cancel
+                    </b-button>
                     <b-button variant="outline-evening" v-if="canEdit"
                      :to="`/app/v/${$route.params.verificationId}/edit`">
                       Edit
@@ -70,6 +78,7 @@ export default {
   mounted : function () {
   },
   created (){
+    this.loadMeta();
     this.loadMembership();
   },
   computed : {
@@ -84,15 +93,8 @@ export default {
     }
   },
   methods : {
-    async loadMembership(){
-      var resp = await this.$service.get('/api/v1/verification/membership',{
-        verificationId : this.$route.params.verificationId,
-        membershipId : this.$route.params.membershipId
-      });
-      this.membership = resp.results[0];
-    },
     async saveVerification(){
-    }
+    },
   },
   components: {
     SocialBoxes

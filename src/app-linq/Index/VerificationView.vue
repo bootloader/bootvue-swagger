@@ -53,12 +53,16 @@
                      :href="`/linq/app/v/${$route.params.verificationId}`">
                       Join
                     </b-button> 
-                    <b-button variant="outline-evening" v-if="canApply"
-                      @click="join(true)">
+                   <b-button variant="outline-danger" v-if="canLeave"
+                      @click="cancelMembership">
+                      Leave
+                    </b-button>
+                    <b-button variant="outline-evening" v-if="canCancel"
+                      @click="cancelMembership">
                       Cancel
                     </b-button>
                     <b-button variant="evening" v-if="canApply"
-                      @click="join()">
+                      @click="join">
                       Apply
                     </b-button> 
                     <b-button variant="greyer" v-if="canViewMembers"
@@ -97,7 +101,7 @@ export default {
   mounted : function () {
   },
   created (){
-    this.loadDomainProfile();
+    this.loadMeta();
     this.loadVerification();
   },
   computed : {
@@ -107,45 +111,16 @@ export default {
     canEdit(){
       return ['OWNER'].indexOf(this.membership.membershipType) > -1
     },
-    canJoin(){
-       return ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership.membershipType) < 0
-    },
-    meta(){
-      return this.$store.getters.StateRest?.AuthMeta || {};
-    },
     canApply(){
       return  (this.membership?.verification?.verificationId) &&  this.canJoin && this.meta.loggedIn;
-    }
+    },
   },
   methods : {
-    async loadDomainProfile (refresh){
-      return await this.$service.getX('/auth/meta#0',{
-      },{  refresh : true });
-    },
-    async loadVerification(){
-      var resp = await this.$service.get('/pub/v1/verification',{
-        verificationId : this.$route.params.verificationId,
+    async join(){
+      var resp = await this.$service.submit('/api/v1/verification/membership',{
+          verificationId : this.$route.params.verificationId,
+          coverLetter : this.membership.coverLetter
       });
-      this.membership = resp.meta || {};
-      this.membership.verification = resp.results[0];
-      this.membership.verification.profileTypes.map((profileType)=>{
-        this.profileTypes[profileType] = true;
-      })
-    },
-    async join(cancel){
-      if(cancel){
-        var resp = await this.$service.delete('/api/v1/membership',{
-            verificationId : this.$route.params.verificationId,
-            membershipId : this.$route.params.membershipId,
-        });
-        await this.loadDomainProfile();
-      } else {
-        var resp = await this.$service.submit('/api/v1/verification/membership',{
-            verificationId : this.$route.params.verificationId,
-            coverLetter : this.membership.coverLetter,
-            cancel : cancel
-        });
-      }
       this.$router.push("/")
     }
   },

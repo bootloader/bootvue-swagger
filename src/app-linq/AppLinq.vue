@@ -15,7 +15,7 @@
   import ReadMore from 'vue-read-more';
   import { ValidationProvider,ValidationObserver } from 'vee-validate';
 
-  import mixin from './../services/mixin.js'
+  import mixin from './mixin.js'
   mixin.init();
 
   import VueClipboard from 'vue-clipboard2';
