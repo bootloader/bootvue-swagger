@@ -43,7 +43,6 @@ export default {
     },
     data (){
       return {
-        nounce : Date.now()
       } 
     },
     computed : {

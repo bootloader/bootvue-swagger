@@ -5,7 +5,7 @@
           </div>
           <div class="lg:w-4/12 px-4 lg:order-2x flex justify-center text-center ">
             <div class="relative" v-lazy-container="{ selector: 'img' }">
-              <img :data-src="$formatters.https_thumburl(domainProfile.profile.picture,150,150)"
+              <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
                 class="defaultCompanyLogo shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"/>
             </div>
@@ -19,7 +19,7 @@
         <div class="section-wrapper mt-20">
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12"
-              :title="domainProfile.profile.name"  :subtitle="domainProfile.profile.jobTitle" provider="google"> 
+              :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
               <template #thumb>
                 <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="evening"/>
               </template>  
@@ -28,7 +28,7 @@
         </div> 
         <div class="section-wrapper">
             <div class="section-divider">My Profiles</div>
-            <SocialBoxes :items="profiles" class="py-3 text-center" allowadd/>
+            <SocialBoxes :items="myProfiles" class="py-3 text-center" allowadd/>
         </div>  
         <div class="section-wrapper">
             <div class="section-divider">My Memberships</div>
@@ -73,25 +73,6 @@ export default {
   data() {
     return {
       defaultCompanyLogo : defaultCompanyLogo,
-      domainProfile : {
-         userId : "-----------",
-         userName : "---- ----",
-         loggedIn : true,
-         intentVerification :null,
-         profile : {
-            name : "- -",
-            email :"-.-@-.-",
-            phone :"",
-            jobTitle : "",
-            picture :"",
-            provider :"----",
-            profileId :"------",
-            profileUUId :"----:----",
-            userId:"-------",
-            verified :false
-         }
-      },
-      profiles :[],
       memberships :[],
       date: new Date().getFullYear(),
     };
@@ -99,33 +80,24 @@ export default {
   mounted : function () {
   },
   created (){
-    this.loadDomainProfile();
-    this.loadChannels();
-    this.loadMemberships();
+    this.load();
   },
   computed : {
-    meta(){
-    }
-  },
-  methods : {
-    async loadDomainProfile (){
-      var resp = await this.$service.get('/auth/meta',{
-      });
-      this.domainProfile = resp.results[0];
-      if(this.domainProfile.intentVerification){
-        this.$router.push("/app/v/"+this.domainProfile.intentVerification)
-      }
-    },
-    async loadChannels(){
-      var resp = await this.$service.get('/api/v1/profiles',{
-      });
-      this.profiles = (resp.results || []).map(function(profile){
+    myProfiles(){
+      return (this.profiles || []).map(function(profile){
         return {
           title : profile.name,
           subtitle : profile.email || profile.phone,
           provider : profile.provider,
         }
       });
+    }
+  },
+  methods : {
+    async load(){
+      this.loadMeta();
+      this.loadProfiles();
+      this.loadMemberships();
     },
     async loadMemberships(){
       var resp = await this.$service.get('/api/v1/user/membership',{

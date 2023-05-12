@@ -4,9 +4,14 @@
   export default {
     init : function(){
       Vue.mixin({
+        data() {
+          return {
+            nounce : Date.now()
+          };
+        },
         computed: {
           meta(){
-            return this.$store.getters.StateRest?.AuthMeta || {};
+            return this.$store.getters.StateRest?.AuthMeta || { profile : {}};
           },
           canJoin(){
             return ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership?.membershipType) < 0
@@ -18,7 +23,10 @@
           canLeave(){
             return  (this.membership?.verification?.verificationId && this.meta.loggedIn) 
                 &&  ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership?.membershipType) > -1
-          }
+          },
+          profiles(){
+            return this.$store.getters.StateApi.V1Profiles || [];
+          },
         },
         methods : {
           async loadMeta (refresh){
@@ -41,6 +49,10 @@
             this.membership.verification.profileTypes.map((profileType)=>{
               this.profileTypes[profileType] = true;
             })
+          },
+          async loadProfiles(){
+            await this.$service.getX('/api/v1/profiles',{
+            });
           },
           async cancelMembership(){
             var resp = await this.$service.delete('/api/v1/membership',{

@@ -20,6 +20,7 @@ const DEFAULT_PROVIDERS = {
   certificate : { icon : "fas fa-certificate", variant : 'evening'},
   mobile : { icon : "fas fa-phone-square", variant : 'mobile'},
   phone : { icon : "fas fa-phone-square", variant : 'mobile'},
+  tick : { icon : "fas fa-check", variant : 'green'},
 }
 
 export default {

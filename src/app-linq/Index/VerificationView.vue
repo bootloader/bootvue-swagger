@@ -11,7 +11,7 @@
           </div>  
         </div> 
 
-         <validation-observer v-slot="{}" ref="formValidator">
+         <validation-observer v-slot="{handleSubmit}" ref="formValidator">
               <div class="section-wrapper styler-height-fix">
                     <div class="section-divider">Details</div>
                     <div class="mb-1">&nbsp;</div>
@@ -35,12 +35,15 @@
                               title="Profiles Required"
                               subtitle="" >
                         <template #thumb>
-                            <social-icon provider="google"/>
+                            <social-icon provider="tick"/>
                         </template>  
                         <template #details>
-                          <span v-for="p in membership.verification.profileTypes"  v-bind:key="p" >
-                            <social-icon v-if="p!='google'"
-                              :provider="p" />
+                          <span v-for="p in matchedProfiles"  v-bind:key="p.provider" >
+                            <social-icon v-if="p.linked"
+                                :provider="p.provider" />
+                            <social-icon v-else variant="grey" 
+                                :href="`/linq/app/v1/connect/${p.provider}?_${nounce}`" 
+                                :provider="p.provider" />
                           </span>  
                         </template>  
                   </social-tile>
@@ -62,7 +65,7 @@
                       Cancel
                     </b-button>
                     <b-button variant="evening" v-if="canApply"
-                      @click="join">
+                      @click="handleSubmit(join)">
                       Apply
                     </b-button> 
                     <b-button variant="greyer" v-if="canViewMembers"
@@ -101,8 +104,7 @@ export default {
   mounted : function () {
   },
   created (){
-    this.loadMeta();
-    this.loadVerification();
+    this.load();
   },
   computed : {
     canViewMembers(){
@@ -114,8 +116,23 @@ export default {
     canApply(){
       return  (this.membership?.verification?.verificationId) &&  this.canJoin && this.meta.loggedIn;
     },
+    matchedProfiles(){
+      return this.membership.verification.profileTypes.map((p)=>{
+        return {
+          provider : p,
+          linked : (!!this.profiles.filter((s)=>{
+            return s.provider == p;
+          })[0]) || false
+        };
+      })
+    }
   },
   methods : {
+    async load(){
+      await this.loadMeta();
+      await this.loadVerification();
+      await this.loadProfiles();
+    },
     async join(){
       var resp = await this.$service.submit('/api/v1/verification/membership',{
           verificationId : this.$route.params.verificationId,

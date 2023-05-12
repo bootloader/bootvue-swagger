@@ -32,20 +32,21 @@ $color-instagram-b              : #285AEB;
 
 $popular-list:(
     red : #ff0000,
+    green : #2dce89,
+    blue: #153f9b,
+    black: #000000,
+    white : #FFF,
 
     danger : #f5365c,
-
-
     online : #4cd137,
     purple-dirty: #9f6bb4,
     purple-darkdirty:  #8648a1,
+
     greyish:  #f0f4f6,
     greyed : #dfdfdf,
     grey:  #8b8b8b,
     greyer:  #5a5a5a,
-    blue: #153f9b,
-    black: #000000,
-    white : #FFF,
+
     white-dirty : rgb(226, 226, 226),
     teal-100 : #d2f4ea,
     scheme :  var(--scheme-color),
