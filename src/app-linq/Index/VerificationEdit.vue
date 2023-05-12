@@ -23,11 +23,11 @@
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
                         <b-col cols="12">
-                            <base-input name="Title" v-model="verification.title" :disabled="isEditing"
+                            <base-input name="Title" v-model="membership.verification.title" :disabled="isEditing"
                               alternative question feedback  required rules="required|max:30" />
                         </b-col>  
                         <b-col cols="12">
-                            <base-text-area name="Note" v-model="verification.description" 
+                            <base-text-area name="Note" v-model="membership.verification.description" 
                               alternative question feedback  required  :rows="4" 
                                 :textLimit="300"  />
                         </b-col> 
@@ -86,36 +86,19 @@ import SocialBoxes from "./SocialBoxes.vue";
 export default {
   data() {
     return {
-      verification : {
-        "title": "",
-        "description": "",
-        "profileTypes": [
-          'google'
-        ],
-        "verificationId": null
+      membership : {
+        verification : {
+          "title": "",
+          "description": "",
+          "profileTypes": [
+            'google'
+          ],
+          "verificationId": null
+        },
       },
       profileTypes : {
         google : true, linkedin : false, outlook : false, whatsapp : false, twitter : false, mobile : false,facebook : false,
       },
-      domainProfile : {
-         userId : "-----------",
-         userName : "---- ----",
-         loggedIn : true,
-         intentVerification :null,
-         profile : {
-            name : "- -",
-            email :"-.-@-.-",
-            phone :"",
-            jobTitle : "",
-            picture :"",
-            provider :"----",
-            profileId :"------",
-            profileUUId :"----:----",
-            userId:"-------",
-            verified :false
-         }
-      },
-      profiles :[],
       memberships :[],
       date: new Date().getFullYear(),
     };
@@ -123,9 +106,9 @@ export default {
   mounted : function () {
   },
   created (){
-    this.loadDomainProfile();
+    this.loadMeta();
     if(this.isEditing){
-      this.loadMembership();
+      this.loadVerification();
     }
   },
   computed : {
@@ -134,12 +117,7 @@ export default {
     }
   },
   methods : {
-    async loadDomainProfile (){
-      var resp = await this.$service.get('/auth/meta',{
-      });
-      this.domainProfile = resp.results[0];
-    },
-    async loadMembership(){
+    async loadMembershipX(){
       var resp = await this.$service.get('/api/v1/verification/membership',{
         verificationId : this.$route.params.verificationId
       });
@@ -147,12 +125,11 @@ export default {
       this.verification.profileTypes.map((profileType)=>{
         this.profileTypes[profileType] = true;
       })
-
     },
     async saveVerification(){
-      this.verification.profileTypes = Object.keys(this.profileTypes).filter((profileType)=>this.profileTypes[profileType])
+      this.membership.verification.profileTypes = Object.keys(this.profileTypes).filter((profileType)=>this.profileTypes[profileType])
       var resp = await this.$service.post('/api/v1/verification',{
-        ... this.verification
+        ... this.membership.verification
       });
       this.$router.push("/")
     }
