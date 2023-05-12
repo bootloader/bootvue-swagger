@@ -25,7 +25,7 @@
                   <div class="section-divider"></div>
                   <base-text-area name="Cover Letter" v-model="membership.coverLetter"
                     placeholder="Give us more information about you" :readonly="!canApply"
-                              alternative question feedback  required  :rows="4" 
+                              alternative question feedback  required  :rows="4"  rules="required|max:300"
                               helpMessage="It will help admin consider your request"
                                 :textLimit="300"  />
               </div> 
