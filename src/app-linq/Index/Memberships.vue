@@ -22,8 +22,8 @@
                  :variant="table.filter.membershipType=='ACTIVE' ? 'evening' : 'outline-evening'">
                 Members
               </b-button>
-              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='NONE'"
-                :variant="table.filter.membershipType=='NONE' ? 'evening' : 'outline-evening'">
+              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='PENDING'"
+                :variant="table.filter.membershipType=='PENDING' ? 'evening' : 'outline-evening'">
                 Pending
               </b-button> 
               <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='REJECTED'"
