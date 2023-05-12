@@ -17,10 +17,10 @@
           },
           canCancel(){
             return  (this.membership?.verification?.verificationId && this.meta.loggedIn) 
-                &&  ['PENDING','NONE'].indexOf(this.membership?.membershipType) > -1
+                && ['NONE'].indexOf(this.membership?.membershipType) > -1
           },
           canLeave(){
-            return  (this.membership?.verification?.verificationId && this.meta.loggedIn) 
+            return (this.membership?.verification?.verificationId && this.meta.loggedIn) 
                 &&  ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership?.membershipType) > -1
           },
           profiles(){

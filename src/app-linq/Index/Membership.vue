@@ -23,8 +23,7 @@
               </div>  
               <div class="section-wrapper">
                   <div class="section-divider">Profiles Shared</div>
-                  <SocialBoxes v-if="membership.profiles && membership.profiles.length>0" 
-                      :items="membership.profiles" class="py-2 text-center" />
+                  <social-tile-container :items="sharedProfiles"/> 
               </div>  
               <div class="section-wrapper">
                   <div class="section-divider"></div>
@@ -59,7 +58,6 @@
     </div>
 </template>
 <script>
-import SocialBoxes from "./SocialBoxes.vue";
 export default {
   data() {
     return {
@@ -90,6 +88,15 @@ export default {
     },
     sharelink(){
       return  `${document.location.origin}/linq/pub/v/${this.$route.params.verificationId}`;
+    },
+    sharedProfiles(){
+      return this.membership?.profiles?.map(function(p){
+        return {
+          provider : p.provider,
+          title : p.name,
+          subtitle : p.email ||  p.phone 
+        }
+      })
     }
   },
   methods : {
@@ -97,7 +104,6 @@ export default {
     },
   },
   components: {
-    SocialBoxes
   },
 };
 </script>

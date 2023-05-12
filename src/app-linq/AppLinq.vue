@@ -31,8 +31,9 @@
   Vue.component('BaseTextArea', () => import('@/@common/argon/components/Inputs/BaseTextArea.vue'));
   Vue.component('BaseCopy', () => import('@/@common/argon/components/BaseCopy.vue'));
 
-  Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
   Vue.component('SocialIcon', () => import('./components/SocialIcon.vue'));
+  Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
+  Vue.component('SocialTileContainer', () => import('./components/SocialTileContainer.vue'));
 
 
 
