@@ -37,8 +37,10 @@
                             <social-icon provider="google"/>
                         </template>  
                         <template #details>
-                            <social-icon v-for="p in membership.verification.profileTypes" 
-                              :provider="p" v-bind:key="p" />
+                          <span v-for="p in membership.verification.profileTypes"  v-bind:key="p" >
+                            <social-icon v-if="p!='google'"
+                              :provider="p" />
+                          </span>  
                         </template>  
                   </social-tile>
               </div>  
