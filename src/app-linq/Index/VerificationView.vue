@@ -24,8 +24,9 @@
               <div class="section-wrapper" v-if="meta.loggedIn">
                   <div class="section-divider"></div>
                   <base-text-area name="Cover Letter" v-model="membership.coverLetter"
-                    placeholder="Give us more information about you" 
+                    placeholder="Give us more information about you" :readonly="!canApply"
                               alternative question feedback  required  :rows="4" 
+                              helpMessage="It will help admin consider your request"
                                 :textLimit="300"  />
               </div> 
               <div class="section-wrapper" v-if="meta.loggedIn">
@@ -52,11 +53,11 @@
                      :href="`/linq/app/v/${$route.params.verificationId}`">
                       Join
                     </b-button> 
-                    <b-button variant="outline-evening" v-if="canJoin && meta.loggedIn"
+                    <b-button variant="outline-evening" v-if="canApply"
                       @click="join(true)">
                       Cancel
                     </b-button>
-                    <b-button variant="evening" v-if="canJoin && meta.loggedIn"
+                    <b-button variant="evening" v-if="canApply"
                       @click="join()">
                       Apply
                     </b-button> 
@@ -111,6 +112,9 @@ export default {
     },
     meta(){
       return this.$store.getters.StateRest?.AuthMeta || {};
+    },
+    canApply(){
+      return  (this.membership?.verification?.verificationId) &&  this.canJoin && this.meta.loggedIn;
     }
   },
   methods : {
