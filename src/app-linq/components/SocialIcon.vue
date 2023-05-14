@@ -1,7 +1,7 @@
 <template>
   <span class="social-btn" @click="onClick">
       <component :is="tag" :href="href"
-          class="social-btn-box" :class="[ provider ,`bg-${myVariant}:before`]">
+          class="social-btn-box" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>
       </component>
   </span>
@@ -32,6 +32,7 @@ export default {
     }, icon : {
     },path : {
     },
+    size : { default : 'md'},
     c : {
       type: Object,
       default(){
@@ -128,5 +129,13 @@ export default {
   font-size: 38px;
   vertical-align: middle;
 }
-
+.social-btn-box.size-sm {
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    margin: 3px 3px;
+    .social-btn-icon {
+      font-size: 20px;
+    }
+}
 </style>

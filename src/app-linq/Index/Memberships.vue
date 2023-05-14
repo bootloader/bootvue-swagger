@@ -50,11 +50,15 @@
                           @click="modify(row.item.membershipId,'REJECTED')">
                             Reject
                         </b-button>
-                         <b-button v-if="row.item.approved" size="sm" variant="evening"
+                         <b-button v-if="row.item.approved" size="sm" variant="outline-danger"
                           @click="modify(row.item.membershipId,'NONE')">
                             Remove
                         </b-button>  
                     </template>
+                     <template #cell(profiles)="row">
+                         <social-icon v-for="p in row.item.profiles" v-bind:key="p.id" size="sm" v-tooltip="`${p.email || p.phone}`"
+                                :provider="p.provider" >[*]</social-icon>
+                     </template> 
                     </b-table>
                 <b-overlay :show="table.isBusy" no-wrap opacity="0.5"></b-overlay>
               </div> 
@@ -64,6 +68,7 @@
     </div>
 </template>
 <script>
+import SocialIcon from '../components/SocialIcon.vue';
 import SocialBoxes from "./SocialBoxes.vue";
 export default {
   data() {
@@ -71,7 +76,8 @@ export default {
       table : {
         fields: [
           { key : "user.name", label : "Member"},
-          { key : "user.email", label : "Email"},
+          //{ key : "user.email", label : "Email"},
+          { key : "profiles", label : "Profiles"},
           { key : "actions", label : ""},
         ],
         items: [],
@@ -199,7 +205,8 @@ export default {
     }
   },
   components: {
-    SocialBoxes
+    SocialBoxes,
+    SocialIcon
   },
 };
 </script>
