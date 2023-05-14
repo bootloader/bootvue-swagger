@@ -14,10 +14,9 @@
          <validation-observer v-slot="{}" ref="formValidator">
               <div class="section-wrapper styler-height-fix">
                     <div class="section-divider">Details</div>
-                    <div class="mb-1">&nbsp;</div>
                     <b-row>
                         <b-col cols="12" class="text-center">
-                           {{membership.verification.description}}
+                           <div class="verificationer-details">{{membership.verification.description}}</div> 
                         </b-col> 
                     </b-row>  
               </div>  

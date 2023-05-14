@@ -35,6 +35,11 @@
             <VerificationBoxes :items="memberships" class="py-3 text-center">
             </VerificationBoxes>
         </div>  
+        <div class="section-wrapper" v-if="interested.length>0">
+            <div class="section-divider">Suggestions</div>
+            <social-tile-container :items="interested">
+            </social-tile-container>
+        </div> 
         <div class="section-wrapper">
             <div class="section-divider">Profile/Settings</div>
             <div class="social-tile-container">
@@ -68,6 +73,7 @@ const defaultCompanyLogo = __webpack_public_path__ + '/_common/static/person-pro
 import ProfileNoDomain from './ProfileNoDomain.vue';
 import SocialIcon from '../components/SocialIcon.vue';
 import VerificationBoxes from './VerificationBoxes.vue';
+import SocialTileContainer from '../components/SocialTileContainer.vue';
 
 export default {
   data() {
@@ -75,6 +81,7 @@ export default {
       defaultCompanyLogo : defaultCompanyLogo,
       memberships :[],
       date: new Date().getFullYear(),
+      interested : []
     };
   },
   mounted : function () {
@@ -95,9 +102,25 @@ export default {
   },
   methods : {
     async load(){
-      this.loadMeta();
+      this.loadMetaAndRecent();
       this.loadProfiles();
       this.loadMemberships();
+    },
+    async loadMetaAndRecent(){
+        await this.loadMeta();
+        if(this.meta.intentVerification){
+            var resp = await this.$service.get('/pub/v1/verification',{
+              verificationId : this.meta.intentVerification,
+            });
+            this.interested = this.interested.concat(resp.results.map(function(v){
+              return {
+                title : v.title,
+                subtitle : "Click to complete your application ",
+                provider : 'certificate',
+                path : "/app/v/"+v.verificationId,
+              }
+            }));
+        }
     },
     async loadMemberships(){
       var resp = await this.$service.get('/api/v1/user/membership',{
@@ -123,7 +146,8 @@ export default {
     Navbar,SocialBoxes,
     FooterComponent,
     ProfileNoDomain,
-    SocialIcon,VerificationBoxes
+    SocialIcon,VerificationBoxes,
+    SocialTileContainer
   },
 };
 </script>

@@ -2,14 +2,15 @@
     <div class="social-tile-container">
         <social-tile class="w-full lg:w-4/12"
           v-for="(c,index) in items" v-bind:key="c.id+'_'+ index"
-          :title="c.title"  :subtitle="c.subtitle" :provider="c.provider"> 
+          :title="c.title"  :subtitle="c.subtitle" :provider="c.provider || provider" :path="c.path"> 
         </social-tile>
     </div>
 </template>
 <script>
 export default {
   props : {
-    items : {}
+    items : {},
+    provider : {}
   },
   data() {
     return {
