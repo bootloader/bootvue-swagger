@@ -4,6 +4,8 @@
           class="social-btn-box" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>
       </component>
+      <i v-if="addsign" class="social-btn-status fa fa-plus bg-grey text-white"></i>
+      <i v-if="ticksign" class="social-btn-status fa fa-check bg-green text-white"></i>
   </span>
 </template>
 <script>
@@ -21,6 +23,7 @@ const DEFAULT_PROVIDERS = {
   mobile : { icon : "fas fa-phone-square", variant : 'mobile'},
   phone : { icon : "fas fa-phone-square", variant : 'mobile'},
   tick : { icon : "fas fa-check", variant : 'green'},
+  cross : { icon : "fas fa-times", variant : 'danger'},
 }
 
 export default {
@@ -31,6 +34,14 @@ export default {
     }, variant : {
     }, icon : {
     },path : {
+    },
+    addsign : {
+      type : Boolean,
+      default : false
+    },
+    ticksign : {
+      type : Boolean,
+      default : false
     },
     size : { default : 'md'},
     c : {
@@ -70,7 +81,12 @@ export default {
 </script>
 <style lang="scss">
 .social-btn  {
-  cursor: pointer;
+  cursor : pointer;
+  position: relative;
+  display: inline-block;
+}
+.social-btn .social-btn-box {
+    position: relative;
 }
 .social-btn .social-btn-box,
 .social-btn .social-btn-box:before,
@@ -137,5 +153,16 @@ export default {
     .social-btn-icon {
       font-size: 20px;
     }
+}
+
+.social-btn .social-btn-status {
+    font-size: 0.8rem;
+    background-color: #616161;
+    border-radius: 50%;
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+    padding: 2px;
+    color: #fff;
 }
 </style>

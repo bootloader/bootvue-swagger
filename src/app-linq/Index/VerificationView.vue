@@ -34,18 +34,20 @@
                               title="Profiles Required"
                               subtitle="" >
                         <template #thumb>
-                            <social-icon provider="tick"/>
+                            <social-icon :provider="isMatchedProfiles ? 'tick' : 'cross'"
+                            :variant="isMatchedProfiles ? 'tick' : 'grey'"/>
                         </template>  
                         <template #details>
                           <span v-for="p in matchedProfiles"  v-bind:key="p.provider" >
-                            <social-icon v-if="p.linked"
+                            <social-icon v-if="p.linked" ticksign :title="`${p.provider} is already linked`"
                                 :provider="p.provider" />
-                            <social-icon v-else variant="grey" 
+                            <social-icon v-else variant="grey" addsign :title="`Add ${p.provider}`"
                                 :href="`/linq/app/v1/connect/${p.provider}?_${nounce}&verificationId=${verificationId}`" 
                                 :provider="p.provider" />
                           </span>  
                         </template>  
                   </social-tile>
+                  <div class="section-divider-footer text-red text-center" v-if="!isMatchedProfiles">Link missing profiles</div>
               </div>  
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
@@ -63,7 +65,7 @@
                       @click="cancelMembership">
                       Cancel
                     </b-button>
-                    <b-button variant="evening" v-if="canApply"
+                    <b-button variant="evening" v-if="canApply" :disabled="!canApplyValid"
                       @click="handleSubmit(join)">
                       Apply
                     </b-button> 
@@ -123,8 +125,18 @@ export default {
             return s.provider == p;
           })[0]) || false
         };
+      }).sort(function(a,b){
+        return b.linked - a.linked;
       })
-    }
+    },
+    isMatchedProfiles(){
+      return !this.matchedProfiles.filter(function(a){
+        return a.linked;
+      })[0];
+    },
+    canApplyValid(){
+      return  this.canApply && this.isMatchedProfiles;
+    },
   },
   methods : {
     async load(){
