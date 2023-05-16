@@ -74,8 +74,12 @@ import ProfileNoDomain from './ProfileNoDomain.vue';
 import SocialIcon from '../components/SocialIcon.vue';
 import VerificationBoxes from './VerificationBoxes.vue';
 import SocialTileContainer from '../components/SocialTileContainer.vue';
+import mixin from '../mixin.js'
+
+console.log("mixin",mixin)
 
 export default {
+  mixins : [mixin],
   data() {
     return {
       defaultCompanyLogo : defaultCompanyLogo,

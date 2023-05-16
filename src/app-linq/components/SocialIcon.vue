@@ -24,6 +24,14 @@ const DEFAULT_PROVIDERS = {
   phone : { icon : "fas fa-phone-square", variant : 'mobile'},
   tick : { icon : "fas fa-check", variant : 'green'},
   cross : { icon : "fas fa-times", variant : 'danger'},
+  'user-OWNER' : { icon : "fas fa-crown", variant : 'evening'},
+  'user-ADMIN' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-MODERATOR' : { icon : "fas fa-user-nurse", variant : 'evening'},
+  'user-MEMBER' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-PENDING' : { icon : "far fa-user", variant : 'evening'},
+  'user-NONE' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-REJECTED' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-BLOCKED' : { icon : "fas fa-user-graduate", variant : 'evening'},
 }
 
 export default {

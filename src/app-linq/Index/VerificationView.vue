@@ -83,7 +83,10 @@
 <script>
 import BaseTextArea from '../../@common/argon/components/Inputs/BaseTextArea.vue';
 import SocialBoxes from "./SocialBoxes.vue";
+import mixin from '../mixin.js'
+
 export default {
+  mixins : [mixin],
   data() {
     return {
       profileTypes : {

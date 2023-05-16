@@ -57,7 +57,9 @@
     </div>
 </template>
 <script>
+import mixin from '../mixin.js'
 export default {
+  mixins : [mixin],
   data() {
     return {
       membership : {

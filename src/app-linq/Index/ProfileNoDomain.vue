@@ -34,8 +34,10 @@
 import socialBgBottomRight from "@/assets/vendor/notus/img/social-bg-bottom-right.png";
 import socialBgBottom from "@/assets/vendor/notus/img/social-bg-bottom.png";
 import FooterSmall from "./FooterSmall.vue";
+import mixin from '../mixin.js'
 
 export default {
+  mixins : [mixin],
   components: {
     FooterSmall,
   },

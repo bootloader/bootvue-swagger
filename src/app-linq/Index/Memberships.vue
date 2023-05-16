@@ -56,8 +56,10 @@
                         </b-button>  
                     </template>
                      <template #cell(profiles)="row">
+                        <social-icon size="sm" v-tooltip="row.item.membershipType"
+                                :provider="`user-${row.item.membershipType}`" ></social-icon>
                          <social-icon v-for="p in row.item.profiles" v-bind:key="p.id" size="sm" v-tooltip="`${p.email || p.phone}`"
-                                :provider="p.provider" >[*]</social-icon>
+                                :provider="p.provider" ></social-icon>
                      </template> 
                     </b-table>
                 <b-overlay :show="table.isBusy" no-wrap opacity="0.5"></b-overlay>
@@ -68,9 +70,11 @@
     </div>
 </template>
 <script>
-import SocialIcon from '../components/SocialIcon.vue';
 import SocialBoxes from "./SocialBoxes.vue";
+import mixin from '../mixin.js'
+
 export default {
+  mixins : [mixin],
   data() {
     return {
       table : {
@@ -205,8 +209,7 @@ export default {
     }
   },
   components: {
-    SocialBoxes,
-    SocialIcon
+    SocialBoxes
   },
 };
 </script>

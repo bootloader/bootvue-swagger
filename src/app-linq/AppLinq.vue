@@ -15,9 +15,6 @@
   import ReadMore from 'vue-read-more';
   import { ValidationProvider,ValidationObserver } from 'vee-validate';
 
-  import mixin from './mixin.js'
-  mixin.init();
-
   import VueClipboard from 'vue-clipboard2';
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
@@ -34,6 +31,7 @@
   Vue.component('SocialIcon', () => import('./components/SocialIcon.vue'));
   Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
   Vue.component('SocialTileContainer', () => import('./components/SocialTileContainer.vue'));
+  Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
 
 
 
@@ -49,7 +47,18 @@
   });
   console.log("Page App is loaded")
   export default {
-    components : { Index }
+    components : { Index },
+    mounted : function (argument) {
+        let recaptchaScript = document.createElement('script')
+        recaptchaScript.setAttribute('src', 'https://kit.fontawesome.com/9cd48bc910.js')
+        document.head.appendChild(recaptchaScript);
+
+      // recaptchaScript = document.createElement('link')
+      // recaptchaScript.setAttribute('rel', 'stylesheet')
+      // recaptchaScript.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css')
+      // document.head.appendChild(recaptchaScript);
+      
+    },
   }
 
 </script>

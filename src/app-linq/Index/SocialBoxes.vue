@@ -31,8 +31,10 @@
     </div>    
 </template>
 <script>
+import mixin from '../mixin.js'
 
 export default {
+  mixins : [mixin],
   components: {  },
     props : {
         items : {

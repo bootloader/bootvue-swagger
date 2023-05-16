@@ -79,11 +79,10 @@
     </div>
 </template>
 <script>
-import Navbar from "./ProfileNavbar.vue";
-import FooterComponent from "./Footer.vue";
-import SocialBoxes from "./SocialBoxes.vue";
+import mixin from '../mixin.js'
 
 export default {
+  mixins : [mixin],
   data() {
     return {
       membership : {
