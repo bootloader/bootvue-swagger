@@ -12,6 +12,9 @@
           meta(){
             return this.$store.getters.StateRest?.AuthMeta || { profile : {}};
           },
+          verificationId(){
+            return  (this.membership?.verification?.verificationId) ||  this.$route.params.verificationId;
+          },
           canJoin(){
             return ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership?.membershipType) < 0
           },

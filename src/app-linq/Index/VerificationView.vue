@@ -41,7 +41,7 @@
                             <social-icon v-if="p.linked"
                                 :provider="p.provider" />
                             <social-icon v-else variant="grey" 
-                                :href="`/linq/app/v1/connect/${p.provider}?_${nounce}`" 
+                                :href="`/linq/app/v1/connect/${p.provider}?_${nounce}&verificationId=${verificationId}`" 
                                 :provider="p.provider" />
                           </span>  
                         </template>  
