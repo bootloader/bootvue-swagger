@@ -35,7 +35,7 @@
                               subtitle="" >
                         <template #thumb>
                             <social-icon :provider="isMatchedProfiles ? 'tick' : 'cross'"
-                            :variant="isMatchedProfiles ? 'tick' : 'grey'"/>
+                            :variant="isMatchedProfiles ? 'green' : 'grey'"/>
                         </template>  
                         <template #details>
                           <span v-for="p in matchedProfiles"  v-bind:key="p.provider" >
@@ -131,7 +131,7 @@ export default {
     },
     isMatchedProfiles(){
       return !this.matchedProfiles.filter(function(a){
-        return a.linked;
+        return a.linked === false;
       })[0];
     },
     canApplyValid(){
