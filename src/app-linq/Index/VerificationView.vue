@@ -70,7 +70,7 @@
                       Apply
                     </b-button> 
                     <b-button variant="greyer" v-if="canViewMembers"
-                      :to="`/app/v/${$route.params.verificationId}/members`">
+                      :to="`/app/v/${$route.params.verificationId}/m/${membership.membershipId}/members`">
                       View Members
                     </b-button> 
                   </div>

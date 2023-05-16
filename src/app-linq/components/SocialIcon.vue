@@ -25,13 +25,13 @@ const DEFAULT_PROVIDERS = {
   tick : { icon : "fas fa-check", variant : 'green'},
   cross : { icon : "fas fa-times", variant : 'danger'},
   'user-OWNER' : { icon : "fas fa-crown", variant : 'evening'},
-  'user-ADMIN' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-ADMIN' : { icon : "fas fa-user-secret", variant : 'evening'},
   'user-MODERATOR' : { icon : "fas fa-user-nurse", variant : 'evening'},
   'user-MEMBER' : { icon : "fas fa-user-graduate", variant : 'evening'},
   'user-PENDING' : { icon : "far fa-user", variant : 'evening'},
-  'user-NONE' : { icon : "fas fa-user-graduate", variant : 'evening'},
-  'user-REJECTED' : { icon : "fas fa-user-graduate", variant : 'evening'},
-  'user-BLOCKED' : { icon : "fas fa-user-graduate", variant : 'evening'},
+  'user-NONE' : { icon : "far fa-user", variant : 'greyed'},
+  'user-REJECTED' : { icon : "fas fa-user-xmark", variant : 'evening'},
+  'user-BLOCKED' : { icon : "fas fa-user-slash", variant : 'evening'},
 }
 
 export default {
@@ -160,6 +160,15 @@ export default {
     margin: 3px 3px;
     .social-btn-icon {
       font-size: 20px;
+    }
+}
+.social-btn-box.size-xs {
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    margin: 0px 0px;
+    .social-btn-icon {
+      font-size: 15px;
     }
 }
 

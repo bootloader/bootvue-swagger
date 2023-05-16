@@ -39,9 +39,12 @@
                 <b-table ref="my-table" id="table-id" :items="table.items" 
                     :fields="table.fields" 
                      sticky-header responsive bordered no-border-collapse show-empty primary-key="id"
-                     stacked="sm"
-                >
+                     stacked="sm">
                     <template #cell(actions)="row">
+                        <b-button v-if="row.item.membershipType == 'MEMBER'" size="sm" variant="evening"
+                          @click="modify(row.item.membershipId,'ADMIN')">
+                            Make Admin
+                        </b-button>
                         <b-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="evening"
                           @click="modify(row.item.membershipId,'MEMBER')">
                             Approve
@@ -55,8 +58,13 @@
                             Remove
                         </b-button>  
                     </template>
+                     <template #cell(user_name)="row">
+                        <!-- <social-icon size="xs" v-tooltip="row.item.membershipType"
+                                :provider="`user-${row.item.membershipType}`" ></social-icon>  -->
+                            {{row.item.user.name}}
+                     </template>           
                      <template #cell(profiles)="row">
-                        <social-icon size="sm" v-tooltip="row.item.membershipType"
+                         <social-icon size="sm" v-tooltip="row.item.membershipType"
                                 :provider="`user-${row.item.membershipType}`" ></social-icon>
                          <social-icon v-for="p in row.item.profiles" v-bind:key="p.id" size="sm" v-tooltip="`${p.email || p.phone}`"
                                 :provider="p.provider" ></social-icon>
@@ -79,7 +87,7 @@ export default {
     return {
       table : {
         fields: [
-          { key : "user.name", label : "Member"},
+          { key : "user_name", label : "Member"},
           //{ key : "user.email", label : "Email"},
           { key : "profiles", label : "Profiles"},
           { key : "actions", label : ""},
@@ -192,7 +200,9 @@ export default {
       const newItems= await this.loadMemberships(this.table.currentPage++,this.table.perPage);
       /* Add new items to existing ones */
     
-      this.table.items = this.table.items.concat(newItems);
+      this.table.items = this.table.items.concat(newItems.filter((m)=>{
+        return m.user && m.verification;
+      }));
       console.log("ITEMS",this.table.items.length,"ADDED:",newItems.length);
 
       /* Disable busy state */
