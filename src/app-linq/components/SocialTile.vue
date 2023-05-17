@@ -2,7 +2,7 @@
   <div class="social-tile pointer" @click="onClick" >
     <span class="social-tile-inner">
       <slot name="thumb">
-            <social-icon  :provider="provider" :variant="variant"></social-icon>
+            <social-icon  :provider="provider" :variant="variant" :status="status"></social-icon>
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
@@ -16,7 +16,8 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {},provider : {}, path : {}, variant : {}
+    title : {}, subtitle : {},provider : {}, path : {}, variant : {}, 
+    status : { }
   },
   data() {
     return {
@@ -63,6 +64,12 @@ export default {
       margin: 5px 5px 5px 0px;
       .social-tile-inner-desc-title {
         font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        height: 25px;
+        white-space: nowrap;
+        font-size: .9rem;
       }
       .social-tile-inner-desc-subtitle {
         font-size: .8rem;

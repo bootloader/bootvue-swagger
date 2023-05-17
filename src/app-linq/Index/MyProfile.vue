@@ -135,6 +135,7 @@ export default {
           subtitle : membership.membershipType,
           provider : 'certificate',
           path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
+          status : 'user-' + membership.membershipType,
         }
       });
     },

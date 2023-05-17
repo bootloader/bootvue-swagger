@@ -6,6 +6,7 @@
       </component>
       <i v-if="addsign" class="social-btn-status fa fa-plus bg-grey text-white"></i>
       <i v-if="ticksign" class="social-btn-status fa fa-check bg-green text-white"></i>
+      <i v-if="status" class="social-btn-status text-white" :class="[ myStatusIcon, `bg-${myStatusVariant}`]"></i>
   </span>
 </template>
 <script>
@@ -51,6 +52,8 @@ export default {
       type : Boolean,
       default : false
     },
+    status : {
+    },
     size : { default : 'md'},
     c : {
       type: Object,
@@ -70,6 +73,12 @@ export default {
     },
     myIcon(){
       return this.icon || DEFAULT_PROVIDERS[this.provider]?.icon || this.provider  || ("fab fa-" + this.provider);
+    },
+    myStatusIcon(){
+      return  DEFAULT_PROVIDERS[this.status]?.icon || this.status  || ("fab fa-" + this.status);
+    },
+    myStatusVariant(){
+      return DEFAULT_PROVIDERS[this.status]?.variant || this.status  || "evening"
     },
     tag(){
       return this.href ? 'a' : 'span'
@@ -171,15 +180,14 @@ export default {
       font-size: 15px;
     }
 }
-
 .social-btn .social-btn-status {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     background-color: #616161;
     border-radius: 50%;
     position: absolute;
     right: 4%;
     bottom: 4%;
-    padding: 2px;
+    padding: 3px;
     color: #fff;
 }
 </style>
