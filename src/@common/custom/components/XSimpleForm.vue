@@ -59,6 +59,7 @@
                 </base-text-area>
 
                 <base-input v-else  class="mb-0" :size="size"
+                    :name="input.meta.keyName"
                     :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
                     v-model="input.config.value" 
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"

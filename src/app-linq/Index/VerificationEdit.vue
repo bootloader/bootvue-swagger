@@ -22,14 +22,30 @@
                     <div class="section-divider">Details</div>
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
-                        <b-col cols="12">
+                        <b-col cols="11">
                             <base-input name="Title" v-model="membership.verification.title" :disabled="isEditing"
                               alternative question feedback  required rules="required|max:30" />
-                        </b-col>  
+                        </b-col>
+
                         <b-col cols="12">
                             <base-text-area name="Note" v-model="membership.verification.description" 
                               alternative question feedback  required  :rows="4" 
                                 :textLimit="300"  />
+                        </b-col> 
+                        <b-col cols="12" v-for="field in form_ques" v-bind:key="'form_'+field.key">
+                            <base-input :name="field.keyName" v-model="field.title"
+                              alternative question feedback required rules="required|max:30" >
+                              <template #actions>
+                                  <b-button variant="outline-red" class="fa fa-trash" 
+                                  v-tooltip="'Delete Question'" @click="removeQues(field.key)"
+                                  ></b-button>
+                              </template>  
+                              </base-input>
+                        </b-col> 
+                        <b-col cols="12" class="text-center">
+                            <b-button variant="outline-greyer" size="sm" @click="addQues">
+                               <i class="fa fa-plus"/>  Add Question
+                            </b-button> 
                         </b-col> 
                     </b-row>  
               </div>  
@@ -81,6 +97,16 @@
 <script>
 import mixin from '../mixin.js'
 
+  function create_UUID(){
+      var dt = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (dt + Math.random()*16)%16 | 0;
+          dt = Math.floor(dt/16);
+          return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+      });
+      return uuid;
+  }
+
 export default {
   mixins : [mixin],
   data() {
@@ -92,7 +118,10 @@ export default {
           "profileTypes": [
             'google'
           ],
-          "verificationId": null
+          "verificationId": null,
+          form : {
+              "ques" : []
+          }
         },
       },
       profileTypes : {
@@ -113,6 +142,9 @@ export default {
   computed : {
     isEditing(){
       return !!this.$route.params.verificationId;
+    },
+    form_ques(){
+      return this.membership?.verification?.form?.ques || [];
     }
   },
   methods : {
@@ -130,7 +162,25 @@ export default {
       var resp = await this.$service.post('/api/v1/verification',{
         ... this.membership.verification
       });
-      this.$router.push("/")
+      this.$router.push("/pub/v/"+resp.results[0].verificationId)
+    },
+    addQues(){
+      let form_ques = this.form_ques;
+      let qindex = form_ques.length+1;
+      form_ques.push({
+        title : '',
+        keyName : `Question ${qindex}`,
+        key : `ques_${Date.now()}_${create_UUID()}`
+      });
+      this.membership.verification.form.ques = form_ques;
+    },
+    removeQues(key){
+      this.membership.verification.form.ques = this.membership.verification.form.ques.filter((ques)=>{
+        return ques.key != key;
+      }).map(function(ques,index){
+        ques.keyName =  `Question ${index+1}`;
+        return ques;
+      });
     }
   },
   components: {

@@ -57,3 +57,29 @@
     border-radius: 18px;
     padding: 13px;
   }
+
+  .x-form .x-form-group {
+    background-color: #81818100;
+    display: block;
+    padding: 8px;
+    outline: 1px solid #00000000;
+    border-radius: 2px;
+
+    .basic-component:read-only {
+        .form-control-label {
+            margin-bottom: 0px;
+            padding: 0px;
+        }
+        .input-bottom {
+            display: none;
+        }
+        input.form-control:read-only {
+            border-radius : 0px;
+            border: 0px solid #000;
+            background-color: #81818100;
+            padding: 0px;
+            margin: 0px;
+        }
+    }
+
+}

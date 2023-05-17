@@ -11,6 +11,12 @@
       verificationId(){
         return  (this.membership?.verification?.verificationId) ||  this.$route.params.verificationId;
       },
+      verificationSharelink(){
+        return  `${document.location.origin}/linq/pub/v/${this.$route.params.verificationId}`;
+      },
+      isOwner(){
+        return ['OWNER'].indexOf(this.membership?.membershipType) >= 0;
+      },
       canJoin(){
         return ['OWNER','ADMIN','MODERATOR','MEMBER','PENDING'].indexOf(this.membership?.membershipType) < 0
       },
@@ -25,6 +31,9 @@
       profiles(){
         return this.$store.getters.StateApi.V1Profiles || [];
       },
+      form_ques(){
+        return this.membership?.verification?.form?.ques || [];
+      }
     },
     methods : {
       async loadMeta (refresh){
@@ -37,12 +46,18 @@
           membershipId : this.$route.params.membershipId
         });
         this.membership = resp.results[0];
+        this.membership.form =  {
+          ...this.membership.form
+        }
       },
       async loadVerification(){
         var resp = await this.$service.get('/pub/v1/verification',{
           verificationId : this.$route.params.verificationId,
         });
-        this.membership = resp.meta || {};
+        this.membership = resp.meta || { form : {}};
+        this.membership.form =  {
+          ...this.membership.form
+        }
         this.membership.verification = resp.results[0];
         this.membership.verification.profileTypes.map((profileType)=>{
           this.profileTypes[profileType] = true;

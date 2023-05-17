@@ -25,11 +25,12 @@
 <script>
     import XSimpleForm from './XSimpleForm.vue';
     import JsonXPath from '@/@common/utils/JsonXPath'
+    import MySource from './MySource.vue';
 
     export default {
         name: "my-modal-form",
         components: {
-            XSimpleForm
+            XSimpleForm,MySource
         },
         props: {
             configs: {
@@ -81,7 +82,7 @@
                     let key = meta.ukey || meta.key;
                     this.model[key] = config.value;
                 }
-                console.log("this.model",this.model)
+                //console.log("this.model",this.model)
                 this.model.__ob__.dep.notify()
                 this.$emit('change',this.model);
                 this.$emit('input',this.model);

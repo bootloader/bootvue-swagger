@@ -11,7 +11,7 @@
           </div>  
         </div> 
 
-         <validation-observer v-slot="{}" ref="formValidator">
+         <validation-observer v-slot="{}" ref="formValidator" v-if="isReady">
               <div class="section-wrapper styler-height-fix">
                     <div class="section-divider">Details</div>
                     <b-row>
@@ -26,7 +26,7 @@
               </div>  
               <div class="section-wrapper">
                   <div class="section-divider"></div>
-                   <base-input label="Share Link" copy readonly v-model="sharelink" size="sm"
+                   <base-input label="Share Link" copy readonly v-model="verificationSharelink"
                         variant="outline-evening"
                         prelabel alternative required rules="required|max:90" />
               </div> 
@@ -81,14 +81,14 @@ export default {
     this.loadMembership();
   },
   computed : {
+    isReady(){
+      return this.meta && this.membership?.membershipId;
+    },
     canViewMembers(){
       return ['OWNER','ADMIN','MODERATOR'].indexOf(this.membership.membershipType) > -1
     },
     canEdit(){
       return ['OWNER'].indexOf(this.membership.membershipType) > -1
-    },
-    sharelink(){
-      return  `${document.location.origin}/linq/pub/v/${this.$route.params.verificationId}`;
     },
     sharedProfiles(){
       return this.membership?.profiles?.map(function(p){

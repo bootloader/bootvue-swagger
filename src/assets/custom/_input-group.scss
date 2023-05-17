@@ -407,6 +407,15 @@
           margin-left: 4px;
         }
 
+        .input-group-append-copy {
+          display: block;
+          position: absolute;
+          top: 0em;
+          right: 0em;
+          margin-top: 4px;
+          margin-left: 4px;
+        }
+        
         .invalid-feedback {
           z-index: 5;
           display: block;

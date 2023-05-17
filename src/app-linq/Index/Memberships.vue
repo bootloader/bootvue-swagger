@@ -14,22 +14,17 @@
         <div class="py-5 text-center">
           <div class="flex flex-wrap justify-center">
             <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-              <b-button variant="outline-evening" size="sm" v-if="membership.membershipId"
+              <b-button variant="outline-evening" size="sm" v-if="membership.membershipId" class="mb-2"
                 :to="`/app/v/${$route.params.verificationId}/m/${membership.membershipId}`">
                 Back
               </b-button> 
-              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='ACTIVE'"
-                 :variant="table.filter.membershipType=='ACTIVE' ? 'evening' : 'outline-evening'">
-                Members
-              </b-button>
-              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='PENDING'"
-                :variant="table.filter.membershipType=='PENDING' ? 'evening' : 'outline-evening'">
-                Pending
-              </b-button> 
-              <b-button v-if="canViewMembers" size="sm" @click="table.filter.membershipType='REJECTED'"
-                :variant="table.filter.membershipType=='REJECTED' ? 'evening' : 'outline-evening'">
-                Rejected
-              </b-button> 
+              <span class="membership_filter mb-0">
+                <button-radio-group size="sm"  :options="['ACTIVE','PENDING','REJECTED']" 
+                  buttonVariant="outline-evening"
+                  v-model="table.filter.membershipType"
+                  :value="table.filter.membershipType"
+                />
+              </span>  
             </div>
           </div>  
         </div>
@@ -56,7 +51,12 @@
                          <b-button v-if="row.item.approved" size="sm" variant="outline-danger"
                           @click="modify(row.item.membershipId,'NONE')">
                             Remove
-                        </b-button>  
+                        </b-button> 
+                        <b-button size="sm" variant="outline-info"
+                          @click="row.toggleDetails">
+                            View
+                        </b-button> 
+                        
                     </template>
                      <template #cell(user_name)="row">
                         <!-- <social-icon size="xs" v-tooltip="row.item.membershipType"
@@ -69,17 +69,43 @@
                          <social-icon v-for="p in row.item.profiles" v-bind:key="p.id" size="sm" v-tooltip="`${p.email || p.phone}`"
                                 :provider="p.provider" ></social-icon>
                      </template> 
+                      <template #row-details="row">
+                          <b-card class="bg-greyish" no-body>
+                            <b-card-body class="px-2 py-3">
+                              <b-row class="mb-1" no-gutters>
+                                <b-col sm="2" class="text-sm-right"><b>Name:</b></b-col>
+                                <b-col>{{ row.item.user.name }}</b-col>
+                                <b-col sm="2" class="text-sm-right"><b>Email</b></b-col>
+                                <b-col>{{ row.item.user.email }}</b-col>
+                                <b-col sm="2" class="text-sm-right"><b>Mobile</b></b-col>
+                                <b-col>{{ row.item.user.phone }}</b-col>
+                              </b-row>
+                            </b-card-body>
+                            <b-card-body class="p-0"
+                                    v-if=" row.item.form && row.item.verification.form 
+                                    && row.item.verification.form.ques 
+                                    && row.item.verification.form.ques.length">
+                                <my-model-form size="sm" class="mt-0 d-block" readonly
+                                  :configs="row.item.verification.form.ques"
+                                  :model="row.item.form">
+                                </my-model-form> 
+                            </b-card-body>
+                          </b-card>
+                          
+                      </template>
                     </b-table>
-                <b-overlay :show="table.isBusy" no-wrap opacity="0.5"></b-overlay>
+                <b-overlay :show="table.isBusy" no-wrap opacity="0.5" variant="transparent"></b-overlay>
               </div> 
           </div>  
-
 
     </div>
 </template>
 <script>
 import SocialBoxes from "./SocialBoxes.vue";
 import mixin from '../mixin.js'
+import MyModelForm from '@/@common/custom/components/MyModelForm.vue';
+import ButtonRadioGroup from '@/@common/argon/components/ButtonRadioGroup.vue';
+
 
 export default {
   mixins : [mixin],
@@ -90,7 +116,7 @@ export default {
           { key : "user_name", label : "Member"},
           //{ key : "user.email", label : "Email"},
           { key : "profiles", label : "Profiles"},
-          { key : "actions", label : ""},
+          { key : "actions", label : ""}
         ],
         items: [],
         currentPage: 0,
@@ -203,8 +229,6 @@ export default {
       this.table.items = this.table.items.concat(newItems.filter((m)=>{
         return m.user && m.verification;
       }));
-      console.log("ITEMS",this.table.items.length,"ADDED:",newItems.length);
-
       /* Disable busy state */
       this.table.isBusy = false;
     },
@@ -219,7 +243,8 @@ export default {
     }
   },
   components: {
-    SocialBoxes
+    SocialBoxes,MyModelForm,
+    ButtonRadioGroup
   },
 };
 </script>
@@ -243,5 +268,11 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
+}
+
+.membership_filter {
+  .basic-component.btn-group-toggle .form-group  {
+      margin-bottom: 0px ;
+  }
 }
 </style>
