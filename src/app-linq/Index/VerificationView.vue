@@ -79,18 +79,18 @@
                      :href="`/linq/app/v/${$route.params.verificationId}`">
                       Join
                     </b-button> 
-                   <b-button variant="outline-danger" v-if="canLeave"
+                   <my-button variant="outline-danger" v-if="canLeave"
                       @click="cancelMembership">
                       Leave
-                    </b-button>
-                    <b-button variant="outline-evening" v-if="canCancel"
+                    </my-button>
+                    <my-button variant="outline-evening" v-if="canCancel"
                       @click="cancelMembership">
                       Cancel
-                    </b-button>
-                    <b-button variant="evening" v-if="canApply" :disabled="!canApplyValid"
+                    </my-button>
+                    <my-button variant="evening" v-if="canApply" :disabled="!canApplyValid"
                       @click="handleSubmit(join)">
                       Apply
-                    </b-button> 
+                    </my-button> 
                     <b-button variant="outline-evening" v-if="canEdit"
                      :to="`/app/v/${$route.params.verificationId}/edit`">
                       Edit

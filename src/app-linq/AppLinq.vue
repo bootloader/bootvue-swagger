@@ -32,7 +32,7 @@
   Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
   Vue.component('SocialTileContainer', () => import('./components/SocialTileContainer.vue'));
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
-
+  Vue.component('MyButton', () => import('@/@common/custom/components/MyButton.vue'));
 
 
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';

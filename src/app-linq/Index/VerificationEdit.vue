@@ -84,9 +84,9 @@
                     <b-button variant="outline-greyer" to="/linq">
                       Cancel
                     </b-button> 
-                    <b-button variant="greyer" @click="handleSubmit(saveVerification)">
+                    <my-button variant="greyer" @click="handleSubmit(saveVerification)">
                       Save
-                    </b-button> 
+                    </my-button> 
                   </div>
                 </div>  
               </div>

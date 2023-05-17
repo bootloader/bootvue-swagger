@@ -1,7 +1,8 @@
   var mixin  = {
     data() {
       return {
-        nounce : Date.now()
+        nounce : Date.now(),
+        loaderCounter : 0
       };
     },
     computed: {

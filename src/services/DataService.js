@@ -14,7 +14,9 @@ import jskeeper from '@/services/jskeeper';
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
     let config = response.config;
+    console.log("response===",response.request.responseURL);
   	if(response.request.responseURL.endsWith("/auth/login")){
+      console.log("LOGIN REDIRECTION",response.request.responseURL);
   	  //https://app.mehery.com/admin/auth/login
       var nextURL = new URL(response.request.responseURL);
       nextURL.searchParams.append("referer",encodeURIComponent(window.location.href))

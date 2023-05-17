@@ -36,26 +36,26 @@
                      sticky-header responsive bordered no-border-collapse show-empty primary-key="id"
                      stacked="sm">
                     <template #cell(actions)="row">
-                        <b-button v-if="row.item.membershipType == 'MEMBER'" size="sm" variant="evening"
-                          @click="modify(row.item.membershipId,'ADMIN')">
-                            Make Admin
-                        </b-button>
-                        <b-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="evening"
-                          @click="modify(row.item.membershipId,'MEMBER')">
-                            Approve
-                        </b-button>
-                        <b-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="danger"
-                          @click="modify(row.item.membershipId,'REJECTED')">
-                            Reject
-                        </b-button>
-                         <b-button v-if="row.item.approved" size="sm" variant="outline-danger"
-                          @click="modify(row.item.membershipId,'NONE')">
-                            Remove
-                        </b-button> 
-                        <b-button size="sm" variant="outline-info"
+                       <my-button size="sm" variant="outline-info"
                           @click="row.toggleDetails">
                             View
-                        </b-button> 
+                        </my-button> 
+                        <my-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="evening"
+                          @click="modify(row.item.membershipId,'MEMBER')">
+                            Approve
+                        </my-button>
+                        <my-button v-if="row.item.membershipType == 'PENDING'" size="sm" variant="danger"
+                          @click="modify(row.item.membershipId,'REJECTED')">
+                            Reject
+                        </my-button>
+                         <my-button v-if="row.item.approved" size="sm" variant="outline-danger"
+                          @click="modify(row.item.membershipId,'NONE')">
+                            Remove
+                        </my-button> 
+                         <my-button v-if="row.item.membershipType == 'MEMBER'" size="sm" variant="evening"
+                          @click="modify(row.item.membershipId,'ADMIN')">
+                            Make Admin
+                        </my-button>
                         
                     </template>
                      <template #cell(user_name)="row">
