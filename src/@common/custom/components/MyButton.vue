@@ -11,7 +11,7 @@
         inheritAttrs: false,
         props : {
             spinner : {
-                default : "circle", //circle,cog,gear,refresh,spinner
+                default : "refresh", //circle,cog,gear,refresh,spinner
             },
             disabled : {
                 type : Boolean,
