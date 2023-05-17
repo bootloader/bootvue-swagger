@@ -32,10 +32,32 @@
         return this.$store.getters.StateApi.V1Profiles || [];
       },
       form_ques(){
-        return this.membership?.verification?.form?.ques || [];
+        return this.membership.verification.form.ques || [];
+      },
+      form_ques_count(){
+        return this.form_ques.length
       }
     },
     methods : {
+      setMembership(membership){
+        this.membership = membership || { form : {}};
+        this.membership.form =  {
+          ...this.membership.form
+        }
+      },
+      setVerification(verification){
+        this.membership.verification = verification  || { form : { ques : [] }};
+        this.membership.verification.form =  {
+          ques : [],
+          ...this.membership.verification.form,
+        }
+        console.log("setverification",this.membership.verification.form.ques);
+        if(this.profileTypes){
+          this.membership.verification.profileTypes.map((profileType)=>{
+            this.profileTypes[profileType] = true;
+          });
+        }
+      },
       async loadMeta (refresh){
         return await this.$service.getX('/auth/meta#0',{
         },{  refresh : true });
@@ -45,23 +67,15 @@
           verificationId : this.$route.params.verificationId,
           membershipId : this.$route.params.membershipId
         });
-        this.membership = resp.results[0];
-        this.membership.form =  {
-          ...this.membership.form
-        }
+        this.setMembership(resp.results[0]);
+        this.setVerification(this.membership.verification);
       },
       async loadVerification(){
         var resp = await this.$service.get('/pub/v1/verification',{
           verificationId : this.$route.params.verificationId,
         });
-        this.membership = resp.meta || { form : {}};
-        this.membership.form =  {
-          ...this.membership.form
-        }
-        this.membership.verification = resp.results[0];
-        this.membership.verification.profileTypes.map((profileType)=>{
-          this.profileTypes[profileType] = true;
-        })
+        this.setMembership(resp.meta)
+        this.setVerification(resp.results[0]);
       },
       async loadProfiles(){
         await this.$service.getX('/api/v1/profiles',{

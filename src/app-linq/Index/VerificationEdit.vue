@@ -44,7 +44,7 @@
                         </b-col> 
                         <b-col cols="12" class="text-center">
                             <b-button variant="outline-greyer" size="sm" @click="addQues">
-                               <i class="fa fa-plus"/>  Add Question
+                               <i class="fa fa-plus"/>  Add Question / {{form_ques_count}}
                             </b-button> 
                         </b-col> 
                     </b-row>  
@@ -120,7 +120,7 @@ export default {
           ],
           "verificationId": null,
           form : {
-              "ques" : []
+            ques : []
           }
         },
       },
@@ -148,21 +148,12 @@ export default {
     }
   },
   methods : {
-    async loadMembershipX(){
-      var resp = await this.$service.get('/api/v1/verification/membership',{
-        verificationId : this.$route.params.verificationId
-      });
-      this.verification = resp.results[0].verification;
-      this.verification.profileTypes.map((profileType)=>{
-        this.profileTypes[profileType] = true;
-      })
-    },
     async saveVerification(){
       this.membership.verification.profileTypes = Object.keys(this.profileTypes).filter((profileType)=>this.profileTypes[profileType])
       var resp = await this.$service.post('/api/v1/verification',{
         ... this.membership.verification
       });
-      this.$router.push("/pub/v/"+resp.results[0].verificationId)
+      this.$router.push("/app/v/"+resp.results[0].verificationId)
     },
     addQues(){
       let form_ques = this.form_ques;
