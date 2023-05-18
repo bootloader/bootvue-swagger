@@ -42,7 +42,7 @@
       </ul>
     </b-col>
     <b-col>
-       <textarea id="manifestCodeEditor" @input="previewUpdate" v-model="manifestJson"
+       <textarea id="manifestCodeEditor" @input="previewUpdate" v-model="manifestJson" @change="jsonOnChange"
         style="overflow: scroll; width: 500px; height: 500px;"></textarea>
     </b-col>  
     <b-col>
@@ -131,6 +131,10 @@ export default {
       this.manifestPreviewer.platform = 'android';
       this.manifestJson = JSON.stringify(manifestDetection.manifestContents, undefined, 2);
       this.previewUpdate();
+    },
+    jsonOnChange(){
+      this.applyJson();
+      this.manifestJson = JSON.stringify(JSON.parse(this.manifestJson), undefined, 2);
     },
     previewUpdate(){
       // Update the manifest previewer.
