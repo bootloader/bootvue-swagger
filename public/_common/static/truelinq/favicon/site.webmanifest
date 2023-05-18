@@ -1,6 +1,7 @@
 {
     "name": "trueLinQ",
     "short_name": "trueLinQ",
+    "start_url": "https://app.truelinq.com",
     "icons": [
         {
             "src": "/_common/static/truelinq/favicon/android-chrome-192x192.png",

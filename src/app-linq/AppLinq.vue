@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Index>
+    <component :is="layout">
       <router-view/>
-    </Index>  
+    </component>  
   </div>
 </template>
 <script>
@@ -48,6 +48,11 @@
   console.log("Page App is loaded")
   export default {
     components : { Index },
+    computed : {
+      layout() {
+        return this.$route.meta.layout || 'Index';
+      }
+    },
     mounted : function (argument) {
         let recaptchaScript = document.createElement('script')
         recaptchaScript.setAttribute('src', 'https://kit.fontawesome.com/9cd48bc910.js')

@@ -22,6 +22,11 @@ export default AppRouter.route({
           path: "/entoc",
           name : "entoc",
           component: () => import('./contakapi/NotpApiTest.vue'),
+        },
+        {
+          path: "/manifest",
+          name : "entoc",
+          component: () => import('./manifest/Manifest.vue'),
         }
       ];
     })()

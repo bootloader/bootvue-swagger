@@ -45,6 +45,11 @@ export default AppRouter.route({
           path: "/pub/v1/connect/whatsapp",
           component: () => import('./Index/WaVerify.vue'),
         },
+        {
+          path: "/pub/manifest",
+          meta : { layout : "div" },
+          component: () => import('../app-www/manifest/Manifest.vue'),
+        },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ]
 })
