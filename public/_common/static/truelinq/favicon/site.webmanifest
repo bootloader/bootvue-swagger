@@ -1,6 +1,7 @@
 {
+    "title": "trueLinQ",
     "name": "trueLinQ",
-    "short_name": "tQ",
+    "short_name": "trueLinQ",
     "start_url": "https://app.truelinq.com",
     "categories": [
       "google",
@@ -23,9 +24,9 @@
         "type": "image/png"
       }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "fullscreen",
+    "theme_color": "#fff",
+    "background_color": "#fff",
+    "display": "standalone",
     "launch_handler": {
       "client_mode": [
         "focus-existing, auto"
