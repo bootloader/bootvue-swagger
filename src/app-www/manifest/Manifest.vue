@@ -2,12 +2,49 @@
 <div>
   <b-row>
     <b-col>
-      <input type="url" id="url-input" v-model="urlInput" placeholder="Type a URL" value="https://www.pwabuilder.com" />
-      <button @click="loadPwa">Go</button>
-      <p id="error-dump" style="color: darkred;">{{errorDump}}</p>
-      <textarea id="manifestCodeEditor" @input="codeEditorChanged" v-model="manifestJson"
-        style="overflow: scroll; width: 500px; height: 500px;"></textarea>
+      <base-input name="Site URL" v-model="urlInput"  placeholder="Type a URL"
+        alternative question feedback required rules="required" 
+        :error="errorDump">
+        <template #actions>
+            <b-button variant="outline-evening" class="fa fa-arrow-right" 
+            v-tooltip="'Delete Question'" @click="loadPwa()"
+            ></b-button>
+        </template>  
+        </base-input>
+       <base-select name="Default Platform" v-model="platform.value" @change="previewUpdate"
+        :options="platform.options">
+       </base-select>
+       <base-select name="Default Stage" v-model="stage.value" @change="previewUpdate"
+        :options="stage.options">
+       </base-select>
+      <h2>References:</h2>
+      <ul id="databases">        
+          <li>
+              <a  target="_blank" 
+                href="https://developer.mozilla.org/en-US/docs/Web/Manifest">
+                developer.mozilla.org</a>  
+          </li> 
+          <li>
+              <a  target="_blank"
+                href="https://medium.com/nerd-for-tech/visualize-application-manifest-ebd771b325d8">
+                Chrome: Visualize Application Manifest</a>  
+          </li> 
+          <li>
+              <a  target="_blank"
+                href="https://blog.pwabuilder.com/posts/visualizing-your-web-manifest/">
+                Visualizing your web manifest</a>  
+          </li> 
+          <li>
+              <a  target="_blank"
+                href="https://www.pwabuilder.com/">
+                the PWABuilder site</a>  
+          </li> 
+      </ul>
     </b-col>
+    <b-col>
+       <textarea id="manifestCodeEditor" @input="previewUpdate" v-model="manifestJson"
+        style="overflow: scroll; width: 500px; height: 500px;"></textarea>
+    </b-col>  
     <b-col>
         <manifest-previewer class="manifest-previewer" ref="manifest_previewer">
         </manifest-previewer>
@@ -20,6 +57,7 @@
 //import "@/assets/vendor/notus/styles/tailwind.css";
   import Vue from 'vue';
   import manifest from "@pwabuilder/manifest-previewer"
+  import BaseInput from '../../@common/argon/components/Inputs/BaseInput.vue';
 
   const loginImage = __webpack_public_path__ + '/_common/static/xms-logo.png';
   
@@ -35,7 +73,15 @@ export default {
       manifestPreviewer : null,
       urlInput : document.location.origin,
       errorDump : "",
-      manifestJson : "{}"
+      manifestJson : "{}",
+      stage : {
+        value : 'splashScreen',
+        options : ['install', 'splashScreen', 'name', 'shortName','themeColor', 'shortcuts', 'display', 'categories', 'shareTarget','description']
+      },
+      platform : {
+        value : 'android',
+        options : ['windows', 'android', 'iOS']
+      }
     };
   },
   watch : {
@@ -80,14 +126,20 @@ export default {
         this.errorDump = `Error fetching manifest: ${manifestDetection.error}`;
         return;
       }
-      console.log("this.manifestPreviewer ",this.manifestPreviewer )
+      console.log("this.manifestPreviewer ",this.manifestPreviewer );
+      this.manifestPreviewer.manifestUrl = manifestDetection.manifestUrl;
+      this.manifestPreviewer.platform = 'android';
+      this.manifestJson = JSON.stringify(manifestDetection.manifestContents, undefined, 2);
+      this.previewUpdate();
+    },
+    previewUpdate(){
       // Update the manifest previewer.
       this.manifestPreviewer.siteUrl = this.urlInput;
-      this.manifestPreviewer.manifestUrl = manifestDetection.manifestUrl;
-      this.manifestPreviewer.manifest = manifestDetection.manifestContents;
-      this.manifestJson = JSON.stringify(manifestDetection.manifestContents, undefined, 2);
+      this.manifestPreviewer.stage = this.stage.value;
+      this.manifestPreviewer.platform = this.platform.value;
+      this.applyJson()
     },
-    codeEditorChanged() {
+    applyJson() {
       // Is the JSON valid?
       let isJsonValid = false;
       let newManifest = null;
@@ -100,9 +152,10 @@ export default {
         return;
       }
       this.manifestPreviewer.manifest = newManifest;
-    }
+    },
   },
   components: {
+    BaseInput
   },
 };
 </script>

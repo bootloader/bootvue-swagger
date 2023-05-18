@@ -113,8 +113,8 @@
             </div>
           </slot>
           <slot name="error">
-            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-              {{ errors[0] }}
+            <div v-if="errors[0] || error" class="invalid-feedback" style="display: block;">
+              {{ errors[0] || error}}
             </div>
           </slot>
       </span>  
