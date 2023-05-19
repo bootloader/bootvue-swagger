@@ -14,7 +14,7 @@
           </div>
         </div> 
       </section>    
-      <section class="relative block h-300-px" style="height:300px">
+      <section class="relative block h-300-px" style="height:260px">
         <div class="absolute top-0 w-full h-full bg-center bg-cover bg-evening">
           <span
             id="blackOverlay"
