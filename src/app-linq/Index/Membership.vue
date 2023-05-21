@@ -30,25 +30,38 @@
                         variant="outline-evening"
                         prelabel alternative required rules="required|max:90" />
               </div> 
-              <div class="py-5 text-center">
-                <div class="flex flex-wrap justify-center">
-                  <div class="w-full lg:w-9/12 px-2 flex flex-wrap justify-center">
-                    <my-button variant="outline-danger" v-if="canLeave"
+              <div class="section-wrapper">
+                <div class="social-tile-container ">
+                    <social-button class="w-full lg:w-4/12" variant="outline-danger" v-if="canLeave"
+                      icon="fas fa-arrow-right-from-bracket" 
+                      title="Leave" :subtitle="`from '${membership.verification.title}'`"
                       @click="cancelMembership">
                       Leave
-                    </my-button>
-                    <my-button variant="outline-evening" v-if="canCancel"
+                    </social-button>
+                    <social-button class="w-full lg:w-4/12" variant="outline-evening" v-if="canCancel"
+                      icon="fa fa-circle-xmark" 
+                      title="Leave" :subtitle="`from '${membership.verification.title}'`"
                       @click="cancelMembership">
                       Cancel
-                    </my-button>
-                    <b-button variant="outline-evening" v-if="canEdit"
-                     :to="`/app/v/${$route.params.verificationId}/edit`">
+                    </social-button>
+                    <social-button  class="w-full lg:w-4/12" variant="outline-evening" v-if="canEdit"
+                      icon="fas fa-edit" 
+                      title="Edit" :subtitle="`details of '${membership.verification.title}'`"
+                      :path="`/app/v/${$route.params.verificationId}/edit`">
                       Edit
-                    </b-button> 
-                    <b-button variant="evening" v-if="canViewMembers"
-                      :to="`/app/v/${$route.params.verificationId}/m/${$route.params.membershipId}/members`">
+                    </social-button> 
+                    <social-button  class="w-full lg:w-4/12" variant="evening" v-if="canViewMembers"
+                      icon="fas fa-users" 
+                      title="Members" :subtitle="`of '${membership.verification.title}'`"
+                      :path="`/app/v/${$route.params.verificationId}/m/${$route.params.membershipId}/members`">
                       Members
-                    </b-button> 
+                    </social-button> 
+                </div> 
+              </div>
+              <div class="py-5 text-center">
+                <div class="flex flex-wrap justify-center">
+                  <div class="w-full lg:w-9/12-xx lg:w-4/12 px-2 flex flex-wrap justify-center">
+ 
                   </div>
                 </div>  
               </div>

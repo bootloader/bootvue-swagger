@@ -124,6 +124,7 @@ export default {
         totalItems: 10000,
         isBusy: false,
         filter : {
+          version : 0,
           approved : true,
           membershipType : 'ACTIVE'
         }
@@ -167,6 +168,7 @@ export default {
       }
     },
     "table.filter.membershipType" : function () {
+      this.table.filter.version++;
       this.table.items = [];
       this.table.currentPage = 0;
       this.fetchItems();
@@ -189,14 +191,19 @@ export default {
       this.membership = resp.results[0];
     },
     async loadMemberships(currentPage,perPage){
+      let localVersion = this.table.filter.version;
       var resp = await this.$service.get('/api/v1/verification/membership',{
         verificationId : this.$route.params.verificationId,
         approved : this.table.filter.approved,
         membershipType : this.table.filter.membershipType,
         pageNo :    currentPage,
         pageSize :  perPage,
+        localVersion : localVersion
       });
-      return resp.results;
+      return resp.results.map(function(m){
+        m.version = localVersion;
+        return m;
+      });
     },
     async modify(membershipId,membershipType){
       try {
@@ -227,7 +234,7 @@ export default {
       /* Add new items to existing ones */
     
       this.table.items = this.table.items.concat(newItems.filter((m)=>{
-        return m.user && m.verification;
+        return m.user && m.verification && (this.table.filter.version === m.version );
       }));
       /* Disable busy state */
       this.table.isBusy = false;

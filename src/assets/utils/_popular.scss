@@ -98,15 +98,31 @@ $popular-list:(
 );
 
 @each $key,$val in $popular-list{
-    .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
+    //BACKGROUND
+    .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after,
+    .bg-outline-#{$key},.bg-outline-#{$key}\:before::before,.bg-outline-#{$key}\:after::after {
         background-color: #{$val}!important;
     }
-    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after {
+
+    //BACKGROUND LIGHT
+    .bg-light.bg-#{$key},.bg-light.bg-#{$key}\:before::before,.bg-light.bg-#{$key}\:after::after,
+    .bg-light.bg-outline-#{$key},.bg-light.bg-outline-#{$key}\:before::before,.bg-light.bg-outline-#{$key}\:after::after {
+        background: rgba($val,.1)!important;
+    }
+
+    //BACKGROUND TEXT
+    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after,
+    .bg-text.bg-outline-#{$key},.bg-text.bg-outline-#{$key}\:before::before,.bg-text.bg-outline-#{$key}\:after::after {
         color: set-color($val);
     }
-    .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after {
+
+    //TEXT
+    .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after ,
+    .text-outline-#{$key},.text-outline-#{$key}\:before::before,.text-outline-#{$key}\:after::after {
         color: #{$val}!important;
     }
+
+    //More
     .fac-bg.fa-#{$key}::before{
         background-color: #{$val};
     }
