@@ -27,7 +27,9 @@
               <div class="section-wrapper">
                   <div class="section-divider"></div>
                    <base-input label="Share Link" copy readonly v-model="verificationSharelink"
+                        prependIcon="fas fa-share-nodes"
                         variant="outline-evening"
+                        helpMessage="Share this link with people to join this."
                         prelabel alternative required rules="required|max:90" />
               </div> 
               <div class="section-wrapper">
