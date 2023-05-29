@@ -102,6 +102,7 @@ export default {
 <style scoped>
   .homeicon {
     z-index: 10000000;
+    text-align: -webkit-right;
   }
 </style>
 
