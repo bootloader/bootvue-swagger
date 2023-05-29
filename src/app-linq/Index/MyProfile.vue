@@ -175,7 +175,7 @@ export default {
   }
   &[lazy=loaded]{
     padding: 2px;
-    background-image: linear-gradient(359deg, #292f3f, white);
+    background-image: linear-gradient(to top, #292f3f 55%, #fff );
   }
   &[lazy=error]{
     background-color: #f9f9f9;
