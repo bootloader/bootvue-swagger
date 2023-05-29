@@ -1,9 +1,9 @@
 <template>
     <div class="px-6-x">
-        <div class="flex flex-wrap justify-end profile-bar">
+        <div class="flex flex-wrap justify-start profile-bar">
           <div class="lg:w-4/12 px-4 lg:order-1x">
           </div>
-          <div class="lg:w-4/12 px-4 lg:order-2x flex justify-end text-center ">
+          <div class="lg:w-4/12 px-4 lg:order-2x flex justify-start text-center ">
             <div class="relative" v-lazy-container="{ selector: 'img' }">
               <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
@@ -13,10 +13,10 @@
           <div class="lg:w-4/12 px-4 lg:order-3x">
           </div>
         </div>
-        <div class="text-center mt-10 pt-10 ">
+        <div class="text-center  pt-10 ">
           
         </div>
-        <div class="section-wrapper1 mt-20">
+        <div class="section-wrapper1">
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
