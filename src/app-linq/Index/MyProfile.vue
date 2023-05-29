@@ -16,7 +16,7 @@
         <div class="text-center mt-10 pt-10 ">
           
         </div>
-        <div class="section-wrapper mt-20">
+        <div class="section-wrapper1 mt-20">
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
