@@ -18,7 +18,7 @@
         </div>
         <div class="section-wrapper1">
           <div class="social-tile-container ">
-            <social-tile class="w-full lg:w-4/12" style="text-align-last: right"
+            <social-tile class="w-full lg:w-4/12" style="text-align-last:center"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
               <template #thumb>
                 <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="evening"/>
