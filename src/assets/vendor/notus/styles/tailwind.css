@@ -1577,6 +1577,10 @@ select {
   border-radius: 9999px;
 }
 
+.rounded-cr {
+  border-radius: 25px;
+}
+
 .rounded-t {
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
