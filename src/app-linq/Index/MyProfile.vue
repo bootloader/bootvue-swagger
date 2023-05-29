@@ -20,7 +20,9 @@
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
-                
+              <template #thumb>
+                <social-icon href="/linq/auth/logout" icon="fa fa-power-off" variant="evening"/>
+              </template>  
             </social-tile>
           </div>  
         </div> 
