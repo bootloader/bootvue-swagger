@@ -3,7 +3,7 @@
         <div class="flex flex-wrap justify-center profile-bar">
           <div class="lg:w-4/12 px-4 lg:order-1x">
           </div>
-          <div class="lg:w-4/12 px-4 lg:order-2x flex justify-center text-center ">
+          <div class="lg:w-4/12 px-4 lg:order-2x flex justify-end text-center ">
             <div class="relative" v-lazy-container="{ selector: 'img' }">
               <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
