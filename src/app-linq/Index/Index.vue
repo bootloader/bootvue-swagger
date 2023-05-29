@@ -4,10 +4,10 @@
         <div class="container mx-auto px-4">
           <div class="relative flex flex-col min-w-0 break-words bg-evening w-full mb-0 shadow-xl rounded-lg">
             <div class="py-2  homeicon">
-                <b-button variant="outline-white" size="md" :to="'/'">
+                <b-button variant="outline-white btn-new " size="md" :to="'/'">
                   <i class="fa fa-home"/>
                 </b-button>  
-                <b-button variant="outline-white float-right" size="md" href="/linq/auth/logout">
+                <b-button variant="outline-white float-right btn-new " size="md" href="/linq/auth/logout">
                   <i class="fa fa-power-off"/>
                 </b-button>  
             </div>
