@@ -164,11 +164,8 @@ export default {
 }
 .defaultCompanyLogo {
   background-color: rgb(239, 239, 239);
-  min-width: 100px;
+  min-width: 130px;
   max-width: 140px;
-  margin-top: -29px;
-  margin-left: -49px;
-}
   &[lazy=loading]{
     padding: 14px;
     background-color: #304157;
