@@ -7,7 +7,7 @@
             <div class="relative" v-lazy-container="{ selector: 'img' }">
               <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
-                class="defaultCompanyLogo shadow-xl rounded-cr h-auto align-middle border-none absolute -m-16  lg:-ml-16 max-w-150-px"/>
+                class="defaultCompanyLogo shadow-xl rounded-cr h-auto align-middle border-none absolute   lg:-ml-16 max-w-150-px"/>
             </div>
           </div>
           <div class="lg:w-4/12 px-4 lg:order-3x">
@@ -164,8 +164,11 @@ export default {
 }
 .defaultCompanyLogo {
   background-color: rgb(239, 239, 239);
-  min-width: 130px;
+  min-width: 100px;
   max-width: 140px;
+  margin-top: -29px;
+  margin-left: -49px;
+
   &[lazy=loading]{
     padding: 14px;
     background-color: #304157;
