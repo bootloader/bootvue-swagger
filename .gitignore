@@ -22,6 +22,7 @@ yarn-error.log*
 *.sw*
 package-lock.json
 yarn-lock.json
+yarn.lock
 .sass-cache
 dist_electron/
 
