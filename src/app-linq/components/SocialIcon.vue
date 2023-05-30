@@ -1,7 +1,7 @@
 <template>
-  <span class="social-btn" @click="onClick">
+  <span class="social-btn " @click="onClick">
       <component :is="tag" :href="href"
-          class="social-btn-box" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
+          class="  social-btn-box social-btn2" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>
       </component>
       <i v-if="addsign" class="social-btn-status fa fa-plus bg-grey text-white"></i>
@@ -101,6 +101,16 @@ export default {
   cursor : pointer;
   position: relative;
   display: inline-block;
+}
+
+
+.social-btn2  {
+  cursor : pointer;
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-left: ridge;
 }
 .social-btn .social-btn-box {
     position: relative;

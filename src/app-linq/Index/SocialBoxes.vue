@@ -1,16 +1,16 @@
 <template>
     <div class="">
         <div class="social-tile-container">
-            <social-tile class="w-full lg:w-4/12"
+            <social-tile class="w-full lg:w-4/12 "
               v-for="(c,index) in channelsEnabled" v-bind:key="c.channelId+'_'+ index"
               :title="c.title"  :subtitle="c.subtitle" :provider="c.provider"> 
             </social-tile>
         </div>
         <div class="social-tile-container" v-if="allowadd">
-            <span class="display-inline-block">
+            <span class="display-inline-block ">
                 <social-tile class="w-full">
                   <template #thumb>
-                      <social-icon provider="google" variant="grey" title="Link Google" addsign
+                      <social-icon  provider="google" variant="grey" title="Link Google" addsign
                         :href="`/linq/app/v1/connect/google?_${nounce}`"  />
                   </template>   
                     <template #details>

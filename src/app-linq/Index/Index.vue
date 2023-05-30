@@ -15,7 +15,7 @@
         </div> 
       </section>    
       <section class="relative block h-300-px" style="height:260px">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover bg-evening">
+        <div class="absolute top-0 w-full h-full bg-center bg-cover " style="background-image: linear-gradient(45deg, black, #b3b3b3);">
           <span
             id="blackOverlay"
             class="w-full h-full absolute opacity-50 bg-black"
@@ -33,13 +33,13 @@
             x="0"
             y="0">
             <polygon
-              class="text-evening fill-current"
+              class="text-black fill-current"
               points="2560 0 2560 100 0 100"
             ></polygon>
           </svg>
         </div>
       </section>
-      <section class="relative pt-16 pb-2 bg-evening">
+      <section class="relative pt-16 pb-2 bg-black ">
         <div class="container mx-auto px-4">
           <div
             class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
