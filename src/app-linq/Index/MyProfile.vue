@@ -28,21 +28,21 @@
           </div>  
         </div> 
         <div class="section-wrapper">
-            <div class="section-divider">My Profiles</div>
+            <h4 class="section-divider">My Profiles</h4>
             <SocialBoxes :items="myProfiles" class="py-3 text-center" allowadd/>
         </div>  
         <div class="section-wrapper">
-            <div class="section-divider">My Memberships</div>
+            <h4 class="section-divider">My Memberships</h4>
             <VerificationBoxes :items="memberships" class="py-3 text-center">
             </VerificationBoxes>
         </div>  
         <div class="section-wrapper" v-if="interested.length>0">
-            <div class="section-divider">Suggestions</div>
+            <h4 class="section-divider">Suggestions</h4>
             <social-tile-container :items="interested">
             </social-tile-container>
         </div> 
         <div class="section-wrapper">
-            <div class="section-divider">Profile/Settings</div>
+            <h4 class="section-divider">Profile/Settings</h4>
             <div class="social-tile-container">
                 <span class="w-full lg:w-4/12 d-inline-block">
                     <social-tile class="w-full" variant="danger" 
@@ -56,7 +56,7 @@
                 </span>  
             </div>
         </div> 
-        <div class="py-5 text-center">
+        <div class=" text-center">
           <div class="flex flex-wrap justify-center">
             <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
             </div>
@@ -200,6 +200,25 @@ export default {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
+
+      h4 {
+            display: flex;
+            flex-direction: row;
+          }
+          
+        h4:before,
+        h4:after {
+            content: "";
+            flex: 1 1;
+            border-bottom: 2px solid #efefef;
+            
+         }
+          
+        img {
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+        }
 
 
 
