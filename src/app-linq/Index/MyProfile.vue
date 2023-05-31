@@ -101,6 +101,7 @@ export default {
           title : profile.name,
           subtitle : profile.email || profile.phone,
           provider : profile.provider,
+          link : profile.profileLink,
         }
       });
     }

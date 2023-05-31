@@ -16,7 +16,7 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {},provider : {}, path : {}, variant : {}, 
+    title : {}, subtitle : {},provider : {}, path : {}, link : {}, variant : {}, 
     status : { }, innerClass : {}
   },
   data() {
@@ -30,7 +30,9 @@ export default {
     onClick(e){
       if(this.path){
         console.log("this.path",this.path)
-        this.$router.push( this.path)
+          this.$router.push( this.path)
+      } else if(this.link){
+           window.open(this.link,'_blank');
       }
       this.$emit('click',e);
     }
