@@ -50,7 +50,7 @@
         </div>
       </section>
 
-      <footer class="relative bg-evening pt-1 pb-6">
+      <footer class="relative bg-black pt-1 pb-6">
           <div class="container mx-auto px-4">
             <hr class="my-1 border-evening" />
             <div
