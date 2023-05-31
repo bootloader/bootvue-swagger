@@ -45,7 +45,7 @@ export default {
     },
     variant : {}, 
     icon : {},
-    path : {},
+    path : {},  link : {},
     imgSrc : {},
     imgError : {},
     addsign : {
@@ -91,7 +91,10 @@ export default {
   methods: {
     onClick(e){
       if(this.path){
-        this.$router.push( this.path)
+        console.log("this.path",this.path)
+          this.$router.push( this.path)
+      } else if(this.link){
+           window.open(this.link,'_blank');
       }
       this.$emit('click',e);
     }

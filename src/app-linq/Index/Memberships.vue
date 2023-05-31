@@ -67,7 +67,7 @@
                          <social-icon size="sm" v-tooltip="row.item.membershipType"
                                 :provider="`user-${row.item.membershipType}`" ></social-icon>
                          <social-icon v-for="p in row.item.profiles" v-bind:key="p.id" size="sm" v-tooltip="`${p.email || p.phone}`"
-                                :provider="p.provider" ></social-icon>
+                                :provider="p.provider" :link="p.profileLink" ></social-icon>
                      </template> 
                       <template #row-details="row">
                           <b-card class="bg-greyish" no-body>
