@@ -1,7 +1,9 @@
 <template>
-  <span class="social-btn " @click="onClick">
-      <component :is="tag" :href="href"
-          class="  social-btn-box social-btn2" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
+  <span class="social-btn " @click="onClick" v-lazy-container="{ selector: 'img' }">
+      <img  class="social-btn-box social-btn2" 
+            v-if="imgSrc" :data-src="imgSrc" :data-error="imgError"/>
+      <component v-else  :is="tag" :href="href"
+          class="social-btn-box social-btn2" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>
       </component>
       <i v-if="addsign" class="social-btn-status fa fa-plus bg-grey text-white"></i>
@@ -37,13 +39,15 @@ const DEFAULT_PROVIDERS = {
 
 export default {
   props : {
-    provider : {
-    }, href : {
-      default : ""
-    }, variant : {
-    }, icon : {
-    },path : {
+    provider : {}, 
+    href : {
+      default : "" 
     },
+    variant : {}, 
+    icon : {},
+    path : {},
+    imgSrc : {},
+    imgError : {},
     addsign : {
       type : Boolean,
       default : false

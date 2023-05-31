@@ -7,7 +7,7 @@
             <div class="relative" v-lazy-container="{ selector: 'img' }">
               <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
-                class="defaultCompanyLogo shadow-xl rounded-cr h-auto align-middle border-none absolute   lg:-ml-16 max-w-150-px"/>
+                class="defaultCompanyLogo shadow-xl rounded-cr h-auto align-middle border-none absolute lg:-ml-16 max-w-150-px"/>
             </div>
           </div>
           <div class="lg:w-4/12 px-4 lg:order-3x">
@@ -21,7 +21,8 @@
             <social-tile class="w-full lg:w-4/12" style="text-align-last:center"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
               <template #thumb>
-                
+                <social-icon :imgSrc="$formatters.https_thumburl(meta.profile.picture,50,50)"
+                :imgError="defaultCompanyLogo"/>
               </template>  
             </social-tile>
           </div>  
