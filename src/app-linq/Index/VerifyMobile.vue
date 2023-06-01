@@ -114,22 +114,20 @@ export default {
   methods : {
     async load(){
         try {
+          if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
+          if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
                               +  `&partnerName=${window.CONST.TCENV.truecaller.appName}`
                               + `&lang=en&title=TITLE_STRING_OPTION`;
           console.log('truecaller_url',truecaller_url)
-          window.location = truecaller_url;
           setTimeout(()=>{
-              if( document.hasFocus() ){
-                this.initFirebaseFlow();
-              } else  {
-                console.log("TrueCaller:Found");
-                this.waitTrueCallerWebhook(0);
-              }
+              this.waitTrueCallerWebhook(0);
           }, 600);
+           window.open(truecaller_url,"_blank");
         } catch(e){
+          console.log("TrueCaller:Unable",e);
           this.initFirebaseFlow();
         }
     },
@@ -137,7 +135,7 @@ export default {
         try {
             if(counter > 5) throw "RetryLimitExceeded:5";
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
-            console.log('TrueCaller',pollResult.results[0]);
+            console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){
                   window.location.href = pollResult.redirectUrl;
             }
