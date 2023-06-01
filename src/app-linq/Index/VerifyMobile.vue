@@ -79,10 +79,11 @@ export default {
       confirmationResult : null,
       recaptchaVerifier  : null,
       canEnterNumber : false,
+      firebaseInitd : false
     };
   },
   mounted : function () {
-        this.loadFirebase();
+        this.load();
   },
   created (){
 
@@ -111,9 +112,41 @@ export default {
     }
   },
   methods : {
-    async loadMembership(){
+    async load(){
+        try {
+          let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
+                              + `&requestNonce=${this.$route.query.nonce}`
+                              +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
+                              +  `&partnerName=${window.CONST.TCENV.truecaller.appName}`
+                              + `&lang=en&title=TITLE_STRING_OPTION`;
+          console.log('truecaller_url',truecaller_url)
+          window.location = truecaller_url;
+          setTimeout(()=>{
+              if( document.hasFocus() ){
+                this.initFirebaseFlow();
+              } else  {
+                console.log("TrueCaller:Found");
+                this.waitTrueCallerWebhook(0);
+              }
+          }, 600);
+        } catch(e){
+          this.initFirebaseFlow();
+        }
     },
-    async saveVerification(){
+    async waitTrueCallerWebhook(counter){ 
+        try {
+            if(counter > 5) throw "RetryLimitExceeded:5";
+            let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
+            console.log('TrueCaller',pollResult.results[0]);
+            if(pollResult.redirectUrl){
+                  window.location.href = pollResult.redirectUrl;
+            }
+            setTimeout(()=>{
+                this.waitTrueCallerWebhook(++counter);
+            },3000)
+        } catch(e){
+          this.initFirebaseFlow();
+        }
     },
     async commit(){
       this.mobileAccepted =  true;
@@ -168,7 +201,12 @@ export default {
      * 
      * 
      */
+    async initFirebaseFlow(){
+      if(this.firebaseInitd) return;
+      return this.loadFirebase();
+    },
     async loadFirebase(){
+        this.firebaseInitd = true;
         firebase.auth().useDeviceLanguage();
         console.log("loadFireBase", this.$refs.recaptchaContainer)
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(this.$refs.recaptchaContainer, {
