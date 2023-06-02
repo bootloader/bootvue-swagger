@@ -50,7 +50,7 @@ export default {
   .social-tile-inner {
     display: inline-block;
     background: #d1d1d167;
-    border-radius: 18px;
+    border-radius: 50px;
     padding: 3px;
     width: 100%;
     .social-tile-inner-desc {

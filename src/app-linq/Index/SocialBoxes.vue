@@ -9,9 +9,9 @@
         </div>
         <div class="social-tile-container" v-if="allowadd">
             <span class="display-inline-block ">
-                <social-tile class="w-full">
+                <social-tile class="w-full ">
                   <template #thumb>
-                      <social-icon  provider="google" variant="grey" title="Link Google" addsign
+                      <social-icon provider="google" variant="grey" title="Link Google" addsign
                         :href="`/linq/app/v1/connect/google?_${nounce}`"  />
                   </template>   
                     <template #details>

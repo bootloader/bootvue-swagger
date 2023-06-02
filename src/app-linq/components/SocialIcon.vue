@@ -1,9 +1,9 @@
 <template>
   <span class="social-btn " @click="onClick" v-lazy-container="{ selector: 'img' }">
-      <img  class="social-btn-box social-btn2" 
+      <img  class="social-btn-box " 
             v-if="imgSrc" :data-src="imgSrc" :data-error="imgError"/>
       <component v-else  :is="tag" :href="href"
-          class="social-btn-box social-btn2" :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
+          class="social-btn-box " :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>
       </component>
       <i v-if="addsign" class="social-btn-status fa fa-plus bg-grey text-white"></i>
@@ -115,8 +115,8 @@ export default {
   cursor : pointer;
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: 30px !important;
+  height: 30px !important;
   border-left: ridge;
 }
 .social-btn .social-btn-box {
@@ -164,7 +164,7 @@ export default {
   text-align: center;
   position: relative;
   overflow: hidden;
-  border-radius: 28%;
+  border-radius: 50%;
   box-shadow: 0 5px 15px -5px rgba(0,0,0,0.1);
   opacity: 0.99;
 }
