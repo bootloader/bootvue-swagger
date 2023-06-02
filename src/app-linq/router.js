@@ -39,11 +39,11 @@ export default AppRouter.route({
         },
         {
           path: "/pub/v1/connect/firebase/mobile",
-          component: () => import('./Index/PhoneVerify.vue'),
+          component: () => import('./Index/VerifyMobile.vue'),
         },
         {
           path: "/pub/v1/connect/whatsapp",
-          component: () => import('./Index/WaVerify.vue'),
+          component: () => import('./Index/VerifyWhatsApp.vue'),
         },
         {
           path: "/pub/manifest",
