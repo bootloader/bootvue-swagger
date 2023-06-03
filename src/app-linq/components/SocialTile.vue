@@ -74,7 +74,7 @@ export default {
         height: 25px;
         white-space: nowrap;
         font-size: .9rem;
-        line-height: .85rem;
+        line-height: 1.5rem;
         margin-bottom: -0.4rem;
       }
       .social-tile-inner-desc-title+.social-tile-inner-desc-title {
@@ -87,6 +87,7 @@ export default {
       }
       .social-tile-inner-desc-title+.social-tile-inner-desc-title+.social-tile-inner-desc-title{
          font-size: .6rem;
+         line-height: 0.5rem;
       }
     }
   }
