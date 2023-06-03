@@ -138,8 +138,8 @@ export default {
           setTimeout(()=>{
               if(document.hasFocus())  this.waitTrueCallerWebhook(0);
           }, 600);
-           //window.open(truecaller_url,"_self");
-           window.open(truecaller_url,"_blank");
+           window.open(truecaller_url);
+           //window.open(truecaller_url,"_blank");
         } catch(e){
           console.log("TrueCaller:Unable",e);
           this.initFirebaseFlow();
@@ -147,7 +147,7 @@ export default {
     },
     async waitTrueCallerWebhook(counter){ 
         try {
-            if(counter > 9) throw "RetryLimitExceeded:5";
+            if(counter > 5) throw "RetryLimitExceeded:5";
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
             console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){
@@ -212,6 +212,7 @@ export default {
      * 
      */
     async initFirebaseFlow(){
+      this.isTrueCaller = false;
       if(this.firebaseInitd) return;
       return this.loadFirebase();
     },
