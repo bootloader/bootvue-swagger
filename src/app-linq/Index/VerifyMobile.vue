@@ -4,15 +4,25 @@
       <ValidationObserver ref="form" class="template-form"  v-slot="{handleSubmit}">
 			<div class="card-header p-2">
         <div class="text-center">
-				  <img :src="mobileImage" class="d-inline" style="max-width:200px;"/>
+          <div class="flex-font-wrapper">
+              <div class="flex-font-container"  :class="{
+                  'text-truecaller' : isTrueCaller,
+                  'text-mobile' : firebaseInitd
+                  }">
+                <span class="fa-stack fa-3x flex-font">
+                  <i class="fa-solid fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
+                </span>
+              </div>  
+          </div>
 				  <h5 class="mb-2">Mobile Verification</h5>
         </div> 
 				<div class="mb-3">
-              <div class="text-center">
+              <div class="text-center" v-show="!mobileAccepted">
                 <span id="recaptcha-container" class="recaptcha-container d-inline-block" ref="recaptchaContainer">
                 </span>
               </div>
-              <span v-if="!mobileAccepted">
+              <span v-if="!mobileAccepted && canEnterNumber">
                 <base-input @keydown="isNumber" :readonly="!canEnterNumber"
                     class="mt-1 d-block" prependClass="btn btn-outline-success" variant="outline-success"
                     prelabel name="Mobile" prependIcon="fas fa-phone pointer"
@@ -79,7 +89,9 @@ export default {
       confirmationResult : null,
       recaptchaVerifier  : null,
       canEnterNumber : false,
-      firebaseInitd : false
+      firebaseInitd : false,
+      isTrueCaller : false,
+      showCaptcha : true,
     };
   },
   mounted : function () {
@@ -116,6 +128,7 @@ export default {
         try {
           //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
           if(!this.$global.isMobile) throw "ThisIsBrowser"; 
+          this.isTrueCaller = true;
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
@@ -123,8 +136,9 @@ export default {
                               + `&lang=en&title=TITLE_STRING_OPTION`;
           console.log('truecaller_url',truecaller_url)
           setTimeout(()=>{
-              this.waitTrueCallerWebhook(0);
+              if(document.hasFocus())  this.waitTrueCallerWebhook(0);
           }, 600);
+           window.open(truecaller_url,"_self");
            window.open(truecaller_url,"_blank");
         } catch(e){
           console.log("TrueCaller:Unable",e);
@@ -171,9 +185,7 @@ export default {
           this.confirmationResult = confirmationResult;
         } catch(e){
             console.log("sendOTP :  FAIELD",e)
-            this.recaptchaVerifier.render().then(function(widgetId) {
-              grecaptcha.reset(widgetId);
-            });
+            grecaptcha.reset(widgetId);
         }
     },
     async verifyOTP(){
@@ -206,7 +218,8 @@ export default {
     async loadFirebase(){
         this.firebaseInitd = true;
         firebase.auth().useDeviceLanguage();
-        console.log("loadFireBase", this.$refs.recaptchaContainer)
+        console.log("loadFireBase", this.$refs.recaptchaContainer);
+        //const auth =  firebase.auth.getAuth();
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(this.$refs.recaptchaContainer, {
           'size': '300px',
           'callback': (response) => {
@@ -214,9 +227,13 @@ export default {
             // reCAPTCHA solved, allow signInWithPhoneNumber.
             this.canEnterNumber = true;
             //onSignInSubmit();
+          }, 'expired-callback': (e) => {
+            console.log("expired-callback",e)
           }
         });
-        await this.recaptchaVerifier.render();
+        await this.recaptchaVerifier.render().then((widgetId) => {
+            window.recaptchaWidgetId = widgetId;
+        });
           return;
         firebase.auth().settings.appVerificationDisabledForTesting = true;
         var phoneNumber = "+16505554567";
@@ -241,4 +258,15 @@ export default {
     letter-spacing: 19px !important;
     padding-left: 27px !important;
   }
+
+.flex-font-wrapper {
+   font-size: 25px;
+  .flex-font-container {
+    .flex-font {
+    }
+    height : 12em;
+    padding: 1em;
+    line-height: 10em;
+  }
+}
 </style>
