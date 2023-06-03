@@ -73,9 +73,12 @@ export default {
     };
   },
   computed : {
+    myPartner(){
+      return this.partner ? this.partner.toLowerCase() :this.partner;
+    },
     myVariant(){
       return this.variant 
-      || DEFAULT_PROVIDERS[this.partner]?.variant
+      || DEFAULT_PROVIDERS[this.myPartner]?.variant
       || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "evening"
     },
     myIcon(){
