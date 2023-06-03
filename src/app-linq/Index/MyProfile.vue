@@ -15,8 +15,8 @@
           
         </div>
         <div class="section-wrapper1">
-          <div class="social-tile-container ">
-            <social-tile id="title-tile" class="w-full lg:w-4/12" style="text-align-last:center"
+          <div class="social-tile-container  ">
+            <social-tile id="title-tile" class="w-full lg:w-4/12" style="text-align-last:center;  padding-top: 15px;"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" nothumb>
             </social-tile>
           </div>  
@@ -199,11 +199,21 @@ export default {
 
 #title-tile.social-tile {
   .social-tile-inner {
-    
+    .social-tile-inner-desc{
+    width: calc( 100% - 56px);
+    }
   }   
-  .social-btn {
 
-  }
 }
 
 </style>
+
+#title-tile.social-tile  .social-tile-inner {
+
+}
+
+#title-tile.social-tile .social-tile-inner  .social-tile-inner-desc {
+
+
+
+}
