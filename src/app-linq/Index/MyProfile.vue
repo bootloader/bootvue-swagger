@@ -1,43 +1,38 @@
 <template>
     <div class="px-6-x">
-        <div class="flex flex-wrap justify-start profile-bar">
-          <div class="lg:w-4/12 px-4 lg:order-1x">
-          </div>
-          <div class="lg:w-4/12 px-4 lg:order-2x flex justify-start text-center " style="z-index: 1;"  > 
+        <div class="  profile-bar">
+          
+          <div class="lg:w-4/12 px-4 lg:order-2x  text-center" style="z-index: 1;"  > 
             <div class="relative" v-lazy-container="{ selector: 'img' }">
               <img :data-src="$formatters.https_thumburl(meta.profile.picture,150,150)"
                   :data-error="defaultCompanyLogo"
                 class="defaultCompanyLogo shadow-xl rounded-cr h-auto align-middle border-none absolute lg:-ml-16 max-w-150-px"/>
             </div>
           </div>
-          <div class="lg:w-4/12 px-4 lg:order-3x">
-          </div>
+          
         </div>
         <div class="text-center  pt-10 ">
           
         </div>
         <div class="section-wrapper1">
           <div class="social-tile-container ">
-            <social-tile class="w-full lg:w-4/12" style="text-align-last:center"
-              :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" provider="google"> 
-              <template #thumb>
-                <social-icon :imgSrc="$formatters.https_thumburl(meta.profile.picture,50,50)"
-                :imgError="defaultCompanyLogo"/>
-              </template>  
+            <social-tile id="title-tile" class="w-full lg:w-4/12" style="text-align-last:center"
+              :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" nothumb>
             </social-tile>
           </div>  
         </div> 
+
         <div class="section-wrapper">
-            <h4 class="section-divider">My Profiles</h4>
+            <h4 class="section-divider linq-section-divider">My Profiles</h4>
             <SocialBoxes :items="myProfiles" class="py-3 text-center" allowadd/>
         </div>  
         <div class="section-wrapper">
-            <h4 class="section-divider">My Memberships</h4>
+            <h4 class="section-divider linq-section-divider">My Memberships</h4>
             <VerificationBoxes :items="memberships" class="py-3 text-center">
             </VerificationBoxes>
         </div>  
         <div class="section-wrapper" v-if="interested.length>0">
-            <h4 class="section-divider">Suggestions</h4>
+            <h4 class="section-divider linq-section-divider">Suggestions</h4>
             <social-tile-container :items="interested">
             </social-tile-container>
         </div> 
@@ -168,8 +163,8 @@ export default {
   background-color: rgb(239, 239, 239);
   min-width: 100px;
   max-width: 140px;
-  margin-top: -29px;
-  margin-left: -49px;
+  margin-top: -20px;
+  margin-left: -50px;
 
   &[lazy=loading]{
     padding: 14px;
@@ -202,25 +197,13 @@ export default {
     justify-content: space-between;
 }
 
-      h4 {
-            display: flex;
-            flex-direction: row;
-          }
-          
-        h4:before,
-        h4:after {
-            content: "";
-            flex: 1 1;
-            border-bottom: 2px solid #efefef;
-            
-         }
-          
-        img {
-            height: 100px;
-            width: 100px;
-            border-radius: 50%;
-        }
+#title-tile.social-tile {
+  .social-tile-inner {
+    
+  }   
+  .social-btn {
 
-
+  }
+}
 
 </style>

@@ -13,7 +13,7 @@
 
          <validation-observer v-slot="{handleSubmit}" ref="formValidator" v-if="isReady">
               <div class="section-wrapper styler-height-fix">
-                    <div class="section-divider">Details</div>
+                    <h4 class="section-divider">Details</h4>
                     <b-row>
                         <b-col cols="12" class="text-center">
                             <div class="verificationer-details">{{membership.verification.description}}</div> 

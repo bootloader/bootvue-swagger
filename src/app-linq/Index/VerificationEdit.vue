@@ -19,7 +19,7 @@
 
          <validation-observer v-slot="{handleSubmit}" ref="formValidator">
               <div class="section-wrapper styler-height-fix">
-                    <div class="section-divider">Details</div>
+                    <h4 class="section-divider">Details</h4>
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
                         <b-col cols="11">
@@ -202,7 +202,4 @@ export default {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
-
-
-
 </style>

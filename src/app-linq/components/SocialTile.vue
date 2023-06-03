@@ -2,7 +2,7 @@
   <div class="social-tile pointer" @click="onClick" >
     <span class="social-tile-inner" :class="innerClass">
       <slot name="thumb">
-            <social-icon  :provider="provider" :variant="variant" :status="status"></social-icon>
+          <social-icon v-if="!nothumb" :provider="provider" :variant="variant" :status="status"></social-icon>
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
@@ -17,7 +17,7 @@
 export default {
   props : {
     title : {}, subtitle : {},provider : {}, path : {}, link : {}, variant : {}, 
-    status : { }, innerClass : {}
+    status : { }, innerClass : {}, nothumb : { type : Boolean, default : false}
   },
   data() {
     return {

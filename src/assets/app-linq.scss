@@ -119,8 +119,25 @@
     
 }
 
- .btn-new {
-
+.btn-new {
     border-inline: none;
     margin-right: 12px !important;
-   }
+}
+
+h4.linq-section-divider {
+    display: flex;
+    flex-direction: row;
+
+    &:before,
+    &:after {
+        content: "";
+        flex: 1 1;
+        border-bottom: 2px solid #efefef;
+        
+     }
+     img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+    }
+}
