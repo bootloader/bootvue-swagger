@@ -136,7 +136,8 @@ export default {
                               + `&lang=en&title=TITLE_STRING_OPTION`;
           console.log('truecaller_url',truecaller_url)
           setTimeout(()=>{
-              if(document.hasFocus())  this.waitTrueCallerWebhook(0);
+              if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
+              else this.initFirebaseFlow();
           }, 600);
            window.open(truecaller_url);
            //window.open(truecaller_url,"_blank");
