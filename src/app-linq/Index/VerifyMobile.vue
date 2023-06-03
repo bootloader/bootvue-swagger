@@ -138,7 +138,7 @@ export default {
           setTimeout(()=>{
               if(document.hasFocus())  this.waitTrueCallerWebhook(0);
           }, 600);
-           window.open(truecaller_url,"_self");
+           //window.open(truecaller_url,"_self");
            window.open(truecaller_url,"_blank");
         } catch(e){
           console.log("TrueCaller:Unable",e);
