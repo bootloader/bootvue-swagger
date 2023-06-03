@@ -114,7 +114,7 @@ export default {
   methods : {
     async load(){
         try {
-          if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
+          //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
           if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
@@ -133,7 +133,7 @@ export default {
     },
     async waitTrueCallerWebhook(counter){ 
         try {
-            if(counter > 5) throw "RetryLimitExceeded:5";
+            if(counter > 9) throw "RetryLimitExceeded:5";
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
             console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){

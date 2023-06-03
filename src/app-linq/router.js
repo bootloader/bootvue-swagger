@@ -51,5 +51,9 @@ export default AppRouter.route({
           component: () => import('../app-www/manifest/Manifest.vue'),
         },
         { path: "/:pathMatch(.*)*", redirect: "/" },
-      ]
+      ],
+      matchNotFound(to, from, next){
+        console.log("matchNotFound",to, from, next);
+        next();
+      }
 })
