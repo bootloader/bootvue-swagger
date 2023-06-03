@@ -25,6 +25,7 @@ const DEFAULT_PROVIDERS = {
   certificate : { icon : "fas fa-certificate", variant : 'evening'},
   mobile : { icon : "fas fa-phone-square", variant : 'mobile'},
   phone : { icon : "fas fa-phone-square", variant : 'mobile'},
+  truecaller : { icon : "fas fa-phone-square", variant : 'truecaller'},
   tick : { icon : "fas fa-check", variant : 'green'},
   cross : { icon : "fas fa-times", variant : 'danger'},
   'user-OWNER' : { icon : "fas fa-crown", variant : 'evening'},
@@ -39,7 +40,7 @@ const DEFAULT_PROVIDERS = {
 
 export default {
   props : {
-    provider : {}, 
+    provider : {}, partner : {},
     href : {
       default : "" 
     },
@@ -73,7 +74,9 @@ export default {
   },
   computed : {
     myVariant(){
-      return this.variant || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "evening"
+      return this.variant 
+      || DEFAULT_PROVIDERS[this.partner]?.variant
+      || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "evening"
     },
     myIcon(){
       return this.icon || DEFAULT_PROVIDERS[this.provider]?.icon || this.provider  || ("fab fa-" + this.provider);

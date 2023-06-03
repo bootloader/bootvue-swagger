@@ -94,8 +94,9 @@ export default {
       return (this.profiles || []).map(function(profile){
         return {
           title : profile.name,
-          subtitle : profile.email || profile.phone,
+          subtitle : profile.phone, subsubtitle : profile.email,
           provider : profile.provider,
+          partner : profile.partner,
           link : profile.profileLink,
         }
       });

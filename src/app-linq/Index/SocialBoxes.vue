@@ -3,7 +3,8 @@
         <div class="social-tile-container">
             <social-tile class="w-full lg:w-4/12 "
               v-for="(c,index) in channelsEnabled" v-bind:key="c.channelId+'_'+ index"
-              :title="c.title"  :subtitle="c.subtitle" :provider="c.provider"
+              :title="c.title"  :subtitle="c.subtitle" :subsubtitle="c.subsubtitle" 
+              :provider="c.provider" :partner="c.partner"
               :link="c.link"> 
             </social-tile>
         </div>
