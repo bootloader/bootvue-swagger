@@ -19,7 +19,7 @@
 
          <validation-observer v-slot="{handleSubmit}" ref="formValidator">
               <div class="section-wrapper styler-height-fix">
-                    <h4 class="section-divider">Details</h4>
+                    <h4 class="section-divider linq-section-divider">Details</h4>
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
                         <b-col cols="11">
