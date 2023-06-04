@@ -89,7 +89,12 @@
         });
         await this.loadMeta();
         this.$router.push("/")
-    },
+      },
+      reload(target_url){
+        this.$router.push({ name : "reload", params : {
+          reload : btoa(target_url),
+        }});
+      }
     }
   };
   

@@ -31,9 +31,9 @@
                     appendIcon="fas fa-arrow-right" appendClass="border-success btn btn-outline-success">
                 </base-input>
                 <div class="mt-3 mb-5">
-                  <b-button variant="success" class="px-4 verify-btn"
+                  <my-button variant="success" class="px-4 verify-btn"
                     :disabled="!canEnterNumber"
-                    @click="handleSubmit(commit)">Send OTP</b-button>
+                    @click="handleSubmit(commit)">Send OTP</my-button>
                 </div>
               </span>
                <span v-if="mobileAccepted">
@@ -59,7 +59,7 @@
           </small>
         </div>
         <div class="mt-3 mb-5">
-          <button class="btn btn-success px-4 verify-btn" :disabled="!isOTPValid" @click="verify">verify</button>
+          <my-button variant="success" class="px-4 verify-btn" :disabled="!isOTPValid" @click="verify">verify</my-button>
         </div>
       </span>
       </ValidationObserver>
@@ -75,10 +75,12 @@ import { getAuth, getRedirectResult, OAuthProvider } from "firebase/auth";
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import SocialBoxes from "./SocialBoxes.vue";
+import mixin from '../mixin.js'
 
 firebase.initializeApp(window.CONST.FBENV.firebase);
 
 export default {
+  mixins : [mixin],
   data() {
     return {
       mobileImage : __webpack_public_path__ + '/_common/static/phoneverify/mobile.png',
@@ -127,12 +129,6 @@ export default {
     }
   },
   methods : {
-    open(targte_url){
-          let iframe = document.createElement('a')
-          iframe.setAttribute('href', targte_url)
-          this.$refs.idTokenForm.appendChild(iframe);
-          iframe.click();
-    },
     async load(){
           if(!this.$route.query.redirected){
             let query = { ...this.$route.query, redirected: 1};
@@ -162,9 +158,10 @@ export default {
              if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
              else this.initFirebaseFlow();
           }, 600);
-          this.$router.push({ name : "reload", params : {
-            reload : btoa(truecaller_url),
-          }});
+          this.reload(truecaller_url);
+          // this.$router.push({ name : "reload", params : {
+          //   reload : btoa(truecaller_url),
+          // }});
           // let iframe = document.createElement('iframe')
           // iframe.setAttribute('src', truecaller_url)
           // this.$refs.idTokenForm.appendChild(iframe);
@@ -185,7 +182,7 @@ export default {
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
             console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){
-                  window.location.href = pollResult.redirectUrl;
+                window.location.href = pollResult.redirectUrl;
             }
             setTimeout(()=>{
                 this.waitTrueCallerWebhook(++counter);
@@ -196,10 +193,10 @@ export default {
     },
     async commit(){
       this.mobileAccepted =  true;
-      this.sendOTP();
+      await this.sendOTP();
     },
     async verify(){
-      this.verifyOTP();
+      await this.verifyOTP();
     },
     isNumber(evt){
         evt = (evt) ? evt : window.event;
@@ -231,7 +228,8 @@ export default {
             idToken : idToken
           },{ put : true });
           if(profileSubmit.redirectUrl){
-            window.location.href = profileSubmit.redirectUrl;
+            this.reload(profileSubmit.redirectUrl);
+            //window.location.href = profileSubmit.redirectUrl;
           }
       } catch(e){
           console.log("verifyOTP :  FAIELD",e)
