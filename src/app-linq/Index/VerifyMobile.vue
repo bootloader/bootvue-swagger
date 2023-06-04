@@ -15,7 +15,7 @@
                 </span>
               </div>  
           </div>
-				  <h5 class="mb-2">Mobile Verification - {{$route.params.provider}}</h5>
+				  <h5 class="mb-2">Mobile Verification</h5>
         </div> 
 				<div class="mb-3">
               <div class="text-center" v-show="!mobileAccepted">

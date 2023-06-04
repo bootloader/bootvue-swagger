@@ -12,7 +12,7 @@
               </div>  
           </div>
 				  <h5 class="mb-2">...</h5>
-          <h6 class="mb-2">{{reloadDecoded}}</h6>
+          <h6 class="mb-2 text-xs">{{reloadDecoded}}</h6>
           <form ref="redirectForm" method="POST">
           </form>
         </div> 
