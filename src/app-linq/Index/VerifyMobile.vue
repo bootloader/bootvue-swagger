@@ -15,7 +15,7 @@
                 </span>
               </div>  
           </div>
-				  <h5 class="mb-2">Mobile Verification</h5>
+				  <h5 class="mb-2">Mobile Verification - {{$route.params.provider}}</h5>
         </div> 
 				<div class="mb-3">
               <div class="text-center" v-show="!mobileAccepted">
@@ -110,6 +110,9 @@ export default {
         if(this.otpNumber && this.otpNumber.length>6){
           this.otpNumber = oldValue;
         }
+    },
+    '$route.params.provider' : function(newval,oldVal){
+
     }
   },
   computed : {
@@ -124,9 +127,29 @@ export default {
     }
   },
   methods : {
+    open(targte_url){
+          let iframe = document.createElement('a')
+          iframe.setAttribute('href', targte_url)
+          this.$refs.idTokenForm.appendChild(iframe);
+          iframe.click();
+    },
     async load(){
-        try {
+          if(!this.$route.query.redirected){
+            let query = { ...this.$route.query, redirected: 1};
+            setTimeout(()=>{
+              console.log("redirecting------")
+              this.$router.push({ name : "trueCallerPage", params : {
+                provider : 'truecaller',
+              }, query: query});
+              setTimeout(()=>{
+                this.tryTrueCaller();
+              },500)
+            },500)
+          }
           //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
+    },
+    tryTrueCaller(){
+        try{
           if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           this.isTrueCaller = true;
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
@@ -136,10 +159,20 @@ export default {
                               + `&lang=en&title=TITLE_STRING_OPTION`;
           console.log('truecaller_url',truecaller_url)
           setTimeout(()=>{
-              if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
-              else this.initFirebaseFlow();
+             if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
+             else this.initFirebaseFlow();
           }, 600);
-           window.open(truecaller_url);
+          this.$router.push({ name : "reload", params : {
+            reload : btoa(truecaller_url),
+          }});
+          // let iframe = document.createElement('iframe')
+          // iframe.setAttribute('src', truecaller_url)
+          // this.$refs.idTokenForm.appendChild(iframe);
+          // let iframe = document.createElement('a')
+          // iframe.setAttribute('href', truecaller_url)
+          // this.$refs.idTokenForm.appendChild(iframe);
+          // iframe.click();
+          //window.open(truecaller_url,'_self');
            //window.open(truecaller_url,"_blank");
         } catch(e){
           console.log("TrueCaller:Unable",e);

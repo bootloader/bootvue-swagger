@@ -38,12 +38,23 @@ export default AppRouter.route({
           component: () => import('./Index/Memberships.vue'),
         },
         {
-          path: "/pub/v1/connect/firebase/mobile",
+          name : "trueCallerPage",
+          path: "/pub/v1/connect/:provider/mobile",
+          component: () => import('./Index/VerifyMobile.vue'),
+        },
+        {
+          name : "fireBasePage",
+          path: "/pub/v1/connect/:provider/mobile",
           component: () => import('./Index/VerifyMobile.vue'),
         },
         {
           path: "/pub/v1/connect/whatsapp",
           component: () => import('./Index/VerifyWhatsApp.vue'),
+        },
+        {
+          name : "reload",
+          path: "/pub/reload/:reload",
+          component: () => import('./Index/Reloadify.vue'),
         },
         {
           path: "/pub/manifest",
