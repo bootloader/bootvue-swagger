@@ -4,15 +4,25 @@
       <ValidationObserver ref="form" class="template-form"  v-slot="{handleSubmit}">
 			<div class="card-header p-2">
         <div class="text-center">
-				  <img :src="mobileImage" class="d-inline" style="max-width:200px;"/>
+          <div class="flex-font-wrapper">
+              <div class="flex-font-container"  :class="{
+                  'text-truecaller' : isTrueCaller,
+                  'text-mobile' : firebaseInitd
+                  }">
+                <span class="fa-stack fa-3x flex-font">
+                  <i class="fa-solid fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
+                </span>
+              </div>  
+          </div>
 				  <h5 class="mb-2">Mobile Verification</h5>
         </div> 
 				<div class="mb-3">
-              <div class="text-center">
+              <div class="text-center" v-show="!mobileAccepted">
                 <span id="recaptcha-container" class="recaptcha-container d-inline-block" ref="recaptchaContainer">
                 </span>
               </div>
-              <span v-if="!mobileAccepted">
+              <span v-if="!mobileAccepted && canEnterNumber">
                 <base-input @keydown="isNumber" :readonly="!canEnterNumber"
                     class="mt-1 d-block" prependClass="btn btn-outline-success" variant="outline-success"
                     prelabel name="Mobile" prependIcon="fas fa-phone pointer"
@@ -21,9 +31,9 @@
                     appendIcon="fas fa-arrow-right" appendClass="border-success btn btn-outline-success">
                 </base-input>
                 <div class="mt-3 mb-5">
-                  <b-button variant="success" class="px-4 verify-btn"
+                  <my-button variant="success" class="px-4 verify-btn"
                     :disabled="!canEnterNumber"
-                    @click="handleSubmit(commit)">Send OTP</b-button>
+                    @click="handleSubmit(commit)">Send OTP</my-button>
                 </div>
               </span>
                <span v-if="mobileAccepted">
@@ -49,7 +59,7 @@
           </small>
         </div>
         <div class="mt-3 mb-5">
-          <button class="btn btn-success px-4 verify-btn" :disabled="!isOTPValid" @click="verify">verify</button>
+          <my-button variant="success" class="px-4 verify-btn" :disabled="!isOTPValid" @click="verify">verify</my-button>
         </div>
       </span>
       </ValidationObserver>
@@ -65,10 +75,12 @@ import { getAuth, getRedirectResult, OAuthProvider } from "firebase/auth";
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import SocialBoxes from "./SocialBoxes.vue";
+import mixin from '../mixin.js'
 
 firebase.initializeApp(window.CONST.FBENV.firebase);
 
 export default {
+  mixins : [mixin],
   data() {
     return {
       mobileImage : __webpack_public_path__ + '/_common/static/phoneverify/mobile.png',
@@ -79,7 +91,9 @@ export default {
       confirmationResult : null,
       recaptchaVerifier  : null,
       canEnterNumber : false,
-      firebaseInitd : false
+      firebaseInitd : false,
+      isTrueCaller : false,
+      showCaptcha : true,
     };
   },
   mounted : function () {
@@ -98,6 +112,9 @@ export default {
         if(this.otpNumber && this.otpNumber.length>6){
           this.otpNumber = oldValue;
         }
+    },
+    '$route.params.provider' : function(newval,oldVal){
+
     }
   },
   computed : {
@@ -113,9 +130,24 @@ export default {
   },
   methods : {
     async load(){
-        try {
-          if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
+          if(!this.$route.query.redirected){
+            let query = { ...this.$route.query, redirected: 1};
+            setTimeout(()=>{
+              console.log("redirecting------")
+              this.$router.push({ name : "trueCallerPage", params : {
+                provider : 'truecaller',
+              }, query: query});
+              setTimeout(()=>{
+                this.tryTrueCaller();
+              },500)
+            },500)
+          }
+          //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
+    },
+    tryTrueCaller(){
+        try{
           if(!this.$global.isMobile) throw "ThisIsBrowser"; 
+          this.isTrueCaller = true;
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
@@ -123,9 +155,22 @@ export default {
                               + `&lang=en&title=TITLE_STRING_OPTION`;
           console.log('truecaller_url',truecaller_url)
           setTimeout(()=>{
-              this.waitTrueCallerWebhook(0);
+             if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
+             else this.initFirebaseFlow();
           }, 600);
-           window.open(truecaller_url,"_blank");
+          this.reload(truecaller_url);
+          // this.$router.push({ name : "reload", params : {
+          //   reload : btoa(truecaller_url),
+          // }});
+          // let iframe = document.createElement('iframe')
+          // iframe.setAttribute('src', truecaller_url)
+          // this.$refs.idTokenForm.appendChild(iframe);
+          // let iframe = document.createElement('a')
+          // iframe.setAttribute('href', truecaller_url)
+          // this.$refs.idTokenForm.appendChild(iframe);
+          // iframe.click();
+          //window.open(truecaller_url,'_self');
+           //window.open(truecaller_url,"_blank");
         } catch(e){
           console.log("TrueCaller:Unable",e);
           this.initFirebaseFlow();
@@ -137,7 +182,7 @@ export default {
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
             console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){
-                  window.location.href = pollResult.redirectUrl;
+                window.location.href = pollResult.redirectUrl;
             }
             setTimeout(()=>{
                 this.waitTrueCallerWebhook(++counter);
@@ -148,10 +193,10 @@ export default {
     },
     async commit(){
       this.mobileAccepted =  true;
-      this.sendOTP();
+      await this.sendOTP();
     },
     async verify(){
-      this.verifyOTP();
+      await this.verifyOTP();
     },
     isNumber(evt){
         evt = (evt) ? evt : window.event;
@@ -171,9 +216,7 @@ export default {
           this.confirmationResult = confirmationResult;
         } catch(e){
             console.log("sendOTP :  FAIELD",e)
-            this.recaptchaVerifier.render().then(function(widgetId) {
-              grecaptcha.reset(widgetId);
-            });
+            grecaptcha.reset(widgetId);
         }
     },
     async verifyOTP(){
@@ -185,7 +228,8 @@ export default {
             idToken : idToken
           },{ put : true });
           if(profileSubmit.redirectUrl){
-            window.location.href = profileSubmit.redirectUrl;
+            this.reload(profileSubmit.redirectUrl);
+            //window.location.href = profileSubmit.redirectUrl;
           }
       } catch(e){
           console.log("verifyOTP :  FAIELD",e)
@@ -200,13 +244,15 @@ export default {
      * 
      */
     async initFirebaseFlow(){
+      this.isTrueCaller = false;
       if(this.firebaseInitd) return;
       return this.loadFirebase();
     },
     async loadFirebase(){
         this.firebaseInitd = true;
         firebase.auth().useDeviceLanguage();
-        console.log("loadFireBase", this.$refs.recaptchaContainer)
+        console.log("loadFireBase", this.$refs.recaptchaContainer);
+        //const auth =  firebase.auth.getAuth();
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(this.$refs.recaptchaContainer, {
           'size': '300px',
           'callback': (response) => {
@@ -214,9 +260,13 @@ export default {
             // reCAPTCHA solved, allow signInWithPhoneNumber.
             this.canEnterNumber = true;
             //onSignInSubmit();
+          }, 'expired-callback': (e) => {
+            console.log("expired-callback",e)
           }
         });
-        await this.recaptchaVerifier.render();
+        await this.recaptchaVerifier.render().then((widgetId) => {
+            window.recaptchaWidgetId = widgetId;
+        });
           return;
         firebase.auth().settings.appVerificationDisabledForTesting = true;
         var phoneNumber = "+16505554567";
@@ -241,4 +291,15 @@ export default {
     letter-spacing: 19px !important;
     padding-left: 27px !important;
   }
+
+.flex-font-wrapper {
+   font-size: 25px;
+  .flex-font-container {
+    .flex-font {
+    }
+    height : 12em;
+    padding: 1em;
+    line-height: 10em;
+  }
+}
 </style>

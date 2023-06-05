@@ -2,12 +2,14 @@
   <div class="social-tile pointer" @click="onClick" >
     <span class="social-tile-inner" :class="innerClass">
       <slot name="thumb">
-          <social-icon v-if="!nothumb" :provider="provider" :variant="variant" :status="status"></social-icon>
+          <social-icon v-if="!nothumb" :provider="provider" :partner="partner" 
+              :variant="variant" :status="status"></social-icon>
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
-          <div class="social-tile-inner-desc-title"> {{title}}&nbsp;</div>
-          <div class="social-tile-inner-desc-subtitle"> {{subtitle}} </div>
+          <div class="social-tile-inner-desc-title" v-if="title"> {{title}}&nbsp;</div>
+          <div class="social-tile-inner-desc-title" v-if="subtitle"> {{subtitle}} </div>
+          <div class="social-tile-inner-desc-title" v-if="subsubtitle"> {{subsubtitle}} </div>
         </span>
       </slot>
     </span> 
@@ -16,7 +18,7 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {},provider : {}, path : {}, link : {}, variant : {}, 
+    title : {}, subtitle : {}, subsubtitle : {},provider : {}, partner : {},path : {}, link : {}, variant : {}, 
     status : { }, innerClass : {}, nothumb : { type : Boolean, default : false}
   },
   data() {
@@ -64,7 +66,7 @@ export default {
       min-height: 50px;
       width: calc( 100% - 70px);
       margin: 5px 5px 5px 0px;
-      .social-tile-inner-desc-title {
+      .social-tile-inner-desc-title:first-child {
         font-weight: bold;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -72,14 +74,20 @@ export default {
         height: 25px;
         white-space: nowrap;
         font-size: .9rem;
+        line-height: 1.5rem;
+        margin-bottom: -0.4rem;
       }
-      .social-tile-inner-desc-subtitle {
-        font-size: .8rem;
+      .social-tile-inner-desc-title+.social-tile-inner-desc-title {
+        font-size: .75rem;
         overflow: hidden;
         text-overflow: ellipsis;
         width: 100%;
-        height: 25px;
+        height: 20px;
         white-space: nowrap;
+      }
+      .social-tile-inner-desc-title+.social-tile-inner-desc-title+.social-tile-inner-desc-title{
+         font-size: .6rem;
+         line-height: 0.5rem;
       }
     }
   }

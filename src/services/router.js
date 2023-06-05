@@ -24,22 +24,25 @@ export default {
 
     var options = this.options;
     options.beforeEach = options.beforeEach || function(to, from, next){
+      console.log("subrouter:beforeEach------->:" ,from,to.matched,to);
       next();
     };
 
     options.accessDenied = options.accessDenied || function(to, from, next){
+      console.log("subrouter:accessDenied------->:" ,from,to.matched,to);
       next(false);
     };
 
     options.matchNotFound = options.matchNotFound || function(to, from, next){
+      console.log("subrouter:matchNotFound------->:" ,from,to.matched);
       next();
     };
 
 
     router.beforeEach((to, from, next) => {
-      console.log(to, "-->" ,from,to.matched);
+      console.log("router:beforeEach------->:" ,from,to.matched);
       if(!to.matched || to.matched.length == 0){
-        console.log("matchNotFound")
+        console.log("router:matchNotFound------->:" ,from,to.matched,to);
         options.matchNotFound(to, from, next)
       } else if(!to.matched.some(function (record) {
         if(!record.meta || !window.CONST.APP_USER_ROLE) return true;
@@ -54,13 +57,13 @@ export default {
             return true
           }
         }
-        console.log("NoRoleFound")
+        console.log("router:noRoleFound------->:" ,from,to.matched,to);
         return false;
       })){
-        console.log("NextFailed")
+        console.log("router:accessDenied------->:" ,from,to.matched,to);
         options.accessDenied(to, from, next);
       } else {
-        console.log("NextDone")
+        console.log("router:beforeEach------->:",from,to.matched,to)
         options.beforeEach(to, from, next);
       }
       
