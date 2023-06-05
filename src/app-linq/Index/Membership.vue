@@ -13,7 +13,7 @@
 
          <validation-observer v-slot="{}" ref="formValidator" v-if="isReady">
               <div class="section-wrapper styler-height-fix">
-                    <h4 class="section-divider">Details</h4>
+                    <h4 class="section-divider linq-section-divider">Details</h4>
                     <b-row>
                         <b-col cols="12" class="text-center">
                            <div class="verificationer-details">{{membership.verification.description}}</div> 
@@ -21,10 +21,10 @@
                     </b-row>  
               </div>  
               <div class="section-wrapper">
-                  <div class="section-divider">Profiles Shared</div>
+                  <h4 class="section-divider linq-section-divider">Profiles Shared</h4>
                   <social-tile-container :items="sharedProfiles"/> 
               </div>  
-              <div class="section-wrapper">
+              <div class="section-wrapper share-bar">
                   <div class="section-divider"></div>
                    <base-input label="Share Link" copy readonly v-model="verificationSharelink"
                         prependIcon="fas fa-share-nodes"
@@ -60,7 +60,7 @@
                     </social-button> 
                 </div> 
               </div>
-              <div class="py-5 text-center">
+              <div class=" text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12-xx lg:w-4/12 px-2 flex flex-wrap justify-center">
  
@@ -143,5 +143,12 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-}        
+}
+
+  .share-bar .btn{
+
+    margin-top: 0px ;
+    border-inline: revert;
+  } 
+  
 </style>

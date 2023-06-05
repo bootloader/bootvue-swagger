@@ -24,7 +24,7 @@
 
         <div class="section-wrapper">
             <h4 class="section-divider linq-section-divider">My Profiles</h4>
-            <SocialBoxes :items="myProfiles" class="py-3 text-center" allowadd/>
+            <SocialBoxes  :items="myProfiles" class="social-plus py-3 text-center" allowadd/>
         </div>  
         <div class="section-wrapper">
             <h4 class="section-divider linq-section-divider">My Memberships</h4>
@@ -204,6 +204,27 @@ export default {
     }
   }   
 
+}
+
+.social-plus .social-tile-container .display-inline-block .social-tile .social-tile-inner .social-btn   {
+  
+  .social-btn-box{
+    width: 35px;
+    height: 35px;
+  }
+   
+  .social-btn-icon{
+    font-size: 30px;
+    vertical-align: middle;
+    margin-top: -15px;
+
+  }
+  .social-btn-status{
+    right: -5%;
+    bottom: 5%;
+    padding: 2px;
+  }
+  
 }
 
 </style>
