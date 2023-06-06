@@ -20,6 +20,8 @@
                         :reload="`/linq/app/v1/connect/linkedin?_${nounce}`"  />
                       <social-icon provider="facebook" variant="grey"  title="Link Facebook"  addsign
                       :reload="`/linq/app/v1/connect/facebook?_${nounce}`"/>
+                      <social-icon provider="twitter" variant="grey"  title="Link Twitter"  addsign
+                      :reload="`/linq/app/v1/connect/twitter?_${nounce}`"/>
                       <social-icon provider="outlook" variant="grey"  title="Link Outlook" addsign
                       :reload="`/linq/app/v1/connect/outlook?_${nounce}`"/>
                       <social-icon provider="mobile" variant="grey"  title="Link Mobile" addsign

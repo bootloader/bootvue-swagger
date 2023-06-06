@@ -76,13 +76,16 @@ export default {
     myPartner(){
       return this.partner ? this.partner.toLowerCase() :this.partner;
     },
+    myProvider(){
+      return this.provider ? this.provider.toLowerCase() :this.provider;
+    },
     myVariant(){
       return this.variant 
       || DEFAULT_PROVIDERS[this.myPartner]?.variant
-      || DEFAULT_PROVIDERS[this.provider]?.variant || this.provider  || "evening"
+      || DEFAULT_PROVIDERS[this.myProvider]?.variant || this.myProvider  || "evening"
     },
     myIcon(){
-      return this.icon || DEFAULT_PROVIDERS[this.provider]?.icon || this.provider  || ("fab fa-" + this.provider);
+      return this.icon || DEFAULT_PROVIDERS[this.myProvider]?.icon || this.myProvider  || ("fab fa-" + this.myProvider);
     },
     myStatusIcon(){
       return  DEFAULT_PROVIDERS[this.status]?.icon || this.status  || ("fab fa-" + this.status);
