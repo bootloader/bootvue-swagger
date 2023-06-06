@@ -202,7 +202,7 @@ export default {
   .social-tile-inner {
     border-radius: 0px;
     height: 62px;
-    background-image: linear-gradient(180deg, #000000, white);
+    background-image: linear-gradient(180deg, #000000, #e1e1e1);
     -webkit-text-stroke: snow;
   }   
     padding: 0px 0px;
