@@ -209,6 +209,12 @@ export default {
       margin: 5px 5px 5px 5px;
       float: revert;
     }
+    .social-tile-inner-desc-title{
+      font-variant: petite-caps;
+      text-transform: none;
+      font-size: 18px;
+      
+    }
 
 }
 

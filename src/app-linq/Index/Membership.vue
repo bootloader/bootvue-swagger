@@ -168,7 +168,7 @@ export default {
 }
     .form-control{
       height: 36px;
-      border: solid 1px #263d64 !important;
+      
     }
     
   } 
