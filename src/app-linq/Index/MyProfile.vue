@@ -16,7 +16,7 @@
         </div>
         <div class="section-wrapper1">
           <div class="social-tile-container  ">
-            <social-tile id="title-tile" class="w-full lg:w-4/12" style="text-align-last:center;  padding-top: 15px;"
+            <social-tile id="title-tile" class="w-full lg:w-4/12" style="text-align-last:center;"
               :title="meta.profile.name"  :subtitle="meta.profile.jobTitle" nothumb>
             </social-tile>
           </div>  
@@ -37,7 +37,7 @@
             </social-tile-container>
         </div> 
         <div class="section-wrapper">
-            <h4 class="section-divider">Profile/Settings</h4>
+            <h4 class="section-divider linq-section-divider">Profile/Settings</h4>
             <div class="social-tile-container">
                 <span class="w-full lg:w-4/12 d-inline-block">
                     <social-tile class="w-full" variant="danger" 
@@ -200,12 +200,19 @@ export default {
 
 #title-tile.social-tile {
   .social-tile-inner {
-    .social-tile-inner-desc{
-    width: calc( 100% - 56px);
-    }
+    border-radius: 0px;
+    height: 62px;
   }   
+    padding: 0px 0px;
+    .social-tile-inner-desc {
+      width: 99%;
+      margin: 5px 5px 5px 5px;
+      float: revert;
+    }
 
 }
+
+
 
 .social-plus .social-tile-container .display-inline-block .social-tile .social-tile-inner .social-btn   {
   

@@ -145,10 +145,32 @@ export default {
     justify-content: space-between;
 }
 
-  .share-bar .btn{
+  .share-bar .input-group  {
 
-    margin-top: 0px ;
-    border-inline: revert;
+    .input-group-prepend .btn {
+      margin-top: 0px ;
+      border: solid 1px #263d64;
+      height: 36px;
+      background-color: #233152;
+      color: #d1cdcd;
+    }
+
+    .input-group-append .btn {
+      margin-top: 0px ;
+      border: solid 1px #263d64;
+      height: 36px;
+    }
+
+    .input-group-append .btn-outline-evening:not(:disabled):not(.disabled):active, .btn-outline-evening:not(:disabled):not(.disabled).active, .btn-outline-evening:not(:disabled):not(.disabled):hover, .show > .btn-outline-evening.dropdown-toggle {
+      color: #FFF;
+      background-color: #233152;
+      border-color: #525f7f;
+}
+    .form-control{
+      height: 36px;
+      border: solid 1px #263d64 !important;
+    }
+    
   } 
   
 </style>
