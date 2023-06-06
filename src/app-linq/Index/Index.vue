@@ -6,6 +6,9 @@
             <div class="py-2  homeicon">
                 <b-button variant="outline-white btn-new " size="md" :to="'/'">
                   <i class="fa fa-home"/>
+                </b-button>
+                <b-button variant="outline-white btn-new " size="md" :to="'/'">
+                  <i class="fa fa-gear"/>
                 </b-button>  
                 <b-button variant="outline-white float-right  " size="md" href="/linq/auth/logout">
                   <i class="fa fa-power-off"/>

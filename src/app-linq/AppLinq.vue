@@ -1,11 +1,11 @@
-<template>
-  <div id="app">
+<template style="background-color: black;">
+  <div id="app"  style="background-color: black;">
     <component :is="layout">
       <router-view/>
     </component>  
   </div>
 </template>
-<script>
+<script >
   import Vue from 'vue';
   import "@fortawesome/fontawesome-free/css/all.min.css";
   import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
