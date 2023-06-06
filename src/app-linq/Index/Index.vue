@@ -15,7 +15,7 @@
         </div> 
       </section>    
       <section class="relative block h-300-px" style="height:260px">
-        <div class="absolute top-0 w-full h-full bg-center bg-cover " style="background-image: linear-gradient(45deg, black, rgb(163 163 163))">
+        <div class="absolute top-0 w-full h-full bg-center bg-cover " style="background-color: black;">
           <span
             id="blackOverlay"
             class="w-full h-full absolute opacity-50 bg-black"

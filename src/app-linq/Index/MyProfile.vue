@@ -202,6 +202,8 @@ export default {
   .social-tile-inner {
     border-radius: 0px;
     height: 62px;
+    background-image: linear-gradient(180deg, #000000, white);
+    -webkit-text-stroke: snow;
   }   
     padding: 0px 0px;
     .social-tile-inner-desc {
@@ -213,6 +215,8 @@ export default {
       font-variant: petite-caps;
       text-transform: none;
       font-size: 18px;
+      color: white;
+      -webkit-transform-origin-x: center;
       
     }
 
