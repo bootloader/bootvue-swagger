@@ -6,7 +6,6 @@
         <div class="text-center">
           <div class="flex-font-wrapper">
               <div class="flex-font-container"  :class="{
-                  'text-truecaller' : isTrueCaller,
                   'text-mobile' : firebaseInitd
                   }">
                 <span class="fa-stack fa-3x flex-font">
@@ -92,7 +91,6 @@ export default {
       recaptchaVerifier  : null,
       canEnterNumber : false,
       firebaseInitd : false,
-      isTrueCaller : false,
       showCaptcha : true,
     };
   },
@@ -112,9 +110,6 @@ export default {
         if(this.otpNumber && this.otpNumber.length>6){
           this.otpNumber = oldValue;
         }
-    },
-    '$route.params.provider' : function(newval,oldVal){
-
     }
   },
   computed : {
@@ -129,78 +124,18 @@ export default {
     }
   },
   methods : {
+    async goToFallback(){
+      let query = { ...this.$route.query, from: 'firebase'};
+      this.$router.push({ name : "trueCallerPage",query: query});
+    },
     async load(){
-          if(!this.$route.query.redirected){
-            let query = { ...this.$route.query, redirected: 1};
-            setTimeout(()=>{
-              console.log("redirecting------")
-              this.$router.push({ name : "trueCallerPage", params : {
-                provider : 'truecaller',
-              }, query: query});
-              setTimeout(()=>{
-                this.tryTrueCaller();
-              },500)
-            },0)
-          }
-          //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
-    },
-    tryTrueCaller(){
-        try{
-          if(!this.$global.isMobile) throw "ThisIsBrowser"; 
-          this.isTrueCaller = true;
-          let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
-                              + `&requestNonce=${this.$route.query.nonce}`
-                              +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
-                              +  `&partnerName=${window.CONST.TCENV.truecaller.appName}`
-                              + `&lang=en&title=TITLE_STRING_OPTION`;
-          console.log('truecaller_url',truecaller_url);
-
-          const handleDeepLinkFailure = () => {
-            console.log("visibilitychange")
-            // Remove the event listener
-            document.removeEventListener('visibilitychange', handleDeepLinkFailure);
-            // Check if the page is visible
-             console.log("visibilitychange:hidden",document.hidden)
-            if (!document.hidden) {
-              // Handle the deep link failure here
-              // You can display an error message or provide an alternative action
-              this.initFirebaseFlow();
-            } else {
-              this.waitTrueCallerWebhook(0);
-            }
-          };
-          // Add an event listener to handle deep link failure
-          document.addEventListener('visibilitychange', handleDeepLinkFailure);
-
-          // setTimeout(()=>{
-          //    if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
-          //    else this.initFirebaseFlow();
-          // }, 600);
-          //this.reloadUrl(truecaller_url);
-          // let recaptchaScript = document.createElement('iframe')
-          // recaptchaScript.setAttribute('src', truecaller_url)
-          // this.$refs.idTokenForm.appendChild(recaptchaScript);
-          window.open(truecaller_url,"_blank");
-
-        } catch(e){
-          console.log("TrueCaller:Unable",e);
+        console.log("MOBILE_VERIFICATION:FIREBASE")
+        if(!this.$global.isMobile || this.$route.query.from == 'truecaller'){
           this.initFirebaseFlow();
+        } else {
+          this.goToFallback();
         }
-    },
-    async waitTrueCallerWebhook(counter){ 
-        try {
-            if(counter > 5) throw "RetryLimitExceeded:5";
-            let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
-            console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
-            if(pollResult.redirectUrl){
-                window.location.href = pollResult.redirectUrl;
-            }
-            setTimeout(()=>{
-                this.waitTrueCallerWebhook(++counter);
-            },3000)
-        } catch(e){
-          this.initFirebaseFlow();
-        }
+        //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
     },
     async commit(){
       this.mobileAccepted =  true;
@@ -255,7 +190,6 @@ export default {
      * 
      */
     async initFirebaseFlow(){
-      this.isTrueCaller = false;
       if(this.firebaseInitd) return;
       return this.loadFirebase();
     },

@@ -59,8 +59,10 @@ try{
 if (document.addEventListener) {
     window.addEventListener('pageshow', function (event) {
         if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
-            console.log("pageShow:back_forward")
+            console.log("pageShow:url",window.location.href)
+			console.log("pageShow:back_forward")
         } else {
+			console.log("pageShow:url",window.location.href)
 			console.log("pageShow:back_forward",event.persisted,performance.getEntriesByType("navigation")[0].type)
 		}
     },

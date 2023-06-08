@@ -39,12 +39,12 @@ export default AppRouter.route({
         },
         {
           name : "trueCallerPage",
-          path: "/pub/v1/connect/:provider/mobile",
-          component: () => import('./Index/VerifyMobile.vue'),
+          path: "/pub/v1/connect/truecaller/mobile",
+          component: () => import('./Index/VerifyMobileTrueCaller.vue'),
         },
         {
           name : "fireBasePage",
-          path: "/pub/v1/connect/:provider/mobile",
+          path: "/pub/v1/connect/firebase/mobile",
           component: () => import('./Index/VerifyMobile.vue'),
         },
         {
