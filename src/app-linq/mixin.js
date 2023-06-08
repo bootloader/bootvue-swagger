@@ -94,6 +94,32 @@
         this.$router.push({ name : "reload", params : {
           reload : btoa(target_url),
         }});
+      },
+      open_deeplink(targetUrl, callback){
+          let target_url = window.location.origin+'/linq/pub/deeplink/'+btoa(targetUrl);
+          window.open(target_url,'_blank');
+          return;
+          //this.reloadUrl(target_url);
+          let iframe = document.createElement('iframe');
+          iframe.id = "deep_link";
+          iframe.name = "deep_link_"+Date.now();
+          iframe.style.border = "none";
+          iframe.style.width = "1px";
+          iframe.style.height = "1px";
+          iframe.width = 0;
+          iframe.height = 0;
+          iframe.frameBorder = 0;
+          iframe.onload = function () {
+            iframe.src = targetUrl;
+            //window.open(targetUrl,iframe.name);
+            if(callback) callback(targetUrl);
+          };
+          iframe.setAttribute('src', target_url);
+          iframe.src= target_url;
+          // hide iframe visually
+          document.body.appendChild(iframe);
+          //window.open(target_url,"_blank");
+           //window.open(target_url);
       }
     }
   };

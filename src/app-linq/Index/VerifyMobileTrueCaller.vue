@@ -5,7 +5,7 @@
 			<div class="card-header p-2">
         <div class="text-center">
           <div class="flex-font-wrapper">
-              <div class="flex-font-container text-truecaller'">
+              <div class="flex-font-container text-truecaller">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa-solid fa-circle fa-stack-2x"></i>
                   <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
@@ -63,7 +63,7 @@ export default {
     async load(){
         try{
           console.log("MOBILE_VERIFICATION:TRUECALLER")
-          if(!this.$global.isMobile) throw "ThisIsBrowser"; 
+          //if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
@@ -80,7 +80,7 @@ export default {
             if (!document.hidden) {
               // Handle the deep link failure here
               // You can display an error message or provide an alternative action
-              this.goToFallback();
+              //this.goToFallback();
             } else {
               this.waitTrueCallerWebhook(0);
             }
@@ -91,21 +91,17 @@ export default {
           //    if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
           //    else this.initFirebaseFlow();
           // }, 600);
-          //this.reloadUrl(truecaller_url);
-          let recaptchaScript = document.createElement('iframe')
-          recaptchaScript.setAttribute('src', truecaller_url)
-          this.$refs.idTokenForm.appendChild(recaptchaScript);
-          window.open(truecaller_url,"_blank");
-           window.open(truecaller_url);
-
+          this.open_deeplink(truecaller_url, (url)=>{
+            console.log("deepling loaded",url)
+          });
         } catch(e){
           console.log("TrueCaller:Unable",e);
-          this.goToFallback();
+          //this.goToFallback();
         }
     },
     async waitTrueCallerWebhook(counter){ 
         try {
-            if(counter > 5) throw "RetryLimitExceeded:5";
+            //if(counter > 5) throw "RetryLimitExceeded:5";
             let pollResult =  await this.$service.get("/pub/v1/connect/truecaller/mobile/webhook");
             console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
             if(pollResult.redirectUrl){
@@ -115,7 +111,7 @@ export default {
                 this.waitTrueCallerWebhook(++counter);
             },3000)
         } catch(e){
-          this.goToFallback();
+          //this.goToFallback();
         }
     },
   },

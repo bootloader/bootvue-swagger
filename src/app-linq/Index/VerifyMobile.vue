@@ -129,7 +129,9 @@ export default {
       this.$router.push({ name : "trueCallerPage",query: query});
     },
     async load(){
-        console.log("MOBILE_VERIFICATION:FIREBASE")
+        console.log("MOBILE_VERIFICATION:FIREBASE");
+
+        return this.goToFallback();
         if(!this.$global.isMobile || this.$route.query.from == 'truecaller'){
           this.initFirebaseFlow();
         } else {
