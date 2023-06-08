@@ -228,7 +228,7 @@ export default {
             idToken : idToken
           },{ put : true });
           if(profileSubmit.redirectUrl){
-            this.reload(profileSubmit.redirectUrl);
+            this.reloadUrl(profileSubmit.redirectUrl);
             //window.location.href = profileSubmit.redirectUrl;
           }
       } catch(e){
