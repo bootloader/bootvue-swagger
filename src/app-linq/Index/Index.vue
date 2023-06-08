@@ -96,7 +96,7 @@ export default {
   methods: {
     setNavbarOpen: function () {
       this.navbarOpen = !this.navbarOpen;
-    },
+    }
   },
   components: {
   },

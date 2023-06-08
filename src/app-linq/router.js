@@ -61,6 +61,11 @@ export default AppRouter.route({
           meta : { layout : "div" },
           component: () => import('../app-www/manifest/Manifest.vue'),
         },
+        {
+          path: "/pub/dev",
+          meta : { layout : "div" },
+          component: () => import('./Index/Dev.vue'),
+        },
         { path: "/:pathMatch(.*)*", redirect: "/" },
       ],
       matchNotFound(to, from, next){
