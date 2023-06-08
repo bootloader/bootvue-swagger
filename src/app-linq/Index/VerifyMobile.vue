@@ -140,7 +140,7 @@ export default {
               setTimeout(()=>{
                 this.tryTrueCaller();
               },500)
-            },500)
+            },0)
           }
           //if(!this.ALWAYS_FALSE) return this.initFirebaseFlow();
     },
@@ -153,24 +153,35 @@ export default {
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
                               +  `&partnerName=${window.CONST.TCENV.truecaller.appName}`
                               + `&lang=en&title=TITLE_STRING_OPTION`;
-          console.log('truecaller_url',truecaller_url)
-          setTimeout(()=>{
-             if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
-             else this.initFirebaseFlow();
-          }, 600);
-          this.reloadUrl(truecaller_url);
-          // this.$router.push({ name : "reload", params : {
-          //   reload : btoa(truecaller_url),
-          // }});
-          // let iframe = document.createElement('iframe')
-          // iframe.setAttribute('src', truecaller_url)
-          // this.$refs.idTokenForm.appendChild(iframe);
-          // let iframe = document.createElement('a')
-          // iframe.setAttribute('href', truecaller_url)
-          // this.$refs.idTokenForm.appendChild(iframe);
-          // iframe.click();
-          //window.open(truecaller_url,'_self');
-           //window.open(truecaller_url,"_blank");
+          console.log('truecaller_url',truecaller_url);
+
+          const handleDeepLinkFailure = () => {
+            console.log("visibilitychange")
+            // Remove the event listener
+            document.removeEventListener('visibilitychange', handleDeepLinkFailure);
+            // Check if the page is visible
+             console.log("visibilitychange:hidden",document.hidden)
+            if (!document.hidden) {
+              // Handle the deep link failure here
+              // You can display an error message or provide an alternative action
+              this.initFirebaseFlow();
+            } else {
+              this.waitTrueCallerWebhook(0);
+            }
+          };
+          // Add an event listener to handle deep link failure
+          document.addEventListener('visibilitychange', handleDeepLinkFailure);
+
+          // setTimeout(()=>{
+          //    if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
+          //    else this.initFirebaseFlow();
+          // }, 600);
+          //this.reloadUrl(truecaller_url);
+          // let recaptchaScript = document.createElement('iframe')
+          // recaptchaScript.setAttribute('src', truecaller_url)
+          // this.$refs.idTokenForm.appendChild(recaptchaScript);
+          window.open(truecaller_url,"_blank");
+
         } catch(e){
           console.log("TrueCaller:Unable",e);
           this.initFirebaseFlow();

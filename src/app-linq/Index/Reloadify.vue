@@ -31,11 +31,16 @@ export default {
     };
   },
   mounted : function () {
+    console.log("ReloadFiy:mounted")
     this.open(this.reloadDecoded);
   },
   created (){
+    console.log("ReloadFiy:created")
   },
   watch : {
+    '$route.params.reload' :  function(neval){
+        console.log("ReloadFiy:reload",neval)
+    }
   },
   computed : {
     reloadDecoded(){
