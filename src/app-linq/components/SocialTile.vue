@@ -34,6 +34,7 @@ export default {
         console.log("this.path",this.path)
           this.$router.push( this.path)
       } else if(this.link){
+           console.log("this.link",this.link)
            window.open(this.link,'_blank');
       }
       this.$emit('click',e);

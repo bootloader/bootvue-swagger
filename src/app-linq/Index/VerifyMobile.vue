@@ -158,7 +158,7 @@ export default {
              if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
              else this.initFirebaseFlow();
           }, 600);
-          this.reload(truecaller_url);
+          this.reloadUrl(truecaller_url);
           // this.$router.push({ name : "reload", params : {
           //   reload : btoa(truecaller_url),
           // }});

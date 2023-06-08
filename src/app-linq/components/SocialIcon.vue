@@ -107,8 +107,9 @@ export default {
           window.open(this.link,'_blank');
       } else if(this.reload){
           console.log("this.reload",this.reload)
-          let reload = window.btoa(this.reload);
-          this.$router.push('/pub/reload/'+reload);
+          this.$router.push({ name : "reload", params : {
+            reload : btoa(this.reload),
+          }});
           //window.open(this.link,'_blank');
       }
       this.$emit('click',e);

@@ -44,6 +44,7 @@ export default {
   },
   methods : {
     open(targte_url){
+      console.log("ReloadFiy",targte_url)
       let iframe = document.createElement('a')
       iframe.setAttribute('href', targte_url)
       this.$refs.redirectForm.appendChild(iframe);
