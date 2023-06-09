@@ -97,7 +97,7 @@
       },
       open_deeplink(targetUrl, callback){
           let target_url = window.location.origin+'/linq/pub/deeplink/'+btoa(targetUrl);
-          window.open(target_url,'_blank');
+          let frame = window.open(target_url,'_blank');
           return;
           //this.reloadUrl(target_url);
           let iframe = document.createElement('iframe');
