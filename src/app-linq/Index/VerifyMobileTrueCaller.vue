@@ -63,7 +63,7 @@ export default {
     async load(){
         try{
           console.log("MOBILE_VERIFICATION:TRUECALLER")
-          if(!this.$global.isMobile) throw "ThisIsBrowser"; 
+          //if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`
@@ -91,12 +91,15 @@ export default {
           //    if(!document.hasFocus())  this.waitTrueCallerWebhook(0);
           //    else this.initFirebaseFlow();
           // }, 600);
-          this.open_deeplink(truecaller_url, (url)=>{
-            console.log("deepling loaded",url)
+          this.open_deeplink(truecaller_url, (url,isopen)=>{
+            console.log("deepling loaded",url);
+            if(!isopen){
+              this.goToFallback();
+            }
           });
         } catch(e){
           console.log("TrueCaller:Unable",e);
-          //this.goToFallback();
+          this.goToFallback();
         }
     },
     async waitTrueCallerWebhook(counter){ 

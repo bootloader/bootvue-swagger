@@ -645,7 +645,7 @@
         this.$service.config("DISABLE_RESPONSE_INTERCEPTOR");
         if (window.addEventListener) {
             window.addEventListener("message", this.onPostMessage, false);
-        } else if (element.attachEvent) {
+        } else if (window.attachEvent) {
             window.attachEvent('onmessage', this.onPostMessage);
         }
         let THIS = this;
@@ -664,7 +664,7 @@
       beforeDestroy () {
         if (window.addEventListener) {
             window.removeEventListener("message", this.onPostMessage, false);
-        } else if (element.attachEvent) {
+        } else if (window.attachEvent) {
             window.removeEventListener('onmessage', this.onPostMessage);
         }
       }

@@ -90,20 +90,61 @@
         await this.loadMeta();
         this.$router.push("/")
       },
+      onPostMessageWrapper : function (e) {
+        if(!e || !e.data || typeof e.data != 'string' || e.data.trim().indexOf("{")!=0){
+          return;
+        }
+        //console.log("onmessage====onPostMessage:data"+e.data);
+        var data = JSON.parse(e.data);
+        if(!data.payload){
+          return;
+        }
+        var payload = data.payload;
+        //console.log("onmessage====onPostMessage.data.payload"+JSON.stringify(payload));
+        if(this.onPostMessage){
+          this.onPostMessage(payload);
+        }
+      },
+      onMessageAttach(){
+        if (window.addEventListener) {
+            window.addEventListener("message", this.onPostMessageWrapper, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onmessage', this.onPostMessageWrapper);
+        }
+      },
+      onMessageRemove(){
+        if (window.addEventListener) {
+            window.removeEventListener("message", this.onPostMessageWrapper, false);
+        } else if (window.attachEvent) {
+            window.removeEventListener('onmessage', this.onPostMessageWrapper);
+        }
+      },
       reloadUrl(target_url){
         this.$router.push({ name : "reload", params : {
           reload : btoa(target_url),
         }});
       },
+      onPostMessage(e){
+        console.log("onPostMessage",e);
+      },
       open_deeplink(targetUrl, callback){
           let target_url = window.location.origin+'/linq/pub/deeplink?deeplink='+btoa(targetUrl);
           let iframe = null;
-          iframe = window.open(target_url,'_blank');
+          iframe = window.open(target_url,'deeplink');
+          this.onMessageAttach((e)=>{
+            console.log("ON_MESSAGE_ATTACH",e);
+          });
           iframe.addEventListener('load', function(){
             console.log(" iframe.onload----",iframe);
-            if(callback) callback(targetUrl);
+            if(callback) callback(targetUrl,true);
             // iframe.close();
           }, false);
+          iframe.addEventListener('unload', function(){
+            console.log(" iframe.unload----",iframe);
+            if(callback) callback(targetUrl,false);
+            // iframe.close();
+          }, false);
+
           return;
           //this.reloadUrl(target_url);
           console.log("target_url",target_url);

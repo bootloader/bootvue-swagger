@@ -131,7 +131,9 @@ export default {
     async load(){
         console.log("MOBILE_VERIFICATION:FIREBASE");
         //return this.goToFallback();
-        if(!this.$global.isMobile || this.$route.query.from == 'truecaller'){
+        if(
+          !this.$global.isMobile || 
+          this.$route.query.from == 'truecaller'){
           this.initFirebaseFlow();
         } else {
           this.goToFallback();
