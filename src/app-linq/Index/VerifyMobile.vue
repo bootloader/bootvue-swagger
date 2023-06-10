@@ -15,6 +15,7 @@
               </div>  
           </div>
 				  <h5 class="mb-2">Mobile Verification</h5>
+          <h6 class="mb-2 text-xs">via SMS</h6>
         </div> 
 				<div class="mb-3">
               <div class="text-center" v-show="!mobileAccepted">
@@ -22,7 +23,7 @@
                 </span>
               </div>
               <span v-if="!mobileAccepted && canEnterNumber">
-                <base-input @keydown="isNumber" :readonly="!canEnterNumber"
+                <base-input @keydown="isNumber" :readonly="!canEnterNumber" 
                     class="mt-1 d-block" prependClass="btn btn-outline-success" variant="outline-success"
                     prelabel name="Mobile" prependIcon="fas fa-phone pointer"
                     v-model="mobileNumber" 
