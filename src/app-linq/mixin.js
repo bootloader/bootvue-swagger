@@ -168,12 +168,6 @@
           document.body.appendChild(iframe);
           //window.open(target_url,"_blank");
            //window.open(target_url);
-      },
-      show_global_loader(){
-        let htmlElement = document.querySelector('html.loadable');
-        if(htmlElement){
-          document.querySelector('html.loadable').className = "loadable loading"
-        }
       }
     }
   };

@@ -51,15 +51,11 @@ export default {
   },
   methods : {
     open(targte_url){
-      this.show_global_loader();
-      console.log("ReloadFiy",targte_url)
+      window.fullloader.busy();
       let iframe = document.createElement('a');
       iframe.setAttribute('href', targte_url);
-      this.show_global_loader();
       this.$refs.redirectForm.appendChild(iframe);
-      this.show_global_loader();
       iframe.click();
-      this.show_global_loader();
     },
   },
   components: {

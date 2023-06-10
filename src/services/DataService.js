@@ -253,6 +253,21 @@ const DataService = {
     }
     return results;
   },
+  async poll(url,query,config) {
+    let _config = config || {};
+    let resp =  await this.get(url,query,_config);
+    if(typeof _config.feed == 'function'){
+      let doPoll = _config.feed(resp);
+      if(doPoll && (_config.maxAttempts!==undefined || _config.maxAttempts>0)){
+        setTimeout(()=>{
+          this.poll(url,query,_config);
+        },_config.interval || 1500)
+      } else if(typeof _config.stop == 'function'){
+        _config.stop(resp);
+      }
+    }
+    return resp;
+  },
   config (argument) {
     switch (argument) {
       case "DISABLE_RESPONSE_INTERCEPTOR" :
