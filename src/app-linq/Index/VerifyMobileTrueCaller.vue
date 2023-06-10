@@ -63,7 +63,7 @@ export default {
     async load(){
         try{
           console.log("MOBILE_VERIFICATION:TRUECALLER")
-          //if(!this.$global.isMobile) throw "ThisIsBrowser"; 
+          if(!this.$global.isMobile) throw "ThisIsBrowser"; 
           let truecaller_url = `truecallersdk://truesdk/web_verify?_=_`
                               + `&requestNonce=${this.$route.query.nonce}`
                               +  `&partnerKey=${window.CONST.TCENV.truecaller.appKey}`

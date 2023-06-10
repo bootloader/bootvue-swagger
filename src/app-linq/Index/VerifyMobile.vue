@@ -130,8 +130,7 @@ export default {
     },
     async load(){
         console.log("MOBILE_VERIFICATION:FIREBASE");
-
-        return this.goToFallback();
+        //return this.goToFallback();
         if(!this.$global.isMobile || this.$route.query.from == 'truecaller'){
           this.initFirebaseFlow();
         } else {
@@ -200,8 +199,10 @@ export default {
         firebase.auth().useDeviceLanguage();
         console.log("loadFireBase", this.$refs.recaptchaContainer);
         //const auth =  firebase.auth.getAuth();
+        //const auth = getAuth();
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(this.$refs.recaptchaContainer, {
-          'size': '300px',
+          //'size': '300px',
+          size : 'invisible',
           'callback': (response) => {
             console.log("CaptchaSolved",response )
             // reCAPTCHA solved, allow signInWithPhoneNumber.
@@ -214,6 +215,7 @@ export default {
         await this.recaptchaVerifier.render().then((widgetId) => {
             window.recaptchaWidgetId = widgetId;
         });
+         this.recaptchaVerifier.verify();
           return;
         firebase.auth().settings.appVerificationDisabledForTesting = true;
         var phoneNumber = "+16505554567";

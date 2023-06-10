@@ -96,11 +96,18 @@
         }});
       },
       open_deeplink(targetUrl, callback){
-          let target_url = window.location.origin+'/linq/pub/deeplink/'+btoa(targetUrl);
-          let frame = window.open(target_url,'_blank');
+          let target_url = window.location.origin+'/linq/pub/deeplink?deeplink='+btoa(targetUrl);
+          let iframe = null;
+          iframe = window.open(target_url,'_blank');
+          iframe.addEventListener('load', function(){
+            console.log(" iframe.onload----",iframe);
+            if(callback) callback(targetUrl);
+            // iframe.close();
+          }, false);
           return;
           //this.reloadUrl(target_url);
-          let iframe = document.createElement('iframe');
+          console.log("target_url",target_url);
+          iframe = document.createElement('iframe');
           iframe.id = "deep_link";
           iframe.name = "deep_link_"+Date.now();
           iframe.style.border = "none";
@@ -110,7 +117,7 @@
           iframe.height = 0;
           iframe.frameBorder = 0;
           iframe.onload = function () {
-            iframe.src = targetUrl;
+            //iframe.src = targetUrl;
             //window.open(targetUrl,iframe.name);
             if(callback) callback(targetUrl);
           };
