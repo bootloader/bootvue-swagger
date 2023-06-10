@@ -73,17 +73,16 @@ export default {
           const handleDeepLinkFailure = () => {
               console.log("visibilitychange:hidden",document.hidden)
               document.removeEventListener('visibilitychange', handleDeepLinkFailure);
-            if (!document.hidden) {
-              // Handle the deep link failure here
-              //  this.goToFallback("TrueCaller:NotHidden");
-            } else {
-              this.waitTrueCallerWebhook(0);
-            }
+              if (document.hidden) {
+                this.waitTrueCallerWebhook(0);
+              } else {
+                this.goToFallback("TrueCaller:noHidden");
+              }
           };
           document.addEventListener('visibilitychange', handleDeepLinkFailure);
           this.open_deeplink(truecaller_url, (url,isopen)=>{
             if(!isopen){
-              this.goToFallback("TrueCaller:UnLoad");
+              //this.goToFallback("TrueCaller:UnLoad");
             }
           });
         } catch(e){
