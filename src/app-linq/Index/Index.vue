@@ -46,7 +46,7 @@
         <div class="container mx-auto px-4">
           <div
             class="relative flex flex-col min-w-0 break-words gry w-full  shadow-xl rounded-lg -mt-64">
-            <div class="px-2">
+            <div class="px-2 slot-wrapper">
               <slot></slot>
             </div>
           </div>
@@ -109,8 +109,15 @@ export default {
 .homeicon {
     z-index: 10000000;
     text-align: -webkit-right;
-  }
-  
-  
+}
+.profile-page {
+  min-height: 100vh;
+}  
+.slot-wrapper {
+  min-height: 80vh;
+}
+.slot-wrapper>div{
+  min-height: 80vh;
+}
 </style>
 

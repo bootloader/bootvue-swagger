@@ -75,7 +75,7 @@ export default {
               document.removeEventListener('visibilitychange', handleDeepLinkFailure);
             if (!document.hidden) {
               // Handle the deep link failure here
-                this.goToFallback("TrueCaller:NotHidden");
+              //  this.goToFallback("TrueCaller:NotHidden");
             } else {
               this.waitTrueCallerWebhook(0);
             }
