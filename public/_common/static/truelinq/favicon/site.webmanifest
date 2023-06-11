@@ -10,7 +10,7 @@
       "whatsapp",
       "telegram"
     ],
-    "description": "Just Verifications",
+    "description": "Simple.Secure.Sign.On",
     "icons": [
       {
         "src": "/_common/static/truelinq/favicon/android-chrome-192x192.png",
@@ -25,14 +25,14 @@
         "purpose": "maskable"
       },
       {
-        "src": "/_common/static/truelinq/favicon/android/android-launchericon-96-96.png",
+        "src": "/_common/static/truelinq/favicon/launchericon-96.png",
         "sizes": "96x96",
         "type": "image/png",
         "purpose" : "any"
       }
     ],
-    "theme_color": "#fff",
-    "background_color": "#fff",
+    "theme_color": "#000",
+    "background_color": "#000",
     "display": "standalone",
     "launch_handler": {
       "client_mode": [
