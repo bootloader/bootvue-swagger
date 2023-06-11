@@ -28,6 +28,8 @@
                       :href="`/linq/app/v1/connect/mobile?_${nounce}`"/>
                       <social-icon provider="whatsapp" variant="grey"  title="Link WhatsApp"  addsign
                       :href="`/linq/app/v1/connect/whatsapp?_${nounce}`"/>
+                      <social-icon provider="telegram" variant="grey"  title="Link Telegram"  addsign
+                      :href="`/linq/app/v1/connect/telegram?_${nounce}`"/>
                     </template> 
                 </social-tile>
             </span>  

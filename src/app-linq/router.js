@@ -48,6 +48,10 @@ export default AppRouter.route({
           component: () => import('./Index/VerifyMobile.vue'),
         },
         {
+          path: "/pub/v1/connect/telegram",
+          component: () => import('./Index/VerifyTelegram.vue'),
+        },
+        {
           path: "/pub/v1/connect/whatsapp",
           component: () => import('./Index/VerifyWhatsApp.vue'),
         },

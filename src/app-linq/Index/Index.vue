@@ -102,7 +102,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .gry {
     background-color: #e1e1e1 !important;
   }
@@ -116,8 +116,13 @@ export default {
 .slot-wrapper {
   min-height: 80vh;
 }
-.slot-wrapper>div{
+.slot-wrapper>.container>{
   min-height: 80vh;
+}
+.slot-wrapper>.container>.card{
+  min-height: 80vh;
+  max-width:350px;
+  min-width:40%;
 }
 </style>
 

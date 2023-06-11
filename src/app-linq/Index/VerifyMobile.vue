@@ -1,13 +1,13 @@
 <template>
 	<div class="container d-flex justify-content-center align-items-center">
-		<div class="card text-center" style="max-width:350px;min-width:40%;">
+		<div class="card text-center">
       <ValidationObserver ref="form" class="template-form"  v-slot="{handleSubmit}">
 			<div class="card-header p-2">
         <div class="text-center">
-          <div class="flex-font-wrapper">
+          <div class="flex-font-wrapper-25">
               <div class="flex-font-container"  :class="{
                   'text-mobile' : firebaseInitd
-                  }">
+                }">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa-solid fa-circle fa-stack-2x"></i>
                   <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
@@ -244,14 +244,4 @@ export default {
     padding-left: 27px !important;
   }
 
-.flex-font-wrapper {
-   font-size: 25px;
-  .flex-font-container {
-    .flex-font {
-    }
-    height : 12em;
-    padding: 1em;
-    line-height: 10em;
-  }
-}
 </style>

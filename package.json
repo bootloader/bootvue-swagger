@@ -95,6 +95,7 @@
     "vue-simple-password-meter": "^0.1.0",
     "vue-slide-up-down": "^2.0.1",
     "vue-swatches": "^2.1.1",
+    "vue-telegram-login": "^2.1.0",
     "vue-toast-notification": "^0.6.1",
     "vue-tree-table-component": "^0.1.1",
     "vue-visibility-change": "^1.2.1",

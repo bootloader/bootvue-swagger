@@ -1,10 +1,10 @@
 <template>
 	<div class="container d-flex justify-content-center align-items-center">
-		<div class="card text-center" style="max-width:350px;min-width:40%;">
+		<div class="card text-center">
       <ValidationObserver ref="form" class="template-form"  v-slot="{handleSubmit}">
 			<div class="card-header p-2">
         <div class="text-center">
-          <div class="flex-font-wrapper">
+          <div class="flex-font-wrapper-25">
               <div class="flex-font-container text-truecaller">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa-solid fa-circle fa-stack-2x"></i>
@@ -14,9 +14,7 @@
           </div>
 				  <h5 class="mb-2">Mobile Verification</h5>
           <h6 class="mb-2 text-xs">via TrueCaller</h6>
-        </div> 
-				<div class="mb-3">
-				</div>
+        </div>
 			</div>
       </ValidationObserver>
       <form ref="idTokenForm" :action="redirectUrl" method="POST">
@@ -26,6 +24,7 @@
 	</div>
 </template>
 <script>
+
 import mixin from '../mixin.js'
 
 export default {
@@ -110,20 +109,4 @@ export default {
 };
 </script>
 <style lang="scss">
-  .otp-box {
-    margin: 5px 20px !important;
-    letter-spacing: 19px !important;
-    padding-left: 27px !important;
-  }
-
-.flex-font-wrapper {
-   font-size: 25px;
-  .flex-font-container {
-    .flex-font {
-    }
-    height : 12em;
-    padding: 1em;
-    line-height: 10em;
-  }
-}
 </style>
