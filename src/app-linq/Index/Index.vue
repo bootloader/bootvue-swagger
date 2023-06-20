@@ -10,7 +10,9 @@
                 <b-button variant="outline-white btn-new " size="sm" :to="'/'">
                   <i class="fa fa-gear"/>
                 </b-button>  
-                <b-button variant="outline-white float-right  " size="sm" href="/linq/auth/logout">
+                <b-button variant="outline-white float-right  " size="sm" :to="{ 
+                      path : '/pub/reload/L2xpbnEvYXV0aC9sb2dvdXQ='
+                  }">
                   <i class="fa fa-power-off"/>
                 </b-button>  
             </div>

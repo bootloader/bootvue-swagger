@@ -46,7 +46,11 @@ export default {
   },
   computed : {
     reloadDecoded(){
-      return window.atob(this.$route.params.reload);
+      try{
+        return window.atob(this.$route.params.reload);
+      } catch(e){
+        return this.$route.params.reload;
+      }
     }
   },
   methods : {
