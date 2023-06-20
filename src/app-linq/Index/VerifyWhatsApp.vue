@@ -1,6 +1,6 @@
 <template>
 	<div class="container d-flex justify-content-center align-items-center">
-		<div class="card text-center" style="max-width:350px;min-width:40%;height:500px">
+		<div class="card text-center">
       <ValidationObserver ref="form" class="template-form"  v-slot="{handleSubmit}">
 			<div class="card-header p-2">
         <div class="text-center">
@@ -19,9 +19,6 @@
         </div> 
 			</div>
       </ValidationObserver>
-      <form ref="idTokenForm" :action="redirectUrl" method="POST">
-        <input name="idToken" v-model="idToken">
-      </form>
 		</div>
 	</div>
 </template>

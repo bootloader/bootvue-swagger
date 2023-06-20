@@ -46,7 +46,7 @@ export default {
     },
     variant : {}, 
     icon : {},
-    path : {},  link : {}, reload : {},
+    path : {},  link : {}, reload : {}, goto : {},
     imgSrc : {},
     imgError : {},
     addsign : {
@@ -110,7 +110,12 @@ export default {
           this.$router.push({ name : "reload", params : {
             reload : btoa(this.reload),
           }});
-          //window.open(this.link,'_blank');
+      } else if(this.goto){
+          window.fullloader.busy();
+          let iframe = document.createElement('a');
+          iframe.setAttribute('href', this.goto);
+          document.body.appendChild(iframe);
+          iframe.click();
       }
       this.$emit('click',e);
     }

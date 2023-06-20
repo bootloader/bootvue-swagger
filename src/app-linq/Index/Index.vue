@@ -116,13 +116,13 @@ export default {
 .slot-wrapper {
   min-height: 80vh;
 }
-.slot-wrapper>.container>{
+.slot-wrapper>.container{
   min-height: 80vh;
 }
 .slot-wrapper>.container>.card{
   min-height: 80vh;
   max-width:350px;
-  min-width:40%;
+  min-width: 400px;
 }
 </style>
 

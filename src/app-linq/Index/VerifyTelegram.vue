@@ -29,9 +29,6 @@
         </div> 
 			</div>
       </ValidationObserver>
-      <form ref="idTokenForm" :action="redirectUrl" method="POST">
-        <input name="idToken" v-model="idToken">
-      </form>
 		</div>
 	</div>
 </template>
