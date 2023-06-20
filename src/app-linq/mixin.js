@@ -6,6 +6,9 @@
       };
     },
     computed: {
+      is_module_busy(){
+        return this.loaderCounter > 0;
+      },
       meta(){
         return this.$store.getters.StateRest?.AuthMeta || { profile : {}};
       },
@@ -40,6 +43,12 @@
       }
     },
     methods : {
+      module_busy(is_busy){
+        let isBusy = (is_busy === undefined) ? true : is_busy;
+        if(isBusy) {
+          this.loaderCounter++
+        } else this.loaderCounter--;
+      },
       setMembership(membership){
         this.membership = membership || { form : {}};
         this.membership.form =  {

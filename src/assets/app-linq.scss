@@ -111,13 +111,29 @@
 
 .flex-font-wrapper-25 {
     font-size: 25px;
+    line-height: 25px;
+    height: 8em;
    .flex-font-container {
      .flex-font {
+
      }
      height : 12em;
      padding: 1em;
      line-height: 10em;
+     font-size: 1em;
+     line-height: 1em;
+     &.flex-font-busy{
+         animation: flex-font-busy 5s infinite;
+     }
    }
+
+   @keyframes flex-font-busy {
+      50% {
+        font-size: 0.8em;
+        line-height: 0.8em;
+      }
+   }
+
  }
 
 .rounded-cr {

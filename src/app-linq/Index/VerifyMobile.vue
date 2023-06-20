@@ -6,7 +6,8 @@
         <div class="text-center">
           <div class="flex-font-wrapper-25">
               <div class="flex-font-container"  :class="{
-                  'text-mobile' : firebaseInitd
+                  'text-mobile' : firebaseInitd,
+                  'flex-font-busy' : is_module_busy
                 }">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa-solid fa-circle fa-stack-2x"></i>
@@ -166,11 +167,12 @@ export default {
           this.confirmationResult = confirmationResult;
         } catch(e){
             console.log("sendOTP :  FAIELD",e)
-            grecaptcha.reset(widgetId);
+            grecaptcha.reset(window.recaptchaWidgetId);
         }
     },
     async verifyOTP(){
       try {
+          this.module_busy(true);
           let result =  await this.confirmationResult.confirm(this.otpNumber);
           console.log("Login Done",result)
           let idToken = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
@@ -183,6 +185,8 @@ export default {
           }
       } catch(e){
           console.log("verifyOTP :  FAIELD",e)
+      } finally {
+        this.module_busy(false);
       }
     },
     /**
@@ -199,6 +203,7 @@ export default {
     },
     async loadFirebase(){
         this.firebaseInitd = true;
+        this.module_busy(true);
         firebase.auth().useDeviceLanguage();
         console.log("loadFireBase", this.$refs.recaptchaContainer);
         //const auth =  firebase.auth.getAuth();
@@ -218,8 +223,9 @@ export default {
         await this.recaptchaVerifier.render().then((widgetId) => {
             window.recaptchaWidgetId = widgetId;
         });
-         this.recaptchaVerifier.verify();
-          return;
+        await this.recaptchaVerifier.verify();
+        this.module_busy(false);
+        return;
         firebase.auth().settings.appVerificationDisabledForTesting = true;
         var phoneNumber = "+16505554567";
         var testVerificationCode = "123456";

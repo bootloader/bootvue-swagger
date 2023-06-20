@@ -5,7 +5,9 @@
 			<div class="card-header p-2">
         <div class="text-center">
           <div class="flex-font-wrapper-25">
-              <div class="flex-font-container text-truecaller">
+              <div class="flex-font-container text-truecaller" :class="{
+                      'flex-font-busy' : is_module_busy
+              }">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa-solid fa-circle fa-stack-2x"></i>
                   <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
@@ -89,6 +91,7 @@ export default {
         }
     },
     async waitTrueCallerWebhook(counter){ 
+      this.module_busy(true);
       return await this.$service.poll("/pub/v1/connect/truecaller/mobile/webhook",{},{
         maxAttempts : 10,
         feed : (pollResult)=>{
@@ -99,6 +102,7 @@ export default {
           }
           return true;
         }, stop : (pollResult)=>{
+           this.module_busy(false);
           this.goToFallback("TrueCaller:MaxAttempts");
         }
       });
