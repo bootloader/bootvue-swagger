@@ -5,7 +5,9 @@
 			<div class="card-header p-2">
         <div class="text-center">
           <div class="flex-font-wrapper-25">
-              <div class="flex-font-container text-telegram">
+              <div class="flex-font-container text-telegram" :class="{
+                      'flex-font-busy' : is_module_busy
+              }">
                 <span class="fa-stack fa-3x flex-font">
                   <i class="fa fa-telegram fa-stack-2x"></i>
                   <i class="fa fa-phone-x fa-stack-1x fa-inverse"></i>
@@ -35,8 +37,10 @@
 </template>
 <script>
 import {vueTelegramLogin} from 'vue-telegram-login'
+import mixin from '../mixin.js'
 
 export default {
+  mixins : [mixin],
   data() {
     return {
       mobileImage : __webpack_public_path__ + '/_common/static/phoneverify/whatsapp.png',
@@ -51,6 +55,7 @@ export default {
     };
   },
   mounted : function () {
+     this.module_busy(true);
   },
   created (){
   },
@@ -72,6 +77,8 @@ export default {
           }
       } catch(e){
           console.log("verifyOTP :  FAIELD",e)
+      } finally{
+         this.module_busy(false);
       }
     },
   },
