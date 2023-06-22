@@ -1,7 +1,7 @@
 <template>
     <div class="px-6-x">
-        <div class="section-wrapper">
-          <div class="social-tile-container ">
+        <SectionWrapper header>
+          <div class="social-tile-container">
             <social-tile class="w-full lg:w-4/12"
               :title="membership.verification.title" :subtitle="membership.membershipType" provider="google"> 
               <template #thumb>
@@ -9,19 +9,17 @@
               </template>  
             </social-tile>
           </div>  
-        </div> 
+        </SectionWrapper> 
 
          <validation-observer v-slot="{handleSubmit}" ref="formValidator" v-if="isReady">
-              <div class="section-wrapper styler-height-fix">
-                    <h4 class="section-divider">Details</h4>
+              <SectionWrapper class="styler-height-fix" title="Details">
                     <b-row>
                         <b-col cols="12" class="text-center">
                             <div class="verificationer-details">{{membership.verification.description}}</div> 
                         </b-col> 
                     </b-row>  
-              </div>  
-              <div class="section-wrapper" v-if="meta.loggedIn && !isOwner && form_ques.length">
-                  <div class="section-divider">Answer below questions</div>
+              </SectionWrapper>  
+              <SectionWrapper v-if="meta.loggedIn && !isOwner && form_ques.length" title="Answer below questions">
                   <!-- <div class="mb-2">&nbsp;</div> -->
                   <b-row>
                     <!-- <b-col>
@@ -43,9 +41,8 @@
                           </my-model-form> 
                     </b-col>  
                   </b-row>  
-              </div> 
-              <div class="section-wrapper" v-if="meta.loggedIn && !isOwner">
-                  <div class="section-divider">Profiles Required</div>
+              </SectionWrapper> 
+              <SectionWrapper v-if="meta.loggedIn && !isOwner" title="Profiles Required">
                   <social-tile class="w-full" 
                               title="Profiles Required"
                               subtitle="" >
@@ -64,13 +61,12 @@
                         </template>  
                   </social-tile>
                   <div class="section-divider-footer text-red text-center" v-if="!isMatchedProfiles">Link missing profiles</div>
-              </div>  
-              <div class="section-wrapper">
-                  <div class="section-divider"></div>
+              </SectionWrapper>  
+              <SectionWrapper title=" ">
                    <base-input label="Share Link" copy readonly v-model="verificationSharelink"
                         variant="outline-evening"
                         prelabel alternative required rules="required|max:90" />
-              </div> 
+              </SectionWrapper> 
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center"

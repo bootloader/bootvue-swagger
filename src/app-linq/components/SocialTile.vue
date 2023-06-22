@@ -3,7 +3,7 @@
     <span class="social-tile-inner" :class="innerClass">
       <slot name="thumb">
           <social-icon v-if="!nothumb" :provider="provider" :partner="partner" 
-              :variant="variant" :status="status"></social-icon>
+              :variant="variant" :status="status" :icon="icon"></social-icon>
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
@@ -18,7 +18,9 @@
 <script>
 export default {
   props : {
-    title : {}, subtitle : {}, subsubtitle : {},provider : {}, partner : {},path : {}, link : {}, variant : {}, 
+    title : {}, subtitle : {}, subsubtitle : {},provider : {}, partner : {},
+    path : {},  link : {}, reload : {}, goto : {}, 
+    icon : {}, variant : {}, 
     status : { }, innerClass : {}, nothumb : { type : Boolean, default : false}
   },
   data() {
@@ -31,11 +33,22 @@ export default {
   methods: {
     onClick(e){
       if(this.path){
-        console.log("this.path",this.path)
+          console.log("this.path",this.path)
           this.$router.push( this.path)
       } else if(this.link){
-           console.log("this.link",this.link)
-           window.open(this.link,'_blank');
+          console.log("this.link",this.link)
+          window.open(this.link,'_blank');
+      } else if(this.reload){
+          console.log("this.reload",this.reload)
+          this.$router.push({ name : "reload", params : {
+            reload : btoa(this.reload),
+          }});
+      } else if(this.goto){
+          window.fullloader.busy();
+          let iframe = document.createElement('a');
+          iframe.setAttribute('href', this.goto);
+          document.body.appendChild(iframe);
+          iframe.click();
       }
       this.$emit('click',e);
     }

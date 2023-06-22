@@ -1,6 +1,6 @@
 <template>
     <div class="px-6-x">
-        <div class="section-wrapper">
+        <SectionWrapper>
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12"
               :title="membership.verification.title" :subtitle="membership.membershipType" provider="google"> 
@@ -9,7 +9,7 @@
               </template>  
             </social-tile>
           </div>  
-        </div> 
+        </SectionWrapper> 
 
         <div class="py-5 text-center">
           <div class="flex flex-wrap justify-center">
@@ -29,7 +29,7 @@
           </div>  
         </div>
 
-          <div class="section-wrapper styler-height-fix">
+          <SectionWrapper class="styler-height-fix">
               <div class="position-relative">
                 <b-table ref="my-table" id="table-id" :items="table.items" 
                     :fields="table.fields" 
@@ -96,7 +96,7 @@
                     </b-table>
                 <b-overlay :show="table.isBusy" no-wrap opacity="0.5" variant="transparent"></b-overlay>
               </div> 
-          </div>  
+          </SectionWrapper>  
 
     </div>
 </template>

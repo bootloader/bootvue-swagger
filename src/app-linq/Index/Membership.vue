@@ -1,7 +1,7 @@
 <template>
     <div class="px-6-x">
-        <div class="section-wrapper">
-          <div class="social-tile-container ">
+        <SectionWrapper header>
+          <div class="social-tile-container">
             <social-tile class="w-full lg:w-4/12" v-if="membership"
               :title="membership.verification.title" :subtitle="membership.membershipType || 'You are not member yet'" provider="google"> 
               <template #thumb>
@@ -9,30 +9,28 @@
               </template>  
             </social-tile>
           </div>  
-        </div> 
+        </SectionWrapper> 
 
          <validation-observer v-slot="{}" ref="formValidator" v-if="isReady">
-              <div class="section-wrapper styler-height-fix">
-                    <h4 class="section-divider linq-section-divider">Details</h4>
+              <SectionWrapper class="styler-height-fix">
                     <b-row>
                         <b-col cols="12" class="text-center">
                            <div class="verificationer-details">{{membership.verification.description}}</div> 
                         </b-col> 
                     </b-row>  
-              </div>  
-              <div class="section-wrapper">
-                  <h4 class="section-divider linq-section-divider">Profiles Shared</h4>
+              </SectionWrapper>  
+              <SectionWrapper title="Profiles Shared">
                   <social-tile-container :items="sharedProfiles"/> 
-              </div>  
-              <div class="section-wrapper share-bar">
+              </SectionWrapper>  
+              <SectionWrapper class="share-bar">
                   <div class="section-divider"></div>
                    <base-input label="Share Link" copy readonly v-model="verificationSharelink"
                         prependIcon="fas fa-share-nodes"
                         variant="outline-evening"
                         helpMessage="Share this link with people to join this."
                         prelabel alternative required rules="required|max:90" />
-              </div> 
-              <div class="section-wrapper">
+              </SectionWrapper> 
+              <SectionWrapper>
                 <div class="social-tile-container ">
                     <social-button class="w-full lg:w-4/12" variant="outline-danger" v-if="canLeave"
                       icon="fas fa-arrow-right-from-bracket" 
@@ -59,7 +57,7 @@
                       Members
                     </social-button> 
                 </div> 
-              </div>
+              </SectionWrapper>
               <div class=" text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12-xx lg:w-4/12 px-2 flex flex-wrap justify-center">

@@ -14,8 +14,16 @@ export default AppRouter.route({
           component: () => import('./Index/MyProfile.vue'),
         },
         {
+          path: "/app/settings",
+          component: () => import('./Index/Settings.vue'),
+        },
+        {
           path: "/app/verification/create",
           component: () => import('./Index/VerificationEdit.vue'),
+        },
+        {
+          path: "/app/verifications",
+          component: () => import('./Index/Verifications.vue'),
         },
         {
           path: "/app/v/:verificationId/edit",

@@ -1,6 +1,6 @@
 <template>
     <div class="px-6-x">
-        <div class="section-wrapper">
+        <SectionWrapper header>
           <div class="social-tile-container ">
             <social-tile class="w-full lg:w-4/12" v-if="isEditing"
               :title="`-- Edit Verification --` " subtitle="Update details" provider="google"> 
@@ -15,14 +15,13 @@
               </template>  
             </social-tile>
           </div>  
-        </div> 
+        </SectionWrapper> 
 
          <validation-observer v-slot="{handleSubmit}" ref="formValidator">
-              <div class="section-wrapper styler-height-fix">
-                    <h4 class="section-divider linq-section-divider">Details</h4>
+              <SectionWrapper class="styler-height-fix">
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
-                        <b-col cols="11">
+                        <b-col cols="12">
                             <base-input name="Title" v-model="membership.verification.title" :disabled="isEditing"
                               alternative question feedback  required rules="required|max:30" />
                         </b-col>
@@ -48,9 +47,8 @@
                             </b-button> 
                         </b-col> 
                     </b-row>  
-              </div>  
-              <div class="section-wrapper">
-                  <div class="section-divider">Required Profiles</div>
+              </SectionWrapper>  
+              <SectionWrapper title="Required Profiles">
                   <social-tile class="w-full" 
                               title="Create new Verification"
                               subtitle="Start your own Verification" >
@@ -77,7 +75,7 @@
                               :variant="profileTypes.whatsapp ? 'whatsapp' : 'greyed'"/>
                         </template>  
                   </social-tile>
-              </div>  
+              </SectionWrapper>  
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">

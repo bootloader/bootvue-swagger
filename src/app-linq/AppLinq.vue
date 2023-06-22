@@ -32,6 +32,7 @@
   Vue.component('SocialTile', () => import('./components/SocialTile.vue'));
   Vue.component('SocialButton', () => import('./components/SocialButton.vue'));
 
+  Vue.component('SectionWrapper', () => import('./components/SectionWrapper.vue'));
   Vue.component('SocialTileContainer', () => import('./components/SocialTileContainer.vue'));
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
   Vue.component('MyButton', () => import('@/@common/custom/components/MyButton.vue'));

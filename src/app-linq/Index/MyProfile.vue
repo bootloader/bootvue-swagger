@@ -22,41 +22,28 @@
           </div>  
         </div> 
 
-        <div class="section-wrapper">
-            <h4 class="section-divider linq-section-divider">My Profiles</h4>
+        <SectionWrapper title="My Profiles">
             <SocialBoxes  :items="myProfiles" class="social-plus py-3 text-center" allowadd/>
-        </div>  
-        <div class="section-wrapper">
-            <h4 class="section-divider linq-section-divider">My Memberships</h4>
-            <VerificationBoxes :items="memberships" class="py-3 text-center">
-            </VerificationBoxes>
-        </div>  
-        <div class="section-wrapper" v-if="interested.length>0">
+        </SectionWrapper>  
+        <SectionWrapper v-if="interested.length>0">
             <h4 class="section-divider linq-section-divider">Suggestions</h4>
             <social-tile-container :items="interested">
             </social-tile-container>
-        </div> 
-        <div class="section-wrapper">
-            <h4 class="section-divider linq-section-divider">Profile/Settings</h4>
-            <div class="social-tile-container">
-                <span class="w-full lg:w-4/12 d-inline-block">
-                    <social-tile class="w-full" variant="danger" 
-                            title="Delete My Profile" @click="deleteMyProfile"
-                            subtitle="Completely erase your data" >
-                      <template #thumb>
-                          <social-icon provider="plus" icon="fa fa-trash-alt" variant="danger"
-                            />
-                      </template>   
-                    </social-tile> 
-                </span>  
-            </div>
-        </div> 
-        <div class=" text-center">
-          <div class="flex flex-wrap justify-center">
-            <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center">
-            </div>
-          </div>
-        </div>
+        </SectionWrapper> 
+        <SectionWrapper title="Dashboard">
+            <social-tile-container>
+                <social-tile class="w-full lg:w-4/12" variant="evening" 
+                      title="Memberships" path="/app/verifications"
+                      provider="plus" icon="fa fa-certificate"
+                      subtitle="Applications" >
+                </social-tile>
+                <social-tile class="w-full lg:w-4/12"  
+                      title="Settings" path="/app/settings"
+                      subtitle="Manage Profile"
+                      icon="fa fa-cog" >
+                </social-tile> 
+            </social-tile-container>
+        </SectionWrapper> 
     </div>
 </template>
 <script>
@@ -106,7 +93,6 @@ export default {
     async load(){
       this.loadMetaAndRecent();
       this.loadProfiles();
-      this.loadMemberships();
     },
     async loadMetaAndRecent(){
         await this.loadMeta();
@@ -123,26 +109,6 @@ export default {
               }
             }));
         }
-    },
-    async loadMemberships(){
-      var resp = await this.$service.get('/api/v1/user/membership',{
-      });
-      this.memberships = (resp.results || []).map(function(membership){
-        return {
-          title : membership.verification?.title,
-          subtitle : membership.membershipType,
-          provider : 'certificate',
-          path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
-          status : 'user-' + membership.membershipType,
-        }
-      });
-    },
-    async deleteMyProfile(){
-      if(confirm("All Your Data will be deleted, You Sure?")){
-        var resp = await this.$service.delete('/auth/meta',{
-        });
-        window.location.reload()
-      }
     }
   },
   components: {
@@ -222,8 +188,6 @@ export default {
 
 }
 
-
-
 .social-plus .social-tile-container .display-inline-block .social-tile .social-tile-inner .social-btn   {
   
   .social-btn-box{
@@ -246,13 +210,3 @@ export default {
 }
 
 </style>
-
-#title-tile.social-tile  .social-tile-inner {
-
-}
-
-#title-tile.social-tile .social-tile-inner  .social-tile-inner-desc {
-
-
-
-}

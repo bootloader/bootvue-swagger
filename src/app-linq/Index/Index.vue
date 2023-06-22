@@ -7,7 +7,7 @@
                 <b-button variant="outline-white btn-new " size="sm" :to="'/'">
                   <i class="fa fa-home"/>
                 </b-button>
-                <b-button variant="outline-white btn-new " size="sm" :to="'/'">
+                <b-button variant="outline-white btn-new " size="sm" :to="'/app/settings'">
                   <i class="fa fa-gear"/>
                 </b-button>  
                 <b-button variant="outline-white float-right  " size="sm" :to="{ 
@@ -47,7 +47,7 @@
       <section class="relative pt-16 pb-2 bg-black ">
         <div class="container mx-auto px-4">
           <div
-            class="relative flex flex-col min-w-0 break-words gry w-full  shadow-xl rounded-lg -mt-64">
+            class="relative flex flex-col min-w-0 break-words slot-continer w-full  shadow-xl rounded-lg -mt-64">
             <div class="px-2 slot-wrapper">
               <slot></slot>
             </div>
@@ -105,9 +105,9 @@ export default {
 };
 </script>
 <style>
-.gry {
-    background-color: #e1e1e1 !important;
-  }
+.slot-continer {
+    background-color: #fff !important;
+}
 .homeicon {
     z-index: 10000000;
     text-align: -webkit-right;
