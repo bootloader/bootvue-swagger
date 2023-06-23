@@ -47,6 +47,10 @@ export default {
         },
         allowadd : {
           type : Boolean
+        },
+        loading : {
+          type : Boolean,
+          default : true
         }
     },
     data (){
@@ -55,6 +59,9 @@ export default {
     },
     computed : {
         channelsEnabled(){
+          if(this.loading){
+            return [0,1,2].map(()=> { return { title : '...', subtitle : '...'} })
+          } 
           return this.items?.filter((c)=>!c.disabled && c.contactType!='WEBSITE');
         }
     }

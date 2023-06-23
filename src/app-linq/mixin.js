@@ -2,7 +2,8 @@
     data() {
       return {
         nounce : Date.now(),
-        loaderCounter : 0
+        loaderCounter : 0,
+        loadProfilesLoading : false
       };
     },
     computed: {
@@ -88,8 +89,10 @@
         this.setVerification(resp.results[0]);
       },
       async loadProfiles(){
+        this.loadProfilesLoading = true;
         await this.$service.getX('/api/v1/profiles',{
         });
+        this.loadProfilesLoading = false;
       },
       async cancelMembership(){
         var resp = await this.$service.delete('/api/v1/membership',{

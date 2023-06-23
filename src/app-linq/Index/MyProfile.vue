@@ -23,7 +23,7 @@
         </div> 
 
         <SectionWrapper title="My Profiles">
-            <SocialBoxes  :items="myProfiles" class="social-plus py-3 text-center" allowadd/>
+            <SocialBoxes  :items="myProfiles" class="social-plus py-3 text-center" allowadd :loading="loadProfilesLoading"/>
         </SectionWrapper>  
         <SectionWrapper v-if="interested.length>0">
             <h4 class="section-divider linq-section-divider">Suggestions</h4>
