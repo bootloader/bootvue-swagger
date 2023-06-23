@@ -35,9 +35,16 @@ export default {
     props : {
         items : {
         },
+        loading : {
+          type : Boolean,
+          default : true
+        }
     },
     computed : {
         channelsEnabled(){
+          if(this.loading){
+            return [0,1,2].map(()=> { return { title : '...', subtitle : '...'} })
+          } 
           return this.items.filter((c)=>!c.disabled && c.contactType!='WEBSITE');
         }
     }

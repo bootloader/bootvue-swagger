@@ -8,7 +8,7 @@
             </social-tile-container>
         </SectionWrapper>  
         <SectionWrapper>
-            <VerificationBoxes :items="memberships" class="py-3 text-center">
+            <VerificationBoxes :items="memberships" class="py-3 text-center" :loading="membershipsLoading">
             </VerificationBoxes>
         </SectionWrapper>  
         <SectionWrapper v-if="interested.length>0">
@@ -36,8 +36,9 @@ export default {
   data() {
     return {
       memberships :[],
+      membershipsLoading : false,
       date: new Date().getFullYear(),
-      interested : []
+      interested : [],
     };
   },
   mounted : function () {
@@ -63,17 +64,22 @@ export default {
       this.loadMemberships();
     },
     async loadMemberships(){
-      var resp = await this.$service.get('/api/v1/user/membership',{
-      });
-      this.memberships = (resp.results || []).map(function(membership){
-        return {
-          title : membership.verification?.title,
-          subtitle : membership.membershipType,
-          provider : 'certificate',
-          path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
-          status : 'user-' + membership.membershipType,
-        }
-      });
+      try {
+        this.membershipsLoading = true;
+        var resp = await this.$service.get('/api/v1/user/membership',{
+        });
+        this.memberships = (resp.results || []).map(function(membership){
+          return {
+            title : membership.verification?.title,
+            subtitle : membership.membershipType,
+            provider : 'certificate',
+            path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
+            status : 'user-' + membership.membershipType,
+          }
+        });
+      } finally {
+          this.membershipsLoading = false;
+      }
     },
     async deleteMyProfile(){
       if(confirm("All Your Data will be deleted, You Sure?")){
