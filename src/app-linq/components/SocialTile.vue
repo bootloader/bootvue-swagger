@@ -7,9 +7,16 @@
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
-          <div class="social-tile-inner-desc-title" v-if="title"> {{title}}&nbsp;</div>
-          <div class="social-tile-inner-desc-title" v-if="subtitle"> {{subtitle}} </div>
-          <div class="social-tile-inner-desc-title" v-if="subsubtitle"> {{subsubtitle}} </div>
+          <span class="social-tile-inner-desc-wrapper">
+              <span class="social-tile-inner-desc-left">
+                <div class="social-tile-inner-desc-title" v-if="title"> {{title}}&nbsp;</div>
+                <div class="social-tile-inner-desc-title" v-if="subtitle"> {{subtitle}} </div>
+                <div class="social-tile-inner-desc-title" v-if="subsubtitle"> {{subsubtitle}} </div>
+              </span>
+              <span v-if="is_link" class="social-tile-inner-desc-right">
+                  <i class="fas fa-arrow-right"/>
+              </span>
+          </span>  
         </span>
       </slot>
     </span> 
@@ -29,6 +36,9 @@ export default {
     };
   },
   computed : {
+    is_link(){
+      return this.path || this.link || this.reload || this.goto;
+    }
   },
   methods: {
     onClick(e){
@@ -80,6 +90,21 @@ export default {
       min-height: 50px;
       width: calc( 100% - 70px);
       margin: 5px 5px 5px 0px;
+
+      .social-tile-inner-desc-wrapper {
+          display: flex;
+          justify-content: space-between;
+          .social-tile-inner-desc-left {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .social-tile-inner-desc-right {
+            padding: 5px;
+            line-height: 40px;
+          }
+      }
+
       .social-tile-inner-desc-title:first-child {
         font-weight: bold;
         overflow: hidden;

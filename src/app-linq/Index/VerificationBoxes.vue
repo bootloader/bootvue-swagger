@@ -4,14 +4,14 @@
             <social-tile class="w-full lg:w-4/12 pointer" 
               v-for="(c,index) in channelsEnabled" v-bind:key="c.channelId+'_'+ index"
               :title="c.title"  :subtitle="c.subtitle" :provider="c.provider" :path="c.path" :status="c.status"> 
-              <template #details>
+              <!-- <template #details>
                 <span class="social-tile-inner-desc">
                   <div class="social-tile-inner-desc-title"> {{c.title}} </div>
                   <div class="social-tile-inner-desc-subtitle"> 
                     {{c.subtitle}} 
                   </div>
                 </span>
-              </template>
+              </template> -->
             </social-tile>
         </div>
         <div class="social-tile-container">
