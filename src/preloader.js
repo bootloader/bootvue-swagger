@@ -68,5 +68,3 @@ if (document.addEventListener) {
     },
     false);
 }
-
-

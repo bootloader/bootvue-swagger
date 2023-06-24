@@ -111,7 +111,7 @@ export default {
             reload : btoa(this.reload),
           }});
       } else if(this.goto){
-          window.fullloader.busy();
+          window.fullloader.busy(this.$attrs.title || true);
           let iframe = document.createElement('a');
           iframe.setAttribute('href', this.goto);
           document.body.appendChild(iframe);
