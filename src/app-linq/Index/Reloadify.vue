@@ -23,6 +23,15 @@
 <script>
 import mixin from '../mixin.js'
 
+function isBase64(str) {
+    if (str ==='' || str.trim() ===''){ return false; }
+    try {
+        return btoa(atob(str)) == str;
+    } catch (err) {
+        return false;
+    }
+}
+
 export default {
     mixins : [mixin],
   props : {
@@ -47,15 +56,26 @@ export default {
   computed : {
     reloadDecoded(){
       try{
-        return window.atob(this.$route.params.reload);
-      } catch(e){
+        if(isBase64(this.$route.query.title)){
+          return window.atob(this.$route.params.reload);
+        }
+      } finally {
         return this.$route.params.reload;
+      }
+    },
+    titleDecoded(){
+      try{
+        if(isBase64(this.$route.query.title)){
+          return window.atob(this.$route.query.title);
+        }
+      } finally {
+        return this.$route.query.title;
       }
     }
   },
   methods : {
     open(targte_url){
-      window.fullloader.busy();
+      window.fullloader.busy(this.titleDecoded);
       let iframe = document.createElement('a');
       iframe.setAttribute('href', targte_url);
       this.$refs.redirectForm.appendChild(iframe);

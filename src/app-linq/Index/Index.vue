@@ -11,7 +11,7 @@
                   <i class="fa fa-gear"/>
                 </b-button>  
                 <b-button variant="outline-white float-right  " size="sm" :to="{ 
-                      path : '/pub/reload/L2xpbnEvYXV0aC9sb2dvdXQ='
+                      path : '/pub/reload/L2xpbnEvYXV0aC9sb2dvdXQ=?title=Logout'
                   }">
                   <i class="fa fa-power-off"/>
                 </b-button>  
