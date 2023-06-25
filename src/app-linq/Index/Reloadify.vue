@@ -56,21 +56,21 @@ export default {
   computed : {
     reloadDecoded(){
       try{
-        if(isBase64(this.$route.query.title)){
+        if(isBase64(this.$route.params.reload)){
           return window.atob(this.$route.params.reload);
         }
-      } finally {
-        return this.$route.params.reload;
+      } catch(e) {
       }
+      return this.$route.params.reload;
     },
     titleDecoded(){
       try{
         if(isBase64(this.$route.query.title)){
           return window.atob(this.$route.query.title);
         }
-      } finally {
-        return this.$route.query.title;
+      } catch(e) {
       }
+      return this.$route.query.title;
     }
   },
   methods : {
