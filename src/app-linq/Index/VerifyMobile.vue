@@ -51,7 +51,7 @@
           <base-input  @keydown="isOTPLetter" label="OTP" placeholder="------" 
               class="mt-1 d-block" variant="outline-success"
               v-model="otpNumber"  inputClasses="text-center rounded otp-box"
-              @commit="handleSubmit(commit)"
+              @commit="handleSubmit(commit)" @focus="otpNumberFocus"
             />
         </div>
         <div class="">
@@ -133,6 +133,8 @@ export default {
     async load(){
         console.log("MOBILE_VERIFICATION:FIREBASE");
         //return this.goToFallback();
+        //return this.initFirebaseFlow();
+        //return this.webOTP();
         if(
           !this.$global.isMobile || 
           this.$route.query.from == 'truecaller'){
@@ -148,6 +150,9 @@ export default {
     },
     async verify(){
       await this.verifyOTP();
+    },
+    otpNumberFocus(){
+      this.ac?.abort();
     },
     isNumber(evt){
         evt = (evt) ? evt : window.event;
@@ -165,6 +170,7 @@ export default {
         try {
           let confirmationResult = await firebase.auth().signInWithPhoneNumber(this.mobileNumber, this.recaptchaVerifier);
           this.confirmationResult = confirmationResult;
+          this.webOTP();
         } catch(e){
             console.log("sendOTP :  FAIELD",e)
             grecaptcha.reset(window.recaptchaWidgetId);
@@ -237,6 +243,28 @@ export default {
 
     },
     
+    webOTP(){
+        // Detect feature support via OTPCredential availability
+        if ("OTPCredential" in window) {
+            console.log("OTPCredential:init")
+            // Set up an AbortController to use with the OTP request
+            this.ac = new AbortController();
+            // Request the OTP via get()
+            navigator.credentials.get({
+              otp: { transport: ["sms"] },
+              signal: this.ac.signal,
+            }).then((otp) => {
+              console.log("otp",otp) 
+              // When the OTP is received by the app client, enter it into the form
+              // input and submit the form automatically
+                this.otpNumber = otp.code;
+                return this.verifyOTP();
+            }).catch((err) => {
+              console.error(err);
+            });
+        }
+    }
+
   },
   components: {
     SocialBoxes

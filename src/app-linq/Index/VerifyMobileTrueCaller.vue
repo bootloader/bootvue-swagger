@@ -93,7 +93,7 @@ export default {
     async waitTrueCallerWebhook(counter){ 
       this.module_busy(true);
       return await this.$service.poll("/pub/v1/connect/truecaller/mobile/webhook",{},{
-        maxAttempts : 10,
+        maxAttempts : 10, //interval : 5000,
         feed : (pollResult)=>{
           console.log('TrueCaller:poll',pollResult.results,pollResult.meta,pollResult.redirectUrl);
           if(pollResult.redirectUrl){
