@@ -34,7 +34,9 @@ console.log("baseURL====",axios.defaults.baseURL);
 console.log("location.pathname====",location.pathname);
 Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue,{
+	breakpoints: [`xs`, 'sm', ,'ms', 'md', 'lg', 'xl', 'xxl']
+});
 Vue.use(BootstrapVueIcons)
 Vue.use(SidebarPlugin)
 

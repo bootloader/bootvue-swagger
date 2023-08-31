@@ -4,6 +4,32 @@
 
 //@import "../core/forms/input-group";
 
+.input-group-ms > .form-control:not(textarea),
+.input-group-ms > .custom-select {
+  height: $input-height-ms;
+}
+
+.input-group-ms > .form-control,
+.input-group-ms > .custom-select,
+.input-group-ms > .input-group-prepend > .input-group-text,
+.input-group-ms > .input-group-append > .input-group-text,
+.input-group-ms > .input-group-prepend > .btn,
+.input-group-ms > .input-group-append > .btn {
+  padding: $input-padding-y-ms $input-padding-x-ms;
+  font-size: $input-font-size-ms;
+  line-height: $input-line-height-ms;
+  @include border-radius($input-border-radius-ms);
+}
+
+.input-group-ms > .custom-select {
+   padding-right: $custom-select-padding-x + $custom-select-indicator-padding;
+}
+
+
+
+
+////////////////////
+
 .my-normalize-v2 {
   .v-select{
     color: rgb(87, 87, 87) !important; 

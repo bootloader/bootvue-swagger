@@ -1,0 +1,21 @@
+// Bootstrap functions
+//
+// Utility mixins and functions for evaluating source code across our variables, maps, and mixins.
+@function list-avg($list){
+	$length: length($list);
+	$sum: 0;
+	$average: 0;
+
+	@for $i from 1 through $length {
+		$sum: $sum + nth($list, $i);
+	}
+
+	$average: $sum / $length;
+
+	@return $average;
+}
+@function avg($val1,$val2){
+	$sum: $val1 + $val2;
+	$average: $sum / 2;
+	@return $average;
+}

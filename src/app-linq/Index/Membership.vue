@@ -24,11 +24,26 @@
               </SectionWrapper>  
               <SectionWrapper class="share-bar">
                   <div class="section-divider"></div>
-                   <base-input label="Share Link" copy readonly v-model="verificationSharelink"
+                   <base-input label="Share Link" copy readonly v-model="verificationSharelink" size="ms"
                         prependIcon="fas fa-share-nodes"
                         variant="outline-evening"
                         helpMessage="Share this link with people to join this."
                         prelabel alternative required rules="required|max:90" />
+              </SectionWrapper> 
+              <SectionWrapper class="share-bar">
+                  <div class="section-divider"></div>
+                   <base-input label="Secret" :copy="!!verificationSecret" readonly v-model="verificationSecret"  size="ms"
+                        prependIcon="fa fa-key"
+                        placeholder="click on reset button to Reset the client secret, old key will become invalid"
+                        variant="outline-evening"
+                        helpMessage="Do Not share this secret with anyone."
+                        prelabel alternative required rules="required|max:90">
+                        <template #actions>
+                          <b-button class="w-20" @click="resetKey"
+                              variant="evening">
+                            Reset</b-button>
+                        </template>  
+                        </base-input>
               </SectionWrapper> 
               <SectionWrapper>
                 <div class="social-tile-container ">
@@ -75,6 +90,7 @@ export default {
   mixins : [mixin],
   data() {
     return {
+      verificationSecret : "",
       membership : {
         membershipType : 'NONE',
         verification : {
@@ -116,6 +132,13 @@ export default {
   methods : {
     async saveVerification(){
     },
+    async resetKey(){
+      let resp = await this.$service.submit("api/v1/verification/key",{
+        verificationId : this.verificationId
+      });
+      console.log("resp",resp);
+      this.verificationSecret = resp.meta.verificationSecret;
+    }
   },
   components: {
   },
@@ -142,30 +165,4 @@ export default {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
-
-.share-bar .input-group  {
-  .input-group-prepend .btn {
-    margin-top: 0px ;
-    border: solid 1px #263d64;
-    height: 36px;
-    background-color: #233152;
-    color: #d1cdcd;
-  }
-  .input-group-append .btn {
-    margin-top: 0px ;
-    border: solid 1px #263d64;
-    height: 36px;
-  }
-  .input-group-append .btn-outline-evening:not(:disabled):not(.disabled):active, 
-  .btn-outline-evening:not(:disabled):not(.disabled).active, 
-  .btn-outline-evening:not(:disabled):not(.disabled):hover, 
-  .show > .btn-outline-evening.dropdown-toggle {
-    color: #FFF;
-    background-color: #233152;
-    border-color: #525f7f;
-  }
-  .form-control{
-    height: 36px;
-  }
-} 
 </style>

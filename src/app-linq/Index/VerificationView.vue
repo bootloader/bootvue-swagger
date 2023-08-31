@@ -67,6 +67,11 @@
                         variant="outline-evening"
                         prelabel alternative required rules="required|max:90" />
               </SectionWrapper> 
+              <SectionWrapper title=" ">
+                   <base-input label="Share Link" copy readonly v-model="verificationSharelink"
+                        variant="outline-evening"
+                        prelabel alternative required rules="required|max:90" />
+              </SectionWrapper> 
               <div class="py-5 text-center">
                 <div class="flex flex-wrap justify-center">
                   <div class="w-full lg:w-9/12 px-4 flex flex-wrap justify-center"
