@@ -37,7 +37,7 @@
                         placeholder="click on reset button to Reset the client secret, old key will become invalid"
                         variant="outline-evening"
                         helpMessage="Do Not share this secret with anyone."
-                        prelabel alternative required rules="required|max:90">
+                        prelabel alternative>
                         <template #actions>
                           <b-button class="w-20" @click="resetKey"
                               variant="evening">
