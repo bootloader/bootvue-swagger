@@ -13,6 +13,9 @@
       meta(){
         return this.$store.getters.StateRest?.AuthMeta || { profile : {}};
       },
+      membershipId(){
+        return  (this.membership?.membershipId) ||  this.$route.params.membershipId;
+      },
       verificationId(){
         return  (this.membership?.verification?.verificationId) ||  this.$route.params.verificationId;
       },

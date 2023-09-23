@@ -186,6 +186,13 @@ var formatter = {
   },
   https : function (mediaUrl) {
     if(!mediaUrl) return mediaUrl;
+    if(this.URL(mediaUrl) !== true){
+      return mediaUrl;
+    }
+    let url = new URL(mediaUrl);
+    if(url.hostname == '127.0.0.1'){
+      return mediaUrl;
+    }
     return mediaUrl.replace("http://","https://");
   },
   thumburl : function (mediaUrl,w,h) {

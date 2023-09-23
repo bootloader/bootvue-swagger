@@ -71,6 +71,12 @@
                       :path="`/app/v/${$route.params.verificationId}/m/${$route.params.membershipId}/members`">
                       Members
                     </social-button> 
+                    <social-button  class="w-full lg:w-4/12" variant="evening"
+                      icon="fas fa-id-badge" 
+                      title="Card" :subtitle="`Show Membership Card'`"
+                      :path="`/app/v/${$route.params.verificationId}/m/${$route.params.membershipId}/card`">
+                      Members
+                    </social-button> 
                 </div> 
               </SectionWrapper>
               <div class=" text-center">

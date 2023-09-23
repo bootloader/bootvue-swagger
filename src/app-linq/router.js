@@ -46,6 +46,15 @@ export default AppRouter.route({
           component: () => import('./Index/Memberships.vue'),
         },
         {
+          path: "/app/v/:verificationId/m/:membershipId/card",
+          meta : { layout : "div", layoutClass:"h-100 my-auto" },
+          component: () => import('./Index/MembershipCard.vue'),
+        },
+        {
+          path: "/pub/v/:verificationId/m/:membershipId/card",
+          component: () => import('./Index/MembershipCard.vue'),
+        },
+        {
           name : "trueCallerPage",
           path: "/pub/v1/connect/truecaller/mobile",
           component: () => import('./Index/VerifyMobileTrueCaller.vue'),
@@ -70,7 +79,7 @@ export default AppRouter.route({
         },
         {
           path: "/pub/manifest",
-          meta : { layout : "div" },
+          meta : { layout : "div"},
           component: () => import('../app-www/manifest/Manifest.vue'),
         },
         {

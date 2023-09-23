@@ -1,6 +1,6 @@
 <template style="background-color: black;">
   <div id="app"  style="background-color: black;">
-    <component :is="layout">
+    <component :is="layout" :class="layoutClass">
       <router-view/>
     </component>  
   </div>
@@ -54,6 +54,8 @@
     computed : {
       layout() {
         return this.$route.meta.layout || 'Index';
+      },layoutClass(){
+        return this.$route.meta.layoutClass;
       }
     },
     mounted : function (argument) {

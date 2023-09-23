@@ -24,6 +24,14 @@ $scheme : var(--scheme-color);
     }
 }
 
+@function set-lighten($color,$pr) {
+    @if ( $scheme!=$color) {
+      @return lighten($color,$pr)
+    }
+    @else {
+      @return $color;
+    }
+}
 
 $color-instagram-y              : #fdf497;
 $color-instagram-r              : #fd5949;
@@ -156,8 +164,9 @@ $popular-list:(
     .text-#{$key}\:hover:hover {
         color: #{$val};
     }
-    .border-#{$key} {
-        border-color: #{$val};
+    .badge-#{$key} {
+        color: #{$val};
+        background-color: #{set-lighten($val,45%)}80;
     }
   }
 .text-comma:not(:empty)+.text-comma:not(:empty)::before {
