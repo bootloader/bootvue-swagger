@@ -1,6 +1,6 @@
 <template>
 	<div class="container d-flex justify-content-center align-items-center my-auto h-100">
-		<div class="card text-center i-card flip-card" :class="{
+		<div class="card text-center i-card flip-card bg-transparent" :class="{
       flipped : flipped
     }">
       <div class="flip-card-inner" @click="flipped=!flipped">
@@ -55,7 +55,7 @@
         <!---  bACK SIDE -->
 
       <div class="card-header p-2 flip-card-back">
-        <div class="text-center">
+        <div class="text-center text-black">
           <div class="picture-wrapper-x">
               <div class="picture-container-x" v-lazy-container="{ selector: 'img' }">
                <qr-code v-if="vCardData" :value="vCardData" :options="{
