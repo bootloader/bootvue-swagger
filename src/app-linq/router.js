@@ -47,11 +47,11 @@ export default AppRouter.route({
         },
         {
           path: "/app/v/:verificationId/m/:membershipId/card",
-          meta : { layout : "div", layoutClass:"h-100 my-auto" },
           component: () => import('./Index/MembershipCard.vue'),
         },
         {
           path: "/pub/v/:verificationId/m/:membershipId/card",
+          meta : { layout : "div", layoutClass:"h-100 my-auto" },
           component: () => import('./Index/MembershipCard.vue'),
         },
         {

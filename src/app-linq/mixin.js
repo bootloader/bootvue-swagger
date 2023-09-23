@@ -77,7 +77,7 @@
         },{  refresh : true });
       },
       async loadMembership(){
-        var resp = await this.$service.get('/api/v1/verification/membership',{
+        var resp = await this.$service.get('/pub/v1/verification/membership',{
           verificationId : this.$route.params.verificationId,
           membershipId : this.$route.params.membershipId
         });
