@@ -38,3 +38,8 @@
         }
     }
 </script>
+<style>
+    .text-center>.channelqrcode {
+        margin: auto;
+    }
+</style>
