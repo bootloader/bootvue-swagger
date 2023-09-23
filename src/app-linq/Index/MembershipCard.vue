@@ -42,8 +42,11 @@
               </b-col>  
             </b-row>  
              <b-row class="">
-                <b-col cols="12" class="text-center" @click.stop="">
-                      <a class="btn btn-evening btn-sm" :href="cardLink">Save Contact</a>
+                <b-col cols="12" class="text-center" >
+                      <a class="btn btn-evening btn-sm" @click.stop="" :href="cardLink">
+                        <i class="fas fa-download"/>  Save</a>
+                      <button class="btn btn-evening btn-sm" @click.stop="shareLink">
+                         <i class="fas fa-share"/> Share</button>
                 </b-col>  
              </b-row> 
         </div> 
@@ -86,8 +89,11 @@
               </b-col>  
             </b-row>  
              <b-row class="">
-                <b-col cols="12" class="text-center" @click.stop="">
-                      <a class="btn btn-evening btn-sm" :href="cardLink">Save Contact</a>
+                <b-col cols="12" class="text-center" >
+                      <a class="btn btn-evening btn-sm" @click.stop="" :href="cardLink">
+                        <i class="fas fa-download"/>  Save</a>
+                      <button class="btn btn-evening btn-sm" @click.stop="shareLink">
+                         <i class="fas fa-share"/> Share</button>
                 </b-col>  
              </b-row> 
         </div> 
@@ -178,6 +184,18 @@ export default {
         });
         this.vCardData = resp;
     },
+    shareLink(){
+        if (navigator.share) {
+          navigator.share({
+              title: this.thisUser.name,
+              text: 'VCard',
+              url: `https://app.truelinq.com/linq/pub/v/${this.verificationId}/m/${this.membershipId}/card`,
+            }).then(() => console.log('Successful share'))
+              .catch((error) => console.log('Error sharing', error));
+        } else {
+          console.log('Share not supported on this browser, do it the old way.');
+        }
+    }
   },
   components: {
     QrCode
