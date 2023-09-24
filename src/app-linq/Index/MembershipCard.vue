@@ -80,10 +80,10 @@
               </b-col>
               <b-col cols="6">
                     <div class="logo-wrapper">
-                      <div class="logo-container" v-lazy-container="{ selector: 'img' }">
+                      <div class="logo-container size-md" v-lazy-container="{ selector: 'img' }">
                       <img :data-src="$formatters.https_thumburl(thisVerification.picture,150,150)"
                         :data-error="$formatters.https_thumburl(defaultCompanyLogo,150,150)"
-                      class="logo shadow-xl rounded-cr h-auto align-middle border-none max-w-150-px"/>
+                      class="logo shadow-xl rounded-cr h-auto align-middle border-none size-md"/>
                     </div>  
                 </div>
               </b-col>  
@@ -246,11 +246,19 @@ export default {
             flex-direction: row;
             justify-content: center;
             align-items: center;
+            &.size-md{
+              height: 10em;
+              border-radius: 25px;
+            }
             .logo {
                 border-radius: 50%;
                 max-width: 70px;
                 max-height: 70px;
                 padding: 5px;
+              &.size-md{
+                max-width: 150px;
+                max-height: 150px;
+              }  
             }
         }
     }
