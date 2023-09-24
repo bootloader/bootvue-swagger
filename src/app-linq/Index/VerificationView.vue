@@ -5,7 +5,7 @@
             <social-tile class="w-full lg:w-4/12"
               :title="membership.verification.title" :subtitle="membership.membershipType" provider="google"> 
               <template #thumb>
-                <social-icon icon="fas fa-certificate"></social-icon>
+                <social-icon :img-src="membership.verification.picture"  icon="fas fa-certificate"></social-icon>
               </template>  
             </social-tile>
           </div>  

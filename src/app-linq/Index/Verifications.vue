@@ -68,13 +68,14 @@ export default {
         this.membershipsLoading = true;
         var resp = await this.$service.get('/api/v1/user/membership',{
         });
-        this.memberships = (resp.results || []).map(function(membership){
+        this.memberships = (resp.results || []).map((membership)=>{
           return {
             title : membership.verification?.title,
             subtitle : membership.membershipType,
             provider : 'certificate',
             path : "/app/v/"+membership.verificationId + "/m/" + membership.membershipId ,
             status : 'user-' + membership.membershipType,
+            picture : (membership.verification.picture ? this.$formatters.https_thumburl(membership.verification.picture,150,150) : undefined)
           }
         });
       } finally {

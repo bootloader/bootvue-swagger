@@ -37,7 +37,6 @@
   Vue.component('MyIcon', () => import('@/@common/custom/components/MyIcon.vue'));
   Vue.component('MyButton', () => import('@/@common/custom/components/MyButton.vue'));
 
-
   const loadimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   const errorimage = __webpack_public_path__ + '/_common/static/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
@@ -48,6 +47,20 @@
     attempt: 1,
     throttleWait : 200
   });
+
+
+  import customPlugin from '@/@common/custom'
+  Vue.use(customPlugin,{
+    imagekit : {
+      imagekitId : 'duckberg',
+      urlEndpoint: "https://ik.imagekit.io/duckberg", // Required. Default URL-endpoint is https://ik.imagekit.io/your_imagekit_id
+      publicKey: "public_f69VQYB2yQqJGkWeZsYy2NidNO4=", // optional
+      authenticationEndpoint: "/linq/api/signature/imagekit", // optional
+      transformationPosition: "path" // optional
+    }
+  });
+  
+
   console.log("Page App is loaded")
   export default {
     components : { Index },

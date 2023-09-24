@@ -1,7 +1,8 @@
 <template>
   <span class="social-btn " @click="onClick" v-lazy-container="{ selector: 'img' }">
-      <img  class="social-btn-box " 
-            v-if="imgSrc" :data-src="imgSrc" :data-error="imgError"/>
+      <span v-if="imgSrc" class="social-btn-box ">
+           <img class="d-inline" :data-src="imgSrc" :data-error="imgError"/>
+      </span>  
       <component v-else  :is="tag" :href="href"
           class="social-btn-box " :class="[ provider ,`bg-${myVariant}:before`, `size-${size}`]">
           <i class="social-btn-icon" :class="[ myIcon, `text-${myVariant}`]"></i>

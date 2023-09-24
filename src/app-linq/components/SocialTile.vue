@@ -3,7 +3,7 @@
     <span class="social-tile-inner" :class="innerClass">
       <slot name="thumb">
           <social-icon v-if="!nothumb" :provider="provider" :partner="partner" 
-              :variant="variant" :status="status" :icon="icon"></social-icon>
+              :variant="variant" :status="status" :icon="icon" :imgSrc="imgSrc"></social-icon>
       </slot>
       <slot name="details">
         <span class="social-tile-inner-desc" :class="'text-'+variant">
@@ -27,7 +27,7 @@ export default {
   props : {
     title : {}, subtitle : {}, subsubtitle : {},provider : {}, partner : {},
     path : {},  link : {}, reload : {}, goto : {}, 
-    icon : {}, variant : {}, 
+    icon : {}, variant : {}, imgSrc : {}, 
     status : { }, innerClass : {}, nothumb : { type : Boolean, default : false}
   },
   data() {

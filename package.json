@@ -38,6 +38,7 @@
     "firebaseui": "^6.0.2",
     "get-user-media-promise": "^1.1.4",
     "google-maps": "^4.3.3",
+    "imagekitio-vue": "^1.0.9",
     "imagemin": "^6.1.0",
     "increase-memory-limit": "^1.0.6",
     "install": "^0.13.0",

@@ -5,7 +5,7 @@
             <social-tile class="w-full lg:w-4/12" v-if="isEditing"
               :title="`-- Edit Verification --` " subtitle="Update details" provider="google"> 
               <template #thumb>
-                <social-icon icon="fas fa-certificate"></social-icon>
+                <social-icon :img-src="membership.verification.picture" icon="fas fa-certificate"></social-icon>
               </template>  
             </social-tile>
             <social-tile class="w-full lg:w-4/12" v-else
@@ -21,6 +21,14 @@
               <SectionWrapper class="styler-height-fix">
                     <div class="mb-1">&nbsp;</div>
                     <b-row>
+                         <b-col cols="12">
+                            <MyUpload ref="myVueDropzone" autoProcessQueue disablePreviews v-model="membership.verification.picture"
+                              @uploaded="uploaded" variant="outline-evening"
+                              placeholder="Upload Logo" imagekit
+                              class="myVueDropzone"> 
+                            </MyUpload>
+                            <div>&nbsp;</div>
+                        </b-col>
                         <b-col cols="12">
                             <base-input name="Title" v-model="membership.verification.title" :disabled="isEditing"
                               alternative question feedback  required rules="required|max:30" />
@@ -170,6 +178,9 @@ export default {
         ques.keyName =  `Question ${index+1}`;
         return ques;
       });
+    },
+    async uploaded(){
+
     }
   },
   components: {

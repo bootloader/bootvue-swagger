@@ -5,7 +5,7 @@
             <social-tile class="w-full lg:w-4/12" v-if="membership"
               :title="membership.verification.title" :subtitle="membership.membershipType || 'You are not member yet'" provider="google"> 
               <template #thumb>
-                <social-icon icon="fas fa-certificate"></social-icon>
+                <social-icon :img-src="membership.verification.picture" icon="fas fa-certificate"></social-icon>
               </template>  
             </social-tile>
           </div>  
@@ -30,7 +30,7 @@
                         helpMessage="Share this link with people to join this."
                         prelabel alternative required rules="required|max:90" />
               </SectionWrapper> 
-              <SectionWrapper class="share-bar">
+              <SectionWrapper class="share-bar" v-if="canEdit">
                   <div class="section-divider"></div>
                    <base-input label="Secret" :copy="!!verificationSecret" readonly v-model="verificationSecret"  size="ms"
                         prependIcon="fa fa-key"
@@ -43,7 +43,7 @@
                               variant="evening">
                             Reset</b-button>
                         </template>  
-                        </base-input>
+                  </base-input>
               </SectionWrapper> 
               <SectionWrapper>
                 <div class="social-tile-container ">

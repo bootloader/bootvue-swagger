@@ -28,11 +28,11 @@
         <div class="mb-3 text-center">
             <b-row class="bg-darker mb-3 p-3 text-white">
               <b-col cols="6 text-left text-sm">
-                <div v-for="p in membership.profiles" v-bind:key="p.profileId">
-                   <div>{{p.phone}}</div>
-                   <div>{{p.email}}</div>
+                <div v-for="p in profileContacts" v-bind:key="p.value">
+                   <div>{{p.value}}</div>
                 </div>
-                <div>{{thisVerification.title}}</div>
+                <div>&nbsp;</div>
+                <div class="text-right text-bold">{{thisVerification.title}}</div>
               </b-col>
               <b-col cols="6">
                   <qr-code :value="cardLink" :options="{
@@ -72,11 +72,11 @@
         <div class="mb-3 text-center">
             <b-row class="bg-darker mb-3 p-3 text-white">
               <b-col cols="6 text-left text-sm">
-                <div v-for="p in membership.profiles" v-bind:key="p.profileId">
-                   <div>{{p.phone}}</div>
-                   <div>{{p.email}}</div>
+                <div v-for="p in profileContacts" v-bind:key="p.value">
+                   <div>{{p.value}}</div>
                 </div>
-                <div>{{thisVerification.title}}</div>
+                <div>&nbsp;</div>
+                <div class="text-right text-bold">{{thisVerification.title}}</div>
               </b-col>
               <b-col cols="6">
                     <div class="logo-wrapper">
@@ -175,7 +175,21 @@ export default {
     },
     cardLink(){
       return `https://app.truelinq.com/linq/pub/v1/card/${this.verificationId}/${this.membershipId}.vcf`;
-    }
+    },
+    profileContacts(){
+      let unique = {};
+      let lsts = [];
+      this.membership?.profiles?.map(function(p){
+        ['email','phone'].map(function(type){
+            let value = p[type];
+            if(!unique[value]){
+                unique[value] = unique[value] || {'type' : type, value : value};
+                lsts.push(unique[value]);
+            }
+        });
+      });
+      return lsts;
+    },
   },
   methods : {
     async loadVCard(){

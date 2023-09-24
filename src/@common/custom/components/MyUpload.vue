@@ -1,18 +1,42 @@
 <template>
     <span class="myVueDropzoneWrapper">
-        <vue-dropzone v-if="uploadActive" ref="myVueDropzone" class="myVueDropzone justify-content-center align-items-end d-flex-x"
+        <div v-if="uploadActive && imagekit"
+            ref="myVueDropzone" class="myVueDropzone justify-content-center align-items-end d-flex-x  vue-dropzone dropzone"
+            :class="{
+                'has-image' : !!value, 'no-image' : !value
+            }">
+            <div class="media-wrapper" :style="{
+                'height' : 'calc('+height+'px + 4em)'
+            }" v-if="value"> 
+                <img v-if="type=='IMAGE'" :src="value"  :style="{
+                    'max-height' : 'calc('+height+'px + 4em)'
+                }"/>
+                <video v-else-if="type=='VIDEO'" :src="value"></video>
+            </div> 
+            <label class="dz-message d-block" :for="'ikupload-'+counterId">
+                <slot>
+                    <div class="dropzone-custom-content" :style="{
+                            'height' : 'calc('+height+'px)'}">
+                        <span class="dropzone-custom-title" v-if="removable" >
+                            <b-button variant="outline-danger" @click="removeFile"> Remove
+                            </b-button>  
+                        </span>  
+                        <span class="dropzone-custom-title">
+                            <b-button tag="span" class="" :variant="variant">
+                                {{placeholder}}
+                            </b-button> 
+                        </span>  
+                    </div>
+                </slot> 
+            </label>
+            <ik-upload :id="'ikupload-'+counterId" hidden :tags="['boot']" 
+                 :responseFields="['tags']" :useUniqueFileName=true :isPrivateFile=false
+                 :onSuccess="onSuccessIK"  :onError="onErrorIK"
+                customCoordinates="10,10,100,100" />
+        </div>  
+        <vue-dropzone v-else-if="uploadActive" ref="myVueDropzone" class="myVueDropzone justify-content-center align-items-end d-flex-x"
             :useCustomSlot="true"
-            id="dropzone" :options="{
-                url: url,
-                thumbnailWidth: thumbnailWidth,
-                thumbnailHeight : thumbnailHeight,
-                maxFilesize: maxFilesize,
-                autoProcessQueue: false,//autoProcessQueue,
-                disablePreviews :disablePreviews,
-                addRemoveLinks : addRemoveLinks,
-                maxFiles : maxFiles,
-                clickable : clickable
-            }"
+            id="dropzone" :options="options"
             v-on:vdropzone-sending="sendingEvent"
             v-on:vdropzone-file-added="fileAdded" 
             v-on:vdropzone-success="fileUploaded"
@@ -26,7 +50,7 @@
                             'height' : 'calc('+height+'px)'
                 }">
                     <span class="dropzone-custom-title">
-                        <b-button class="" variant="outline-primary">
+                        <b-button class="" :variant="variant">
                             {{placeholder}}
                         </b-button> 
                     </span>    
@@ -65,6 +89,9 @@
 <script>
     import vue2Dropzone from 'vue2-dropzone';
     import 'vue2-dropzone/dist/vue2Dropzone.min.css';
+    import custom from '@/@common/custom'
+
+    let COUNTER=0;
 
     export default {
         inheritAttrs: false,
@@ -82,6 +109,7 @@
             },
             optionLabel : {
             },
+            variant : { default : 'outline-primary' },
             type : {
                 default : "IMAGE"
             },
@@ -100,11 +128,17 @@
                 type : Number,
                 default : 100
             },
+            imagekit : {
+                default : false,type : Boolean
+            },
+            uploadThumb : {
+                default : false,type : Boolean
+            }
         },
         data() {
             return {
                 lastMediaType : null, previewVideo : null, previewThumb : null, previewThumblob : null,
-                canvasId : 'previewCanvas-'+ Date.now()
+                canvasId : 'previewCanvas-'+ Date.now(), counterId : COUNTER++
             }   
         },
         computed : {
@@ -125,9 +159,69 @@
             },
             nowMediaType(){
                 return this.lastMediaType || this.type
+            },
+            options(){
+                let url =  this.url;
+                let paramName = 'file';
+                let authEndpoint;
+                let authKey;
+                if(this.imagekit){
+                    let imagekitOptions = custom.customOptions().imagekit;
+                    if(this.imagekit.urlEndpoint){
+                        url = this.imagekit.urlEndpoint;
+                    } else if(imagekitOptions.imagekitId){
+                         url =`https://upload.imagekit.io/rest/api/image/${imagekitOptions.imagekitId}`;
+                    }
+                    paramName = 'image'
+                    authEndpoint = imagekitOptions.authenticationEndpoint;
+                    authKey = imagekitOptions.publicKey;
+                }
+                return {
+                    url: url,
+                    thumbnailWidth: this.thumbnailWidth,
+                    thumbnailHeight : this.thumbnailHeight,
+                    maxFilesize: this.maxFilesize,
+                    autoProcessQueue: false,//autoProcessQueue,
+                    disablePreviews : this.disablePreviews,
+                    addRemoveLinks : this.addRemoveLinks,
+                    maxFiles : this.maxFiles,
+                    clickable : this.clickable,
+                    paramName : paramName,
+                    accept : this.fileAccept,
+                    authEndpoint : authEndpoint,
+                    authKey : authKey,
+                    withCredentials : false,
+                    headers : {
+                        "Cache-Control": "",
+                        'X-Requested-With' : '',
+                        'Sec-Ch-Ua-Mobile' : '',
+                        'Sec-Ch-Ua-Platform' : '',
+                        'Referer' : '',
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                }
             }
         },
+        mounted(){
+            console.log('customOptions()',custom.customOptions())
+        },
         methods :{
+            fileAccept(file,done){
+                if(this.options.authEndpoint){
+                    fetch(this.options.authEndpoint).then((resp)=>{
+                        resp.json().then((json)=>{
+                            console.log("fetch:json",json)
+                            file.uploadSignature = json.signature;
+                            file.uploadStamp = json.expire;
+                            file.uploadStoken = json.token;
+                            file.uploadKey = this.options.authKey;
+                            done();
+                        })
+                    }); 
+                } else {
+                     done();
+                }
+            },
             fileAdded(file){
                 if(file.type.indexOf('video/')==0){
                     this.lastMediaType = "VIDEO"
@@ -181,24 +275,51 @@
                 },1000);
             },
             sendingEvent(file, xhr, formData){
-                if(this.previewThumblob){
+                if(this.previewThumblob && this.uploadThumb){
                     console.log('thumbnail',this.previewThumblob)
                     formData.append('thumbnail', this.previewThumblob);
                 }
+                if(this.imagekit && file.uploadSignature){
+                    //formData.append("filename", file.name);
+                    formData.append("timestamp", file.uploadStamp);
+                    formData.append("apiKey", file.uploadKey);
+                    formData.append("signature", file.uploadSignature);
+                    console.log("xhr",xhr)
+                }
+
             },
             async processQueue() {
                 await this.$refs.myVueDropzone.processQueue();
             },
-            async fileUploaded (file, response) {
-                    //this.model.social.logo = response.results[0];
-                let value = response.results[0];
+            fileUploaded_publish_event (value) {
                 this.$emit("input", value?.url);
                 this.$emit("change", value?.url);
                 this.$emit("update:thumb", value?.thumb);
                 this.$emit("update:type", value?.type);
                 this.$emit("uploaded", value);
+            },
+            async fileUploaded (file, response) {
+                    //this.model.social.logo = response.results[0];
+                let value = response.results[0];
+                this.fileUploaded_publish_event(value)
                 this.$refs.myVueDropzone.removeFile(file);
                 console.log("fileUploaded",response)
+            },
+            async onErrorIK(err) {
+                console.log("onErrorIK");
+                console.log(err);
+            },
+            async onSuccessIK(res){
+                console.log("onSuccessIK");
+                console.log(res);
+                this.fileUploaded_publish_event({
+                    url : res.url,
+                    type : res.fileType,
+                    thumb : res.thumbnailUrl,
+                    width : res.width, height : res.height,
+                    name : res.name,
+                    size : res.size
+                });
             },
             removeFile(){
                 this.$emit("input", null);

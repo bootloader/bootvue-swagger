@@ -205,9 +205,12 @@ var formatter = {
         return m.slice(1).join("/");
       } 
       var aws = mediaUrl.match(/(.+)\/(.+).(s3.amazonaws.com)\/(.+)/);
+      var imk = mediaUrl.match(/(.+)\/(ik.imagekit.io)\/(.+)/);
       if(aws && aws.length){
         return `https://ik.imagekit.io/meherysoccom/${aws[2]}/${aws[4]}?tr=w-${_w},h-${_h}`
-      } 
+      } else if(imk && imk.length){
+        return `${imk[0].split("?")[0]}?tr=w-${_w},h-${_h}`
+      }
       return mediaUrl;
   },
   https_thumburl : function (mediaUrl,w,h) {
