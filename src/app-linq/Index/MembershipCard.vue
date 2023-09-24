@@ -59,7 +59,7 @@
           <div class="picture-wrapper-x">
               <div class="picture-container-x" v-lazy-container="{ selector: 'img' }">
                <qr-code v-if="vCardData" :value="vCardData" :options="{
-                      size : 300, padding : null
+                      size : 280, padding : null
                     }">
                 </qr-code>
               </div>  
@@ -220,8 +220,8 @@ export default {
 .i-card {
     min-width: 350px !important; 
     min-height: 570px !important;
-    max-width: 95vw !important; 
-    max-height: 95vh !important; 
+    max-width: 98vw !important; 
+    max-height: 98vh !important; 
     .picture-wrapper {
         .picture-container {
             height: 9em;
