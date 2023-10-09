@@ -1,4 +1,4 @@
-# Mehery Web
+# Cherry Web
 
 
 [![cherrybase](https://github.com/cherrybase/cherry-web/actions/workflows/cherrybase.yml/badge.svg)](https://github.com/cherrybase/cherry-web/actions/workflows/cherrybase.yml)
