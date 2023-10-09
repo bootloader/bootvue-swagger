@@ -39,6 +39,22 @@ export default AppRouter.route({
               meta : {
                 role : ["SUPER_DEV"]
               }
+            },
+            {
+              path: '/app/waba/channels',
+              name : "Waba Channels",
+              component: () => import(/* webpackChunkName: "demo" */ '@/app-partner/App/PartnerWaba/PartnerWaba.vue'),
+              meta : {
+                role : ["DOMAIN_ADMIN"]
+              },
+            },
+            {
+              path: '/app/waba/clients',
+              name : "Waba Clients",
+              component: () => import(/* webpackChunkName: "demo" */ './App/PartnerWaba/PartnerWabaClients.vue'),
+              meta : {
+                role : ["DOMAIN_ADMIN"]
+              },
             }
           ]
         },

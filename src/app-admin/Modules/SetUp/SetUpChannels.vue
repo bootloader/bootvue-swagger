@@ -111,10 +111,13 @@
                         read documentation</a>
                     </template>  
                 </base-text-area>
-                <base-input v-else-if="oneItemView.webhookManual" size="sm" readonly prelabel copy
-                  label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath" 
-                  >
+                <base-input v-else-if="oneItemView.webhookManual && oneItemView.callbackPath" size="sm" readonly prelabel copy
+                  label="Webhook URL" :value="oneItemView.webhookUrl + '/' + oneItemView.callbackPath">
                 </base-input>
+                <qr-code :value="$global.MyDict.c2cUrl(oneItemView)" :options="{
+                  size : 300
+                }">
+                </qr-code>
                 <template #modal-footer="{ok}">
                   <button @click="ok()"
                           class="btn btn-sm btn-primary">OK</button>
@@ -125,7 +128,9 @@
           header-class="py-2"
             @hidden="cancelItem">
                 <x-simple-form size="sm"
-                :inputs="modalInputs" :isnew="!oneItem.id"
+                :inputs="modalInputs" :isnew="!oneItem.id" :settings="{
+                  json_height : '200px'
+                }"
                 @change="onConfigChange">
                 </x-simple-form>
                 <template #modal-footer>
@@ -149,7 +154,8 @@
 
     // Import the styles too, typically in App.vue or main.js
     import 'vue-swatches/dist/vue-swatches.css'
-    import MyStatus from '../../../@common/custom/components/MyStatus.vue';
+    import MyStatus from '@/@common/custom/components/MyStatus.vue';
+    import QrCode from '@/@common/custom/components/QrCode.vue';
 
     function newItem(channelType) {
       return {
@@ -161,7 +167,8 @@
     export default {
         components: {
             MasterView,XSimpleForm,
-                MyStatus
+                MyStatus,
+                QrCode
         },
         data: () => ({
             MyFlags : MyFlags, MyDict : MyDict,MyConst : MyConst,
@@ -274,13 +281,14 @@
               let resp = await this.$service.get('api/meta/channel_configs/'+item.channelType);
               console.log("oldHash",this.oldHash)
               this.modalInputs = resp.results.map(function (meta) {
-                var key = (meta.path || meta.key)
+                let path = (meta.pathRaw || meta.path )
+                var key = (path|| meta.key)
                 console.log("meta.key",key,JsonXPath({ path : '$.'+key,json : item}))
                 return {
                   meta : meta,
                   config : { 
                     key : meta.key,
-                    path : meta.path,
+                    path : path,
                     value : JsonXPath({ path : '$.'+key,json : item})[0]
                   }
                 }
@@ -288,7 +296,7 @@
               this.$bvModal.show(this.modelName)
           },
           async onConfigChange({ meta,config }){
-              var key = (meta.path || meta.key);
+              var key = (meta.pathRaw || meta.path || meta.key);
               const rs = JsonXPath({
                 path : '$.' +key,
                 json: this.oneItem,

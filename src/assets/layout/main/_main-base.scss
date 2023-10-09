@@ -13,7 +13,43 @@
   padding: $grid-gutter-width $grid-gutter-width 0;
   flex: 1;
 }
+.nb-spinner {
+  width: 75px;
+  height: 75px;
+  position: fixed;
+  left: calc(50% - 37px);
+  top: calc(50% - 37px);
+  margin: 0;
+  background: transparent;
+  z-index: 10000;
+  border-top: 4px solid #009688;
+  border-right: 4px solid transparent;
+  border-radius: 50%;
+  -webkit-animation: 1s spin linear infinite;
+  animation: 1s spin linear infinite;
+}
 
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 // Themes
 
 @import "themes/main-white";

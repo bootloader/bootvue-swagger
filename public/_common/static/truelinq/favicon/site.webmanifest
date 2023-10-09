@@ -1,0 +1,43 @@
+{
+    "name": "TrueLinQ",
+    "short_name": "TrueLinQ",
+    "start_url": "https://app.truelinq.com",
+    "categories": [
+      "google",
+      "facebook",
+      "twitter",
+      "otpless",
+      "whatsapp",
+      "telegram"
+    ],
+    "description": "Simple.Secure.Sign.On",
+    "icons": [
+      {
+        "src": "/_common/static/truelinq/favicon/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "/_common/static/truelinq/favicon/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "/_common/static/truelinq/favicon/launchericon-96.png",
+        "sizes": "96x96",
+        "type": "image/png",
+        "purpose" : "any"
+      }
+    ],
+    "theme_color": "#000",
+    "background_color": "#000",
+    "display": "standalone",
+    "launch_handler": {
+      "client_mode": [
+        "focus-existing",
+        "auto"
+      ]
+    }
+  }

@@ -34,7 +34,9 @@ console.log("baseURL====",axios.defaults.baseURL);
 console.log("location.pathname====",location.pathname);
 Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue,{
+	breakpoints: [`xs`, 'sm', ,'ms', 'md', 'lg', 'xl', 'xxl']
+});
 Vue.use(BootstrapVueIcons)
 Vue.use(SidebarPlugin)
 
@@ -50,7 +52,10 @@ Vue.use(Vue2TouchEvents)
 import AppWrapper from './AppWrapper';
 
 (function(configs,app){
-	var config = configs[app] || configs.dev;
+	let appFile = app[0].toUpperCase() + app.substring(1); 
+	var config = configs[app] || {
+		component : () => import(`./app-${app}/App${appFile}.vue`)
+	};
 	//console.log("ALWAYS",app,config);
 
 	if(typeof config.beforeLoad == 'function'){
@@ -74,35 +79,11 @@ import AppWrapper from './AppWrapper';
 	"admin" : {
 		component : () => import('./AppAdmin.vue')	
 	},
-	"agent" : { 
-		component : () => import('./app-agent/AppAgent.vue')
-	},
-	"customer" : { //Customer App
-		component : () => import('./app-customer/AppCustomer.vue')
-	},
-	"account" : { //Account App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-account/AppAccount.vue')
-	},
-	"partner" : { //Partner App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-partner/AppPartner.vue')
-	},
-    "cpanel" : { //Partner App
-		beforeLoad : () => {
-		},
-		component : () => import('./app-cpanel/AppCpanel.vue')
-	},
-	"front" : { //Account App
-		component : () => import('./app-front/AppFront.vue')
-	},
 	"page" : { //Account App
 		component : () => import('./app-page/AppPage.vue')
 	},
-	"contak" : { //Notp App
-		component : () => import('./app-contak/AppContak.vue')
+	"linq" : { //Linq App
+		component : () => import('./app-linq/AppLinq.vue')
 	},
 	"dev" : { 
 		component : () => import('./app-dev/AppDev.vue')
@@ -111,6 +92,11 @@ import AppWrapper from './AppWrapper';
 		beforeLoad : () => {
 		},
 		component : () => import('./app-content/AppContent.vue')
+	},
+	"www" : { //Www App
+		beforeLoad : () => {
+		},
+		component : () => import('./app-www/AppW.vue')
 	},
 },window.CONST.APP);
 

@@ -1,7 +1,7 @@
 <template>
     <div class="app-footer">
         <div class="app-footer__inner text-center">
-            Copyright &copy; 2021 Mehery SocCom - All Rights Reserved
+            Copyright &copy; {{year}} {{$config.PROP_SERVICE_NAME}} - All Rights Reserved
         </div>
     </div>
 </template>
@@ -10,6 +10,11 @@
     export default {
         name: "Footer",
         components: {
+        },
+        data() {
+            return {
+                year: new Date().getFullYear()
+            };
         }
     };
 </script>

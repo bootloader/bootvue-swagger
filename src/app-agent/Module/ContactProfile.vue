@@ -312,6 +312,9 @@
     }
 </style>
 <style type="text/css">
+    #tagmodal___BV_modal_outer_{
+        z-index: 1000000000001 !important;
+    }
     #tagmodal li.ti-tag, #tagmodal li.ti-item{
         background-color: #efefef!important;
         color: #212529!important;

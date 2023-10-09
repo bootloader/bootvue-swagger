@@ -7,6 +7,10 @@ import Vue from 'vue';
 import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
 Vue.use(DashboardPlugin);
 
+import VueClipboard from 'vue-clipboard2';
+VueClipboard.config.autoSetContainer = true // add this line
+Vue.use(VueClipboard);
+
 console.log("This is AppPartner")
 
 export default {
@@ -17,3 +21,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+    @import '@/assets/utils/_popular.scss';
+</style>

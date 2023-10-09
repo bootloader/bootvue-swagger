@@ -1,0 +1,140 @@
+{
+    "options":[
+      {
+         "id":"OTP",
+         "label":"OTP",
+         "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
+         "icon":"my my-oa-type-otp",
+         "type" :  "OTP", 
+         "suggestion" : {
+           "Login" : "MAJOR",
+           "Reset" : "MAJOR",
+           "Pin" : "MAJOR",
+           "Transaction" : "MAJOR"
+         }
+      },
+       {
+          "id":"ACCOUNT",
+          "label":"Account",
+          "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
+          "icon":"my my-oa-type-account",
+          "type" :  "TRANSACTIONAL", 
+          "suggestion" : {
+            "Credit" : "CREDIT",
+            "Debit" : "DEBIT",
+            "Notification" : "INFO",
+            "Statement" : "MAJOR",
+            "Activated" : "INFO",
+            "Balance" : "MAJOR",
+            "Shares Credited" : "CREDIT",
+            "Shares Debited" : "DEBIT",
+            "Spend" : "DEBIT"
+          }
+       },
+       {
+         "id":"APPOINTMENT",
+         "label":"Appointments",
+         "desc":"Send confirmations, reminders or other updates to customers about their appointments.",
+         "icon":"my my-oa-type-appointment",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Rescheduled" : "ALERT"
+          }
+       },
+      {
+         "id":"RESERVATION",
+         "label":"Reservations",
+         "desc":"Send confirmations, reminders or other updates to customers about their reservations.",
+         "icon":"my my-oa-type-reservation",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      },
+      {
+         "id":"TICKET",
+         "label":"Ticket",
+         "desc":"Send ticketing information or updates to customers.",
+         "icon":"my my-oa-type-ticket",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Update" : "MAJOR",
+            "Confirmed" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      },
+
+       {
+          "id":"SERVICE",
+          "label":"Service",
+          "desc":"Respond to questions, concerns or feedback from customers about your business.",
+          "icon":"my my-oa-type-service",
+          "type" :  "TRANSACTIONAL", 
+          "suggestion" : {
+            "Issue" : "MAJOR",
+            "Notification" : "MINOR",
+            "Resolved" : "INFO",
+            "Cancelled" : "ALERT",
+            "Checkbook dispatched" : "INFO"
+          }
+       },
+
+      {
+         "id":"SHIPMENT",
+         "label":"Shippments",
+         "desc":"Send shipping updates to customers about their orders.",
+         "icon":"my my-oa-type-shipment",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Dispatched" : "MAJOR",
+            "Delivered" : "INFO",
+            "Delayed" : "ALERT",
+            "Pickup Initiated" : "MAJOR",
+            "Pickup completed" : "INFO"
+          }
+      },
+      {
+         "id":"PAYMENT",
+         "label":"Payment",
+         "desc":"Send a message to customers about their payment.",
+         "icon":"my my-oa-type-payment",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Initiated" : "MAJOR",
+            "Notification" : "INFO",
+            "Success" : "MAJOR",
+            "Reminder" : "ALERT"
+          }
+      },
+      {
+         "id":"PROFILE",
+         "label":"Profile",
+         "desc":"Send a message to customers about their profile/credential changes",
+         "icon":"my my-oa-type-profile",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Created" : "MAJOR",
+            "Password Updated" : "INFO",
+            "Success" : "MAJOR",
+            "Disabled" : "ALERT",
+            "Deleted" : "ALERT"
+          }
+      },
+      {
+         "id":"ORDER",
+         "label":"Order",
+         "desc":"Send a message to customers about orders",
+         "icon":"my my-oa-type-order",
+         "type" :  "TRANSACTIONAL", 
+         "suggestion" : {
+            "Received" : "MAJOR",
+            "Accepted" : "INFO",
+            "Cancelled" : "ALERT"
+          }
+      }
+    ]
+ }

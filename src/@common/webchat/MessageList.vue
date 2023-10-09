@@ -143,7 +143,8 @@ export default {
   height: 80%;
   overflow: auto;
   -webkit-overflow-scrolling:touch;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-size: 100%;
   padding: 40px 20px;
   display: flex;

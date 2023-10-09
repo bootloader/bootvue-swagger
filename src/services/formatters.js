@@ -2,6 +2,7 @@ import Vue from 'vue';
 import moment from 'moment';
 import numeral from 'numeral';
 import JsonUtils from './../@common/utils/JsonUtils';
+import mustache from 'mustache';
 
 var CONTACT_LABELS_DICT = {};
 var CONTACT_TAGS_DICT = {};
@@ -185,6 +186,13 @@ var formatter = {
   },
   https : function (mediaUrl) {
     if(!mediaUrl) return mediaUrl;
+    if(this.URL(mediaUrl) !== true){
+      return mediaUrl;
+    }
+    let url = new URL(mediaUrl);
+    if(url.hostname == '127.0.0.1'){
+      return mediaUrl;
+    }
     return mediaUrl.replace("http://","https://");
   },
   thumburl : function (mediaUrl,w,h) {
@@ -197,9 +205,12 @@ var formatter = {
         return m.slice(1).join("/");
       } 
       var aws = mediaUrl.match(/(.+)\/(.+).(s3.amazonaws.com)\/(.+)/);
+      var imk = mediaUrl.match(/(.+)\/(ik.imagekit.io)\/(.+)/);
       if(aws && aws.length){
         return `https://ik.imagekit.io/meherysoccom/${aws[2]}/${aws[4]}?tr=w-${_w},h-${_h}`
-      } 
+      } else if(imk && imk.length){
+        return `${imk[0].split("?")[0]}?tr=w-${_w},h-${_h}`
+      }
       return mediaUrl;
   },
   https_thumburl : function (mediaUrl,w,h) {
@@ -211,7 +222,19 @@ var formatter = {
   clean_url : function(url){
     return url.replace(/(\/)\/+/g, "$1").replace(/^https?:/,'https:/');
   },
-
+  toMedia(attachment){
+    if(attachment){
+      return {
+        mediaCode : attachment.code,
+        mediaSrc : null,
+        mediaURL : attachment.url,
+        mediaType : attachment.type, mediaSubType : null,  mediaMimeType : attachment.mimeType, 
+        mediaId : attachment.id,
+        mediaName : attachment.title,
+        mediaCaption : null
+      }
+    } return null;
+  },
   keys : function keys(map,prefix){
       prefix = prefix || "" ;
       var list = [];
@@ -270,7 +293,7 @@ var formatter = {
 
 
   //Validators
-  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile"],
+  validators : ["phone","phoneML","emailz","alphanum","HBNumVar","HBPrefixedVar","URL","csvFile","oneline"],
   alphanum : function alphanumValidator (value) {
     if(/^[a-zA-Z0-9]*$/.test(value))
       return true
@@ -363,12 +386,25 @@ var formatter = {
     try {
       url = new URL(string);
     } catch (_) {
-      return false;  
+      return "errors.ValidURL";  
+    }
+    if(/\s/.test(string)){
+      return "errors.ValidURL";
     }
     return (url.protocol === "http:" || url.protocol === "https:") && (url.href == string || url.origin == string);
   },
+  oneline : function(contents){
+    if(!/\n/.test(contents))
+      return true
+    return 'errors.ValidLine';
+  },
+
+  //Formmatter
   item_code : function item_code (value) {
     return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9_]+/g,'_').replace(/[_]+/g,'_');
+  },
+  alphanumlower : function alphanumlower (value) {
+    return (value || '').toLowerCase().trim().replace(/[^A-Za-z0-9]+/g,'').replace(/[\s]+/g,'');
   },
 
   init : function () {
@@ -388,7 +424,10 @@ var formatter = {
     });
     Vue.filter('uppercase', function (html_str) {
       return (html_str || '').toUpperCase();
-  });
+    });
+    Vue.filter('nospacial', function (html_str) {
+      return (html_str || '').replace(/[-_]/ig,' ');
+    });
     Vue.filter('number', function (value,format) {
         var _format = format || "0,0a"
         return numeral(value).format(_format).toUpperCase();//.replace(/(?:\r\n|\r|\n)/g, '<br/>').trim();
@@ -453,8 +492,16 @@ var formatter = {
     Vue.filter('json', function (str) {
       return JSON.stringify(JsonUtils.deepParse(str), null, 2);
     });
+    Vue.filter('hb', function (str,model) {
+      try {
+        return mustache.render(str, model);
+      } catch(e){
+        return str;
+      }
+    });
 
     Vue.filter('item_code', THAT.item_code);
+    Vue.filter('alphanumlower', THAT.alphanumlower);
   }
 }
 

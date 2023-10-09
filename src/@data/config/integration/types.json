@@ -13,6 +13,10 @@
             "name": "WIT.ai"
         },
         {
+            "code": "google",
+            "name": "GCS"
+        },
+        {
             "code": "navitaire",
             "name": "navitaire"
         }

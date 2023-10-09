@@ -151,7 +151,7 @@
           </div>
         </div>
 
-        <SocialBoxes :channels="channels" class="py-5 text-center type-1"/>
+        <SocialBoxes :channels="channels" class="py-5 text-center"/>
 
       </section>
 
@@ -252,7 +252,7 @@ export default {
                 "header.bg.color" : "#1e293b",
                 "header.text.color" : "#ffffff",
                 //"header.icon.url" : this.$global.MyConst.cdn + "/_common/static/support.png",
-                "header.title.text" : "Support",
+                //"header.title.text" : "Support",
                 //"header.disabled" : true,
 
                 "launcher.bg.color" : "#1e293b",
@@ -302,11 +302,6 @@ export default {
     background-color: #f9f9f9;
     padding: 14px;
   }
-}
-.type-1 {
-  min-width: 300px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
 }
 
 

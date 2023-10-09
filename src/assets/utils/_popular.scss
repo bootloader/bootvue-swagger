@@ -1,5 +1,5 @@
 // Helpers imports
-@import "social";
+//@import "social";
 
 $threshold: 55%;
 $dark: #000;
@@ -24,34 +24,117 @@ $scheme : var(--scheme-color);
     }
 }
 
+@function set-lighten($color,$pr) {
+    @if ( $scheme!=$color) {
+      @return lighten($color,$pr)
+    }
+    @else {
+      @return $color;
+    }
+}
+
+$color-instagram-y              : #fdf497;
+$color-instagram-r              : #fd5949;
+$color-instagram-p              : #d6249f;
+$color-instagram-b              : #285AEB;
+
 $popular-list:(
     red : #ff0000,
+    green : #2dce89,
+    blue: #153f9b,
+    black: #000000,
+    white : #FFF,
+
+    danger : #f5365c,
     online : #4cd137,
     purple-dirty: #9f6bb4,
     purple-darkdirty:  #8648a1,
+
     greyish:  #f0f4f6,
     greyed : #dfdfdf,
     grey:  #8b8b8b,
     greyer:  #5a5a5a,
-    blue: #153f9b,
-    white : #FFF,
+
     white-dirty : rgb(226, 226, 226),
     teal-100 : #d2f4ea,
     scheme :  var(--scheme-color),
     darker : #262a2e,
-    darkish : #343a40d1
+    darkish : #343a40d1,
+
+    evening : #525f7f,
+
+    nightest :rgba(0, 0, 0, 0.5),
+    night :rgba(0, 0, 0, 0.25),
+    nighter :rgba(0, 0, 0, 0.1),
+    nightish :rgba(0, 0, 0, 0.05),
+    dayish :rgba(255, 255, 255, 0.05),
+    dayer :rgba(255, 255, 255, 0.1),
+    day :rgba(255, 255, 255, 0.25),
+    dayest :rgba(255, 255, 255, 0.5),
+
+    facebook: #4267B2,
+    twitter:  #1DA1F2,
+    telegram:  #0088cc,
+    telegram-plane:  #0088cc,
+    whatsapp: #25D366,
+    whatsapp-dull: #10b981,
+    whatsapp-dark: #245135,
+    google: #dc4a38,
+    dribbble: #f26798,
+    skype : #00aff0,
+    chrome : #4c8bf5,
+    instagram-y : #fdf497,
+    instagram-r : #fd5949,
+    instagram-p : #d6249f,
+    instagram-b : #285AEB,
+    envelope : #444343,
+    linkedin :  #0077B5,
+    microsoft :  #00a2ed,
+    outlook : #00a2ed,
+    mobile : #10b981,
+    truecaller : #0287ff,
+
+    oa-blue : #3f3f95,
+    oa-yellow : #fab14b,
+    oa-grey : #f7fafc,
+
+    oa-major : #0a0a0a,
+    oa-minor : #cfcfcf,
+    oa-debit : rgb(255, 59, 48),
+    oa-credit : rgb(52, 199, 89),
+    oa-info : rgb(48, 176, 199),
+    oa-alert : rgb(255, 149, 0),
 );
 
 @each $key,$val in $popular-list{
-    .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after {
+    //BACKGROUND
+    .bg-#{$key},.bg-#{$key}\:before::before,.bg-#{$key}\:after::after,
+    .bg-outline-#{$key},.bg-outline-#{$key}\:before::before,.bg-outline-#{$key}\:after::after {
         background-color: #{$val}!important;
         color: set-color($val);
     }
-    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after {
+
+    //BACKGROUND LIGHT
+    .bg-light.bg-#{$key},.bg-light.bg-#{$key}\:before::before,.bg-light.bg-#{$key}\:after::after,
+    .bg-light.bg-outline-#{$key},.bg-light.bg-outline-#{$key}\:before::before,.bg-light.bg-outline-#{$key}\:after::after {
+        background: rgba($val,.1)!important;
+    }
+
+    //BACKGROUND TEXT
+    .bg-text.bg-#{$key},.bg-text.bg-#{$key}\:before::before,.bg-text.bg-#{$key}\:after::after,
+    .bg-text.bg-outline-#{$key},.bg-text.bg-outline-#{$key}\:before::before,.bg-text.bg-outline-#{$key}\:after::after {
         color: set-color($val);
     }
-    .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after {
+
+    //TEXT
+    .text-#{$key},.text-#{$key}\:before::before,.text-#{$key}\:after::after ,
+    .text-outline-#{$key},.text-outline-#{$key}\:before::before,.text-outline-#{$key}\:after::after {
         color: #{$val}!important;
+    }
+
+    //More
+    .fac-bg.fa-#{$key}::before{
+        background-color: #{$val};
     }
     .btn-#{$key} {
         background-color: #{$val};
@@ -82,8 +165,9 @@ $popular-list:(
     .text-#{$key}\:hover:hover {
         color: #{$val};
     }
-    .border-#{$key} {
-        border-color: #{$val};
+    .badge-#{$key} {
+        color: #{$val};
+        background-color: #{set-lighten($val,45%)}80;
     }
   }
 .text-comma:not(:empty)+.text-comma:not(:empty)::before {
@@ -105,11 +189,46 @@ $popular-list:(
 .text-dotted {
     text-decoration: underline dotted;
 }
-.border-1px {
+.border-1px,.b-1px {
     border-width: 1px; border-style: solid;
+}
+.bb-1px {
+    border-bottom-width: 1px; border-bottom-style: solid;
+}
+.bl-1px {
+    border-left-width: 1px; border-left-style: solid;
 }
 .dull {
     opacity: 0.7;
+}
+.bg-round-text {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    height: 1em;
+    line-height: 1em;
+}
+
+.fac-bg::before {
+    color : #FFF;
+}
+.fac-bg.fa-instagram::before,
+.bg-instagram,.bg-instagram\:before::before,.bg-instagram\:after::after  {
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+}
+.fa-instagram.text-instagram::before {
+    //background: -webkit-linear-gradient(#eee, #333);
+    background: radial-gradient(circle at 30% 107%, $color-instagram-y 0%, $color-instagram-y 5%, $color-instagram-r  45%,$color-instagram-p 60%,$color-instagram-b 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.fac-bg {
+    &.fa-telegram:before {
+        content: "\f3fe";
+    }
+    &.fa-facebook:before {
+        content: "\f39e";
+    }
 }
 
 .fa-x {

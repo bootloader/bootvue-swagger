@@ -103,6 +103,9 @@
             icon: 'pe-7s-network icon-gradient bg-tempting-azure fa fa-users',
             actions : [{
               label : "Add Team", icon : "plus", name : "ADD_ITEM"
+            },
+            {
+              label : "Add User", icon : "plus", name : "ADD_USER"
             }],
             table : {
               fields: [ 
@@ -116,6 +119,12 @@
             newItem : newItem(),
             modelName :  "MODAL_ADD_TEAM",
             includeInActive : false,
+            addUserLinks : {
+              name : 'AgentsUsers',
+              params : {
+                openUserPopup:true
+              }
+            }
         }),
         computed : {
             teams (){
@@ -126,7 +135,7 @@
             },
             isChanged :  function (argument) {
               return this.oldHash !== JSON.stringify(this.newItem);
-            } 
+            }
         },
         created : function (argument) {
           this.loadAgentTeams(true);
@@ -176,12 +185,19 @@
               case "CANCEL" :
                 this.$bvModal.hide(this.modelName)
                 break;
+              case "ADD_USER" :
+                this.$router.push(this.addUserLinks)
+                break;
               default:
                 console.log("NoMapping",argument) 
             }
           }
-
-        }
+        },
+        mounted(){
+            if(this.$route.params.openTeamPopup){
+                this.onAction(this.actions[0])
+            }
+          }
 
 
     }

@@ -289,7 +289,7 @@
                       "header.bg.color" : "#1e293b",
                       "header.text.color" : "#ffffff",
                       "header.icon.url" : "https://cdn.jsdelivr.net/gh/mehery-soccom/mehery-web-dist@834bfa2c3b8060cac2ebcd7778758d6021be2dca/dist/logo/logo-tiny-o.png",
-                      "header.title.text" : "Support",
+                      "header.title.text" : "Support Test",
                       //"header.disabled" : true,
                       "launcher.bg.color" : "#1e293b",
                       //"launcher.open" : true,

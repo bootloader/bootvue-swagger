@@ -1,13 +1,14 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
-    <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
+  :class="['basic-component bc-v-select','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
+  disabled ? 'bc-disabled' : '', isMySelect ? 'bc-v-select-MySelect' : '']" ref="vp">
+    <b-form-group class="form-group-input" :label-for="'fmg-bvs-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
       ]">
       <slot name="label">
         <label v-if="!isPrelabel && (label || name)"
-          :for="'fmg-' + inputId"
+          :for="'fmg-bvs-' + inputId"
           :class="[
           {'focused': focused},
           {'is-valid': valid && validated }, 
@@ -39,8 +40,8 @@
               </b-button>
             </slot>
         </div>
-        <my-v-select 
-            :id="'fmg-' + inputId" ref="myVSelect" :size="size"
+        <my-select  v-if="isMySelect"
+            :id="'fmg-bvs-' + inputId" ref="myVSelect" :size="size"
             :placeholder="$attrs.placeholder"
             :value="value" 
             v-on="listeners"
@@ -48,9 +49,31 @@
             :options="options" :optionKey="optionKey" :optionLabel="optionLabel" :optionContext="optionContext"
             :emptyDisplay="emptyDisplay"
             :valid="valid" 
-            :required="required"
+            :required="required" :disabled="disabled"
             :autoPosition="autoPosition"
-            :filter="filter" :searchable="searchable" :clearable="clearable"
+            :filter="filter" :search="search" :fullOptionSearch="fullOptionSearch"
+             :searchable="searchable" :clearable="clearable"
+            :class="['text-'+size, 'v-select-'+size,
+              {'is-valid': valid && validated && successMessage}, 
+              {'is-invalid': invalid && validated}, inputClasses]"
+            >
+            <template v-for="slotName in Object.keys($scopedSlots)" v-slot:[slotName]="slotScope">
+              <slot :name="slotName" v-bind="slotScope"></slot>
+            </template>
+        </my-select> 
+        <my-v-select v-else
+            :id="'fmg-bvs-' + inputId" ref="myVSelect" :size="size"
+            :placeholder="$attrs.placeholder"
+            :value="value" 
+            v-on="listeners"
+            v-bind="$attrs" 
+            :options="options" :optionKey="optionKey" :optionLabel="optionLabel" :optionContext="optionContext"
+            :emptyDisplay="emptyDisplay"
+            :valid="valid" 
+            :required="required" :disabled="disabled"
+            :autoPosition="autoPosition"
+            :filter="filter" :search="search"
+             :searchable="searchable" :clearable="clearable"
             :class="['text-'+size, 'v-select-'+size,
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, inputClasses]"
@@ -80,33 +103,36 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="help">
-          <div class="help-feedback" v-if="showHelpMessage">
-            {{helpMessage || $attrs.placeholder}}
-          </div>
-      </slot>
-      <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="help">
+              <div class="help-feedback" v-if="showHelpMessage">
+                {{helpMessage || $attrs.placeholder}}
+              </div>
+          </slot>
+          <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span>  
     </b-form-group>
   </validation-provider>
 </template>
 <script>
  
  import MyVSelect from '@/@common/custom/components/MyVSelect.vue';
+ import MySelect from '@/@common/custom/components/MySelect.vue';
 
  var ID_COUNTER = 0;
 
   export default {
-    components: {MyVSelect },
+    components: {MyVSelect ,MySelect},
     inheritAttrs: false,
     name: "base-text-area",
     props: {
@@ -247,6 +273,8 @@
       },
       filter : {
       },
+      search : {
+      },
       emptyDisplay :{},
       autoPosition : {
           type : Boolean,
@@ -259,6 +287,22 @@
       searchable : {
         type: Boolean,
         default: false
+      },
+      fullOptionSearch : {
+        type: Boolean,
+        default: false
+      },
+      disabled : {
+        type: Boolean,
+        default: false
+      },
+      latest : {
+        type: Boolean,
+        default: false
+      },
+      version : {
+        type: String,
+        default: 'MyVSelect'
       }
     },
     data() {
@@ -277,7 +321,8 @@
           //input: this.updateValue,
           focus: this.onFocus,
           blur: this.onBlur,
-          score : this.onScore
+          score : this.onScore,
+          change : this.onChange
         };
       },
       slotData() {
@@ -307,13 +352,24 @@
       isPrelabel(){
         return this.prependIcon || this.prelabel || this.$slots.prepend || this.prepend || this.prependClass
       },
+      isMySelect(){
+        return this.latest || (this.version=='MySelect')
+      }
     },
     methods: {
       updateValue(value) {
         if(value?.target){
           value = (value?.target?.value);
         }
+        this.emitValue(value);
+      },
+      emitValue(value){
         this.$emit("input", value);
+        //this.$emit("change", value);
+      },
+      onChange(evt){
+        setTimeout(()=>this.$refs.vp.validate());
+        this.$emit("change", evt);
       },
       onFocus(evt) {
         this.focused = true;

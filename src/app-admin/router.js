@@ -12,6 +12,12 @@ export default AppRouter.route({
             component: () => import('./Modules/MyAnalytics.vue'),
         },
         {
+            path: '/app/analytics',
+            alias: '/app/home',
+            name: 'msganalytics',
+            component: () => import('./Modules/MsgAnalytics.vue'),
+        },
+        {
             path: '/app/reports/taxonomy',
             name: 'ReportTaxonomy',
             component: () => import('./Modules/ReportTaxonomy.vue'),
@@ -31,6 +37,16 @@ export default AppRouter.route({
             path: '/app/master/contact/profiles',
             name: 'ContactProfiles',
             component: () => import('./Modules/Masters/ContactProfiles.vue'),
+        },
+        {
+            path: '/app/faq',
+            name: 'FAQ',
+            component: () => import('./Modules/FAQ.vue'),
+        },
+        {
+            path: '/app/reports/taxonomy',
+            name: 'ReportTaxonomy',
+            component: () => import('./Modules/ReportTaxonomy.vue'),
         },
         {
             path: '/app/moderate/import-chat',
@@ -172,10 +188,27 @@ export default AppRouter.route({
         {
             path : "/app/console/logs",
             name: 'ErrorLogs',
-            component: () => import('./Modules/Console/ErrorLogs.vue'),    
+            component: () => import('./Modules/Console/ErrorLogs.vue'),   
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            }  
         },
-
-
+        {
+            path : "/app/console/activities",
+            name: 'ActivityLogs',
+            component: () => import('./Modules/Console/UserActivities.vue'),   
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            } 
+        },
+        {
+            path : "/app/console/change_logs",
+            name: 'ChangeLogs',
+            component: () => import('./Modules/Console/ChangeLogs.vue'),    
+            meta : {
+                role  : ['BUSINESS_USER','DUPER_USER']
+            } 
+        },
         {
             path: 'app/admins/components/modals',
             name: 'modals',

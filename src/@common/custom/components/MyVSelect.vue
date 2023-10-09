@@ -8,18 +8,23 @@
         :searchable="searchable"
         :placeholder="placeholder"
         :clearable="clearable"
+        :filter="search"
         @search="onSearch"
         :appendToBody="appendToBody"
         :calculatePosition="calculatePosition"
         @input="onChange">
 
         <template #selected-option="option">
-            <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+            <span :class="option.selectedClass">
+                <span v-if="selectedPrefixClass" :class="[selectedPrefixClass,'mr-1']">&nbsp;</span>
+                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+            </span>
         </template>
 
         <template #option="option">
-            <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+             <span :class="[option.optionClass]">
+                <span v-if="option.prefixClass" :class="[option.prefixClass,'mr-1']">&nbsp;</span>{{option.label }}
+             </span>  
         </template>
 
         <template #open-indicator="{ attributes }">
@@ -94,6 +99,8 @@
             },
             filter : {
             },
+            search :{
+            },
             type : {
                 type : String,
                 default : "dropdown"
@@ -123,6 +130,10 @@
             },
             options : function(newVal, oldVal){
                 this.loadOptions();
+            },
+            filter : function(newVal, oldVal){
+                if(JSON.stringify(newVal) != JSON.stringify(oldVal))
+                    this.loadOptions();
             }
         },
         created : function(){
@@ -154,7 +165,7 @@
                 let THIS = this;
                 let hasEmptyValue = false;
                 if(!options || !options.map){
-                    console.error("options",options)
+                    console.error("options",options,'for',this);
                 }
                 this.model.options = options.map(function(option){
                     if(typeof option == 'string' || typeof option == 'number'){
@@ -177,7 +188,9 @@
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
                             item : option,
-                            prefixClass : option.prefixClass || option.icon
+                            prefixClass : option.prefixClass || option.icon,
+                            optionClass : option.optionClass || option.class,
+                            selectedClass : option.selectedClass || option.class,
                         };
                     }
                 });
@@ -189,7 +202,7 @@
                         item : null,
                     },...this.model.options];
                 }
-
+                //console.log("filters",this.filter);
                 if(this.filter){
                     let filters = [];
                     if(Object.prototype.toString.call(this.filter) === '[object Array]') {
@@ -197,6 +210,7 @@
                     } else if(Object.prototype.toString.call(this.filter) === '[object Object]') {
                         filters = [this.filter];
                     }
+                    //console.log("filters",filters);
                     this.model.options  = this.model.options.filter(function(option){
                         return filters.some(function(filter){
                             for(var key in filter){
@@ -228,11 +242,26 @@
             async loadOptions(){
                 if(this.options && (typeof this.options == 'string') 
                     && /^(data\:|@data\/)/.test(this.options) ){
-                    let json = await import("@/@data/" + this.options.replace(/^(data:|@data\/)/,"") + ".json");
+                    let file =  this.options.split("#");   
+                    let json = await import("@/@data/" + file[0].replace(/^(data:\/|data:|@data\/)/,"") + ".json");
+                    this.fromOptions(json.options);
+                } else if(this.options && (typeof this.options == 'string') 
+                    && /^(json\:|@json\/)/.test(this.options) ){
+                    let file =  this.options.split("#"); 
+                    console.log("__webpack_public_path__",__webpack_public_path__); 
+                    let jsonfile = __webpack_public_path__ + '/_json/' + file[0].replace(/^(json:\/|json:|@json\/)/,"") + ".json" 
+                    let resp = await fetch(jsonfile);
+                    let json = await resp.json();
+                    //let resp = await this.$service.getX(jsonfile);
+                    //this.fromOptions(resp.results ? resp.results : resp);
                     this.fromOptions(json.options);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('getx:') == 0){
                     let url = this.options.replace("getx:","");
                     let resp = await this.$service.getX(url);
+                    this.fromOptions(resp.results ? resp.results : resp);
+                } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('get:') == 0){
+                    let url = this.options.replace("get:","");
+                    let resp = await this.$service.get(url);
                     this.fromOptions(resp.results ? resp.results : resp);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('dispatch:') == 0){
                     let evenName = this.options.replace("dispatch:","");
@@ -243,7 +272,7 @@
                 }
             },
             onChange: function () {
-                let value = this.model.value ? this.model.value.value : null;
+                let value = this.model?.value?.value;
                 this.$emit("input", value);
                 this.$emit("change", value);
             },

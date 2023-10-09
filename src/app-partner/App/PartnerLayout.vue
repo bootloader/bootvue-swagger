@@ -2,7 +2,7 @@
   <div class="wrapper">
     <notifications></notifications>
     <side-bar
-      :logo="$config.PROP_LOGO_BG_X_LOGO"
+      :logo="$config.PROP_LOGO_BG_X_LOGO" :profileImage="profileImage"
     >
       <template slot="links">
 
@@ -11,6 +11,14 @@
                     name: 'Domains',
                     path: '/app/home',
                     icon: 'ni ni-planet text-blue'
+                  }">
+        </sidebar-item>
+
+        <sidebar-item
+                  :link="{
+                    name: 'WABA',
+                    path: '/app/waba',
+                    icon: 'fa fa-whatsapp text-whatsapp'
                   }">
         </sidebar-item>
 
@@ -99,7 +107,7 @@
       </template>
     </side-bar>
     <div class="main-content min-vh-100">
-      <dashboard-navbar :type="$route.meta.navbarType"></dashboard-navbar>
+      <dashboard-navbar :type="$route.meta.navbarType" :profileImage="profileImage"></dashboard-navbar>
 
       <div @click="$sidebar.displaySidebar(false)" class="min-vh-100">
         <fade-transition :duration="200" origin="center top" mode="out-in">
@@ -115,6 +123,7 @@
   /* eslint-disable no-new */
   import PerfectScrollbar from 'perfect-scrollbar';
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
+  import profileImage from "@/assets/images/avatars//profile.png";
 
 console.log("This is AppPartnerAuth")
 
@@ -145,6 +154,11 @@ console.log("This is AppPartnerAuth")
       //DashboardContent,
       FadeTransition
     },
+    data(){
+      return {
+        profileImage
+      }
+    },
     methods: {
       initScrollbar() {
         let isWindows = navigator.platform.startsWith('Win');
@@ -153,7 +167,7 @@ console.log("This is AppPartnerAuth")
         }
       },
       showLink(role){
-        return window.CONST.APP_USER_ROLE.indexOf(role) > -1
+        return window.CONST.APP_USER_ROLE?.indexOf(role) > -1
       }
     },
     mounted() {

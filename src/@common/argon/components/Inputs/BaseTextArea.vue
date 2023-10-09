@@ -1,7 +1,8 @@
 <template>
   <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
-  :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout,'bc-size-' + size]">
-    <b-form-group class="form-group-input" label-for="'fmg-' + inputId"
+    :class="['basic-component bc-text-area','bc-span', 'bc-layout-' + layout,'bc-size-' + size,
+    disabled ? 'bc-disabled' : '']">
+    <b-form-group class="form-group-input" :label-for="'fmg-' + inputId"
       :class="['layout-' + layout,
         {'is-question': question },
         {'resizable' : resizable},
@@ -27,7 +28,7 @@
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': (label || name) || $slots.label},
-       inputGroupClasses
+       inputGroupClasses, 'input-group-text-area'
        ]">
         <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
         <span class="input-group-text">
@@ -36,40 +37,50 @@
           </slot>
         </span>
         </div>
-        
-          <text-complete v-if="textCompleteStrategies && textCompleteStrategies.length && !disabled"  
+            <input v-if="showAsInput"
+            :id="'fmg-' + inputId"
+            :value="displayValue"
+            v-on="listeners"
+            v-bind="$attrs" 
+            :valid="valid" 
+            :placeholder="question ? '' : $attrs.placeholder"
+            :required="required"
+            class="form-control"
+            :class="[
+                size ? 'form-control-'+size : '',
+                {'is-valid': valid && validated && successMessage}, 
+                {'is-invalid': invalid && validated}, inputClasses]">
+          <text-complete v-else-if="textCompleteStrategies && textCompleteStrategies.length && !disabled"  
               :id="'fmg-' + inputId"
-              :value="value"
-              :type="type"
+              :value="displayValue"
               v-on="listeners"
               v-bind="$attrs" 
               :valid="valid" :disabled="disabled"
-              :placeholder="$attrs.placeholder"
+              :placeholder="question ? '' : $attrs.placeholder"
               :required="required"
               class=""
               :areaClass="[ 
-                size ? 'form-control-'+size : '',
+                size ? 'form-control-'+size : 'form-control',
                 (valid && validated && successMessage) ? 'is-valid' : '',
                 (invalid && validated) ? 'is-invalid' : '',
                 inputClasses].join(' ')"
               :strategies="textCompleteStrategies || []">
           </text-complete>
-
           <textarea v-else
             :id="'fmg-' + inputId"
             :value="value"
-            :type="type"
             v-on="listeners"
             v-bind="$attrs" 
-            :disabled="disabled"
             :valid="valid" 
-            :placeholder="$attrs.placeholder"
+             :placeholder="question ? '' : $attrs.placeholder"
             :required="required"
+            :disabled="disabled"
             class="form-control"
             :class="[
                 {'is-valid': valid && validated && successMessage}, 
                 {'is-invalid': invalid && validated}, inputClasses]">
           </textarea>
+
 
         <div v-if="feedback"  class="input-group-append">
             <span class="input-group-text">
@@ -83,34 +94,40 @@
             <b-button v-clipboard:copy="value" 
                 variant="outline-success fa fa-clipboard"></b-button>
         </div>
-        <div v-if="appendIcon || $slots.append || textLimit>0" class="input-group-append">
+        <div v-if="textLimit>0" class="input-group-append input-group-append-text-limit">
+          <span class="input-group-text">
+              <span class="">
+                {{value ? value.length : 0}}/{{textLimit}}
+              </span>
+          </span>
+        </div>
+        <div v-if="appendIcon || $slots.append" class="input-group-append">
           <span class="input-group-text">
                <slot name="append">
-                  <span v-if="textLimit>0" class="">
-                    {{value ? value.length : 0}}/{{textLimit}}
-                  </span>
-                  <i v-else :class="appendIcon"></i>
+                  <i :class="appendIcon"></i>
               </slot>
           </span>
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="help">
-          <div class="help-feedback" v-if="showHelpMessage">
-            {{helpMessage || $attrs.placeholder}}
-          </div>
-      </slot>
-      <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="help">
+              <div class="help-feedback" v-if="showHelpMessage">
+                {{helpMessage || $attrs.placeholder}}
+              </div>
+          </slot>
+          <password-meter v-if="strengthBar" v-show="strengthBar" :password="value" @score="listeners.score" />
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span> 
     </b-form-group>
   </validation-provider>
 </template>
@@ -205,11 +222,6 @@
         type: [String, Number],
         description: "Input value"
       },
-      type: {
-        type: String,
-        description: "Input type",
-        default: "text"
-      },
       appendIcon: {
         type: String,
         description: "Append icon (right)"
@@ -241,10 +253,20 @@
       copy : {
         type : Boolean,
         default : false
+      },
+      formatFilter : {
+         type: String
+      },
+      formatValue : {
+      },
+      formatLive : {
+        type : Boolean,
+        default : false
       }
     },
     data() {
       return {
+        showAsInput : false,
         focused: false,
         inputId : ++ID_COUNTER,
       };
@@ -281,12 +303,48 @@
         if(this.helpMessage){
           return true;
         }
+      },
+      inputValue(){
+        if(this.value === null || this.value === undefined || this.value === ''){
+          return this.formatValue;
+        }
+        return this.value;
+      },
+      displayValue : {
+          get: function() {
+              if (
+                (this.formatLive || !this.focused) && this.formatFilter && this.$options.filters[this.formatFilter]) {
+                return this.$options.filters[this.formatFilter](this.inputValue);
+              } else {
+                return this.inputValue;
+              }
+          },
+          set: function(modifiedValue) {
+              if(this.formatFilter && this.$options.filters[this.formatFilter]){
+                let newValue = this.$options.filters[this.formatFilter](modifiedValue);
+                this.emitValue(newValue);
+              } else  this.emitValue(modifiedValue);
+          }
+        }
+    },
+    watch : {
+      'formatValue' :  function(n,o){
+        if(this.formatFilter && this.$options.filters[this.formatFilter]){
+          let oldValue = this.$options.filters[this.formatFilter](o);
+          if(!this.value || this.value == oldValue){
+            this.displayValue = n;
+          }
+        }
       }
     },
     methods: {
       updateValue(evt) {
         let value = (evt.target) ? evt.target.value : evt;
+        this.emitValue(value);
+      },
+      emitValue(value){
         this.$emit("input", value);
+        this.$emit("change", value);
       },
       onFocus(evt) {
         this.focused = true;
@@ -303,10 +361,10 @@
   };
 </script>
 <style>
-  .basic-text-area textarea{
+  .bc-text-area textarea{
     resize: none;
   }
-  .basic-text-area .resizable textarea{
+  .bc-text-area .resizable textarea{
     resize: both;
   }
 </style>

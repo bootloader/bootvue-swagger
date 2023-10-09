@@ -14,7 +14,9 @@ import jskeeper from '@/services/jskeeper';
 let myRespInterceptor = axios.interceptors.response.use(
   function(response) {
     let config = response.config;
+    console.log("response===",response.request.responseURL);
   	if(response.request.responseURL.endsWith("/auth/login")){
+      console.log("LOGIN REDIRECTION",response.request.responseURL);
   	  //https://app.mehery.com/admin/auth/login
       var nextURL = new URL(response.request.responseURL);
       nextURL.searchParams.append("referer",encodeURIComponent(window.location.href))
@@ -128,11 +130,14 @@ const DataService = {
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("submitX",pathKey,results, responseData)
       await store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+    } else {
+      await store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results });
     }
     return results;
   },
   async get(url,query,config) {
-    url = slashUrl(url);
+    let urls = url.split("#");
+    url = slashUrl(urls[0]);
     let _config = config || {};
     _config.params = query;
     let response = null;
@@ -146,7 +151,8 @@ const DataService = {
     return processor(query,response.data,_config);
   },
   async getX(url,query,config) {
-    url = slashUrl(url);
+    let urls = url.split("#");
+    url = slashUrl(urls[0]);
     var pathKey = path2key(url);
     let _config = config || {};
 
@@ -166,7 +172,9 @@ const DataService = {
     let results = responseData.results ? responseData.results : responseData;
     if(url.indexOf('/api/') == 0 || url.indexOf('api/') == 0){
       console.log("getX",pathKey,results, response.data)
-      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
+      store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results,target : urls[1]});
+    } else {
+      store.dispatch('UPDATE_REST_STORE',{ pathKey : pathKey, data : results, target : urls[1] });
     }
     return results;
   },
@@ -198,7 +206,12 @@ const DataService = {
         }
     }
     try{
-      let response = await axios.post(url, SubmitForm,_config);
+      let response = null;
+      if(_config.put){
+        response = await axios.put(url, SubmitForm,_config);
+      } else {
+        response = await axios.post(url, SubmitForm,_config);
+      }
       return processor(params,response.data,_config);
     } catch(e){
         if(_config && _config.ref && typeof _config.ref.setErrors == 'function'){
@@ -239,6 +252,21 @@ const DataService = {
       store.dispatch('UPDATE_API_STORE',{ pathKey : pathKey, data : results });
     }
     return results;
+  },
+  async poll(url,query,config) {
+    let _config = config || {};
+    let resp =  await this.get(url,query,_config);
+    if(typeof _config.feed == 'function'){
+      let doPoll = _config.feed(resp);
+      if(doPoll && (_config.maxAttempts!==undefined || _config.maxAttempts>0)){
+        setTimeout(()=>{
+          this.poll(url,query,_config);
+        },_config.interval || 1500)
+      } else if(typeof _config.stop == 'function'){
+        _config.stop(resp);
+      }
+    }
+    return resp;
   },
   config (argument) {
     switch (argument) {

@@ -1,12 +1,14 @@
 <template>
-  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}">
-    <b-form-group class="form-group-select" label-for="'fmg-' + inputId"
+  <validation-provider :rules="rules" :name="name" v-bind="$attrs" v-slot="{errors, valid, invalid, validated}"
+  :class="['basic-component bc-select','bc-span', 'bc-layout-' + layout, 'bc-size-' + size, 
+  $attrs.disabled ? 'bc-disabled' : '']" ref="vp">
+    <b-form-group class="form-group-select" label-for="'fmg-bs-' + inputId"
       :class="[
         {'is-question': question }, 'text-' + size
       ]">
       <slot name="label">
         <label v-if="label || name" 
-          :for="'fmg-' + inputId"
+          :for="'fmg-bs-' + inputId"
           :class="[
           {'focused': focused},
           {'is-valid': valid && validated }, 
@@ -22,7 +24,7 @@
        {'focused': focused},
        {'input-group-alternative': alternative},
        {'has-label': label || $slots.label},
-       inputGroupClasses
+       inputGroupClasses,'input-group-select'
        ]">
         <div v-if="prependIcon || $slots.prepend" class="input-group-prepend">
         <span class="input-group-text">
@@ -38,15 +40,18 @@
             v-on="listeners"
             v-bind="$attrs"
             :valid="valid"
-            :required="required"
+            :required="required" 
             class="form-control"
             :class="[
               {'is-valid': valid && validated && successMessage}, 
               {'is-invalid': invalid && validated}, 
               {'none-value': !value},
               'text-' + size,
+              'form-control-'+size,
               inputClasses]">
-              <option v-if="!question && ($attrs.placeholder || label || name)" :class="'text-' + size"
+              <option v-if="!question && ($attrs.placeholder || label || name) && !required" :class="'text-' + size"
+              value=""  selected >{{$attrs.placeholder || label || name}}</option>
+              <option v-else-if="!question && ($attrs.placeholder || label || name)" :class="'text-' + size"
               value="" disabled selected hidden >{{$attrs.placeholder || label || name}}</option>
               <slot name="default"> 
                 <option v-for="option in selectOptions" :value="option.id" v-bind:key="option.id" :class="'text-' + size">
@@ -73,16 +78,18 @@
         </div>
         <slot name="infoBlock"></slot>
       </div>
-      <slot name="success">
-        <div class="valid-feedback" v-if="valid && validated && successMessage">
-          {{successMessage}}
-        </div>
-      </slot>
-      <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
-          {{ errors[0] }}
-        </div>
-      </slot>
+      <span class="input-bottom">
+          <slot name="success">
+            <div class="valid-feedback" v-if="valid && validated && successMessage">
+              {{successMessage}}
+            </div>
+          </slot>
+          <slot name="error">
+            <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+              {{ errors[0] }}
+            </div>
+          </slot>
+      </span>  
     </b-form-group>
   </validation-provider>
 </template>
@@ -94,6 +101,11 @@
     inheritAttrs: false,
     name: "base-select",
     props: {
+      layout : {
+        type : String,
+        default : "default",
+        description: "ex : flushed"
+      },
       required: {
         type: Boolean,
         description: "Whether input is required (adds an asterix *)"
@@ -196,7 +208,8 @@
           ...this.$listeners,
           input: this.updateValue,
           focus: this.onFocus,
-          blur: this.onBlur
+          blur: this.onBlur,
+          change : this.onChange
         };
       },
       slotData() {
@@ -224,6 +237,10 @@
       updateValue(evt) {
         let value = evt.target.value;
         this.$emit("input", value);
+      },
+      onChange(evt){
+        setTimeout(()=>this.$refs.vp.validate());
+        this.$emit("change", evt);
       },
       onFocus(evt) {
         this.focused = true;

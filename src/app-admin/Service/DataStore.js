@@ -149,6 +149,19 @@ const actions = {
     return response.data;
   },
 
+  async LoadContactType({ commit },options) {
+    let response = await axios.get("/admin/fetch-contact-type",options);
+    let contactList = response.data.map(v=>{
+      if(["HOLD","ORIGINAL","QUEUED","REJECTED"].indexOf(v.split("_")[1]) == -1){
+        return {
+          label : v.split("_")[1],
+          value: v
+        }
+      } else return null;
+    }).filter(v=> v)
+    return contactList;
+  },
+
   async LoadAgentList() {
     let response = await axios.get("/admin/fetch-agent-chat-session-list");
     return response.data;
@@ -326,6 +339,27 @@ const actions = {
   async LoadQuickTag({ commit }) {
     let response = await axios.get("/gallery/map/quick_tags");
     commit("setQuickTags", response.data);
+  },
+
+  async GetFAQParent({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/parent",{ params : options });
+    return response.data;
+  },
+  async GetFAQByParentCode({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/parent/code",{ params : options });
+    return response.data;
+  },
+  async CreateFAQ({ commit },options) {
+    let response = await axios.post( "/pub/app/faq",{ params : options });
+    return response.data;
+  },
+  async UpdateFAQ({ commit },options) {
+    let response = await axios.post( "/pub/app/update/faq",{ params : options });
+    return response.data;
+  },
+  async getAllFAQ({ commit },options) {
+    let response = await axios.get( "/pub/app/faq/all",{ params : options });
+    return response.data;
   },
 };
 

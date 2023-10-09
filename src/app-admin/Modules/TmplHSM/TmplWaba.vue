@@ -18,6 +18,7 @@
             <template #filter(go2hsm)="{filter}">
                 <b-button variant="link" :to="filter.link">{{filter.label}}</b-button>
             </template>
+            
             <template #filter(channelId)="{apply,filter}">
                 <MyChannelSelect v-model="filter.value" @change="apply"
                     :filter="{
@@ -39,10 +40,17 @@
                         v-tooltip="'Clone to HSM template'" variant="outline-primary">
                         <span class="fa fa-cloud-download-alt" title="Submit"/>
                 </b-button>  
-                <b-button size="sm" @click="deleteItem(item)" class="mx-1"
-                        v-tooltip="'Delete template'" variant="outline-danger">
-                        <span class="fa fa-trash-alt" title="Submit"/>
-                </b-button> 
+                <el-popconfirm
+                    title="Are you sure to delete this?"
+                    confirm-button-text='Yes'
+                    cancel-button-text='No'
+                    @confirm="deleteItem(item)"
+                  >
+                    <b-button slot="reference" size="sm" class="mx-1"
+                            v-tooltip="'Delete template'" variant="outline-danger">
+                            <span class="fa fa-trash-alt" title="Submit"/>
+                    </b-button> 
+                </el-popconfirm>
             </template>
             <template #cell(code)="{item}">
                 <b-button variant="link" :to="{
@@ -62,7 +70,7 @@
         <master-view v-if="template.code"
             :header="{
                 heading: template.code,
-                subheading: template.category,
+                subheading: `${template.wabaType} - ${template.category}`,
                 icon: 'icon-gradient bg-happy-itmeo fa fa-whatsapp',
             }"  
             :actions="[{ name : 'cancel'}]"      
@@ -126,11 +134,32 @@
                                 <b-card-sub-title class="mb-2 text-sm">
                                     Add a title or choose which type of media you'll use for this header.</b-card-sub-title>
                                 <b-card-text>
-                                <my-v-select  class="mb-1"
-                                    emptyDisplay="None" :selectDefault="true" :clearable="false"
-                                        v-model="templateSimple.header.format" :disabled="nonEditable"
-                                        options="data:hsm/message_format_types">
-                                </my-v-select>  
+                                <b-row>
+                                    <b-col cols="6">
+                                        <my-v-select  class="mb-1"
+                                            emptyDisplay="None" :selectDefault="true" :clearable="false"
+                                            v-model="templateSimple.header.format" :disabled="nonEditable"
+                                            options="data:hsm/message_format_types">
+                                        </my-v-select> 
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <my-v-select class="w-100" ref="attachment" v-if="hasMediaHeader"
+                                        options="getx:/api/tmpl/quickmedia"
+                                        optionKey="url" optionLabel="title" clearable
+                                        v-model="templateSimple.examples.header_handler" 
+                                        :filter="{
+                                            type : templateSimple.header.format || ''
+                                        }">
+                                            <template #option="{ item }">
+                                            <my-icon type="fileType" :value="item.type"/>
+                                            {{item.title}} {{item.type == templateSimple.header.format}}
+                                            </template>  
+                                            <template #selected-option="{ item }">
+                                            <my-icon type="fileType" :value="item.type"/>&nbsp;{{item.title}}
+                                            </template>
+                                        </my-v-select>
+                                    </b-col>
+                                </b-row>
                                  <base-input 
                                     prelabel :name="'Sample URL of media'"
                                     v-if="hasMediaHeader"  :disabled="nonEditable"
@@ -193,7 +222,7 @@
                                 <b-card-text>
                                 <base-input :disabled="nonEditable"
                                     v-model="templateSimple.footer.text" :textLimit="60"
-                                    rules="max:60" >
+                                    rules="max:60|oneline" >
                                 </base-input>
                                 </b-card-text>
                             </b-card-body>
@@ -277,9 +306,16 @@
                                         </b-list-group-item>
                                     </b-list-group>
                                 </b-card-text>
+                                <span cols="12" class="body-card-body-variable-grid">
+                                    <VGrid v-if="templateSimple.varMap && hasUrlButtonVariable"  theme="default" class="w-100" style="min-height:100px"
+                                    :columns="sampleVar.columns"
+                                    :source="templateSimple.varMap.buttons[0]"
+                                    @afteredit=afterVarEdit></VGrid>
+                                </span>
                             </b-card-body>
 
                             <b-card-footer>
+                                <b-button type="button" @click="onUpdateMappings" variant="outline-primary" class="float-left">Update Mappings</b-button>
                                 <b-button type="submit" variant="primary" class="float-right">Save</b-button>
                             </b-card-footer>
 
@@ -315,10 +351,15 @@
                 class="mb-0"/>
 
             <BaseVSelect size="sm" label="Message Category"  placeholder="Select Message Category"
-                options="data:hsm/message_category_types"
+                options="data:hsm/message_category_types"  @change="newItemCategoryChange"
                 v-model="newItem.category"  filterable searchable required rules="required"
                 class="mb-0"/>
-                
+            
+            <BaseVSelect size="sm" label="WABA Category"  placeholder="Select WABA Category" latest
+                options="json:hsm/message_categories_waba"
+                v-model="newItem.wabaType"  filterable searchable required rules="required"
+                class="mb-0"/>   
+
             <base-input  size="sm"  :disabled="nonEditable" class="mb-0"
                 label="Template Name"
                 v-model="newItem.name" :textLimit="512" required rules="required|min:4|max:512" >
@@ -362,7 +403,7 @@
         </b-modal>
         <b-modal v-if="templatePreview" :id="modelNamePreview" 
             :title="'Template Preview'"
-            @ok="onSubmit">
+            @ok="onSubmit()">
                 <template-preview :template="templatePreview" />
         </b-modal>
         <b-modal id="SHOW_CLIENT_ERROR" size="lg"
@@ -381,13 +422,14 @@
     import MyStatus from '../../../@common/custom/components/MyStatus.vue'
     import BaseTextArea from '../../../@common/argon/components/Inputs/BaseTextArea.vue'
     import BaseInput from '../../../@common/argon/components/Inputs/BaseInput.vue'
-    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM} from "@/@common/utils/WABATmpl";
+    import {createWABATmplSample, createWABATmplSimple,cloneWABATmplSample,toHSM,wabaType} from "@/@common/utils/WABATmpl";
     import BaseSelect from '../../../@common/argon/components/Inputs/BaseSelect.vue'
     import TemplatePreview from '../../../@common/custom/components/TemplatePreview.vue'
     import JsonXPath from "@/@common/utils/JsonXPath";
     import TmplUtils from '@/@common/utils/TmplUtils';
     import debounce from "debounce";
     import VGrid from "@revolist/vue-datagrid";
+    import {Popconfirm} from 'element-ui';
 
     export default {
         components: {
@@ -398,7 +440,8 @@
                 BaseTextArea,
                 BaseInput,
                 BaseSelect,
-                TemplatePreview,MyStatus,VGrid
+                TemplatePreview,MyStatus,VGrid,
+            [Popconfirm.name]: Popconfirm,
         },
         data: () => ({
             filters: [
@@ -421,16 +464,17 @@
                   },
             table: {
                 fields: [
-                    { key: 'code', label: 'Template Code/Name', sortable: true, filterOptions:{enabled:true}},
+                    { key: 'code', label: 'Template Code/Name', sortable: true, filterOptions:{enabled:true,search : true}},
                     { key: 'template.category', label: 'Message Type', sortable: true, 
                     filterOptions:{
                         enabled:true,
-                        
+                        search : true
                     }},
                     //{ key: 'template.namespace', label: 'namespace' },
                     { key: 'template.status', label: 'Status', sortable: true, 
                     filterOptions:{
                         enabled:true,
+                        clearSelectionText: 'clear',
                         filterDropdownItems:["approved","rejected"]
                     }},
                     { key: 'template.language', label: 'Language',sortable: false},
@@ -456,7 +500,7 @@
             templates : [],
             newLanguage : null,
             newItem : {
-                name : null, category : null, lang : null
+                name : null, category : null, lang : null,wabaType : null
             },
             strategies: [{
                 match: /(^|\s)\{+([a-z0-9+\-\_\.]*)$/,
@@ -480,18 +524,12 @@
               columns: [
                 { name: 'component', prop: "component", readonly : true},
                 { name: 'Variable', prop: "numVar", readonly : true},
-                { name: 'Data Path', prop: "path"},
+                { name: 'Data Path', prop: "path",autoSize: true,size:250},
                 { name: 'Sample Value', prop: "sample"}],
             },
             ERROR_JSON : null
         }),
         computed: {
-            items: function () {
-                return this.$store.getters.StateAgents
-            },
-            teams: function () {
-                return this.$store.getters.StateTeams
-            },
             isValidNewItem: function () {
                 return this.newItem.category && this.newItem.name;
             },
@@ -519,6 +557,12 @@
             nonEditable : function(){
                 return !!this.template?.template?.status;
             },
+            wabaEditable(){
+                return !!this.template?.template?.status;
+                //360 not allowing update, fb does, but no api for now except partner apis
+                //let status = (this.template?.template?.status || "").toLowerCase()
+                //return ["approved", "rejected","paused"].indexOf(status) > -1;
+            },
             hasMediaHeader : function(){
                 return ["IMAGE","VIDEO","DOCUMENT"].indexOf(this.templateSimple?.header?.format) > -1;
             },
@@ -528,6 +572,11 @@
                     && this.templateSimple?.header?.text
                     && this.templateSimple?.header?.text.indexOf("{{1}}") > -1
                 );
+            },
+            hasUrlButtonVariable : function(){
+                return (this.templateSimple?.buttons?.buttons).filter(function(button){
+                    return button.type == "URL" && button.url.indexOf("{{1}}") > -1
+                })[0] || false;
             },
             templatePreview(){
                 return {
@@ -601,13 +650,19 @@
                     this.newItem.category = (option.item.categoryType || option.item?.meta?.messageType || "").toUpperCase();
                     this.newItem.lang = option.item.lang;
                     this.newItem.hsm = option.item;
+                    this.newItemCategoryChange();
                 } else {
                     this.newItem.hsm = null;
                 }
             },
+            newItemCategoryChange(){
+                this.newItem.wabaType = wabaType(this.newItem.category);
+            },
             async deleteItem(item) {
                 if(item.id){
-                    await this.$service.delete(this.table.api, item);
+                    await this.$service.delete(this.table.api, {
+                        id : item.id, channelId : item.channelId
+                    });
                     this.$refs.templatesView.apply();
                 } else {
                     this.onDelete(item);
@@ -616,10 +671,12 @@
             async createItem () {
                 let success = await this.$refs.form.validate();
                 if(success === true){
+                    console.log("createItem",this.newItem)
                     this.selectTemplate({
                         channelId : this.newItem.channelId || this.filters[1].value,
                         code : this.newItem.name,
                         category : this.newItem.category,
+                        wabaType : this.newItem.wabaType,
                         lang : this.newItem.lang
                     });
                     this.addTemplate(this.newItem.lang,this.newItem.hsm);
@@ -627,7 +684,7 @@
                     this.$bvModal.hide(this.modelName);
                 }
             },
-            async onSubmit(){
+            async onSubmit(onlyMeta){
                 // this will be called only after form is valid. You can do an api call here to register users
                 try {
 
@@ -635,10 +692,11 @@
                         channelId : this.template.channelId,
                         id : this.template.id,
                         hsmTemplateId : this.template.hsmTemplateId,
-                        varMap : this.templateSimple.varMap
+                        varMap : this.templateSimple.varMap,
+                        category : this.template.category,
                     }
 
-                    if(!this.nonEditable){
+                    if((!this.nonEditable || this.wabaEditable) && !onlyMeta){
                         templateRequest.template = {
                             category : this.template.template.category,
                             language : this.template.template.language,
@@ -671,6 +729,9 @@
             onSaveTamplete (){
                 this.$bvModal.show(this.modelNamePreview);
             },
+            onUpdateMappings(){
+                this.onSubmit(true);
+            },
             async onAction(argument) {
                 switch (argument.name) {
                     case "ADD_ITEM" : 
@@ -689,6 +750,8 @@
             refreshSelectedTemplates(){
                 this.templates = this.$refs.templatesView.getItems().filter((template)=>{
                     return template.code == this.template.code;
+                }).map(function(tmpl){
+                    return tmpl;
                 });
             },
             async selectTemplate(item) {
@@ -801,7 +864,7 @@
             },
             afterVarEdit(e){
                 let path = e.detail.model.path || "data." + e.detail.model.component + "_var_"+ e.detail.model.numVar.replace(/(\{\{)|(\}\})/g, '');
-                e.detail.model.path = path;
+                e.detail.model.path = path.replace(/[^0-9a-zA-Z\.\_]/ig,'');
                 if(e.detail.prop == "path"){
                     e.detail.model.sample = JsonXPath({path : '$.' +path,json: this.templateSimple.model})[0] || e.detail.model.sample;
                 }

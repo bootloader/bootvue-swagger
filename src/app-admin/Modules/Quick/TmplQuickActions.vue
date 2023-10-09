@@ -64,8 +64,8 @@
             },
             table :{
               fields: [ 
-                { key : 'category', label : "Category" }, { key : 'title', label : "Title" }, 
-                { key : 'code', label : "Action Code" },
+                { key : 'category', label : "Category" , sortable: true}, { key : 'title', label : "Title" , sortable: true}, 
+                { key : 'code', label : "Action Code" , sortable: true},
                 { key: 'actions', label: 'Options' }
               ],
               busy : false,

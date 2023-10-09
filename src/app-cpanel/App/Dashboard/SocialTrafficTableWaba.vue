@@ -1,11 +1,10 @@
 <template>
-    <b-card no-body class="bg-default shadow">
-        <b-card-header class="bg-transparent border-0">
-            <h3 class="mb-0 text-white">{{headerTitle}}</h3>
+    <b-card no-body class="shadow">
+        <b-card-header class="border-0">
+            <h3 class="mb-0">{{headerTitle}}</h3>
         </b-card-header>
 
-        <el-table class="table-responsive table table-dark"
-                  header-row-class-name="thead-dark"
+        <el-table class="table-responsive table"
                   :data="tableData">
             <el-table-column label="Channel"
                              min-width="310px"

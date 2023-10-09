@@ -33,15 +33,14 @@
                      tag="li"
                      title-tag="a"
                      title-classes="nav-link pr-0">
-        <a href="#" class="nav-link pr-0" @click.prevent slot="title-container">
-          <b-media no-body class="align-items-center">
+            <a href="#" class="nav-link pr-0" @click.prevent slot="title-container">
+            <b-media no-body class="align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" :src="profileImage">
+                    <img alt="Profile Image" :src="profileImage">
                   </span>
-            <b-media-body class="ml-2 d-none d-lg-block">
-              
-            </b-media-body>
-          </b-media>
+                <b-media-body class="ml-2 d-none d-lg-block">
+                </b-media-body>
+            </b-media>
         </a>
 
         <template>
@@ -82,7 +81,6 @@
 <script>
 import { CollapseTransition } from 'vue2-transitions';
 import { BaseNav, Modal } from '@/@common/argon/components';
-import profileImage from "@/assets/images/avatars//profile.png";
 
 export default {
   components: {
@@ -95,6 +93,11 @@ export default {
       type: String,
       default: 'default', // default|light
       description: 'Look of the dashboard navbar. Default (Green) or light (gray)'
+    },
+    profileImage : {
+        type: String,
+        default: '/argon/img/theme/team-1.jpg',
+        description: 'Sidebar app logo'
     }
   },
   computed: {
@@ -105,7 +108,6 @@ export default {
   },
   data() {
     return {
-      profileImage,
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,

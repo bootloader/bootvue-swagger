@@ -47,7 +47,7 @@
         <b-dropdown-item  class="pr-0" href="#" >
           <b-media no-body class="align-items-center">
                   <span class="avatar avatar-sm">
-                    <b-img alt="Image placeholder" rounded="circle" src="/argon/img/theme/team-4.jpg" />
+                    <b-img alt="SImage placeholder" rounded="circle" src="/argon/img/theme/team-4.jpg" />
                   </span>
             <b-media-body class="ml-2 d-none d-lg-block">
               <span class="mb-0 text-sm  font-weight-bold">John Snow</span>

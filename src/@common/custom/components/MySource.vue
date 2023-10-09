@@ -1,7 +1,7 @@
 <template>
     <component :is="tag">
         <slot name="data" v-bind="model">
-            {{myDisplay}}
+            <i v-if="prependIcon && myIcon" :class="myIcon">&nbsp;</i>{{myDisplay}}
         </slot>
     </component>
 </template>
@@ -41,17 +41,25 @@
             tag : {
                 type : String,
                 default : "span"
+            },
+            prependIcon : {
+                type : Boolean, 
+                default : true
             }
         },
         data: () => ({
             model : {
                 options: [],
-                selected: null
+                selected: null,
+                value : null,
             }
         }),
         computed :{
             myDisplay : function(){
                 return this.model?.selected?.label; 
+            },
+            myIcon : function(){
+                return this.model?.selected?.item?.icon; 
             }
         },
         watch : {
@@ -60,6 +68,10 @@
             },
             options : function(newVal, oldVal){
                 this.loadOptions();
+            },
+            filter : function(newVal, oldVal){
+                if(JSON.stringify(newVal) != JSON.stringify(oldVal))
+                    this.loadOptions();
             }
         },
         mounted: function () {
@@ -71,9 +83,11 @@
             },
             selectModelValue(){
                 this.model.selected = null;
+                this.model.value = this.model.selected?.value;
                 for(var i in this.model.options){
                     if(this.model.options[i].value == this.value){
                         this.model.selected = this.model.options[i];
+                        this.model.value = this.model.selected?.value;
                     }
                 }
                 let oldOption = this.model.selected;
@@ -81,12 +95,14 @@
                 if((this.model.selected === undefined || this.model.selected === null)){
                     if(this.selectDefault && this.selectDefault==true && this.model.options[0]){
                         this.model.selected = this.model.options[0];
+                        this.model.value = this.model.selected?.value;
                         this.onChange(this.model.selected,oldOption);
                     } else if(this.invalidDisplay){
                         this.model.selected = {
                             label : this.invalidDisplay,
                             value : this.value
                         };
+                        this.model.value = this.model.selected?.value;
                         this.onChange(this.model.selected,oldOption);
                     } 
                 }
@@ -97,7 +113,7 @@
                 let THIS = this;
                 let hasEmptyValue = false;
                 if(!options || !options.map){
-                    console.error("options",options)
+                    console.error("options",options,'for',this);
                 }
 
                 this.model.options = options.map(function(option){
@@ -122,9 +138,15 @@
                             value : value,
                             label : label || ((value === null || value === undefined) ? (THIS.emptyDisplay || THIS.placeholder) : ''),
                             item : option,
-                            prefixClass : option.prefixClass || option.icon
+                            prefixClass : option.prefixClass || option.icon,
+                            _disabled : option._disabled
                         };
                     }
+                }).filter(function(option){
+                    if(option._disabled){
+                        return false;
+                    }
+                    return true;
                 });
                 if(!hasEmptyValue && THIS.emptyDisplay){
                    this.model.options = [{
@@ -173,16 +195,28 @@
                 if(this.options && (typeof this.options == 'string') 
                     && /^(data\:|@data\/)/.test(this.options) ){
                     let file =  this.options.split("#");   
-                    let json = await import("@/@data/" + file[0].replace(/^(data:|@data\/)/,"") + ".json");
+                    let json = await import("@/@data/" + file[0].replace(/^(data:\/|data:|@data\/)/,"") + ".json");
+                    this.fromOptions(json.options);
+                } else if(this.options && (typeof this.options == 'string') 
+                    && /^(json\:|@json\/)/.test(this.options) ){
+                    let file =  this.options.split("#"); 
+                    console.log("__webpack_public_path__",__webpack_public_path__); 
+                    let jsonfile = __webpack_public_path__ + '/_json/' + file[0].replace(/^(json:\/|json:|@json\/)/,"") + ".json" 
+                    let resp = await fetch(jsonfile);
+                    let json = await resp.json();
+                    //let resp = await this.$service.getX(jsonfile);
+                    //this.fromOptions(resp.results ? resp.results : resp);
                     this.fromOptions(json.options);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('getx:') == 0){
-                    let url = this.options.replace("getx:","");
-                    let resp = await this.$service.getX(url);
-                    this.fromOptions(resp.results ? resp.results : resp);
+                    let url = this.options.replace("getx:","").split("#");
+                    let resp = await this.$service.getX(url[0]);
+                    let results = url[1] || 'results';
+                    this.fromOptions(resp[results] ? resp[results] : resp);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('get:') == 0){
-                    let url = this.options.replace("get:","");
-                    let resp = await this.$service.get(url);
-                    this.fromOptions(resp.results ? resp.results : resp);
+                    let url = this.options.replace("get:","").split("#");
+                    let resp = await this.$service.get(url[0]);
+                    let results = url[1] || 'results';
+                    this.fromOptions(resp[results] ? resp[results] : resp);
                 } else if(this.options && (typeof this.options == 'string') && this.options.indexOf('dispatch:') == 0){
                     let evenName = this.options.replace("dispatch:","");
                     let resp = await this.$store.dispatch(evenName);

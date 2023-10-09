@@ -11,11 +11,13 @@
 
 <script>
   import Vue from 'vue';
-  import router from "./router";
   
+  import router from "./router";
+
   const loadimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   const errorimage = 'http://hilongjw.github.io/vue-lazyload/dist/loading-spin.svg';
   import VueLazyload from 'vue-lazyload'
+
   Vue.use(VueLazyload, {
     preLoad: 1.3,
     error: errorimage,

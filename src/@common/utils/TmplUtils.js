@@ -1,7 +1,7 @@
 const varFinder = /({{([\w\d\.]+)}})/g
 function getVars(replaceVars, regex = varFinder) {
-    var myArray = replaceVars.match(regex) || []
     var varList = []
+    var myArray = (replaceVars ? replaceVars.match(regex) : null) || []
     let unique = [...new Set(myArray)]
     for (var i in unique) {
         varList.push({
@@ -42,6 +42,10 @@ function sampleModel (){
     return  {
         contact : {
           name : "John Doe", phone : "919876543210", email : "John.Doe."+(counter++)+"@company.com"
+        },
+        session : {
+            agent : { name : "Vinod" , code : "vinod" },
+            team : { name : "Online", code : "online"}
         },
         global : {
         },

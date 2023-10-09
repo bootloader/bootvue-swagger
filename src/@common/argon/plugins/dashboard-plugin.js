@@ -17,7 +17,7 @@ import locale from 'element-ui/lib/locale';
 locale.use(lang);
 
 // vue-bootstrap
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue, BVConfigPlugin,IconsPlugin } from 'bootstrap-vue'
 
 // asset imports
 import '@/assets/vendor/argon/argon.scss';
@@ -38,6 +38,9 @@ export default {
     Vue.use(GlobalDirectives);
     Vue.use(SideBar);
     Vue.use(Notifications);
+    Vue.use(BVConfigPlugin,{
+      breakpoints: [`xs`, 'sm', ,'ms', 'md', 'lg', 'xl']
+    });
     Vue.use(BootstrapVue);
     Vue.use(IconsPlugin);
     configure({

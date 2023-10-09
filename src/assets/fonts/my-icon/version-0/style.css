@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'myicon';
+  src:  url('fonts/myicon.eot?sat9l');
+  src:  url('fonts/myicon.eot?sat9l#iefix') format('embedded-opentype'),
+    url('fonts/myicon.ttf?sat9l') format('truetype'),
+    url('fonts/myicon.woff?sat9l') format('woff'),
+    url('fonts/myicon.svg?sat9l#myicon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.my[class^="my-"], .my[class*=" my-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'myicon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.my-oa-chat:before {
+  content: "\e900";
+}
+.my-oa-type-account:before {
+  content: "\e901";
+}
+.my-oa-type-appointment:before {
+  content: "\e902";
+}
+.my-oa-type-otp:before {
+  content: "\e903";
+}
+.my-oa-type-payment:before {
+  content: "\e904";
+}
+.my-oa-type-profile:before {
+  content: "\e905";
+}
+.my-oa-type-reservation:before {
+  content: "\e906";
+}
+.my-oa-type-service:before {
+  content: "\e907";
+}
+.my-oa-type-shipment:before {
+  content: "\e908";
+}
+.my-oa-type-ticket:before {
+  content: "\e909";
+}

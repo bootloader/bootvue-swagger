@@ -20,6 +20,7 @@
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :disableUserListToggle="false"
       :messageStyling="messageStyling"
+      :headerLogo="config.header.icon.url"
       @onType="handleOnType"
       @edit="editMessage"
       :launcherPosition="config.launcher.position"
@@ -30,7 +31,7 @@
           <img v-if="config.header.icon.url" class="sc-header--img-v2" :src="config.header.icon.url" alt="" 
             style="width:34px;height:34px ;" />
         </span>  
-        <div class="sc-header--title">{{ config.header.title.text }}</div>
+        <div class="sc-header--title">{{ config.header.title.text}}</div>
       </template>
 
       <template v-slot:text-message-body="{ message,messageText, messageColors}">
@@ -145,7 +146,7 @@
           participants: [
             {
               id: 'support',
-              name: 'Support',
+              name: 'Supportor',
               imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
             }
           ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
@@ -297,6 +298,10 @@
               console.log("onMessageWasSentAsync:message:undefined");
               return;
           }
+          if(message.type == "file" && message.data.file.size >= 5242880){
+              this.addMessage({ type : "system", data : { text : "File size should not exceed 5 mb" }});
+              return false;
+            } 
           message.id=null;
           message.data.type="I"; 
           message.data.timestamp = Date.now();
@@ -305,13 +310,14 @@
         if(this.options.channelId){
               let resp = null;
               if(message.type == "file"){
-                  let bodyFormData = new FormData();
+                  let bodyFormData = new FormData();                 
                   bodyFormData.append("file",message.data.file, message.data.file.fileName);
                   resp= await this.$service.put(
                         `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
                         `?from=${this.csid}&${this.webSession.key}=${this.webSession.id}`,
                         bodyFormData
                     );
+                  console.log("filemessageresp",resp)
               } else {
                   resp = await this.$service.post(
                     `ext/plugin/inbound/v2/web/callback/${this.$global.MyConst.nounce}/${this.options.channelId}/${this.options.channelKey}`+
@@ -378,6 +384,7 @@
           }
         },
         onMessageRecvd (message) {
+          console.log("onMessageRecvd",message);
           this.form_input = message.data.inputs ? message.data.inputs[0] : null;
           this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
           this.addMessage(message);
@@ -594,6 +601,7 @@
             var config = myChatEvent.options.config || {};
             config.dummy = 'dummy.dummy';
             var thisConfig = this.config;
+            thisConfig.header.title.text = (this.$global.MyConst.config.SETUP.POSTMAN_CHAT_WEB_CHANNEL_TITLE) || thisConfig.header.title.text;
             for(var key in config){
                   var keys = key.split(".");
                   if(keys[keys.length-1] == 'color'){
@@ -637,7 +645,7 @@
         this.$service.config("DISABLE_RESPONSE_INTERCEPTOR");
         if (window.addEventListener) {
             window.addEventListener("message", this.onPostMessage, false);
-        } else if (element.attachEvent) {
+        } else if (window.attachEvent) {
             window.attachEvent('onmessage', this.onPostMessage);
         }
         let THIS = this;
@@ -656,7 +664,7 @@
       beforeDestroy () {
         if (window.addEventListener) {
             window.removeEventListener("message", this.onPostMessage, false);
-        } else if (element.attachEvent) {
+        } else if (window.attachEvent) {
             window.removeEventListener('onmessage', this.onPostMessage);
         }
       }
@@ -666,15 +674,7 @@
 
 </script>
 <style type="text/css">
-  .sc-launcher {
-    right: 5px!important;
-    bottom: 5px!important;
-  }
-  .sc-launcher .sc-closed-icon, .sc-launcher .sc-open-icon{
-      position: fixed;
-      right: 5px!important;
-      bottom: 5px!important;
-  }
+
   .sc-header {
     min-height: 55px!important;
     padding: 5px!important;
@@ -702,7 +702,7 @@
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.22);
+    /* background-color: rgba(0, 0, 0, 0.22); */
     text-align: center;
     line-height: 100vh;
     color: #0000005e;

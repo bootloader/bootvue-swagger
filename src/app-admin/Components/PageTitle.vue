@@ -299,41 +299,44 @@
             display: block;
             float:left;
         }
-
-            input.form-control {
-                height: calc(2.25rem + 0px);
+        input.form-control {
+            height: calc(2.25rem + 0px);
+            margin-top: 0px;
+        }
+        .form-group.form-group-input {
+            height: calc(2.25rem + 0px);
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        button.btn {
+            height: calc(2.25rem + 0px);
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        .v-select {
+            input.vs__search {
+                color: #5a5a5a;
+            }
+            margin-top: 0px;
+            height: calc(2.25rem + -1px);
+            .vs__dropdown-toggle {
+                // height: calc(2.25rem + -1px);
+            }
+        }
+        .vue-daterange-picker {
+            min-height: 35px;
+            //height: calc(2.25rem + -1px);
+            .reportrange-text{
+                min-height: calc(2.25rem + 0px);
                 margin-top: 0px;
+                font-size: inherit;
+                font-weight: bold;
             }
-            button.btn {
-                height: calc(2.25rem + 0px);
-                margin-top: 0px;
-                margin-bottom: 0px;
-            }
-            .v-select {
-                input.vs__search {
-                    color: #5a5a5a;
-                }
-                margin-top: 0px;
-                height: calc(2.25rem + -1px);
-                .vs__dropdown-toggle {
-                   // height: calc(2.25rem + -1px);
-                }
-            }
-            .vue-daterange-picker {
-                min-height: 35px;
-                //height: calc(2.25rem + -1px);
-                .reportrange-text{
-                    min-height: calc(2.25rem + 0px);
-                    margin-top: 0px;
-                    font-size: inherit;
-                    font-weight: bold;
-                }
-                .daterangepicker.show-calendar .ranges {
-                    padding: 0px !important;
-                }
-
+            .daterangepicker.show-calendar .ranges {
+                padding: 0px !important;
             }
 
+        }
         .filter-wrapper{
             float: left;
             display: flex;

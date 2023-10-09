@@ -3,6 +3,13 @@ import formatters from '@/services/formatters';
 import TmplUtils from './TmplUtils';
 import JsonXPath from './JsonXPath';
 import mustache from 'mustache';
+import messageCategories from "@/@data/hsm/message_category_types.json";
+
+function wabaType(category){
+    return messageCategories.options.filter(function(option){
+        return option.id == category
+    })[0]?.wabaType || category;
+}
 
 function toHSM(waba){
     console.log("toHSMs",waba);
@@ -11,6 +18,7 @@ function toHSM(waba){
         lang : waba?.template?.language,
         category : waba?.template?.category,
         categoryType : (waba?.template?.category),
+        wabaType : wabaType(waba?.template?.category),
         meta : {
         }
     };
@@ -105,7 +113,7 @@ function cloneWABATmplSample(template,hsm) {
         template : {
             name : template.code,
             language : template.lang,
-            category : template.category,
+            category : wabaType(template?.category),
             components: [
                 {
                     type: 'BODY',
@@ -133,7 +141,7 @@ function cloneWABATmplSample(template,hsm) {
                 })(),
                 {
                     type: 'FOOTER',
-                    text: hsm?.footer,
+                    text: (hsm?.footer || '').replace(/\n/,' ') || undefined,
                 },
                 {
                     type: 'BUTTONS',
@@ -163,11 +171,12 @@ function createWABATmplSample(template) {
         template : {
             name : template.code,
             language : template.lang,
-            category : template.category,
+            category : wabaType(template?.category),
             components: [
                 {
                     type: 'BODY',
                     text: null,
+                    example: {body_text:[[]]}
                 },
                 {
                     type: 'HEADER',
@@ -185,6 +194,28 @@ function createWABATmplSample(template) {
             ],
         }
     }
+}
+
+function fixWABATmplSimple(templateSimple,hsm) {
+    let hasUrlVar = (templateSimple?.buttons?.buttons).filter(function(button){
+        return button.type == "URL" && button.url.indexOf("{{1}}") > -1
+    })[0] || false;
+
+    if(hasUrlVar && !templateSimple?.varMap?.buttons?.[0]){
+        let buttonVars = [];
+        if(hasUrlVar.type == "URL"){
+            let btnTmpl = TmplUtils.convertToOrderedVars(hasUrlVar.url);
+            hasUrlVar.urlWaba = btnTmpl.text;
+            buttonVars = btnTmpl.vars;
+            for(var i in buttonVars){
+                buttonVars[i].component = "button";
+                buttonVars[i].sample = mustache.render(hasUrlVar.urlWaba, {});
+            }
+        } 
+        if(buttonVars.length)
+            templateSimple?.varMap?.buttons.push(buttonVars);
+    }
+    return templateSimple;
 }
 
 function createWABATmplSimple(template) {
@@ -214,7 +245,8 @@ function createWABATmplSimple(template) {
         },
         varMap : {
             body : [],
-            header  : []
+            header  : [],
+            buttons : []
         },
         model : TmplUtils.sampleModel()
     }
@@ -242,7 +274,7 @@ function createWABATmplSimple(template) {
         console.log("template.varMap",template.varMap)
         templateSimple.varMap = template.varMap || templateSimple.varMap;
     }
-    return templateSimple;
+    return fixWABATmplSimple(templateSimple);
 }
 
 
@@ -311,4 +343,6 @@ function whatsappLinkStyle(text) {
 
 
 
-export { createWABATmplSample, createWABATmplSimple ,cloneWABATmplSample,toHSM, waMarkDown}
+export { createWABATmplSample, createWABATmplSimple ,
+    cloneWABATmplSample,toHSM,
+     waMarkDown,fixWABATmplSimple,wabaType}

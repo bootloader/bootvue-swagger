@@ -5,6 +5,8 @@
 <script>
 import Vue from 'vue';
 import DashboardPlugin from '@/@common/argon/plugins/dashboard-plugin';
+Vue.component('BaseVSelect', () => import('@/@common/custom/components/base/BaseVSelect.vue'));
+
 Vue.use(DashboardPlugin);
 
 console.log("This is AppPartner")
@@ -17,3 +19,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+    @import '@/assets/utils/_popular.scss';
+</style>

@@ -34,7 +34,7 @@
 <script>
     import { SidebarMenu } from 'vue-sidebar-menu'
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-    import { MyConst } from '@/services/global';
+    import { MyConst, User } from '@/services/global';
 
     function menuFilter(menu) {
         var header = null
@@ -83,6 +83,13 @@
                         icon: 'pe-7s-graph3 fa fa-chart-bar',
                         href: '/',
                         enabled: true,
+                        child: [
+                            {
+                                enabled: true,
+                                href: '/app/analytics',
+                                title: 'Analytics',
+                            }
+                        ],
                     },
                     {
                         title: 'Taxonomy',
@@ -259,7 +266,28 @@
                         title: 'Config Setup',
                         icon: 'pe-7s-network fa fa-tools',
                     },
-
+                    {
+                        enabled: User.canDebugDomain,
+                        title: 'Console',
+                        icon: 'pe-7s-network fa fa-tools',
+                        child: [
+                            {
+                                enabled: User.canDebugDomain,
+                                href: '/app/console/logs',
+                                title: 'Logs',
+                            },
+                            {
+                                enabled: User.canDebugDomain,
+                                href: '/app/console/activities',
+                                title: 'ActivityLogs',
+                            },
+                            {
+                                enabled: User.canDebugDomain,
+                                href: '/app/console/change_logs',
+                                title: 'Change Logs',
+                            },
+                        ]
+                    },
                     {
                         title: 'Dashboards',
                         icon: 'pe-7s-rocket',

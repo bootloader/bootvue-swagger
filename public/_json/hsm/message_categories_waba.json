@@ -1,0 +1,36 @@
+{
+    "options":[
+      {
+         "id":"MARKETING",
+         "label":"Marketing",
+         "desc":"Send promotions or information about your products, services or business.",
+         "icon":"fas fa-bullhorn"
+       },
+       {
+         "id":"UTILITY",
+         "label":"Utility",
+         "desc":"Send messages about an existing order or account.",
+         "icon":"fas fa-bell"
+      },
+      {
+         "id":"AUTHENTICATION",
+         "label":"Authentication",
+         "desc":"Send codes to verify a transaction or login.",
+         "icon":"fas fa-key"
+      },
+      {
+         "id":"OTP",
+         "label":"OTP",
+         "desc":"Send OTP to verify a transaction or login.",
+         "icon":"fas fa-key",
+         "_disabled" : true
+      },
+       {
+          "id":"TRANSACTIONAL",
+          "label":"Transactioal",
+          "desc":"Let customers know about credits/debits/updates to their account/portfolio/balance.",
+          "icon":"fas fa-bell",
+          "_disabled" : true
+       }
+    ]
+ }

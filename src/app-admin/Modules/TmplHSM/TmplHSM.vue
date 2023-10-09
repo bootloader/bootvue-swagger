@@ -11,23 +11,30 @@
               ...table,
               items :filtered
             }"
-                  :actions="[{
+            :actions="[{
               label : 'Add Template', icon : 'plus', name : 'ADD_ITEM',  link : '/app/admins/tmpl/pushtemplate/edit/new'
             }]"
+            :endpoint="endpoint"
             @action="onAction"
-            @rows="selectItem">
-            <template #top-row="row">
+            @rows="selectItem"
+            >
+            <!-- <template #top-row="row">
                   <b-th><input type="text" v-model="filters.category"  class="form-control form-control-sm" /></b-th>
                   <b-th><input type="text" v-model="filters.desc"  class="form-control form-control-sm" /></b-th>
                   <b-th><input type="text" v-model="filters.categoryType"  class="form-control form-control-sm" /></b-th>
                   <b-th>&nbsp;</b-th>
-            </template>
+            </template> -->
                 <template #cell(desc)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id" class=" btn-outline-primary-link pointer">
                          <span class="fa fa-edit" title="Edit"/>
                     {{row.item.desc}}  
                   </router-link><br/>
                   <span>{{row.item.code}}</span>
+                </template>
+                <template #cell(categoryType)="row">
+                  <my-source  options="data:hsm/message_category_types" v-model="row.item.categoryType" prepend-icon
+                    type="messageType" :value="row.item.formatType"/>&nbsp;
+                  <my-icon type="messageType" :value="row.item.formatType" class="float-right"/>
                 </template>
                 <template #cell(actions)="row">
                   <router-link tag="span" :to="'/app/admins/tmpl/pushtemplate/edit/' + row.item.id">
@@ -36,9 +43,18 @@
                     </b-button>   
                   </router-link>
                   &nbsp;
-                  <b-button size="sm" @click="deleteItem(row.item, row.index, $event.target)" variant="outline-primary">
-                    <font-awesome-icon icon="trash" title="Delete"/>
-                  </b-button>
+
+                  <el-popconfirm
+                    title="Are you sure to delete this?"
+                    confirm-button-text='Yes'
+                    cancel-button-text='No'
+                    @confirm="deleteItem(row)"
+                  >
+                    <b-button slot="reference" size="sm" variant="outline-primary">
+                      <font-awesome-icon icon="trash" title="Delete"/>
+                    </b-button>
+                  </el-popconfirm>
+ 
                   &nbsp;
                   <b-button size="sm" cursor-pointer  :id="'template-details-'+ row.item.id " variant="outline-primary">
                     <span class="fa fa-eye" title="View" /> 
@@ -197,13 +213,13 @@
                                         <label for="examplePassword" class="text-sm">Template : <em>{{newItem.name}}</em></label>
                                         <base-text-area  name="Header" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.header" 
-                                                          rules="max:1024|HBPrefixedVar:*,0,60,contact.,data.,global." :rows="1"
+                                                          rules="max:1024|HBPrefixedVar:*,0,60,contact.,data.,global.,session." :rows="1"
                                                           :textLimit="60"
                                                           :textCompleteStrategies="strategies">
                                         </base-text-area>
                                         <base-text-area  name="Body" layout="flushed"
                                                           placeholder="Type here" v-model="newItem.template" 
-                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data.,global." :rows="9"
+                                                          rules="required|max:1024|HBPrefixedVar:*,0,60,contact.,data.,global.,session." :rows="9"
                                                           :textLimit="1024"
                                                           :textCompleteStrategies="strategies">
                                         </base-text-area>
@@ -247,19 +263,36 @@
                                         </div>
                                       </div>
                                       <div class="position-relative form-group col-md-4">
-                                            <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
-                                              <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
-                                            </label>
-                                            <VGrid theme="default" class="w-100"
-                                                :columns="sampleVar.columns"
-                                                :source="templateVariable"
-                                                @afteredit=afterEdit
-                                            ></VGrid>
-                                            
+                                          <base-v-select class="w-100" ref="default_attachment" @change="default_attachment_update"
+                                            :disabled="['IMAGE','VIDEO'].indexOf(newItem.formatType)<0"
+                                            label="Default Media" size="sm"
+                                            options="getx:/api/tmpl/quickmedia" :filter="{
+                                              type : newItem.formatType
+                                            }"
+                                            optionKey="code" optionLabel="title"
+                                            v-model="default_attachment.mediaCode">
+                                              <template #option="{ item }">
+                                                <my-icon type="fileType" :value="item.type"/>
+                                                {{item.title}}
+                                              </template>  
+                                              <template #selected-option="{ item }">
+                                                <my-icon type="fileType" :value="item.type"/>&nbsp;{{item.title}}
+                                              </template>
+                                          </base-v-select>
+                                            <div class="vgrid-wrapper w-100 bg-white mt-4" style="height: 300px; min-width:200px">
+                                                <label for="examplePassword" class="text-sm" v-pre>Sample Data<br/>
+                                                  <small>Note : use {{data.&lt;variable&gt;}} for custom variables</small>
+                                                </label>
+                                                <VGrid theme="default" class="w-100"
+                                                    :columns="sampleVar.columns" :autoSizeColumn="true"
+                                                    :source="templateVariable"
+                                                    @afteredit=afterEdit
+                                                ></VGrid>
+                                            </div> 
                                       </div>
-                                      <div class="position-relative form-group col-md-4">
+                                      <div class="position-relative form-group col-md-4" v-if="newItem">
                                           <label for="examplePassword" class="text-sm">Template Preview</label>
-                                          <TemplatePreview 
+                                          <TemplatePreview
                                             :template="newItem" style="height: 400px;"
                                             />
                                       </div>
@@ -328,8 +361,8 @@
             <base-input
                 class="mb-0" prependClass="btn btn-outline-primary"
                 prelabel label="Description" 
-                v-model="modalEditButton.item.desc" :textLimit="72" required
-                rules="required|max:72" >
+                v-model="modalEditButton.item.desc" :textLimit="72"
+                rules="max:72" >
             </base-input>
             </span>
 
@@ -392,6 +425,8 @@
 import MyStatus from '../../../@common/custom/components/MyStatus.vue';
 import MyIcon from '../../../@common/custom/components/MyIcon.vue';
 import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
+import {Popconfirm} from 'element-ui';
+
 
     library.add(
         faUsersSlash,faUsers,faTrash,faEye
@@ -422,7 +457,8 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
             VGrid,
                 MyStatus,
                 MyIcon,
-                BaseRadio
+                BaseRadio,
+                [Popconfirm.name]: Popconfirm,
         },
         data: () => ({
                   input : {
@@ -441,11 +477,23 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                   },
                   list_option_title:"",
                   more_option_title:"",
+                  default_attachment : {
+                    mediaCode : null
+                  },
                   table : {
                     fields: [ 
-                              { key : 'category', label : "Grouping Category", sortable : true }, 
-                              { key : 'desc', label : "Description",sortable : true  }, 
-                              { key : 'categoryType', label : "Message Type" , sortable : true }, 
+                              { key : 'category', label : "Grouping Category", sortable : true,filterOptions : {} }, 
+                              { key : 'desc', label : "Description",sortable : true ,filterOptions : { 
+                                  filter : (item,search)=>{ 
+                                    let s = search?.toLowerCase();
+                                    return  item.desc?.toLowerCase().indexOf(s)>-1 
+                                    || item.code?.toLowerCase().indexOf(s)>-1 
+                                  }
+                               } }, 
+                              { key : 'categoryType', label : "Message Type" , sortable : true,
+                                filterOptions : {
+                                   filterDropdownItems: 'data:hsm/message_category_types' 
+                                } }, 
                               { key: 'actions', label: 'Actions' },
                               { key : 'status', label : 'Status'}    ],
                     items : [],
@@ -453,8 +501,9 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                     currentPage: 1,
                     rows : 0,
                     tableClass : 'text-sm',
-                    sortBy : "name"
+                    sortBy : "name",
                   },
+                  endpoint : "/api/tmpl/hsm",
                   filters:{
                       category:"",
                       desc:"",
@@ -490,7 +539,7 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                   }],
                   sampleVar : {
                     columns: [
-                      { name: 'Variable', prop: "variable", readonly : true},
+                      { name: 'Variable', prop: "variable", readonly : true,autoSize: true,size:250},
                       { name: 'Sample Value', prop: "sample"}] ,
                     contact : [],
                     data : []
@@ -499,7 +548,6 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
         computed : {
             filtered() {
                 let items = this.table.items;
-                console.log("items",items);
                 if(!items?.length) return [];
                 return items.filter(item => {
                   return Object.keys(this.filters).every(key =>{
@@ -545,7 +593,10 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
             },
             "newItem.template" : function(neVal){
               this.templateTextChange(neVal)
-            }
+            },
+            // 'default_attachment.mediaCode' : function(){
+            //   this.default_attachment_update();
+            // }
         },
         created : function (argument) {
           this.mode = this.$route.params.mode;
@@ -555,12 +606,16 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
           this.templateTextChange = debounce(this.templateTextChange,100)
         },
         methods : {
+          async default_attachment_update(){
+              this.newItem.options.attachment = this.$f.toMedia(this.$refs.default_attachment?.selected?.()?.item);
+          },
           async loadOptions (argument) {
           },
           async loadItems (){
+           // return; //@Deprecated
             var resp = await this.$service.get("api/tmpl/hsm");
             this.table.items = resp.results;
-            await this.$refs.templatesView.apply();
+            await this.$refs.templatesView?.apply?.();
           },
           selectItem : function () {
             if(this.mode == "edit"){
@@ -620,8 +675,10 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
               this.loadItems ();
             }
           },
-          async deleteItem(item) {
-             await this.$service.delete('/api/tmpl/hsm', item);
+          async deleteItem(row) {
+             //await this.$service.delete('/api/tmpl/hsm', item);
+             await row.removeItem();
+             this.loadItems ();
           }, 
           async cancelItem(item) {
              this.newItem = newItem();
@@ -636,6 +693,7 @@ import BaseRadio from '../../../@common/argon/components/Inputs/BaseRadio.vue';
                 }
                 this.newItem.meta = this.newItem.meta || {};
                 this.newItem.model = this.newItem.model || newItem().model;
+                this.default_attachment.mediaCode = item.options?.attachment?.mediaCode;
               }
               this.onAction({name : "EDIT_ITEM"});
              //await this.$store.dispatch('DeleteQuickReps', item);

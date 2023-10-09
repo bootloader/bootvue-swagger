@@ -1,0 +1,158 @@
+
+
+// BOOTSTRAP 4 VARIABLES
+
+@import "components/bootstrap4/functions";
+@import "custom/functions";
+@import "components/bootstrap4/variables";
+@import "custom/variables";
+@import "components/bootstrap4/mixins";
+
+// ArchitectUI Themes Variables
+
+@import "themes/layout-variables";
+
+
+// BOOTSTRAP 4 IMPORTS
+@import "components/bootstrap4/root";
+@import "components/bootstrap4/reboot";
+@import "components/bootstrap4/type";
+@import "components/bootstrap4/images";
+@import "components/bootstrap4/code";
+@import "components/bootstrap4/grid";
+@import "components/bootstrap4/tables";
+
+
+//Custom
+@import "custom/components";
+
+@import 'utils/_helpers.scss';
+@import 'utils/_sizes';
+@import 'utils/_popular.scss';
+
+
+.section-wrapper1 {
+    padding:0px 0px;
+    display: block;
+    background: #fff;
+    overflow-y: scroll;
+    height: 100%;
+    text-transform: uppercase;
+    -webkit-text-stroke: thin;
+    width: calc(100% + 0.5rem);
+
+    .section-divider {
+        width: 100%;
+        height: 13px; 
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        text-align: left;
+        .section-title {
+            font-size: 12px; 
+            background-color: #ffffff; 
+            padding: 0 5px;
+            border-radius: 5px;
+        }
+    }
+}
+
+
+
+.verificationer-details {
+    white-space: break-spaces;
+    font-size: .9em;
+    text-align: left;
+    min-width: 200px;
+    display: inline-block;
+    background: #d1d1d167;
+    border-radius: 18px;
+    padding: 13px;
+  }
+
+  .x-form .x-form-group {
+    background-color: #81818100;
+    display: block;
+    padding: 8px;
+    outline: 1px solid #00000000;
+    border-radius: 2px;
+
+    .basic-component:read-only {
+        .form-control-label {
+            margin-bottom: 0px;
+            padding: 0px;
+        }
+        .input-bottom {
+            display: none;
+        }
+        input.form-control:read-only {
+            border-radius : 0px;
+            border: 0px solid #000;
+            background-color: #81818100;
+            padding: 0px;
+            margin: 0px;
+        }
+    }
+
+}
+
+.flex-font-wrapper-25 {
+    font-size: 25px;
+    line-height: 25px;
+    height: 8em;
+   .flex-font-container {
+     .flex-font {
+
+     }
+     height : 12em;
+     padding: 1em;
+     line-height: 10em;
+     font-size: 1em;
+     line-height: 1em;
+     &.flex-font-busy{
+         animation: flex-font-busy 5s infinite;
+     }
+   }
+
+   @keyframes flex-font-busy {
+      50% {
+        font-size: 0.8em;
+        line-height: 0.8em;
+      }
+   }
+
+ }
+
+.rounded-cr {
+  border-radius: 25px;
+}
+
+.btn {
+    // border-inline: none;
+    // padding: 4px 9px ;
+    // margin-top: 6px;
+}
+
+.btn-new {
+    border-inline: none;
+    margin-right: 12px !important;
+}
+
+h4.linq-section-divider {
+    display: flex;
+    flex-direction: row;
+
+    &:before,
+    &:after {
+        content: "";
+        flex: 1 1;
+        border-bottom: 2px solid #efefef;
+        
+     }
+     img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+    }
+}
+
+

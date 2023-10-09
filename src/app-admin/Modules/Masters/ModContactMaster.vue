@@ -178,7 +178,7 @@
             this.updateContact(item,results[0],"DLINK");
           }, 
           updateContact(item, newItem,link){
-             for(var key in newItem){
+              for(var key in newItem){
                   item[key] = newItem[key];
               }
               item.profile = newItem.profile;

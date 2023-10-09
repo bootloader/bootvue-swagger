@@ -15,7 +15,9 @@
   import DataStore from "./app-admin/Service/DataStore";
   import { ValidationProvider, ValidationObserver } from 'vee-validate';
   import VueClipboard from 'vue-clipboard2';
-
+  import TreeTable from 'tree-table-vue';
+ 
+  Vue.use(TreeTable);
   Vue.component('admin-default-layout', () => import('./app-admin/Layout/baseLayout.vue'));
   Vue.component('admin-scriptus-layout', () => import('./app-admin/Layout/ScriptusLayout.vue'));
   Vue.component('admin-userpages-layout', () => import('./app-admin/Layout/pagesLayout.vue'));
@@ -41,11 +43,17 @@
   Vue.component('MyDatePicker', () => import('./@common/custom/components/MyDatePicker.vue'));
   Vue.component('ForEachOption', () => import('./@common/custom/components/ForEachOption.vue'));
   Vue.component('MyVSelect', () => import('./@common/custom/components/MyVSelect.vue'));
+  Vue.component('MySelect', () => import('./@common/custom/components/MySelect.vue'));
   Vue.component('BaseVSelect', () => import('./@common/custom/components/base/BaseVSelect.vue'));
   Vue.component('MyAxon', () => import('./@common/custom/components/MyAxon.vue'));
   Vue.component('MyIcon', () => import('./@common/custom/components/MyIcon.vue'));
   Vue.component('MyMedia', () => import('./@common/custom/components/MyMedia.vue'));
+  import 'element-ui/lib/theme-chalk/index.css';
+  import lang from 'element-ui/lib/locale/lang/en'
+  import locale from 'element-ui/lib/locale'
 
+  locale.use(lang)
+  
   VueClipboard.config.autoSetContainer = true // add this line
   Vue.use(VueClipboard)
 

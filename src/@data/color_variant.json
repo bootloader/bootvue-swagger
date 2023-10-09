@@ -1,0 +1,34 @@
+{
+    "options": [
+        {
+            "enabled" : true,
+            "code": "MAJOR",
+            "name": "Major"
+        },
+        {
+            "enabled" : true,
+            "code": "MINOR",
+            "name": "Minor"
+        },
+        {
+            "enabled" : true,
+            "code": "DEBIT",
+            "name": "Debit"
+        },
+        {
+            "enabled" : true,
+            "code": "CREDIT",
+            "name": "Credit"
+        },
+        {
+            "enabled" : true,
+            "code": "INFO",
+            "name": "Info"
+        },
+        {
+            "code": "ALERT",
+            "name": "Alert",
+            "enabled" : true
+        }
+    ]
+ }

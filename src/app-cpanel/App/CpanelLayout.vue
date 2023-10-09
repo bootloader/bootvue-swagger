@@ -14,6 +14,23 @@
                   }">
         </sidebar-item>
 
+
+        <sidebar-item
+                  :link="{
+                    name: 'WABA Channels',
+                    path: '/app/waba/channels',
+                    icon: 'fa fa-whatsapp text-whatsapp'
+                  }">
+        </sidebar-item>
+
+        <sidebar-item
+                  :link="{
+                    name: 'WABA Clients',
+                    path: '/app/waba/clients',
+                    icon: 'fa fa-whatsapp text-whatsapp'
+                  }">
+        </sidebar-item>
+
         <sidebar-item hidden
           :link="{
             name: 'Dashboard',

@@ -141,9 +141,9 @@
             actions : [{
               label : "Add Quick Media", icon : "plus", name : "ADD_ITEM"
             }],
-            fields: [ { key : 'category', label : "Category" }, 
-              { key : 'title', label : "Title" }, 
-              { key : 'code', label : "Code" }, 
+            fields: [ { key : 'category', label : "Category" , sortable: true}, 
+              { key : 'title', label : "Title" , sortable: true}, 
+              { key : 'code', label : "Code" , sortable: true}, 
               { key: 'actions', label: 'Actions' }],
             newItem : newItem(),
             sample : {

@@ -32,7 +32,7 @@
                                     @search="onContactSearch" 
                                     @option="onContactOption"
                                     />
-                                <MyVSelect options="getx:/api/options/tmpl/hsm" ref="selectedTemplate"
+                                <MyVSelect options="getx:/api/options/tmpl/hsm" ref="selectedTemplate" @option="onOption"
                                     class="f-hsm-template"
                                     selectedPrefixClass="fa fa-file-code text-xl px-1 text-greyer"
                                     v-model="model.templateId" searchable filterable
@@ -71,10 +71,13 @@
                                         </small>
                                     </template>
                                 </MyVSelect>
-                                     
                         </div>
                         <div class="message-box-preview m-0 w-100"> 
                                 <div v-if="model.templateId" class="">
+                                    <div> 
+                                        - {{model.templateId}}<br/>
+                                    </div>        
+
                                     <div  class="">
                                         <TemplatePreview  :templateId="model.templateId" 
                                         class="template-preview h-100p"
@@ -82,7 +85,7 @@
                                             contact : vars.contact, 
                                             data : vars.data
                                         }" />
-                                    </div>    
+                                    </div>
                                     <div v-if="model.templateId" class="m-3">
                                         <my-model-form size="sm" class="mt-3 d-block"
                                             :configs="sampleVarData" prelabel variant="outline-grey"
@@ -169,49 +172,6 @@
         components: {MyChannelSelect,MyHSMTmplSelect,MyVSelect,TemplatePreview,BaseVSelect,
             vueDropzone: vue2Dropzone,
             MyModelForm},
-        computed: {
-            m() {
-                return this.message
-            },
-            selectedTemplate(){
-              if(this.model.templateId){
-                return {
-                    ...this.$refs.selectedTemplate?.selected().item,
-                   // attachments : this.attachments 
-                }
-              }
-              return null;  
-            },
-            hasAttachment(){
-                return this.selectedTemplate.formatType && !(this.selectedTemplate.formatType == 'TEXT')
-            },
-            acceptedFiles(){
-                switch(this.selectedTemplate.formatType){
-                    case "IMAGE":
-                        return 'image/png, image/jpeg';
-                    case "VIDEO":
-                        return 'video/*';
-                    case "AUDIO":
-                        return 'audio/*';
-                    default :
-                        return null;
-                }
-            },
-            sampleVarData(){
-              if(this.model.templateId){
-                let neVal = (this.selectedTemplate.header + this.selectedTemplate.template + this.selectedTemplate.footer)
-                 let THAT = this;
-                  return TmplUtils.getVars(neVal,/({{((data|global)\.[\w\d\.]+)}})/g
-                  ).map(function(v,i){
-                    return {
-                        title : v.path,
-                        path : v.path,
-                        //value : JsonXPath({path : '$.' +v.path,json : THAT.input.templates.vars})[0]
-                    }
-                });
-              }
-            },
-        },
         data: () => ({
             model : {
                 channelId : null,//"tg:mehery_demo_bot",
@@ -219,6 +179,8 @@
                 contactId : null,
                 templateId : null,
             },
+            selectedTemplate :{}, 
+            sampleVarData : [],
             vars : {
                 contact : null, 
                 data : {}, 
@@ -238,6 +200,26 @@
               showcounter : null
             },
         }),
+        computed: {
+            m() {
+                return this.message
+            },
+            hasAttachment(){
+                return this.selectedTemplate?.formatType && !(this.selectedTemplate?.formatType == 'TEXT')
+            },
+            acceptedFiles(){
+                switch(this.selectedTemplate?.formatType){
+                    case "IMAGE":
+                        return 'image/png, image/jpeg';
+                    case "VIDEO":
+                        return 'video/*';
+                    case "AUDIO":
+                        return 'audio/*';
+                    default :
+                        return null;
+                }
+            }
+        },
         mounted(){
             console.log("this.$route.params.contact",this.$route.params.contact)
             if(this.$route.params.contact){
@@ -305,16 +287,37 @@
                     messageId : "", templateId : this.model.templateId, type :"O",
                     hsm : {
                         id : this.model.templateId,
-                        code : this.selectedTemplate.code,
+                        code : this.selectedTemplate?.code,
                         data : this.vars.data,
                     }
                 };
                 return msg;
             },
+            onOption(selectedTemplate){
+                this.selectedTemplate = selectedTemplate?.item;
+                this.refreshSampleVarData();
+            },
+            refreshSampleVarData(){
+              if(this.model.templateId && this.selectedTemplate){
+                let neVal = (this.selectedTemplate?.header + this.selectedTemplate?.template + this.selectedTemplate?.footer);
+                 let THAT = this;
+                  this.sampleVarData =  
+                  TmplUtils.getVars(neVal,/({{((data|global)\.[\w\d\.]+)}})/g
+                  ).map(function(v,i){
+                    return {
+                        title : v.path,
+                        path : v.path,
+                        //value : JsonXPath({path : '$.' +v.path,json : THAT.input.templates.vars})[0]
+                    }
+                });
+              }
+            },
             async sendNewMessage() {
                 let msg = this.prepareMessage();
                 let resp = null;
-                if(this.hasAttachment){
+                let defAttachment = this.selectedTemplate.options.attachment && (this.$refs.myVueDropzone.getQueuedFiles().length==0)
+
+                if(this.hasAttachment && !defAttachment){
                      await this.updaedNewMessage(msg);
                 } else {
                     resp = await this.$store.dispatch('SendChat', msg);

@@ -12,12 +12,13 @@
                             Reply to &nbsp;<i class="fa fa-chevron-right"/>
                             <span hidden>{{m.local.replyMessage}}</span>
                         </div>
-                        <b-popover triggers="hover focus"  @show="onReplyShow(m)"
+                        <b-popover triggers="hover"  @show="onReplyShow(m)"
                             :target="'reply-id-'+ m.replyIdExt + '-' + m.messageId"
                             :delay="100"
+                            :disabled.sync="disabledPopover"
                             custom-class="message-preview" placement="right">
                             <span class="message-preview"> 
-                                <ChatMessageContent v-if="m.local.replyMessage" :message="m.local.replyMessage">
+                                <ChatMessageContent @viewer="onViewer" v-if="m.local.replyMessage" :message="m.local.replyMessage">
                                 </ChatMessageContent>
                                 <span v-else>Loading</span>
                                 <loading :active="!m.local.replyMessage"
@@ -131,12 +132,17 @@
         data: () => ({
              refreshKey: false,
              cleanlog : function(logs){
-                 return (logs +'').replace('360dialog',"whatsapp");
-             }
+                 return (logs +'').replace(/360dialog/gi,"whatsapp");
+             },
+             disabledPopover:false
         }),
         mounted : function(){
         },
         methods: {
+            onViewer : function(disabled){
+                this.disabledPopover = disabled;
+                console.log('disabled',disabled);
+            },
             onReplyShow : pebounce(async function(m) {
                 if(this.activeChat && this.activeChat.messages){
                     for(var i in this.activeChat.messages){

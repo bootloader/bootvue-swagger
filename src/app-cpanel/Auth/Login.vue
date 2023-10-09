@@ -23,7 +23,7 @@
                     <span class="btn-inner--text">Github</span>
                   </a>
                   <a href="#" class="btn btn-neutral btn-icon">
-                    <span class="btn-inner--icon"><img :src="$config.CDN_URL +  '/argon/img//icons/common/google.svg'"></span>
+                    <span class="btn-inner--icon"><img :src="$config.CDN_URL +  '/argon/img/icons/common/google.svg'"></span>
                     <span class="btn-inner--text">Google</span>
                   </a>
                 </div>

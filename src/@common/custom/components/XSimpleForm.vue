@@ -1,6 +1,7 @@
 <template>
     <div class="x-form">
-        <span v-for="input in inputs" v-bind:key="input.key">
+        <span v-for="group in grouped" v-bind:key="group.superKey" class="x-form-group">
+        <span v-for="input in group.inputs" v-bind:key="input.key">
             <span v-if="!input.meta.hidden">
                 <BaseVSelect 
                     v-if=" input.meta.inputType=='OPTIONS' && (input.meta.optionsSource || input.meta.options.length > 5)" 
@@ -14,7 +15,7 @@
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :disabled="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
                     :placeholder="input.meta.example || 'Select'"
-                    searchable :clearable="!!input.meta.optional"
+                    searchable :clearable="!!input.meta.optional" filterable
                     @change="onChange(input.meta,input.config)" >
                     <template #help>
                       <small class="text-xs" v-if="input.meta.desc">  
@@ -36,13 +37,29 @@
                        <span> <MyIcon type="infoType" :value="input.meta.messageType"/> {{input.meta.title}}</span><br/>
                       <small style="white-space: pre-line;"> {{input.meta.desc}}</small>
                 </b-alert>
-                <v-jsoneditor v-else-if="input.meta.inputType == 'JSON'"
+                <div v-else-if="input.meta.inputType == 'JSON'" class="form-group form-group-input" >
+                    <label class="form-control-label text-sm">
+                        {{input.meta.title || input.meta.key}}
+                    </label>
+                    <v-jsoneditor 
                     v-model="input.config.value" :options="{
                       mode : 'code', mainMenuBar : false,
                       onChange : ()=>onChange(input.meta,input.config)
-                    }" :plus="false" height="400px" @error="onJsonError"
+                    }" :plus="false" :height="settings.json_height || '400px'" @error="onJsonError"
                     />
+                </div>
+                <base-text-area v-else-if="input.meta.inputType == 'TEXTAREA'"  class="mb-0" :size="size"
+                    :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
+                    v-model="input.config.value" 
+                    :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
+                    :value="input.meta.defaultValue"
+                    :required="!input.meta.optional "
+                    :placeholder="input.meta.example"
+                    @change="onChange(input.meta,input.config)">
+                </base-text-area>
+
                 <base-input v-else  class="mb-0" :size="size"
+                    :name="input.meta.keyName"
                     :label="(input.meta.title || input.meta.key)" :prelabel="prelabel" :variant="variant"
                     v-model="input.config.value" 
                     :readonly="input.meta.readonly || (input.meta.createonly && !isnew) || readonly"
@@ -69,6 +86,7 @@
                 </b-form-group> -->
             </span>
         </span>
+        </span>
     </div>
 </template>
 
@@ -86,6 +104,11 @@
                 description: "pass list of input configs",
                 default : function () {
                     return [{}];
+                }
+            },
+            settings : {
+                type : Object, default : function(){
+                    return {}
                 }
             },
             isnew : {
@@ -107,6 +130,19 @@
                 }
             }
         },
+        computed : {
+            grouped(){
+                let groupedMap = {};let groupedList = [];
+                return this.inputs.reduce(function(result, input) {
+                    if(!groupedMap[input.meta.superKey]){
+                        groupedMap[input.meta.superKey] = {superKey : input.meta.superKey,inputs : []};
+                        groupedList.push(groupedMap[input.meta.superKey]);
+                    }
+                    groupedMap[input.meta.superKey].inputs.push(input)
+                    return result;
+                },groupedList)
+            }
+        },
         mounted : function (argument) {
             
         },
@@ -126,3 +162,12 @@
         }
     };
 </script>
+<style>
+    .x-form-group {
+        background-color: #8181810d;
+        display: block;
+        padding: 8px;
+        outline: 1px solid #00000021;
+        border-radius: 2px;
+    }
+</style>

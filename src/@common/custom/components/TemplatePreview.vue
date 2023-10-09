@@ -21,12 +21,12 @@
                         || content.formatType == 'IMAGE' 
                         || content.formatType == 'DOCUMENT'"
                 :class="['message-attachment-inline','attachment-'+content.formatType]">
-                <div v-if="templateConfig.attachments && templateConfig.attachments[0]"
-                  :class="['message-attachment-inline-original','attachment-'+templateConfig.attachments[0].mediaType]"
+                <div v-if="headerMedia"
+                  :class="['message-attachment-inline-original','attachment-'+headerMedia.mediaType]"
                 > 
-                  <my-media style="max-height:150px"
-                  :src="templateConfig.attachments[0].mediaURL"
-                    auto width="100%" height="200px"
+                  <my-media style="max-height:150px" v-if="headerMedia.mediaURL"
+                  :src="headerMedia.mediaURL"
+                  :auto="autoplay" width="100%" height="200px"
                   />
                 </div>
               </div> 
@@ -132,6 +132,9 @@
       options (){
 
       },
+      headerMedia(){
+        return this.templateConfig?.attachments?.[0] || this.templateConfig.options?.attachment;
+      },
       local_format(){
         return this.format || 'WHATSAPP';
       }
@@ -174,6 +177,10 @@
           type: String, default : "WHATSAPP"
         },
         model : {
+        },
+        autoplay : {
+          type : Boolean,
+          default : false
         }
     },
     watch : {

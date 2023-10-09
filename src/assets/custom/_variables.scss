@@ -1,0 +1,48 @@
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+@use "sass:map";
+
+$grid-breakpoints-temp: (
+  xs:   map-get($grid-breakpoints,"xs"),
+  sm:   map-get($grid-breakpoints,"sm"),
+  ms :  672px,
+  md:   map-get($grid-breakpoints,"md"),
+  lg:   map-get($grid-breakpoints,"lg"),
+  xl:   map-get($grid-breakpoints,"xl")
+);
+
+//@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+//@include _assert-starts-at-zero($grid-breakpoints);
+
+// stylelint-disable-next-line scss/dollar-variable-default
+$container-max-widths-temp:(
+    sm:  map-get($container-max-widths,"sm"),
+    ms: 630px,
+    md:  map-get($container-max-widths,"md"),
+    lg:  map-get($container-max-widths,"lg"),
+    xl:  map-get($container-max-widths,"xl")
+);
+@include _assert-ascending($container-max-widths, "$container-max-widths");
+
+
+
+$input-btn-padding-y-ms:      avg($input-btn-padding-y-sm,$input-btn-padding-y) !default;
+$input-btn-padding-x-ms:      avg($input-btn-padding-x-sm,$input-btn-padding-x) !default;
+$input-btn-font-size-ms:      avg($font-size-sm,$font-size-base) !default;
+//$input-btn-font-size-ms:      avg($input-btn-font-size-sm, $input-btn-font-size) !default;
+$input-btn-line-height-ms:    avg($line-height-sm,$line-height-base) !default;
+
+
+$input-padding-y-ms:                    avg($input-btn-padding-y-sm,$input-btn-padding-y) !default;
+$input-padding-x-ms:                    avg($input-btn-padding-x-sm,$input-btn-padding-x) !default;
+$input-font-size-ms:                    avg($input-btn-font-size-sm,$input-btn-font-size) !default;
+$input-line-height-ms:                  avg($input-btn-line-height-sm,$input-btn-line-height) !default;
+
+$input-border-radius-ms:                avg($border-radius-sm,$border-radius) !default;
+
+// Forms
+
+$input-height-inner-ms:                 ($input-btn-font-size-ms * $input-btn-line-height-ms) + ($input-btn-padding-y-ms * 2) !default;
+$input-height-ms:                       calc(#{$input-height-inner-ms} + #{$input-height-border}) !default;

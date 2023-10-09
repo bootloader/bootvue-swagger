@@ -8,6 +8,9 @@
             <template #filter(agent)="{filter}">
                 <MyAgentSelect v-model="filter.value" @change="agentSelect" emptyDisplay="All Teams"> </MyAgentSelect>
             </template>
+            <template #filter(contactType)="{filter}">
+                <MyContactTypeSelect v-model="filter.value" @change="contactSelect" emptyDisplay="All Channel"> </MyContactTypeSelect>
+            </template>
         </page-title>
 
         <div class="mb-3">
@@ -226,7 +229,7 @@
             </div>
         </div>
 
-
+        <div v-if="loading" class="nb-spinner"></div>
     </div>
 
 </template>
@@ -254,6 +257,7 @@
     import lineeg from './../Charts/MyLine'
     import {newChartData,updateChartData} from './../Charts/MyLine'
     import MyAgentSelect from '../../@common/custom/components/MyAgentSelect.vue';
+    import MyContactTypeSelect from '../../@common/custom/components/MyContactTypeSelect.vue';
 
     library.add(
         faTrashAlt,
@@ -301,7 +305,8 @@
            // chart1,chart2,chart3,
             lineeg,
             vSelect,
-                MyAgentSelect
+            MyAgentSelect,
+            MyContactTypeSelect
         },
         data: () => ({
             heading: 'Analytics Dashboard',
@@ -340,7 +345,14 @@
                     type : "agentSelect", 
                     options:[], 
                     value: null
-                }],
+                },
+                {
+                    name : "contactType", 
+                    type : "contactSelect", 
+                    options:[], 
+                    value: null
+                }
+            ],
             summary : {
                 "contactType": null,
                 "filter": null,
@@ -382,6 +394,7 @@
             model: {
                 agent: '',
             },
+            loading:false
         }),
         computed :  {
             // summaryChart : function (argument) {
@@ -398,12 +411,14 @@
               return date ? date.getTime(): date;
           },
           async loadAnalytics (){
+            this.loading = true;
             var resp = await this.$store.dispatch('LoadAnalytics',{
               "agent": this.filters[0].value ? this.filters[0].value : "TEAM",
-              "contactType": {},
+              "contactType": this.filters[1].value ? [this.filters[1].value] : null,
               "dateRange1": this.getTime(this.input.daterange.startDate),
               "dateReange2": this.getTime(this.input.daterange.endDate)
             });
+            this.loading = false;
             this.summary = (resp.data || {});
             this.summaries = (resp.results || []);
 
@@ -419,6 +434,10 @@
           },
           agentSelect : function (v) {
             this.filters[0].value = v;
+            this.loadAnalytics();
+          },
+          contactSelect : function (v) {
+            this.filters[1].value = v;
             this.loadAnalytics();
           },
           onAction : function (argument) {
